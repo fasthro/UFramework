@@ -22,6 +22,8 @@ namespace UFramework
             return IOPath.PathCombine(Application.dataPath, "UAssets");
         }
 
+        #region config
+
         /// <summary>
         /// Config Editor 目录
         /// </summary>
@@ -47,6 +49,26 @@ namespace UFramework
         public static string ConfigDataDirectory()
         {
             return "";
+        }
+
+        #endregion
+
+        /// <summary>
+        /// 用户代码目录
+        /// </summary>
+        /// <returns></returns>
+        public static string UserScriptDirectory()
+        {
+            return "Stripts";
+        }
+
+        /// <summary>
+        /// Lua Wrap 目录
+        /// </summary>
+        /// <returns></returns>
+        public static string ToLuaWrapDirectory()
+        {
+            return "Stripts/ToLuaWrap";
         }
 
         #endregion
