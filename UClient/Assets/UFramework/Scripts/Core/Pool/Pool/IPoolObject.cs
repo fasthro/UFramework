@@ -11,5 +11,7 @@ namespace UFramework.Pool
         bool isRecycled { get; set; }
 
         void Recycle();
+
+        void OnRecycle();
     }
 }

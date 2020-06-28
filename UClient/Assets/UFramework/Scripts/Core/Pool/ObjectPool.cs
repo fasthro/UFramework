@@ -79,6 +79,17 @@ namespace UFramework.Pool
         }
 
         /// <summary>
+        /// 分配对象
+        /// </summary>
+        /// <returns></returns>
+        public override T Allocate()
+        {
+            var obj = base.Allocate();
+            obj.isRecycled = false;
+            return obj;
+        }
+
+        /// <summary>
         /// 回收
         /// </summary>
         /// <param name="obj"></param>
@@ -98,6 +109,7 @@ namespace UFramework.Pool
             }
 
             obj.isRecycled = true;
+            obj.OnRecycle();
             m_stacks.Push(obj);
 
             return true;

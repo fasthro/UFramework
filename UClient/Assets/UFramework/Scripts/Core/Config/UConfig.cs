@@ -5,6 +5,7 @@
  */
 using System.Collections.Generic;
 using LitJson;
+using UnityEngine;
 
 namespace UFramework.Config
 {
@@ -37,6 +38,7 @@ namespace UFramework.Config
         /// <summary>
         /// 读取配置
         /// </summary>
+        /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public static T Read<T>() where T : IConfigObject, new()
         {
@@ -107,7 +109,7 @@ namespace UFramework.Config
 #endif
             IOPath.FileCreateText(path, content);
         }
-        
+
         /// <summary>
         /// 读取基础配置
         /// </summary>

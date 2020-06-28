@@ -59,14 +59,8 @@ namespace UFramework.Thread
                 {
                     Sleep(sleep);
                 }
-
                 taskFunc();
-
-                // TODO
-                if (completeFunc != null)
-                {
-                    completeFunc();
-                }
+                completeFunc.InvokeGracefully();
             };
 
             ThreadPool.QueueUserWorkItem(wc);

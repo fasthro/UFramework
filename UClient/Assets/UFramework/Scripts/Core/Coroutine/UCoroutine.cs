@@ -10,12 +10,6 @@ using UnityEngine;
 
 namespace UFramework.Coroutine
 {
-    /// /// <summary>
-    /// 协同事件
-    /// </summary>
-    /// <param name="manual"></param>
-    public delegate void UCoroutineEventCallback(bool manual);
-
     public class UCoroutine
     {
         public bool running { get; private set; }
@@ -78,8 +72,7 @@ namespace UFramework.Coroutine
                     else running = false;
                 }
             }
-            // TODO
-            // m_completeCallback.InvokeGracefully(stopped);
+            m_completeCallback.InvokeGracefully(stopped);
         }
     }
 }
