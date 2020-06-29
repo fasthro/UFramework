@@ -15,11 +15,6 @@ namespace UFramework.Config
         string name { get; }
 
         /// <summary>
-        /// Odin Readed
-        /// </summary>
-        object OdinReaded();
-
-        /// <summary>
         /// 保存配置
         /// </summary>
         void Save();

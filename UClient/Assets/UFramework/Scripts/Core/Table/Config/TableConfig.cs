@@ -27,5 +27,10 @@ namespace UFramework.Table
         public string tableModelNamespace;
         // 数据表
         public Dictionary<string, TableItem> tableDictionary = new Dictionary<string, TableItem>();
+
+        public void Save()
+        {
+            UConfig.Write<TableConfig>(this);
+        }
     }
 }
