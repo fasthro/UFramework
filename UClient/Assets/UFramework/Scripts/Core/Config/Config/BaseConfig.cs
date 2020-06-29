@@ -14,11 +14,14 @@ namespace UFramework.Config
         public string name { get { return "BaseConfig"; } }
 
         [ShowInInspector]
-        [DictionaryDrawerSettings(IsReadOnly = true)]
-        [InfoBox("Setting Config File Address")]
+        [DictionaryDrawerSettings(IsReadOnly = true, DisplayMode = DictionaryDisplayOptions.OneLine)]
+        [InfoBox("配置文件地址设置")]
         public Dictionary<string, FileAddress> addressDictionary = new Dictionary<string, FileAddress>();
-
-        [Button(ButtonSizes.Large)]
+        
+        /// <summary>
+        /// Save
+        /// </summary>
+        [Button(ButtonSizes.Large, Name = "Apply")]
         public void Save()
         {
             UConfig.Write<BaseConfig>(this);

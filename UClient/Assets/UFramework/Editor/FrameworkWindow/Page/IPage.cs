@@ -1,7 +1,7 @@
 /*
  * @Author: fasthro
  * @Date: 2020-06-29 08:38:48
- * @Description: 页面接口
+ * @Description: IPage
  */
 namespace UFramework.FrameworkWindow
 {

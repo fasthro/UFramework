@@ -11,15 +11,14 @@ namespace UFramework.Table
 {
     public class Excel2TableObject : Excel2Any
     {
-        private string template = @"// FastEngine
+        private string template = @"// UFramework
 // excel2table auto generate
 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using FastEngine;
-using FastEngine.Core;
-using FastEngine.Core.Excel2Table;
+using UFramework;
+using UFramework.Table;
 
 namespace $namespace$
 {
@@ -39,7 +38,7 @@ $variable$
         private Dictionary<string, $tableName$TableData> m_tableDataStringDictionary;
         private Dictionary<int, Dictionary<int, $tableName$TableData>> m_tableDataInt2IntDictionary;
 
-        public override void InitializeSingleton()
+        protected override void OnSingletonAwake()
         {
             switch (dataFormatOptions)
             {

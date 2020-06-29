@@ -23,6 +23,7 @@ namespace UFramework.Table
 
         public ExcelReader(string filePath, ExcelReaderOptions options)
         {
+            Debug.Log(filePath);
             this.m_filePath = filePath;
             this.options = options;
             this.descriptions = new List<string>();
@@ -45,61 +46,59 @@ namespace UFramework.Table
 
             using (var stream = File.Open(m_filePath, FileMode.Open, FileAccess.Read))
             {
-                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                var reader = ExcelReaderFactory.CreateReader(stream);
+                var result = reader.AsDataSet();
+                for (int i = 0; i < reader.ResultsCount; i++)
                 {
-                    var result = reader.AsDataSet();
-                    for (int i = 0; i < reader.ResultsCount; i++)
+                    var dataTable = result.Tables[i];
+                    var columnCount = dataTable.Columns.Count;
+                    var rowCount = dataTable.Rows.Count;
+                    for (int r = 0; r < rowCount; r++)
                     {
-                        var dataTable = result.Tables[i];
-                        var columnCount = dataTable.Columns.Count;
-                        var rowCount = dataTable.Rows.Count;
-
-                        for (int r = 0; r < rowCount; r++)
+                        var row = new ExcelReaderRow();
+                        for (int c = 0; c < columnCount; c++)
                         {
-                            var row = new ExcelReaderRow();
-                            for (int c = 0; c < columnCount; c++)
+                            var context = dataTable.Rows[r][c].ToString();
+                            if (r == 0)
                             {
-                                var context = dataTable.Rows[r][c].ToString();
-                                if (r == 0)
+                                descriptions.Add(context);
+                            }
+                            else if (r == 1)
+                            {
+                                fields.Add(context);
+                            }
+                            else if (r == 2)
+                            {
+                                fieldType = TypeUtils.TypeContentToFieldType(context);
+                                types.Add(fieldType);
+                                if (fieldType == FieldType.Ignore)
                                 {
-                                    descriptions.Add(context);
-                                }
-                                else if (r == 1)
-                                {
-                                    fields.Add(context);
-                                }
-                                else if (r == 2)
-                                {
-                                    fieldType = TypeUtils.TypeContentToFieldType(context);
-                                    types.Add(fieldType);
-                                    if (fieldType == FieldType.Ignore)
-                                    {
-                                        ignoreIndexs.Add(c);
-                                    }
-                                }
-                                else
-                                {
-                                    row.datas.Add(context);
+                                    ignoreIndexs.Add(c);
                                 }
                             }
-
-                            if (r > 2)
+                            else
                             {
-                                if (!removeIgnore)
-                                {
-                                    descriptions = RemoveIgnore<string>(descriptions, ignoreIndexs);
-                                    fields = RemoveIgnore<string>(fields, ignoreIndexs);
-                                    types = RemoveIgnore<FieldType>(types, ignoreIndexs);
-                                    removeIgnore = true;
-                                }
-                                row.descriptions = descriptions;
-                                row.fields = fields;
-                                row.types = types;
-                                row.datas = RemoveIgnore<string>(row.datas, ignoreIndexs);
-                                rows.Add(row);
+                                row.datas.Add(context);
                             }
                         }
+
+                        if (r > 2)
+                        {
+                            if (!removeIgnore)
+                            {
+                                descriptions = RemoveIgnore<string>(descriptions, ignoreIndexs);
+                                fields = RemoveIgnore<string>(fields, ignoreIndexs);
+                                types = RemoveIgnore<FieldType>(types, ignoreIndexs);
+                                removeIgnore = true;
+                            }
+                            row.descriptions = descriptions;
+                            row.fields = fields;
+                            row.types = types;
+                            row.datas = RemoveIgnore<string>(row.datas, ignoreIndexs);
+                            rows.Add(row);
+                        }
                     }
+
                 }
             }
         }

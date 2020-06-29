@@ -50,6 +50,66 @@ namespace UFramework
         /// <returns></returns>
         public static string ConfigDataDirectory()
         {
+            // TODO
+            return "";
+        }
+
+        #endregion
+
+        #region Table
+
+        /// <summary>
+        /// Table Editor 目录
+        /// </summary>
+        /// <returns></returns>
+        public static string TableDirectory()
+        {
+            return IOPath.PathCombine(AssetsDirectory(), "Table");
+        }
+
+        /// <summary>
+        /// Table Editor Excel 目录
+        /// </summary>
+        /// <returns></returns>
+        public static string TableExcelDirectory()
+        {
+            return IOPath.PathCombine(TableDirectory(), "Excel");
+        }
+
+        /// <summary>
+        /// Table Editor Out Data 目录
+        /// </summary>
+        /// <returns></returns>
+        public static string TableOutDataDirectory()
+        {
+            return IOPath.PathCombine(TableDirectory(), "Data");
+        }
+
+        /// <summary>
+        /// Table Editor TableObject 目录
+        /// </summary>
+        /// <returns></returns>
+        public static string TableObjectDirectory()
+        {
+            return IOPath.PathCombine(TableDirectory(), "TableObject");
+        }
+
+        /// <summary>
+        /// Table Resource 目录
+        /// </summary>
+        /// <returns></returns>
+        public static string TableReourceDirectory()
+        {
+            return "Table";
+        }
+
+        /// <summary>
+        /// Table Data 目录
+        /// </summary>
+        /// <returns></returns>
+        public static string TableDataDirectory()
+        {
+            // TODO
             return "";
         }
 
