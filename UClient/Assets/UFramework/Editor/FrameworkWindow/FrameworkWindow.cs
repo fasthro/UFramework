@@ -16,14 +16,16 @@ namespace UFramework.FrameworkWindow
 {
     public class FrameworkWindow : OdinMenuEditorWindow
     {
-        [MenuItem("UFramework/UFramework")]
+        [MenuItem("UFramework/Preferences")]
         private static void OpenWindow()
         {
             var window = GetWindow<FrameworkWindow>();
-            window.titleContent = new GUIContent("UFramework");
+            window.titleContent = new GUIContent("UFramework Preferences");
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(800, 600);
         }
 
+        static AssetBundlePage assetBundlePage = new AssetBundlePage();
+        static AssetBundlePreferencesPage assetBundlePreferencesPage = new AssetBundlePreferencesPage();
         static ConfigPage configPage = new ConfigPage();
         static TablePage tablePage = new TablePage();
         static TablePreferencesPage tablePreferencesPage = new TablePreferencesPage();
@@ -34,11 +36,9 @@ namespace UFramework.FrameworkWindow
 
             tree.Add("Lua", this);
 
-            tree.Add("AssetBundle/Configure", this);
-            tree.Add("AssetBundle/Build", this);
-            tree.Add("AssetBundle/Setting", this);
+            tree.Add(assetBundlePage.menuName, assetBundlePage.GetInstance());
+            tree.Add(assetBundlePreferencesPage.menuName, assetBundlePreferencesPage.GetInstance());
 
-            tree.Add("Pool", this);
             tree.Add("I18N", this);
             // config
             tree.Add(configPage.menuName, configPage.GetInstance());
@@ -48,7 +48,7 @@ namespace UFramework.FrameworkWindow
             // sdk
             tree.Add("SDK", this);
             tree.Add("Version", this);
-            tree.Add("Setting", this);
+            tree.Add("Other", this);
 
             tree.Selection.SelectionChanged += SelectionChanged;
 

@@ -45,7 +45,7 @@ namespace UFramework.Table
         [ShowInInspector]
         [HorizontalGroup("Opt")]
         [Button(ButtonSizes.Large, Name = "Export")]
-        private void Export()
+        static void Export()
         {
 #if UNITY_EDITOR
             TableConfig tableConfig = UConfig.Read<TableConfig>();
@@ -80,7 +80,7 @@ namespace UFramework.Table
                 new Excel2TableObject(reader);
             });
 
-            // UnityEditor.AssetDatabase.Refresh();
+            UnityEditor.AssetDatabase.Refresh();
             Debug.Log("Table Export Completed!");
 #endif
         }
