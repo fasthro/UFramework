@@ -49,6 +49,15 @@ namespace UFramework
         }
 
         /// <summary>
+        /// 目录是否存在
+        /// </summary>
+        /// <param name="directory"></param>
+        public static bool DirectoryExists(string directory)
+        {
+            return Directory.Exists(directory);
+        }
+
+        /// <summary>
         /// Copy 目录
         /// </summary>
         /// <param name="source"></param>

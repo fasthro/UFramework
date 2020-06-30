@@ -5,6 +5,7 @@
  */
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
@@ -21,7 +22,7 @@ namespace UFramework.FrameworkWindow
         {
             var window = GetWindow<FrameworkWindow>();
             window.titleContent = new GUIContent("UFramework Preferences");
-            window.position = GUIHelper.GetEditorWindowRect().AlignCenter(800, 600);
+            window.position = GUIHelper.GetEditorWindowRect().AlignCenter(1000, 600);
         }
 
         static AssetBundlePage assetBundlePage = new AssetBundlePage();
@@ -34,44 +35,58 @@ namespace UFramework.FrameworkWindow
         {
             OdinMenuTree tree = new OdinMenuTree(false);
 
-            tree.Add("Lua", this);
+            tree.DefaultMenuStyle.IconSize = 28.00f;
+            tree.Config.DrawSearchToolbar = true;
+
+            // tree.Add("Lua", this);
 
             tree.Add(assetBundlePage.menuName, assetBundlePage.GetInstance());
             tree.Add(assetBundlePreferencesPage.menuName, assetBundlePreferencesPage.GetInstance());
 
-            tree.Add("I18N", this);
+            // tree.Add("I18N", this);
             // config
             tree.Add(configPage.menuName, configPage.GetInstance());
             // table
             tree.Add(tablePage.menuName, tablePage.GetInstance());
             tree.Add(tablePreferencesPage.menuName, tablePreferencesPage.GetInstance());
             // sdk
-            tree.Add("SDK", this);
-            tree.Add("Version", this);
-            tree.Add("Other", this);
+            // tree.Add("SDK", this);
+            // tree.Add("Version", this);
+            // tree.Add("Other", this);
 
             tree.Selection.SelectionChanged += SelectionChanged;
 
             return tree;
         }
 
+        protected override void OnBeginDrawEditors()
+        {
+            var selection = this.MenuTree.Selection.FirstOrDefault();
+            var toolbarHeight = this.MenuTree.Config.SearchToolbarHeight;
+
+            SirenixEditorGUI.BeginHorizontalToolbar(toolbarHeight);
+            {
+                var page = selection.Value as IPage;
+                if (page != null)
+                {
+                    GUILayout.Label(page.menuName);
+                    if (SirenixEditorGUI.ToolbarButton(new GUIContent("Apply")))
+                    {
+                        page.OnApply();
+                    }
+                    page.OnDrawFunctoinButton();
+                }
+            }
+            SirenixEditorGUI.EndHorizontalToolbar();
+        }
+
         void SelectionChanged(SelectionChangedType type)
         {
             if (type == SelectionChangedType.ItemAdded)
             {
-                var selection = MenuTree.Selection[0];
-                if (configPage.IsPage(selection.Name))
-                {
-                    configPage.OnRenderBefore();
-                }
-                else if (tablePage.IsPage(selection.Name))
-                {
-                    tablePage.OnRenderBefore();
-                }
-                else if (tablePreferencesPage.IsPage(selection.Name))
-                {
-                    tablePreferencesPage.OnRenderBefore();
-                }
+                var selection = this.MenuTree.Selection.FirstOrDefault();
+                var page = selection.Value as IPage;
+                page.OnRenderBefore();
             }
         }
     }

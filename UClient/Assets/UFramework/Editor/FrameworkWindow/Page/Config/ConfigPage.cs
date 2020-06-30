@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Sirenix.OdinInspector;
 using UFramework.Config;
 using UnityEngine;
 
@@ -14,17 +15,22 @@ namespace UFramework.FrameworkWindow
     public class ConfigPage : IPage
     {
         public string menuName { get { return "Config"; } }
+        static BaseConfig describeObject;
 
-        static BaseConfig instance;
+        [ShowInInspector]
+        [DictionaryDrawerSettings(IsReadOnly = true, KeyLabel = "Name", ValueLabel = "Address")]
+        [InfoBox("配置文件地址设置")]
+        public Dictionary<string, FileAddress> addressDictionary = new Dictionary<string, FileAddress>();
 
         public object GetInstance()
         {
-            instance = UConfig.Read<BaseConfig>();
-            return instance;
+            return this;
         }
 
         public void OnRenderBefore()
         {
+            describeObject = UConfig.Read<BaseConfig>();
+
             bool hasNew = false;
             Type[] types = Assembly.Load("Assembly-CSharp").GetTypes();
             for (int i = 0; i < types.Length; i++)
@@ -32,22 +38,29 @@ namespace UFramework.FrameworkWindow
                 if (types[i].GetInterface("IConfigObject") != null)
                 {
                     var configName = types[i].Name;
-                    if (!instance.addressDictionary.ContainsKey(configName))
+                    if (!describeObject.addressDictionary.ContainsKey(configName))
                     {
                         hasNew = true;
-                        instance.addressDictionary.Add(configName, FileAddress.Editor);
+                        describeObject.addressDictionary.Add(configName, FileAddress.Editor);
                     }
                 }
             }
             if (hasNew)
             {
-                instance.Save();
+                describeObject.Save();
             }
+            addressDictionary = describeObject.addressDictionary;
         }
 
-        public bool IsPage(string name)
+        public void OnDrawFunctoinButton()
         {
-            return menuName.Equals(name);
+
+        }
+
+        public void OnApply()
+        {
+            describeObject.addressDictionary = addressDictionary;
+            describeObject.Save();
         }
     }
 }

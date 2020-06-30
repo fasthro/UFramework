@@ -25,9 +25,13 @@ namespace UFramework.FrameworkWindow
         void OnRenderBefore();
 
         /// <summary>
-        /// 是否为
+        /// 画功能按钮
         /// </summary>
-        /// <returns></returns>
-        bool IsPage(string name);
+        void OnDrawFunctoinButton();
+
+        /// <summary>
+        /// 应用
+        /// </summary>
+        void OnApply();
     }
 }
