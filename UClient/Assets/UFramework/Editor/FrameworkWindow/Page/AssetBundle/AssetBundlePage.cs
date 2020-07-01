@@ -21,10 +21,14 @@ namespace UFramework.FrameworkWindow
         static AssetBundleAssetItemConfig describeObject;
 
         private HashSet<string> assetRecorder = new HashSet<string>();
-        private HashSet<string> assetDependenciesRecorder = new HashSet<string>();
 
         [ShowInInspector]
+        [TabGroup("Assets")]
         public List<AssetBundleAssetItem> assets = new List<AssetBundleAssetItem>();
+
+        [ShowInInspector]
+        [TabGroup("Dependencies Assets")]
+        public List<AssetBundleAssetItem> dependencieAssets = new List<AssetBundleAssetItem>();
 
         public object GetInstance()
         {
@@ -68,7 +72,7 @@ namespace UFramework.FrameworkWindow
             }
 
             // Parse Dependencies
-            assetDependenciesRecorder.Clear();
+            dependencieAssets.Clear();
             for (int i = 0; i < assets.Count; i++)
             {
                 ParseDependencies(assets[i]);
@@ -195,7 +199,19 @@ namespace UFramework.FrameworkWindow
         /// <param name="assetItem"></param>
         private void ParseDependencies(AssetBundleAssetItem assetItem)
         {
-            
+            var dependencies = AssetDatabase.GetDependencies(assetItem.path);
+            for (int i = 0; i < dependencies.Length; i++)
+            {
+                var dependencie = dependencies[i];
+                if (!dependencie.Equals(assetItem.path))
+                {
+                    var item = new AssetBundleAssetItem();
+                    item.path = dependencie;
+                    item.assetBundleName = FormatAssetBundleName(dependencie);
+                    item.assetType = ParseAssetType(dependencie);
+                    AddAssetItem(item, true);
+                }
+            }
         }
 
         /// <summary>
@@ -251,10 +267,42 @@ namespace UFramework.FrameworkWindow
         }
 
         /// <summary>
+        /// 分析资源类型
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        private AssetBundleBuildAssetType ParseAssetType(string path)
+        {
+            var suffix = Path.GetExtension(path);
+            if (suffix.Equals(".prefab"))
+            {
+                return AssetBundleBuildAssetType.Prefab;
+            }
+            else if (suffix.Equals(".mat"))
+            {
+                return AssetBundleBuildAssetType.Materail;
+            }
+            else if (suffix.Equals(".png"))
+            {
+                return AssetBundleBuildAssetType.Texture;
+            }
+            else if (suffix.Equals(".anim"))
+            {
+                return AssetBundleBuildAssetType.Animation;
+            }
+            else if (suffix.Equals(".controller"))
+            {
+                return AssetBundleBuildAssetType.AnimatorController;
+            }
+            return AssetBundleBuildAssetType.File;
+        }
+
+        /// <summary>
         /// Add Asset Item
         /// </summary>
         /// <param name="item"></param>
-        private void AddAssetItem(AssetBundleAssetItem item)
+        /// <param name="isDependencie"></param>
+        private void AddAssetItem(AssetBundleAssetItem item, bool isDependencie = false)
         {
             item.path = IOPath.PathUnitySeparator(item.path);
             item.size = IOPath.FileSize(item.path);
@@ -262,8 +310,14 @@ namespace UFramework.FrameworkWindow
             if (!assetRecorder.Contains(item.path))
             {
                 assetRecorder.Add(item.path);
-                assets.Add(item);
-
+                if (!isDependencie)
+                {
+                    assets.Add(item);
+                }
+                else
+                {
+                    dependencieAssets.Add(item);
+                }
                 SetAssetBundleName(item);
             }
         }

@@ -171,9 +171,7 @@ namespace UFramework.FrameworkWindow
         /// <summary>
         /// 是否为依赖资源
         /// </summary>
-        [ShowInInspector]
-        [HideLabel]
-        [HorizontalGroup]
+        [HideInInspector]
         public bool IsDependencies = false;
     }
 
