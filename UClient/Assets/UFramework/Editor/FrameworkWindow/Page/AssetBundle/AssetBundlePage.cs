@@ -23,13 +23,43 @@ namespace UFramework.FrameworkWindow
 
         private HashSet<string> assetRecorder = new HashSet<string>();
 
+        /// <summary>
+        /// 资源列表
+        /// </summary>
+        /// <typeparam name="AssetBundleAssetItem"></typeparam>
+        /// <returns></returns>
         [ShowInInspector]
         [TabGroup("Assets")]
+        [ListDrawerSettings(HideRemoveButton = true, HideAddButton = true, OnTitleBarGUI = "OnAssetsTitleBarGUI")]
         public List<AssetBundleAssetItem> assets = new List<AssetBundleAssetItem>();
 
+        /// <summary>
+        /// 依赖资源列表
+        /// </summary>
+        /// <typeparam name="AssetBundleAssetItem"></typeparam>
+        /// <returns></returns>
         [ShowInInspector]
         [TabGroup("Dependencies Assets")]
+        [ListDrawerSettings(HideRemoveButton = true, HideAddButton = true, OnTitleBarGUI = "OnAssetsDependenciesTitleBarGUI")]
         public List<AssetBundleAssetItem> dependencieAssets = new List<AssetBundleAssetItem>();
+
+        /// <summary>
+        /// 排序类型
+        /// </summary>
+        [HideInInspector]
+        public AssetBundleItemSortType sortType = AssetBundleItemSortType.Name;
+
+        /// <summary>
+        /// 是否为升序
+        /// </summary>
+        [HideInInspector]
+        public bool ascendingOrder = true;
+
+        [HideInInspector]
+        public bool ascendingOrderActive = true;
+
+        [HideInInspector]
+        public bool descendingOrderActive = false;
 
         public object GetInstance()
         {
@@ -64,6 +94,90 @@ namespace UFramework.FrameworkWindow
         {
             describeObject.assets = assets;
             describeObject.Save();
+        }
+
+        private void OnAssetsTitleBarGUI()
+        {
+            if (SirenixEditorGUI.ToolbarButton(EditorIcons.Refresh))
+            {
+                var index = (int)sortType;
+                var maxIndex = (int)AssetBundleItemSortType.End;
+                index++;
+                if (index >= maxIndex)
+                {
+                    sortType = AssetBundleItemSortType.Name;
+                }
+                else
+                {
+                    sortType = (AssetBundleItemSortType)index;
+                }
+                ascendingOrder = true;
+                ascendingOrderActive = true;
+                descendingOrderActive = false;
+                AssetsSort(assets);
+            }
+
+            if (ascendingOrderActive = SirenixEditorGUI.ToolbarToggle(ascendingOrderActive, EditorIcons.ArrowUp))
+            {
+                if (!ascendingOrder)
+                {
+                    AssetsSort(assets);
+                }
+                descendingOrderActive = false;
+                ascendingOrder = true;
+            }
+
+            if (descendingOrderActive = SirenixEditorGUI.ToolbarToggle(descendingOrderActive, EditorIcons.ArrowDown))
+            {
+                if (ascendingOrder)
+                {
+                    AssetsSort(assets);
+                }
+                ascendingOrderActive = false;
+                ascendingOrder = false;
+            }            
+        }
+
+        private void OnAssetsDependenciesTitleBarGUI()
+        {
+            if (SirenixEditorGUI.ToolbarButton(EditorIcons.Refresh))
+            {
+                var index = (int)sortType;
+                var maxIndex = (int)AssetBundleItemSortType.End;
+                index++;
+                if (index >= maxIndex)
+                {
+                    sortType = AssetBundleItemSortType.Name;
+                }
+                else
+                {
+                    sortType = (AssetBundleItemSortType)index;
+                }
+                ascendingOrder = true;
+                ascendingOrderActive = true;
+                descendingOrderActive = false;
+                AssetsSort(dependencieAssets);
+            }
+
+            if (ascendingOrderActive = SirenixEditorGUI.ToolbarToggle(ascendingOrderActive, EditorIcons.ArrowUp))
+            {
+                if (!ascendingOrder)
+                {
+                    AssetsSort(dependencieAssets);
+                }
+                descendingOrderActive = false;
+                ascendingOrder = true;
+            }
+
+            if (descendingOrderActive = SirenixEditorGUI.ToolbarToggle(descendingOrderActive, EditorIcons.ArrowDown))
+            {
+                if (ascendingOrder)
+                {
+                    AssetsSort(dependencieAssets);
+                }
+                ascendingOrderActive = false;
+                ascendingOrder = false;
+            }
         }
 
         private void Refresh()
@@ -364,6 +478,47 @@ namespace UFramework.FrameworkWindow
             resInfo.size = assetItem.size;
             resInfo.md5 = IOPath.FileMD5(assetItem.path);
             return resInfo;
+        }
+
+        /// <summary>
+        /// 资源排序
+        /// </summary>
+        /// <param name="items"></param>
+        private void AssetsSort(List<AssetBundleAssetItem> items)
+        {
+            if (sortType == AssetBundleItemSortType.Name)
+            {
+                if (ascendingOrder)
+                {
+                    items.Sort((x, y) => x.path.CompareTo(y.path));
+                }
+                else
+                {
+                    items.Sort((x, y) => y.path.CompareTo(x.path));
+                }
+            }
+            else if (sortType == AssetBundleItemSortType.Type)
+            {
+                if (ascendingOrder)
+                {
+                    items.Sort((x, y) => x.assetType.CompareTo(y.assetType));
+                }
+                else
+                {
+                    items.Sort((x, y) => y.assetType.CompareTo(x.assetType));
+                }
+            }
+            else if (sortType == AssetBundleItemSortType.Size)
+            {
+                if (ascendingOrder)
+                {
+                    items.Sort((x, y) => x.size.CompareTo(y.size));
+                }
+                else
+                {
+                    items.Sort((x, y) => y.size.CompareTo(x.size));
+                }
+            }
         }
 
         /// <summary>

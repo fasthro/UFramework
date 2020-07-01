@@ -52,6 +52,17 @@ namespace UFramework.FrameworkWindow
     }
 
     /// <summary>
+    /// AssetBundle Item 排序类型
+    /// </summary>
+    public enum AssetBundleItemSortType
+    {
+        Name,
+        Type,
+        Size,
+        End,
+    }
+
+    /// <summary>
     /// AssetBundle PathItem
     /// </summary>
     [System.Serializable]
