@@ -2,19 +2,33 @@
 using System.Collections.Generic;
 using UFramework.Config;
 using UnityEngine;
+using UFramework.ResLoader;
 
 public class Test : MonoBehaviour
 {
-    // Start is called before the first frame update
+    AssetBundleLoader loader;
+
     void Start()
     {
-        var bc = UConfig.Read<BaseConfig>();
-        UConfig.Write<BaseConfig>(bc);
+        loader = AssetBundleLoader.AllocateRes("Assets/Art/Cube/Prefab/Cube1.prefab");
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            var ready = loader.LoadSync();
+            if (ready)
+            {
+                var prefab = loader.bundleAssetRes.GetAsset<GameObject>();
+                var go = GameObject.Instantiate(prefab) as GameObject;
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            loader.Unload(true);
+        }
     }
 }

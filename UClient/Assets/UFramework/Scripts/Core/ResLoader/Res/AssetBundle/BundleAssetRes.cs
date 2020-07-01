@@ -5,6 +5,7 @@
  */
 using System;
 using System.Collections;
+using UFramework.Config;
 using UFramework.Coroutine;
 using UFramework.Pool;
 using UnityEngine;
@@ -13,6 +14,19 @@ namespace UFramework.ResLoader
 {
     public class BundleAssetRes : Res, IPoolObject, IUCoroutineTaskRunner
     {
+        static ResLoaderConfig _assetInfos = null;
+        static ResLoaderConfig assetInfos
+        {
+            get
+            {
+                if (_assetInfos == null)
+                {
+                    _assetInfos = UConfig.Read<ResLoaderConfig>(); ;
+                }
+                return _assetInfos;
+            }
+        }
+
         private AssetBundleRequest m_request;
         private BundleRes m_bundleRes;
 
@@ -38,8 +52,8 @@ namespace UFramework.ResLoader
 
         public void OnRecycle()
         {
-            ResPool.Recycle(resName);
-            ResPool.Recycle(bundleName);
+            ResPool.Recycle(assetName);
+            ResPool.Recycle(assetBundleName);
         }
         #endregion
 
@@ -49,7 +63,8 @@ namespace UFramework.ResLoader
         /// <param name="data"></param>
         private void Initialize(string resName)
         {
-            this.resName = resName;
+            assetName = resName;
+            assetBundleName = assetInfos.GetAssetInfo(resName).assetBundleName;
             resStatus = ResStatus.Waiting;
             resType = ResType.AssetBundleAsset;
             assetObject = null;
@@ -63,7 +78,7 @@ namespace UFramework.ResLoader
         {
             if (assetBundle == null)
             {
-                m_bundleRes = ResPool.Allocate<BundleRes>(bundleName, ResType.AssetBundle);
+                m_bundleRes = ResPool.Allocate<BundleRes>(assetBundleName, ResType.AssetBundle);
                 if (m_bundleRes != null)
                 {
                     assetBundle = m_bundleRes.assetBundle;

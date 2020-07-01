@@ -36,7 +36,6 @@ namespace UFramework.ResLoader
 
         public void Init(string resName)
         {
-            this.resName = resName;
             assetName = resName;
             resStatus = ResStatus.Waiting;
             resType = ResType.Resource;

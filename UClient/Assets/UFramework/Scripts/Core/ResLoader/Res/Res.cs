@@ -38,9 +38,8 @@ namespace UFramework.ResLoader
     /// </summary>
     public abstract class Res : ReferenceCountObject
     {
-        public string resName { get; protected set; }
         public string assetName { get; protected set; }
-        public string bundleName { get; protected set; }
+        public string assetBundleName { get; protected set; }
         public ResStatus resStatus { get; protected set; }
         public ResType resType { get; protected set; }
 

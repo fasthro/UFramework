@@ -38,7 +38,7 @@ namespace UFramework.ResLoader
 
         public void OnRecycle()
         {
-            ResPool.Recycle(resName);
+            ResPool.Recycle(assetBundleName);
         }
         #endregion
 
@@ -48,8 +48,7 @@ namespace UFramework.ResLoader
         /// <param name="data"></param>
         private void Initialize(string resName)
         {
-            this.resName = resName;
-            bundleName = resName;
+            assetBundleName = resName;
             resStatus = ResStatus.Waiting;
             resType = ResType.AssetBundle;
             assetObject = null;
@@ -62,7 +61,7 @@ namespace UFramework.ResLoader
         /// <returns></returns>
         private bool FindDependencies()
         {
-            string[] ds = GetDependencies(bundleName);
+            string[] ds = GetDependencies(assetBundleName);
             int length = ds.Length;
             m_dependencies = new BundleRes[length];
             for (int i = 0; i < length; i++)
@@ -101,7 +100,7 @@ namespace UFramework.ResLoader
             }
 
             // 加载本体
-            var url = IOPath.PathCombine(App.BundleDirectory, bundleName);
+            var url = IOPath.PathCombine(App.BundleDirectory, assetBundleName);
             assetBundle = AssetBundle.LoadFromFile(url);
             if (assetBundle == null)
             {
@@ -164,7 +163,7 @@ namespace UFramework.ResLoader
         /// <param name="async"></param>
         public IEnumerator OnCoroutineTaskRun()
         {
-            var url = IOPath.PathCombine(App.BundleDirectory, bundleName); ;
+            var url = IOPath.PathCombine(App.BundleDirectory, assetBundleName); ;
             var request = AssetBundle.LoadFromFileAsync(url);
 
             m_request = request;
