@@ -166,6 +166,61 @@ namespace UFramework
         }
         #endregion
 
+        #region Language
+        static string _languageDirectory;
+
+        /// <summary>
+        /// 语言根目录
+        /// </summary>
+        /// <value></value>
+        public static string LanguageDirectory
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_languageDirectory))
+                {
+                    _languageDirectory = IOPath.PathCombine(AssetsDirectory(), "Language");
+                }
+                return _languageDirectory;
+            }
+        }
+
+        static string _languageExcelDirectory;
+
+        /// <summary>
+        /// 语言Excel目录
+        /// </summary>
+        /// <value></value>
+        public static string LanguageExcelDirectory
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_languageExcelDirectory))
+                {
+                    _languageExcelDirectory = IOPath.PathCombine(LanguageDirectory, "Excel");
+                }
+                return _languageExcelDirectory;
+            }
+        }
+
+        static string _languageDataDirectory;
+
+        /// <summary>
+        /// 语言Txt Data目录
+        /// </summary>
+        /// <value></value>
+        public static string LanguageDataDirectory
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_languageDataDirectory))
+                {
+                    _languageDataDirectory = IOPath.PathCombine(LanguageDirectory, "Data");
+                }
+                return _languageDataDirectory;
+            }
+        }
+        #endregion
 
         #region data
 

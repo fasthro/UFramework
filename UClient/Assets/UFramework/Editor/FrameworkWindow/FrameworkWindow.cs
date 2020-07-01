@@ -30,6 +30,7 @@ namespace UFramework.FrameworkWindow
         static ConfigPage configPage = new ConfigPage();
         static TablePage tablePage = new TablePage();
         static TablePreferencesPage tablePreferencesPage = new TablePreferencesPage();
+        static LanguagePage languagePage = new LanguagePage();
 
         protected override OdinMenuTree BuildMenuTree()
         {
@@ -39,16 +40,15 @@ namespace UFramework.FrameworkWindow
             tree.Config.DrawSearchToolbar = true;
 
             // tree.Add("Lua", this);
-
             tree.Add(assetBundlePage.menuName, assetBundlePage.GetInstance());
             tree.Add(assetBundlePreferencesPage.menuName, assetBundlePreferencesPage.GetInstance());
-
-            // tree.Add("I18N", this);
             // config
             tree.Add(configPage.menuName, configPage.GetInstance());
             // table
             tree.Add(tablePage.menuName, tablePage.GetInstance());
             tree.Add(tablePreferencesPage.menuName, tablePreferencesPage.GetInstance());
+            // language
+            tree.Add(languagePage.menuName, languagePage.GetInstance());
             // sdk
             // tree.Add("SDK", this);
             // tree.Add("Version", this);
