@@ -5,6 +5,7 @@
  */
 using System.Collections.Generic;
 using System.IO;
+using AssetBundleBrowser.AssetBundleDataSource;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
 using UFramework.Config;
@@ -20,6 +21,7 @@ namespace UFramework.FrameworkWindow
         static AssetBundleAssetItemConfig describeObject;
 
         private HashSet<string> assetRecorder = new HashSet<string>();
+        private HashSet<string> assetDependenciesRecorder = new HashSet<string>();
 
         [ShowInInspector]
         public List<AssetBundleAssetItem> assets = new List<AssetBundleAssetItem>();
@@ -56,12 +58,20 @@ namespace UFramework.FrameworkWindow
 
         private void Refresh()
         {
+            // Parse PathItemConfig
             assets.Clear();
             assetRecorder.Clear();
             var pathConfig = UConfig.Read<AssetBundleAssetPathItemConfig>();
             for (int i = 0; i < pathConfig.assetPathItems.Count; i++)
             {
                 ParsePathItem(pathConfig.assetPathItems[i]);
+            }
+
+            // Parse Dependencies
+            assetDependenciesRecorder.Clear();
+            for (int i = 0; i < assets.Count; i++)
+            {
+                ParseDependencies(assets[i]);
             }
         }
 
@@ -76,7 +86,7 @@ namespace UFramework.FrameworkWindow
             {
                 var assetItem = new AssetBundleAssetItem();
                 assetItem.path = pathItem.path;
-                assetItem.bundle = IOPath.PathUnitySeparator(pathItem.path);
+                assetItem.assetBundleName = FormatAssetBundleName(pathItem.path);
                 assetItem.assetType = pathItem.assetType;
 
                 AddAssetItem(assetItem);
@@ -91,7 +101,7 @@ namespace UFramework.FrameworkWindow
                     if (file.EndsWith(".meta")) continue;
                     var assetItem = new AssetBundleAssetItem();
                     assetItem.path = file;
-                    assetItem.bundle = IOPath.PathUnitySeparator(file);
+                    assetItem.assetBundleName = FormatAssetBundleName(file);
                     assetItem.assetType = pathItem.assetType;
 
                     AddAssetItem(assetItem);
@@ -107,7 +117,7 @@ namespace UFramework.FrameworkWindow
                     if (file.EndsWith(".meta")) continue;
                     var assetItem = new AssetBundleAssetItem();
                     assetItem.path = file;
-                    assetItem.bundle = IOPath.PathUnitySeparator(pathItem.path);
+                    assetItem.assetBundleName = FormatAssetBundleName(pathItem.path);
                     assetItem.assetType = pathItem.assetType;
 
                     AddAssetItem(assetItem);
@@ -127,7 +137,7 @@ namespace UFramework.FrameworkWindow
                         if (file.EndsWith(".meta")) continue;
                         var assetItem = new AssetBundleAssetItem();
                         assetItem.path = file;
-                        assetItem.bundle = IOPath.PathUnitySeparator(directorie);
+                        assetItem.assetBundleName = FormatAssetBundleName(directorie);
                         assetItem.assetType = pathItem.assetType;
 
                         AddAssetItem(assetItem);
@@ -148,7 +158,7 @@ namespace UFramework.FrameworkWindow
                         if (file.EndsWith(".meta")) continue;
                         var assetItem = new AssetBundleAssetItem();
                         assetItem.path = file;
-                        assetItem.bundle = IOPath.PathUnitySeparator(customDirectory);
+                        assetItem.assetBundleName = FormatAssetBundleName(customDirectory);
                         assetItem.assetType = pathItem.assetType;
 
                         AddAssetItem(assetItem);
@@ -169,7 +179,7 @@ namespace UFramework.FrameworkWindow
                             if (file.EndsWith(".meta")) continue;
                             var assetItem = new AssetBundleAssetItem();
                             assetItem.path = file;
-                            assetItem.bundle = IOPath.PathUnitySeparator(customDirectory);
+                            assetItem.assetBundleName = FormatAssetBundleName(customDirectory);
                             assetItem.assetType = pathItem.assetType;
 
                             AddAssetItem(assetItem);
@@ -177,6 +187,15 @@ namespace UFramework.FrameworkWindow
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Parse Asset Dependencies
+        /// </summary>
+        /// <param name="assetItem"></param>
+        private void ParseDependencies(AssetBundleAssetItem assetItem)
+        {
+            
         }
 
         /// <summary>
@@ -216,6 +235,22 @@ namespace UFramework.FrameworkWindow
         }
 
         /// <summary>
+        /// 格式化 AssetBundleName
+        /// </summary>
+        /// <param name="bundleName"></param>
+        /// <returns></returns>
+        private string FormatAssetBundleName(string bundleName)
+        {
+            bundleName = IOPath.PathUnitySeparator(bundleName);
+            string dpName = "Assets/";
+            if (bundleName.StartsWith("Assets/"))
+            {
+                return bundleName.Substring(dpName.Length);
+            }
+            return bundleName;
+        }
+
+        /// <summary>
         /// Add Asset Item
         /// </summary>
         /// <param name="item"></param>
@@ -228,12 +263,29 @@ namespace UFramework.FrameworkWindow
             {
                 assetRecorder.Add(item.path);
                 assets.Add(item);
+
+                SetAssetBundleName(item);
             }
         }
 
+        /// <summary>
+        /// 设置 AssetBundle Name
+        /// </summary>
+        /// <param name="assetItem"></param>
+        private void SetAssetBundleName(AssetBundleAssetItem assetItem)
+        {
+            AssetImporter assetImporter = AssetImporter.GetAtPath(assetItem.path);
+            assetImporter.assetBundleName = assetItem.assetBundleName;
+        }
+
+        /// <summary>
+        /// Buid All Bundle
+        /// </summary>
         private void BuildAll()
         {
-
+            IOPath.DirectoryClear(App.BundleDirectory);
+            BuildPipeline.BuildAssetBundles(App.BundleDirectory, BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
+            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
         }
     }
 }

@@ -131,7 +131,7 @@ namespace UFramework.FrameworkWindow
         [HideLabel]
         [HorizontalGroup]
         [ReadOnly]
-        public string bundle;
+        public string assetBundleName;
 
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace UFramework.FrameworkWindow
         /// </summary>
         [ShowInInspector]
         [HideLabel]
-        [HorizontalGroup(150f)]
+        [HorizontalGroup(50f)]
         [ReadOnly]
         public string sizeString
         {
@@ -168,16 +168,13 @@ namespace UFramework.FrameworkWindow
             }
         }
 
-        public static string FormatBytes(long bytes)
-        {
-            string[] Suffix = { "Byte", "KB", "MB", "GB", "TB" };
-            int i = 0;
-            double dblSByte = bytes;
-            if (bytes > 1024)
-                for (i = 0; (bytes / 1024) > 0; i++, bytes /= 1024)
-                    dblSByte = bytes / 1024.0;
-            return string.Format("{0:0.##} {1}", dblSByte, Suffix[i]);
-        }
+        /// <summary>
+        /// 是否为依赖资源
+        /// </summary>
+        [ShowInInspector]
+        [HideLabel]
+        [HorizontalGroup]
+        public bool IsDependencies = false;
     }
 
     /// <summary>

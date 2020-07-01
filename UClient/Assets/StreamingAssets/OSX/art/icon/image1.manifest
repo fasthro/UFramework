@@ -1,0 +1,16 @@
+ManifestFileVersion: 0
+CRC: 460950397
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 5fa876ee1e4b891febdc2b8f2e77e161
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: f19fbf085e00d23fbc8d6cf7b345590b
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+Assets:
+- Assets/Art/Icon/Image1/herocard_10001.png
+Dependencies: []

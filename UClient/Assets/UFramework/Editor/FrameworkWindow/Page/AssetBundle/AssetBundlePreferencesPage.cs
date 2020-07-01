@@ -171,6 +171,8 @@ namespace UFramework.FrameworkWindow
 
                 }
             }
+
+            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
         }
     }
 }
