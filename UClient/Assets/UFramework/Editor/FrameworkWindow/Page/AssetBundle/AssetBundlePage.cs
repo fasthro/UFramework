@@ -9,6 +9,7 @@ using AssetBundleBrowser.AssetBundleDataSource;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
 using UFramework.Config;
+using UFramework.ResLoader;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
@@ -52,6 +53,11 @@ namespace UFramework.FrameworkWindow
             {
                 BuildAll();
             }
+
+            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Clear Build All")))
+            {
+                ClearuildAll();
+            }
         }
 
         public void OnApply()
@@ -77,6 +83,15 @@ namespace UFramework.FrameworkWindow
             {
                 ParseDependencies(assets[i]);
             }
+
+            // gen config relation
+            var resAssetInfoConfig = UConfig.Read<ResLoaderConfig>();
+            resAssetInfoConfig.assetInfoDictionary.Clear();
+            for (int i = 0; i < assets.Count; i++)
+            {
+                resAssetInfoConfig.assetInfoDictionary.Add(assets[i].path, GenResAssetInfo(assets[i]));
+            }
+            resAssetInfoConfig.Save();
         }
 
         /// <summary>
@@ -258,6 +273,11 @@ namespace UFramework.FrameworkWindow
         private string FormatAssetBundleName(string bundleName)
         {
             bundleName = IOPath.PathUnitySeparator(bundleName);
+            string ext = Path.GetExtension(bundleName);
+            if (!string.IsNullOrEmpty(ext))
+            {
+                bundleName = bundleName.Substring(0, bundleName.Length - ext.Length);
+            }
             string dpName = "Assets/";
             if (bundleName.StartsWith("Assets/"))
             {
@@ -333,13 +353,36 @@ namespace UFramework.FrameworkWindow
         }
 
         /// <summary>
+        /// 生成 ResAssetInfo
+        /// </summary>
+        /// <param name="assetItem"></param>
+        /// <returns></returns>
+        private ResAssetInfo GenResAssetInfo(AssetBundleAssetItem assetItem)
+        {
+            var resInfo = new ResAssetInfo();
+            resInfo.assetBundleName = assetItem.assetBundleName;
+            resInfo.size = assetItem.size;
+            resInfo.md5 = IOPath.FileMD5(assetItem.path);
+            return resInfo;
+        }
+
+        /// <summary>
         /// Buid All Bundle
         /// </summary>
         private void BuildAll()
         {
-            IOPath.DirectoryClear(App.BundleDirectory);
+            if (!IOPath.DirectoryExists(App.BundleDirectory))
+            {
+                IOPath.DirectoryClear(App.BundleDirectory);
+            }
             BuildPipeline.BuildAssetBundles(App.BundleDirectory, BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
             AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+        }
+
+        private void ClearuildAll()
+        {
+            IOPath.DirectoryClear(App.BundleDirectory);
+            BuildAll();
         }
     }
 }

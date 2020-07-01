@@ -332,6 +332,33 @@ namespace UFramework
         }
 
         /// <summary>
+        /// 文件 md5
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static string FileMD5(string path)
+        {
+            try
+            {
+                FileStream fs = new FileStream(path, FileMode.Open);
+                System.Security.Cryptography.MD5 md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
+                byte[] retVal = md5.ComputeHash(fs);
+                fs.Close();
+
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < retVal.Length; i++)
+                {
+                    sb.Append(retVal[i].ToString("x2"));
+                }
+                return sb.ToString();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("md5file() fail, error:" + ex.Message);
+            }
+        }
+
+        /// <summary>
         /// 文件名称
         /// </summary>
         /// <param name="path"></param>

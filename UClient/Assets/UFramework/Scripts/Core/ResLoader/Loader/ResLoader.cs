@@ -25,7 +25,8 @@ namespace UFramework.ResLoader
         /// <summary>
         /// 卸载资源
         /// </summary>
-        public abstract void Unload();
+        /// <param name="unloadAllLoadedObjects"></param>
+        public abstract void Unload(bool unloadAllLoadedObjects = true);
 
         /// <summary>
         /// 接收通知

@@ -1,0 +1,17 @@
+ManifestFileVersion: 0
+CRC: 2730387237
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: art/icon/image1
+      Dependencies: {}
+    Info_1:
+      Name: art/icon/image2
+      Dependencies: {}
+    Info_2:
+      Name: art/cube/prefab
+      Dependencies:
+        Dependency_0: art/dependencies/gameobject
+    Info_3:
+      Name: art/dependencies/gameobject
+      Dependencies: {}

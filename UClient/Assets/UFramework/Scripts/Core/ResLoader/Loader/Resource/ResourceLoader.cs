@@ -91,13 +91,14 @@ namespace UFramework.ResLoader
             m_eventCallback.InvokeGracefully(readly, res);
         }
 
-        /// <summary>
-        /// 卸载资源
-        /// </summary>
-        public override void Unload()
+       /// <summary>
+       /// 卸载资源
+       /// </summary>
+       /// <param name="unloadAllLoadedObjects"></param>
+        public override void Unload(bool unloadAllLoadedObjects = true)
         {
             resourceAssetRes.RemoveListener(OnEventCallback);
-            resourceAssetRes.Unload();
+            resourceAssetRes.Unload(unloadAllLoadedObjects);
             resourceAssetRes = null;
             m_eventCallback = null;
             Recycle();

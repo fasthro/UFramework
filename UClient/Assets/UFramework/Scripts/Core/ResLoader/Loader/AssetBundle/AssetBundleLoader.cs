@@ -4,6 +4,7 @@
  * @Description: Assetbundle Loader
  */
 
+using UFramework.Config;
 using UFramework.Messenger;
 using UFramework.Pool;
 
@@ -11,6 +12,19 @@ namespace UFramework.ResLoader
 {
     public class AssetBundleLoader : ResLoader, IPoolObject
     {
+        static ResLoaderConfig _assetInfos = null;
+        static ResLoaderConfig assetInfos
+        {
+            get
+            {
+                if (_assetInfos == null)
+                {
+                    _assetInfos = UConfig.Read<ResLoaderConfig>(); ;
+                }
+                return _assetInfos;
+            }
+        }
+
         public BundleRes bundleRes { get; protected set; }
         public BundleAssetRes bundleAssetRes { get; protected set; }
 
@@ -34,10 +48,14 @@ namespace UFramework.ResLoader
         /// <returns></returns>
         public static AssetBundleLoader AllocateRes(string resPath, UCallback<bool, Res> callback)
         {
-            var mapping = AssetBundleDB.GetMappingData(resPath);
-            var loader = ObjectPool<AssetBundleLoader>.Instance.Allocate();
-            loader.Initialize(mapping.bundleName, mapping.assetName, callback);
-            return loader;
+            var info = assetInfos.GetAssetInfo(resPath);
+            if (info != null)
+            {
+                var loader = ObjectPool<AssetBundleLoader>.Instance.Allocate();
+                loader.Initialize(info.assetBundleName, resPath, callback);
+                return loader;
+            }
+            return null;
         }
 
         /// <summary>
@@ -149,19 +167,20 @@ namespace UFramework.ResLoader
         /// <summary>
         /// 卸载资源
         /// </summary>
-        public override void Unload()
+        /// <param name="unloadAllLoadedObjects"></param>
+        public override void Unload(bool unloadAllLoadedObjects = true)
         {
             if (bundleRes != null)
             {
                 bundleRes.RemoveListener(OnEventCallback);
-                bundleRes.Unload();
+                bundleRes.Unload(unloadAllLoadedObjects);
                 bundleRes = null;
             }
 
             if (bundleAssetRes != null)
             {
                 bundleAssetRes.RemoveListener(OnEventCallback);
-                bundleAssetRes.Unload();
+                bundleAssetRes.Unload(unloadAllLoadedObjects);
                 bundleAssetRes = null;
             }
             m_eventCallback = null;

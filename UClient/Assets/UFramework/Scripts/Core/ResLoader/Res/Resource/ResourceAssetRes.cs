@@ -5,12 +5,13 @@
  */
 using System;
 using System.Collections;
+using UFramework.Coroutine;
 using UFramework.Pool;
 using UnityEngine;
 
 namespace UFramework.ResLoader
 {
-    public class ResourceAssetRes : Res, IPoolObject, IRunAsyncObject
+    public class ResourceAssetRes : Res, IPoolObject, IUCoroutineTaskRunner
     {
         public static ResourceAssetRes Allocate(string resName)
         {
@@ -70,7 +71,7 @@ namespace UFramework.ResLoader
             else if (resStatus == ResStatus.Waiting || resStatus == ResStatus.Failed)
             {
                 resStatus = ResStatus.Loading;
-                RunAsync.Instance.Push(this);
+                UCoroutineTask.AddTaskRunner(this);
             }
         }
 
@@ -78,7 +79,7 @@ namespace UFramework.ResLoader
         /// 执行异步加载
         /// </summary>
         /// <param name="async"></param>
-        public IEnumerator AsyncRun(IRunAsync async)
+        public IEnumerator OnCoroutineTaskRun()
         {
             var request = Resources.LoadAsync(assetName);
 
@@ -87,7 +88,7 @@ namespace UFramework.ResLoader
             if (!request.isDone)
             {
                 resStatus = ResStatus.Failed;
-                async.OnRunAsync();
+                UCoroutineTask.TaskComplete();
                 BroadcastEvent(false);
                 yield break;
             }
@@ -97,37 +98,33 @@ namespace UFramework.ResLoader
             if (assetObject == null)
             {
                 resStatus = ResStatus.Failed;
-                async.OnRunAsync();
+                UCoroutineTask.TaskComplete();
                 BroadcastEvent(false);
                 yield break;
             }
 
             resStatus = ResStatus.Ready;
-            async.OnRunAsync();
+            UCoroutineTask.TaskComplete();
             BroadcastEvent(true);
         }
 
         /// <summary>
         /// 卸载资源
         /// </summary>
-        public override void Unload(bool unloadAllLoadedObjects = false)
+        /// <param name="unloadAllLoadedObjects"></param>
+        public override void Unload(bool unloadAllLoadedObjects = true)
         {
             Release();
-        }
-
-        /// <summary>
-        /// 引用次数为0处理
-        /// </summary>
-        protected override void OnEmptyRef()
-        {
-            if (assetObject != null)
+            if (isEmptyRef)
             {
-                if (assetObject is GameObject) { }
-                else Resources.UnloadAsset(assetObject);
-            }
-            assetObject = null;
+                if (assetObject != null)
+                {
+                    Resources.UnloadAsset(assetObject);
+                }
+                assetObject = null;
 
-            Recycle();
+                Recycle();
+            }
         }
     }
 }

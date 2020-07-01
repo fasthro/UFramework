@@ -149,27 +149,12 @@ namespace UFramework.FrameworkWindow
         /// </summary>
         private void DelectAssetAssetBundleNames()
         {
-            var directorys = Directory.GetDirectories(Application.dataPath, "*.*", SearchOption.AllDirectories);
-            for (int i = 0; i < directorys.Length; i++)
+            AssetDatabase.RemoveUnusedAssetBundleNames();
+
+            var bundleNames = AssetDatabase.GetAllAssetBundleNames();
+            for (int i = 0; i < bundleNames.Length; i++)
             {
-                var files = Directory.GetFiles(directorys[i]);
-                for (int k = 0; k < files.Length; k++)
-                {
-                    if (files[k].EndsWith(".meta")) continue;
-                    if (files[k].EndsWith(".cs")) continue;
-                    if (files[k].EndsWith(".lua")) continue;
-                    if (files[k].EndsWith(".unitypackage")) continue;
-                    if (files[k].EndsWith(".dll")) continue;
-                    if (files[k].EndsWith(".a")) continue;
-                    if (files[k].EndsWith(".so")) continue;
-                    if (files[k].EndsWith(".plist")) continue;
-                    if (files[k].EndsWith(".bat")) continue;
-
-                    var filePath = files[k].Replace(Application.dataPath, "Assets");
-                    AssetImporter assetImporter = AssetImporter.GetAtPath(filePath);
-                    assetImporter.assetBundleName = "";
-
-                }
+                AssetDatabase.RemoveAssetBundleName(bundleNames[i], true);
             }
 
             AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);

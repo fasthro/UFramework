@@ -4,12 +4,13 @@
  * @Description: Assetbundle Res
  */
 using System.Collections;
+using UFramework.Coroutine;
 using UFramework.Pool;
 using UnityEngine;
 
 namespace UFramework.ResLoader
 {
-    public class BundleRes : Res, IPoolObject, IRunAsyncObject
+    public class BundleRes : Res, IPoolObject, IUCoroutineTaskRunner
     {
         private AssetBundleCreateRequest m_request;
         private BundleRes[] m_dependencies;
@@ -56,11 +57,12 @@ namespace UFramework.ResLoader
         }
 
         /// <summary>
-        /// 查找依赖
+        /// 卸载资源
         /// </summary>
+        /// <returns></returns>
         private bool FindDependencies()
         {
-            string[] ds = AssetBundleDB.GetDependencies(bundleName);
+            string[] ds = GetDependencies(bundleName);
             int length = ds.Length;
             m_dependencies = new BundleRes[length];
             for (int i = 0; i < length; i++)
@@ -135,7 +137,7 @@ namespace UFramework.ResLoader
                 }
                 else
                 {
-                    RunAsync.Instance.Push(this);
+                    UCoroutineTask.AddTaskRunner(this);
                 }
             }
         }
@@ -152,7 +154,7 @@ namespace UFramework.ResLoader
             if (m_dependWaitCount <= 0)
             {
                 // 依赖加载完毕
-                RunAsync.Instance.Push(this);
+                UCoroutineTask.AddTaskRunner(this);
             }
         }
 
@@ -160,7 +162,7 @@ namespace UFramework.ResLoader
         /// 执行异步加载
         /// </summary>
         /// <param name="async"></param>
-        public IEnumerator AsyncRun(IRunAsync async)
+        public IEnumerator OnCoroutineTaskRun()
         {
             var url = IOPath.PathCombine(App.BundleDirectory, bundleName); ;
             var request = AssetBundle.LoadFromFileAsync(url);
@@ -172,7 +174,7 @@ namespace UFramework.ResLoader
             if (!request.isDone)
             {
                 resStatus = ResStatus.Failed;
-                async.OnRunAsync();
+                UCoroutineTask.TaskComplete();
                 BroadcastEvent(false);
                 yield break;
             }
@@ -182,47 +184,59 @@ namespace UFramework.ResLoader
             if (assetBundle == null)
             {
                 resStatus = ResStatus.Failed;
-                async.OnRunAsync();
+                UCoroutineTask.TaskComplete();
                 BroadcastEvent(false);
                 yield break;
             }
 
             resStatus = ResStatus.Ready;
-            async.OnRunAsync();
+            UCoroutineTask.TaskComplete();
             BroadcastEvent(true);
         }
 
         /// <summary>
         /// 卸载资源
         /// </summary>
-        public override void Unload(bool unloadAllLoadedObjects = false)
+        public override void Unload(bool unloadAllLoadedObjects = true)
         {
             // 依赖
             if (FindDependencies())
             {
                 for (int i = 0; i < m_dependencies.Length; i++)
                 {
-                    m_dependencies[i].Release();
+                    m_dependencies[i].Unload(unloadAllLoadedObjects);
                 }
             }
-
             // 本体
             Release();
+            if (isEmptyRef)
+            {
+                if (assetBundle != null)
+                {
+                    assetBundle.Unload(unloadAllLoadedObjects);
+                }
+                assetBundle = null;
+                assetObject = null;
+                m_request = null;
+
+                Recycle();
+            }
         }
 
-        /// <summary>
-        /// 引用次数为0处理
-        /// </summary>
-        protected override void OnEmptyRef()
+        #region assebundle dependencies
+        static AssetBundleManifest manifest;
+
+        static string[] GetDependencies(string bundleName)
         {
-            if (assetBundle != null)
+            if (manifest == null)
             {
-                assetBundle.Unload(true);
+                // manifest
+                var bundle = AssetBundle.LoadFromFile(IOPath.PathCombine(App.BundleDirectory, App.BundlePlatformName));
+                manifest = bundle.LoadAsset("AssetBundleManifest") as AssetBundleManifest;
+                bundle.Unload(false);
             }
-            assetBundle = null;
-            assetObject = null;
-            m_request = null;
-            Recycle();
+            return manifest.GetAllDependencies(bundleName);
         }
+        #endregion
     }
 }
