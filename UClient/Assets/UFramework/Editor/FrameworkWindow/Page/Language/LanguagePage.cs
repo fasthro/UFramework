@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
 using UFramework.Config;
+using UFramework.Language;
+using UnityEditor;
 using UnityEngine;
 
 namespace UFramework.FrameworkWindow
@@ -76,7 +78,17 @@ namespace UFramework.FrameworkWindow
 
         void Generate()
         {
+            var opt = new ExcelReaderOptions();
+            opt.languages = describeObject.supportedLanguages;
+            var reader = new ExcelReader(opt);
+            reader.Read();
 
+            new Excel2Text(reader);
+            new Excel2Index(reader);
+            // TODO 实现多语言Lua Index
+            // new Excel2LuaIndex(reader);
+
+            AssetDatabase.Refresh();
         }
     }
 }

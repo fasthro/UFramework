@@ -11,7 +11,7 @@ namespace UFramework.Language
         {
             IOPath.DirectoryClear(App.LanguageDataDirectory);
 
-            for (int i = 0; i < reader.sheets.Length; i++)
+            for (int i = 0; i < reader.sheets.Count; i++)
             {
                 var sheet = reader.sheets[i];
                 for (int l = 0; l < reader.options.languages.Count; l++)

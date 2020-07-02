@@ -24,7 +24,7 @@ namespace UFramework.Language
 
             // model
             m_builder.AppendLine("language_model = {");
-            for (int i = 0; i < reader.sheets.Length; i++)
+            for (int i = 0; i < reader.sheets.Count; i++)
             {
                 m_builder.AppendLine(string.Format("\t{0} = {1},", reader.sheets[i].name, i));
             }
@@ -33,7 +33,7 @@ namespace UFramework.Language
             // key
             m_builder.AppendLine("language_key = {");
 
-            for (int i = 0; i < reader.sheets.Length; i++)
+            for (int i = 0; i < reader.sheets.Count; i++)
             {
                 m_builder.AppendLine(reader.sheets[i].ToLuaKeyString());
             }

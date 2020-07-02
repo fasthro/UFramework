@@ -220,6 +220,24 @@ namespace UFramework
                 return _languageDataDirectory;
             }
         }
+
+        static string _languageIndexDirectory;
+
+        /// <summary>
+        /// 语言Index目录
+        /// </summary>
+        /// <value></value>
+        public static string LanguageIndexDirectory
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_languageIndexDirectory))
+                {
+                    _languageIndexDirectory = IOPath.PathCombine(LanguageDirectory, "Index");
+                }
+                return _languageIndexDirectory;
+            }
+        }
         #endregion
 
         #region data

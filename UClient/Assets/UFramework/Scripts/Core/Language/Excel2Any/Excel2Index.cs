@@ -9,34 +9,51 @@ namespace UFramework.Language
 {
     public class Excel2Index
     {
-        private StringBuilder m_builder = new StringBuilder();
+        static StringBuilder builder = new StringBuilder();
+        static StringBuilder funBuilder = new StringBuilder();
+
+        static string funcTemplate = @"    public static string $model1$(int key)
+    {
+        return sys.Get($model2$, key);
+    }";
 
         public Excel2Index(ExcelReader reader)
         {
-            m_builder.Clear();
+            builder.Clear();
+            funBuilder.Clear();
 
             // model
-            m_builder.AppendLine("public static class LanguageModel");
-            m_builder.AppendLine("{");
+            builder.AppendLine("// UFramework Auto Generate.");
+            builder.AppendLine("using sys = UFramework.i18n.Language;");
+            builder.AppendLine("");
+            builder.AppendLine("public static class Language");
+            builder.AppendLine("{");
 
-            for (int i = 0; i < reader.sheets.Length; i++)
+            for (int i = 0; i < reader.sheets.Count; i++)
             {
-                m_builder.AppendLine(string.Format("\tpublic static int {0} = {1};", reader.sheets[i].name, i));
+                var modelName = reader.sheets[i].name;
+                builder.AppendLine(string.Format("\tpublic static int {0} = {1};", modelName, i));
+
+                var template = string.Copy(funcTemplate);
+                template = template.Replace("$model1$", "Get" + modelName.FirstCharToUpper());
+                template = template.Replace("$model2$", modelName);
+                funBuilder.AppendLine(template);
+                funBuilder.AppendLine("");
             }
-            m_builder.AppendLine("}");
 
             // key
-            m_builder.AppendLine("public static class LanguageKey");
-            m_builder.AppendLine("{");
+            builder.AppendLine("");
 
-            for (int i = 0; i < reader.sheets.Length; i++)
+            for (int i = 0; i < reader.sheets.Count; i++)
             {
-                m_builder.AppendLine(reader.sheets[i].ToCSharpKeyString());
+                builder.AppendLine(reader.sheets[i].ToCSharpKeyString());
             }
-            m_builder.AppendLine("}");
             
-            // TODO
-            // IOPath.FileCreateText(AppUtils.i18nIndexDirectory() + "/i18nIndex.cs", m_builder.ToString());
+            builder.AppendLine("");
+            builder.AppendLine(funBuilder.ToString());
+            builder.AppendLine("}");
+
+            IOPath.FileCreateText(App.LanguageIndexDirectory + "/Language.cs", builder.ToString());
         }
     }
 }
