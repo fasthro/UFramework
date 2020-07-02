@@ -384,7 +384,7 @@ namespace UFramework.Network
         {
             while (true)
             {
-                if (!m_clientSocket.Connected)
+                if (m_clientSocket != null && !m_clientSocket.Connected)
                 {
                     isConnected = false;
                     break;
