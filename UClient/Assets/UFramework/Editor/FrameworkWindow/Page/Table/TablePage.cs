@@ -35,9 +35,9 @@ namespace UFramework.FrameworkWindow
             describeObject = UConfig.Read<TableConfig>();
 
             bool hasNew = false;
-            if (Directory.Exists(App.TableExcelDirectory()))
+            if (Directory.Exists(App.TableExcelDirectory))
             {
-                var files = Directory.GetFiles(App.TableExcelDirectory(), "*.xlsx", SearchOption.AllDirectories);
+                var files = Directory.GetFiles(App.TableExcelDirectory, "*.xlsx", SearchOption.AllDirectories);
                 HashSet<string> fileHashSet = new HashSet<string>();
                 for (int i = 0; i < files.Length; i++)
                 {
@@ -80,10 +80,10 @@ namespace UFramework.FrameworkWindow
             {
                 TableConfig tableConfig = UConfig.Read<TableConfig>();
 
-                IOPath.DirectoryClear(App.TableObjectDirectory());
-                IOPath.DirectoryClear(App.TableOutDataDirectory());
+                IOPath.DirectoryClear(App.TableObjectDirectory);
+                IOPath.DirectoryClear(App.TableDataDirectory);
 
-                tableConfig.tableDictionary.ForEach((item) =>
+                tableConfig.tableDictionary.ForEach((System.Action<KeyValuePair<string, DataFormatOptions>>)((item) =>
                 {
                     Debug.Log("Table Export: " + item.Key);
                     var options = new ExcelReaderOptions();
@@ -91,9 +91,9 @@ namespace UFramework.FrameworkWindow
                     options.tableModelNamespace = tableConfig.tableModelNamespace;
                     options.outFormatOptions = tableConfig.outFormatOptions;
                     options.dataFormatOptions = item.Value;
-                    options.dataOutDirectory = App.TableOutDataDirectory();
-                    options.tableModelOutDirectory = App.TableObjectDirectory();
-                    var reader = new ExcelReader(string.Format("{0}/{1}.xlsx", App.TableExcelDirectory(), item.Key), options);
+                    options.dataOutDirectory = App.TableDataDirectory;
+                    options.tableModelOutDirectory = App.TableObjectDirectory;
+                    var reader = new ExcelReader(string.Format("{0}/{1}.xlsx", App.TableExcelDirectory, item.Key), options);
                     reader.Read();
                     switch (tableConfig.outFormatOptions)
                     {
@@ -108,7 +108,7 @@ namespace UFramework.FrameworkWindow
                             break;
                     }
                     new Excel2TableObject(reader);
-                });
+                }));
 
                 UnityEditor.AssetDatabase.Refresh();
                 Debug.Log("Table Export Completed!");

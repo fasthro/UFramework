@@ -10,18 +10,18 @@ using UnityEngine;
 
 namespace UFramework.i18n
 {
-    public class Language : MonoSingleton<Language>
+    public class Language : Singleton<Language>
     {
         /// <summary>
         /// 语言类型
         /// </summary>
         /// <value></value>
-        static SystemLanguage languageType;
+        private SystemLanguage m_languageType;
 
         /// <summary>
         /// 语言类型文本
         /// </summary>
-        static string languageTypeString;
+        private string m_languageTypeString;
 
 
         /// <summary>
@@ -30,22 +30,22 @@ namespace UFramework.i18n
         /// <typeparam name="int"></typeparam>
         /// <typeparam name="string[]"></typeparam>
         /// <returns></returns>
-        static Dictionary<int, string[]> modelDictonary = new Dictionary<int, string[]>();
+        private Dictionary<int, string[]> m_modelDictonary = new Dictionary<int, string[]>();
 
-        protected override void OnSingletonStart()
+        protected override void OnSingletonAwake()
         {
             var app = UConfig.Read<AppConfig>();
             if (app.useSystemLanguage)
             {
-                languageType = Application.systemLanguage;
+                m_languageType = Application.systemLanguage;
             }
 
-            if (!app.supportedLanguages.Contains(languageType))
+            if (!app.supportedLanguages.Contains(m_languageType))
             {
-                languageType = app.defaultLanguage;
+                m_languageType = app.defaultLanguage;
             }
 
-            languageTypeString = languageType.ToString();
+            m_languageTypeString = m_languageType.ToString();
         }
 
         /// <summary>
@@ -54,10 +54,10 @@ namespace UFramework.i18n
         /// <param name="model">model</param>
         /// <param name="key">key</param>
         /// <returns></returns>
-        public static string Get(int model, int key)
+        private string _Get(int model, int key)
         {
             string[] ls = null;
-            if (modelDictonary.TryGetValue(model, out ls))
+            if (m_modelDictonary.TryGetValue(model, out ls))
             {
                 if (key >= 0 && key < ls.Length)
                 {
@@ -66,8 +66,8 @@ namespace UFramework.i18n
             }
             else
             {
-                BuildModel(model);
-                if (modelDictonary.TryGetValue(model, out ls))
+                _Load(model);
+                if (m_modelDictonary.TryGetValue(model, out ls))
                 {
                     if (key >= 0 && key < ls.Length)
                     {
@@ -80,15 +80,15 @@ namespace UFramework.i18n
         }
 
         /// <summary>
-        /// 构建模块
+        /// 加载模块
         /// </summary>
         /// <param name="model"></param>
-        static void BuildModel(int model)
+        void _Load(int model)
         {
-            if (modelDictonary.ContainsKey(model)) return;
+            if (m_modelDictonary.ContainsKey(model)) return;
 
             string text = "";
-            string dataPath = IOPath.PathCombine(App.LanguageDataDirectory, languageTypeString, model + ".txt");
+            string dataPath = IOPath.PathCombine(App.LanguageDataDirectory, m_languageTypeString, model + ".txt");
 #if UNITY_EDITOR
             text = IOPath.FileReadText(dataPath);
 #else
@@ -104,7 +104,28 @@ namespace UFramework.i18n
             }
             resLoader.Unload();
 #endif
-            modelDictonary.Add(model, text.Split('\n'));
+            m_modelDictonary.Add(model, text.Split('\n'));
+        }
+
+        /// <summary>
+        /// 获取多语言内容
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static string Get(int model, int key)
+        {
+            return Instance._Get(model, key);
+        }
+
+        /// <summary>
+        /// 预加载多语言模块
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static void Preload(int model)
+        {
+            Instance._Load(model);
         }
     }
 }

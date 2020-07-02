@@ -1,0 +1,16 @@
+ManifestFileVersion: 0
+CRC: 1084573468
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: e40383b5f234fa2d9aa5f3d8f2884f11
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 5ad585dd02dfb5016c0dad519eab8f49
+HashAppended: 0
+ClassTypes:
+- Class: 49
+  Script: {instanceID: 0}
+Assets:
+- Assets/UAssets/Language/Data/English/0.txt
+Dependencies: []

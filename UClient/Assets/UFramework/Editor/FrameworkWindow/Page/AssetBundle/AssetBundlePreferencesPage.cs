@@ -69,6 +69,7 @@ namespace UFramework.FrameworkWindow
         public void OnApply()
         {
             describeObject.assetPathItems = assetPathItems;
+            describeObject.builtInAssetPathItems = builtInAssetPathItems;
             describeObject.Save();
         }
 
@@ -176,12 +177,12 @@ namespace UFramework.FrameworkWindow
 
             // table
             var tableItem = new AssetBundleAssetPathItem();
-            tableItem.path = IOPath.PathRelativeAsset(App.TableOutDataDirectory());
+            tableItem.path = IOPath.PathRelativeAsset(App.TableDataDirectory);
             tableItem.buildType = AssetBundleBuildPathType.DirectoryFile;
             tableItem.assetType = AssetBundleBuildAssetType.File;
             tableItem.pattern = "*.*";
 
-            builtInAssetPathItems.Add(languageItem);
+            builtInAssetPathItems.Add(tableItem);
         }
 
         /// <summary>

@@ -15,104 +15,137 @@ namespace UFramework
     {
         #region path
 
+        private static string _assetsDirectory;
+
         /// <summary>
         /// UAssets 目录
         /// </summary>
         /// <returns></returns>
-        public static string AssetsDirectory()
+        public static string AssetsDirectory
         {
-            return IOPath.PathCombine(Application.dataPath, "UAssets");
+            get
+            {
+                if (string.IsNullOrEmpty(_assetsDirectory))
+                {
+                    _assetsDirectory = IOPath.PathUnitySeparator(IOPath.PathCombine(Application.dataPath, "UAssets"));
+                }
+                return _assetsDirectory;
+            }
         }
 
         #region config
 
+        static string _configDirectory;
+
         /// <summary>
-        /// Config Editor 目录
+        /// Config 目录
         /// </summary>
         /// <returns></returns>
-        public static string ConfigDirectory()
+        public static string ConfigDirectory
         {
-            return IOPath.PathCombine(AssetsDirectory(), "Config");
+            get
+            {
+                if (string.IsNullOrEmpty(_configDirectory))
+                {
+                    _configDirectory = IOPath.PathRelativeAsset(IOPath.PathCombine(AssetsDirectory, "Config"));
+                }
+                return _configDirectory;
+            }
         }
+
+        static string _configResourceDirectory;
 
         /// <summary>
         /// Config Reource 目录
         /// </summary>
         /// <returns></returns>
-        public static string ConfigResourceDirectory()
+        public static string ConfigResourceDirectory
         {
-            return "Config";
-        }
-
-        /// <summary>
-        /// Config Data 目录
-        /// </summary>
-        /// <returns></returns>
-        public static string ConfigDataDirectory()
-        {
-            // TODO
-            return "";
+            get
+            {
+                if (string.IsNullOrEmpty(_configResourceDirectory))
+                {
+                    _configResourceDirectory = "Config";
+                }
+                return _configResourceDirectory;
+            }
         }
 
         #endregion
 
         #region Table
 
+        private static string _tableDirectory = null;
+
         /// <summary>
         /// Table Editor 目录
         /// </summary>
         /// <returns></returns>
-        public static string TableDirectory()
+        public static string TableDirectory
         {
-            return IOPath.PathCombine(AssetsDirectory(), "Table");
+            get
+            {
+                if (string.IsNullOrEmpty(_tableDirectory))
+                {
+                    _tableDirectory = IOPath.PathCombine(AssetsDirectory, "Table");
+                }
+                return _tableDirectory;
+            }
         }
 
-        /// <summary>
-        /// Table Editor Excel 目录
-        /// </summary>
-        /// <returns></returns>
-        public static string TableExcelDirectory()
-        {
-            return IOPath.PathCombine(TableDirectory(), "Excel");
-        }
+        private static string _tableExcelDirectory = null;
 
         /// <summary>
-        /// Table Editor Out Data 目录
+        /// Table Excel 目录
         /// </summary>
         /// <returns></returns>
-        public static string TableOutDataDirectory()
+        public static string TableExcelDirectory
         {
-            return IOPath.PathCombine(TableDirectory(), "Data");
+            get
+            {
+                if (string.IsNullOrEmpty(_tableExcelDirectory))
+                {
+                    _tableExcelDirectory = IOPath.PathCombine(TableDirectory, "Excel");
+                }
+                return _tableExcelDirectory;
+            }
         }
 
-        /// <summary>
-        /// Table Editor TableObject 目录
-        /// </summary>
-        /// <returns></returns>
-        public static string TableObjectDirectory()
-        {
-            return IOPath.PathCombine(TableDirectory(), "TableObject");
-        }
-
-        /// <summary>
-        /// Table Resource 目录
-        /// </summary>
-        /// <returns></returns>
-        public static string TableReourceDirectory()
-        {
-            return "Table";
-        }
+        private static string _tableDataDirectory = null;
 
         /// <summary>
         /// Table Data 目录
         /// </summary>
         /// <returns></returns>
-        public static string TableDataDirectory()
+        public static string TableDataDirectory
         {
-            // TODO
-            return "";
+            get
+            {
+                if (string.IsNullOrEmpty(_tableDataDirectory))
+                {
+                    _tableDataDirectory = IOPath.PathRelativeAsset(IOPath.PathCombine(TableDirectory, "Data"));
+                }
+                return _tableDataDirectory;
+            }
         }
 
+        private static string _tableObjectDirectory = null;
+
+        /// <summary>
+        /// Table TableObject 目录
+        /// </summary>
+        /// <returns></returns>
+        public static string TableObjectDirectory
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_tableDataDirectory))
+                {
+                    _tableDataDirectory = IOPath.PathCombine(TableDirectory, "TableObject");
+                }
+                return _tableDataDirectory;
+            }
+        }
         #endregion
 
         #region bundle
@@ -179,7 +212,7 @@ namespace UFramework
             {
                 if (string.IsNullOrEmpty(_languageDirectory))
                 {
-                    _languageDirectory = IOPath.PathCombine(AssetsDirectory(), "Language");
+                    _languageDirectory = IOPath.PathCombine(AssetsDirectory, "Language");
                 }
                 return _languageDirectory;
             }
@@ -215,7 +248,7 @@ namespace UFramework
             {
                 if (string.IsNullOrEmpty(_languageDataDirectory))
                 {
-                    _languageDataDirectory = IOPath.PathCombine(LanguageDirectory, "Data");
+                    _languageDataDirectory = IOPath.PathRelativeAsset(IOPath.PathCombine(LanguageDirectory, "Data"));
                 }
                 return _languageDataDirectory;
             }

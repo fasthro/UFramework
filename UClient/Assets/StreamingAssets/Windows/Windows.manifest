@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 2730387237
+CRC: 3719932286
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -14,4 +14,19 @@ AssetBundleManifest:
         Dependency_0: art/dependencies/gameobject
     Info_3:
       Name: art/dependencies/gameobject
+      Dependencies: {}
+    Info_4:
+      Name: uassets/language/data/chinesesimplified/0
+      Dependencies: {}
+    Info_5:
+      Name: uassets/language/data/chinesesimplified/1
+      Dependencies: {}
+    Info_6:
+      Name: uassets/language/data/english/0
+      Dependencies: {}
+    Info_7:
+      Name: uassets/language/data/english/1
+      Dependencies: {}
+    Info_8:
+      Name: uassets/table/data/template
       Dependencies: {}

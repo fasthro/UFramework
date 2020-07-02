@@ -4,6 +4,7 @@
  * @Description: table parse
  */
 using System.Collections.Generic;
+using UFramework.ResLoader;
 using UnityEngine;
 
 namespace UFramework.Table
@@ -19,21 +20,22 @@ namespace UFramework.Table
         protected void LoadAsset()
         {
             if (!string.IsNullOrEmpty(m_content)) return;
-            // TODO
-            // if (App.runModel == AppRunModel.Develop)
-            // {
-            //     var filePath = FilePathUtils.Combine(AppUtils.TableDataDirectory(), m_tableName + ".csv");
-            //     bool succeed = false;
-            //     m_content = FilePathUtils.FileReadAllText(filePath, out succeed);
-            // }
-            // else
-            // {
-            //     var loader = AssetBundleLoader.Allocate(FilePathUtils.Combine(AppUtils.TableDataBundleRootDirectory(), m_tableName), null);
-            //     loader.LoadSync();
-            //     m_content = loader.assetRes.GetAsset<TextAsset>().text;
-            //     loader.Unload();
-            //     loader = null;
-            // }
+            var filePath = IOPath.PathCombine(App.TableDataDirectory, m_tableName + ".csv");
+#if UNITY_EDITOR
+            m_content = IOPath.FileReadText(filePath);
+#else
+            var loader = AssetBundleLoader.AllocateRes(filePath, null);
+            var ready = loader.LoadSync();
+            if (ready)
+            {
+                var ta = loader.bundleAssetRes.GetAsset<TextAsset>();
+                if (ta != null)
+                {
+                    m_content = ta.text;
+                }
+            }
+            loader.Unload(true);
+#endif
         }
 
         public abstract T[] ParseArray<T>();

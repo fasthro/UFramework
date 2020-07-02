@@ -95,7 +95,7 @@ namespace UFramework
         /// <returns></returns>
         public static string PathCombine(string path1, string path2)
         {
-            return Path.Combine(path1, path2);
+            return PathUnitySeparator(Path.Combine(path1, path2));
         }
 
         /// <summary>

@@ -44,6 +44,16 @@ namespace UFramework.FrameworkWindow
         public List<AssetBundleAssetItem> dependencieAssets = new List<AssetBundleAssetItem>();
 
         /// <summary>
+        /// 内部资源列表
+        /// </summary>
+        /// <typeparam name="AssetBundleAssetItem"></typeparam>
+        /// <returns></returns>
+        [ShowInInspector]
+        [TabGroup("Built-In Assets")]
+        [ListDrawerSettings(HideRemoveButton = true, HideAddButton = true)]
+        public List<AssetBundleAssetItem> builtInAssets = new List<AssetBundleAssetItem>();
+
+        /// <summary>
         /// 排序类型
         /// </summary>
         [HideInInspector]
@@ -135,7 +145,7 @@ namespace UFramework.FrameworkWindow
                 }
                 ascendingOrderActive = false;
                 ascendingOrder = false;
-            }            
+            }
         }
 
         private void OnAssetsDependenciesTitleBarGUI()
@@ -188,7 +198,11 @@ namespace UFramework.FrameworkWindow
             var pathConfig = UConfig.Read<AssetBundleAssetPathItemConfig>();
             for (int i = 0; i < pathConfig.assetPathItems.Count; i++)
             {
-                ParsePathItem(pathConfig.assetPathItems[i]);
+                var items = ParsePathItem(pathConfig.assetPathItems[i]);
+                for (int k = 0; k < items.Count; k++)
+                {
+                    AddAssetItem(items[k]);
+                }
             }
 
             // Parse Dependencies
@@ -198,12 +212,27 @@ namespace UFramework.FrameworkWindow
                 ParseDependencies(assets[i]);
             }
 
+            // Parse Built-Int
+            builtInAssets.Clear();
+            for (int i = 0; i < pathConfig.builtInAssetPathItems.Count; i++)
+            {
+                var items = ParsePathItem(pathConfig.builtInAssetPathItems[i]);
+                for (int k = 0; k < items.Count; k++)
+                {
+                    AddBuiltInAssetItem(items[k]);
+                }
+            }
+
             // gen config relation
             var resAssetInfoConfig = UConfig.Read<ResLoaderConfig>();
             resAssetInfoConfig.assetInfoDictionary.Clear();
             for (int i = 0; i < assets.Count; i++)
             {
                 resAssetInfoConfig.assetInfoDictionary.Add(assets[i].path, GenResAssetInfo(assets[i]));
+            }
+            for (int i = 0; i < builtInAssets.Count; i++)
+            {
+                resAssetInfoConfig.assetInfoDictionary.Add(builtInAssets[i].path, GenResAssetInfo(builtInAssets[i]));
             }
             resAssetInfoConfig.Save();
         }
@@ -212,8 +241,9 @@ namespace UFramework.FrameworkWindow
         /// Parse Path Item
         /// </summary>
         /// <param name="pathItem"></param>
-        private void ParsePathItem(AssetBundleAssetPathItem pathItem)
+        private List<AssetBundleAssetItem> ParsePathItem(AssetBundleAssetPathItem pathItem)
         {
+            List<AssetBundleAssetItem> assetItems = new List<AssetBundleAssetItem>();
             // File
             if (pathItem.buildType == AssetBundleBuildPathType.File)
             {
@@ -222,7 +252,7 @@ namespace UFramework.FrameworkWindow
                 assetItem.assetBundleName = FormatAssetBundleName(pathItem.path);
                 assetItem.assetType = pathItem.assetType;
 
-                AddAssetItem(assetItem);
+                assetItems.Add(assetItem);
             }
             // DirectoryFile
             else if (pathItem.buildType == AssetBundleBuildPathType.DirectoryFile)
@@ -237,7 +267,7 @@ namespace UFramework.FrameworkWindow
                     assetItem.assetBundleName = FormatAssetBundleName(file);
                     assetItem.assetType = pathItem.assetType;
 
-                    AddAssetItem(assetItem);
+                    assetItems.Add(assetItem);
                 }
             }
             // Directory
@@ -253,7 +283,7 @@ namespace UFramework.FrameworkWindow
                     assetItem.assetBundleName = FormatAssetBundleName(pathItem.path);
                     assetItem.assetType = pathItem.assetType;
 
-                    AddAssetItem(assetItem);
+                    assetItems.Add(assetItem);
                 }
             }
             // SubDirectory
@@ -273,7 +303,7 @@ namespace UFramework.FrameworkWindow
                         assetItem.assetBundleName = FormatAssetBundleName(directorie);
                         assetItem.assetType = pathItem.assetType;
 
-                        AddAssetItem(assetItem);
+                        assetItems.Add(assetItem);
                     }
                 }
             }
@@ -294,7 +324,7 @@ namespace UFramework.FrameworkWindow
                         assetItem.assetBundleName = FormatAssetBundleName(customDirectory);
                         assetItem.assetType = pathItem.assetType;
 
-                        AddAssetItem(assetItem);
+                        assetItems.Add(assetItem);
                     }
                 }
                 // 查询子文件夹是否符合Standard格式
@@ -315,11 +345,12 @@ namespace UFramework.FrameworkWindow
                             assetItem.assetBundleName = FormatAssetBundleName(customDirectory);
                             assetItem.assetType = pathItem.assetType;
 
-                            AddAssetItem(assetItem);
+                            assetItems.Add(assetItem);
                         }
                     }
                 }
             }
+            return assetItems;
         }
 
         /// <summary>
@@ -454,6 +485,19 @@ namespace UFramework.FrameworkWindow
                 }
                 SetAssetBundleName(item);
             }
+        }
+
+        /// <summary>
+        /// Add Built-In Asset Item
+        /// </summary>
+        /// <param name="item"></param>
+        private void AddBuiltInAssetItem(AssetBundleAssetItem item)
+        {
+            item.path = IOPath.PathUnitySeparator(item.path);
+            item.size = IOPath.FileSize(item.path);
+
+            builtInAssets.Add(item);
+            SetAssetBundleName(item);
         }
 
         /// <summary>

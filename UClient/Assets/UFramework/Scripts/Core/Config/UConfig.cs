@@ -55,20 +55,22 @@ namespace UFramework.Config
             string content;
             string fileName = configName + ".json";
 #if UNITY_EDITOR
-            content = IOPath.FileReadText(IOPath.PathCombine(App.ConfigDirectory(), fileName));
+            content = IOPath.FileReadText(IOPath.PathCombine(App.ConfigDirectory, fileName));
 #else
             if (baseConfig.addressDictionary.ContainsKey(configName))
             {
                 if (baseConfig.addressDictionary[configName] == FileAddress.Resource)
                 {
-                    content = IOPath.FileReadText(IOPath.PathCombine(App.ConfigResourceDirectory(), fileName));
+                    content = IOPath.FileReadText(IOPath.PathCombine(App.ConfigResourceDirectory, fileName));
                 }
-                else{
-                    content = IOPath.FileReadText(IOPath.PathCombine(App.ConfigDataDirectory(), fileName));
+                else
+                {
+                    content = IOPath.FileReadText(IOPath.PathCombine(App.ConfigDirectory, fileName));
                 }
             }
-            else{
-                content = IOPath.FileReadText(IOPath.PathCombine(App.ConfigDataDirectory(), fileName));
+            else
+            {
+                content = IOPath.FileReadText(IOPath.PathCombine(App.ConfigDirectory, fileName));
             }
 #endif
 
@@ -92,6 +94,7 @@ namespace UFramework.Config
         /// <param name="config"></param>
         public static void Write<T>(object config) where T : IConfigObject, new()
         {
+#if UNITY_EDITOR
             string configName = typeof(T).Name;
 
             if (configDictionart.ContainsKey(configName))
@@ -101,13 +104,9 @@ namespace UFramework.Config
 
             string fileName = configName + ".json";
             string content = JsonMapper.ToJson(config);
-            string path;
-#if UNITY_EDITOR
-            path = IOPath.PathCombine(App.ConfigDirectory(), fileName);
-#else
-            path = IOPath.PathCombine(App.ConfigDataDirectory(), fileName);
-#endif
+            string path = IOPath.PathCombine(App.ConfigDirectory, fileName);
             IOPath.FileCreateText(path, content);
+#endif
         }
 
         /// <summary>
@@ -119,7 +118,7 @@ namespace UFramework.Config
             {
                 string content;
 #if UNITY_EDITOR
-                content = IOPath.FileReadText(IOPath.PathCombine(App.ConfigDirectory(), "BaseConfig.json"));
+                content = IOPath.FileReadText(IOPath.PathCombine(App.ConfigDirectory, "BaseConfig.json"));
 #else
                 content = IOPath.FileReadText(IOPath.PathCombine(App.ConfigResourceDirectory(), "BaseConfig.json"));
 #endif
