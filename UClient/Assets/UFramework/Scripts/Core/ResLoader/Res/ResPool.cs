@@ -51,5 +51,14 @@ namespace UFramework.ResLoader
                 resDictionary.Remove(resName);
             }
         }
+
+        /// <summary>
+        /// 获取资源池中资源字典
+        /// </summary>
+        /// <returns></returns>
+        public static Dictionary<string, Res> GetResDictionary()
+        {
+            return resDictionary;
+        }
     }
 }
