@@ -7,6 +7,7 @@
 using System;
 using System.IO;
 using System.Text;
+using UnityEngine;
 
 namespace UFramework
 {
@@ -192,6 +193,16 @@ namespace UFramework
                 return stringBuilder.ToString();
             }
             return null;
+        }
+
+        /// <summary>
+        /// Reset Relatative To Assets Path
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static string PathRelativeAsset(string path)
+        {
+            return "Assets" + path.Replace(Application.dataPath, "");
         }
 
         #endregion

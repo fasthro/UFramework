@@ -11,6 +11,8 @@ public class Test : MonoBehaviour
     void Start()
     {
         loader = AssetBundleLoader.AllocateRes("Assets/Art/Cube/Prefab/Cube1.prefab");
+
+        Debug.Log(Language.GetTest(Language.test_key));
     }
 
     // Update is called once per frame

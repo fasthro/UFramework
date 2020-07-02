@@ -28,7 +28,19 @@ namespace UFramework.FrameworkWindow
         /// <typeparam name="AssetBundlePathItem"></typeparam>
         /// <returns></returns>
         [ShowInInspector]
+        [TabGroup("Custom")]
         public List<AssetBundleAssetPathItem> assetPathItems = new List<AssetBundleAssetPathItem>();
+
+        /// <summary>
+        /// 内置资源路径列表
+        /// </summary>
+        /// <typeparam name="AssetBundleAssetPathItem"></typeparam>
+        /// <returns></returns>
+        [ShowInInspector]
+        [TabGroup("Built-In")]
+        [ReadOnly]
+        [ListDrawerSettings(HideAddButton = true, HideRemoveButton = true)]
+        public List<AssetBundleAssetPathItem> builtInAssetPathItems = new List<AssetBundleAssetPathItem>();
 
         public object GetInstance()
         {
@@ -39,6 +51,7 @@ namespace UFramework.FrameworkWindow
         {
             describeObject = UConfig.Read<AssetBundleAssetPathItemConfig>();
             assetPathItems = describeObject.assetPathItems;
+            BuildBuiltInPathItems();
         }
 
         public void OnDrawFunctoinButton()
@@ -142,6 +155,33 @@ namespace UFramework.FrameworkWindow
             {
                 EditorUtility.DisplayDialog("Notice", "Validation Succeed!", "Sure");
             }
+        }
+
+        /// <summary>
+        /// 构建内部资源路径列表
+        /// </summary>
+        private void BuildBuiltInPathItems()
+        {
+            builtInAssetPathItems.Clear();
+            // config
+
+            // language
+            var languageItem = new AssetBundleAssetPathItem();
+            languageItem.path = IOPath.PathRelativeAsset(App.LanguageDataDirectory);
+            languageItem.buildType = AssetBundleBuildPathType.DirectoryFile;
+            languageItem.assetType = AssetBundleBuildAssetType.File;
+            languageItem.pattern = "*.txt";
+
+            builtInAssetPathItems.Add(languageItem);
+
+            // table
+            var tableItem = new AssetBundleAssetPathItem();
+            tableItem.path = IOPath.PathRelativeAsset(App.TableOutDataDirectory());
+            tableItem.buildType = AssetBundleBuildPathType.DirectoryFile;
+            tableItem.assetType = AssetBundleBuildAssetType.File;
+            tableItem.pattern = "*.*";
+
+            builtInAssetPathItems.Add(languageItem);
         }
 
         /// <summary>
