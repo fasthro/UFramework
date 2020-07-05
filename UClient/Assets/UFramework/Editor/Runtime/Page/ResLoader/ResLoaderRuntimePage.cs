@@ -103,7 +103,7 @@ namespace UFramework.Editor.Runtime
 
         [ShowInInspector]
         [HideLabel]
-        [HorizontalGroup(50)]
+        [HorizontalGroup(150)]
         [ReadOnly]
         public string sizeString
         {
@@ -151,7 +151,7 @@ namespace UFramework.Editor.Runtime
 
         [ShowInInspector]
         [HideLabel]
-        [HorizontalGroup(50)]
+        [HorizontalGroup(150)]
         [ReadOnly]
         public string sizeString
         {
@@ -167,6 +167,51 @@ namespace UFramework.Editor.Runtime
     }
 
     /// <summary>
+    /// AssetBundle Tab
+    /// </summary>
+    [System.Serializable]
+    public class AssetBundleRuntimeTable
+    {
+        [ShowInInspector]
+        [TabGroup("Assets")]
+        [ListDrawerSettings(HideAddButton = true, HideRemoveButton = true, OnTitleBarGUI = "OnAssetTitleBarGUI")]
+        public List<AssetRuntimeRes> assets = new List<AssetRuntimeRes>();
+
+        [ShowInInspector]
+        [TabGroup("Bundles")]
+        [ListDrawerSettings(HideAddButton = true, HideRemoveButton = true, OnTitleBarGUI = "OnAssetBundleTitleBarGUI")]
+        public List<AssetBundleRuntimeRes> assetBundles = new List<AssetBundleRuntimeRes>();
+
+        [HideInInspector]
+        public long totalAssetSize { get; set; }
+
+        [HideInInspector]
+        public string totalAssetSizeString { get; set; }
+
+        [HideInInspector]
+        public long totalAssetBundleSize { get; set; }
+
+        [HideInInspector]
+        public string totalAssetBundleSizeString { get; set; }
+
+        private void OnAssetTitleBarGUI()
+        {
+            if (totalAssetSize > 0)
+            {
+                GUILayout.Label("totalSize: " + totalAssetSizeString);
+            }
+        }
+
+        private void OnAssetBundleTitleBarGUI()
+        {
+            if (totalAssetBundleSize > 0)
+            {
+                GUILayout.Label("totalSize: " + totalAssetBundleSizeString);
+            }
+        }
+    }
+
+    /// <summary>
     /// Page
     /// </summary>
     public class ResLoaderRuntimePage : IPage
@@ -174,38 +219,22 @@ namespace UFramework.Editor.Runtime
         public string menuName { get { return "Res Loader"; } }
 
         [ShowInInspector]
-        [TabGroup("AssetBundle - Asset")]
-        [ListDrawerSettings(HideAddButton = true, HideRemoveButton = true, OnTitleBarGUI = "OnAssetTitleBarGUI")]
-        public List<AssetRuntimeRes> assets = new List<AssetRuntimeRes>();
-
-        [ShowInInspector]
         [TabGroup("AssetBundle")]
-        [ListDrawerSettings(HideAddButton = true, HideRemoveButton = true, OnTitleBarGUI = "OnAssetBundleTitleBarGUI")]
-        public List<AssetBundleRuntimeRes> assetBundles = new List<AssetBundleRuntimeRes>();
+        [HideLabel]
+        public AssetBundleRuntimeTable assetBundleRuntimeTable = new AssetBundleRuntimeTable();
 
         [ShowInInspector]
-        [TabGroup("Resource Asset")]
+        [TabGroup("Resource Assets")]
         [ListDrawerSettings(HideAddButton = true, HideRemoveButton = true, OnTitleBarGUI = "OnResourceTitleBarGUI")]
         public List<ResourceAssetRuntimeRes> resourceAssets = new List<ResourceAssetRuntimeRes>();
 
         #region total size
-        [HideInInspector]
-        public long totalAssetSize { get; private set; }
-
-        [HideInInspector]
-        private string m_totalAssetSizeString;
-
-        [HideInInspector]
-        public long totalAssetBundleSize { get; private set; }
-
-        [HideInInspector]
-        private string m_totalAssetBundleSizeString;
 
         [HideInInspector]
         public long totalResourceAssetSize { get; private set; }
 
         [HideInInspector]
-        private string m_totalResourceAssetSizeString;
+        public string totalResourceAssetSizeString { get; private set; }
 
         #endregion
 
@@ -228,41 +257,25 @@ namespace UFramework.Editor.Runtime
             }
         }
 
-        private void OnAssetTitleBarGUI()
-        {
-            if (totalAssetSize > 0)
-            {
-                GUILayout.Label("totalSize: " + m_totalAssetSizeString);
-            }
-        }
-
-        private void OnAssetBundleTitleBarGUI()
-        {
-            if (totalAssetBundleSize > 0)
-            {
-                GUILayout.Label("totalSize: " + m_totalAssetBundleSizeString);
-            }
-        }
-
         private void OnResourceTitleBarGUI()
         {
             if (totalResourceAssetSize > 0)
             {
-                GUILayout.Label("totalSize: " + m_totalResourceAssetSizeString);
+                GUILayout.Label("totalSize: " + totalResourceAssetSizeString);
             }
         }
 
         private void Refresh()
         {
-            totalAssetSize = 0;
-            totalAssetBundleSize = 0;
+            assetBundleRuntimeTable.totalAssetSize = 0;
+            assetBundleRuntimeTable.totalAssetBundleSize = 0;
             totalResourceAssetSize = 0;
 
-            assets.Clear();
-            assetBundles.Clear();
+            assetBundleRuntimeTable.assets.Clear();
+            assetBundleRuntimeTable.assetBundles.Clear();
             resourceAssets.Clear();
-
-            var resDictionary = ResPool.GetResDictionary();
+            
+            var resDictionary = ResPool.GetResDictionary()
             resDictionary.ForEach((KeyValuePair<string, Res> item) =>
             {
                 var name = item.Key;
@@ -273,10 +286,13 @@ namespace UFramework.Editor.Runtime
                     var bundle = new AssetBundleRuntimeRes();
                     bundle.assetBundleName = name;
                     bundle.refCount = res.refCount;
-                    bundle.size = Profiler.GetRuntimeMemorySizeLong(res.assetBundle);
-                    assetBundles.Add(bundle);
+                    if (res.assetBundle != null)
+                    {
+                        bundle.size = Profiler.GetRuntimeMemorySizeLong(res.assetBundle);
+                    }
+                    assetBundleRuntimeTable.assetBundles.Add(bundle);
 
-                    totalAssetBundleSize += bundle.size;
+                    assetBundleRuntimeTable.totalAssetBundleSize += bundle.size;
                 }
                 else if (res.resType == ResType.AssetBundleAsset)
                 {
@@ -284,17 +300,23 @@ namespace UFramework.Editor.Runtime
                     asset.assetName = name;
                     asset.assetBundleName = res.assetBundleName;
                     asset.refCount = res.refCount;
-                    asset.size = Profiler.GetRuntimeMemorySizeLong(res.assetObject);
-                    assets.Add(asset);
+                    if (res.assetObject != null)
+                    {
+                        asset.size = Profiler.GetRuntimeMemorySizeLong(res.assetObject);
+                    }
+                    assetBundleRuntimeTable.assets.Add(asset);
 
-                    totalAssetSize += asset.size;
+                    assetBundleRuntimeTable.totalAssetSize += asset.size;
                 }
                 else if (res.resType == ResType.Resource)
                 {
                     var asset = new ResourceAssetRuntimeRes();
                     asset.assetName = name;
                     asset.refCount = res.refCount;
-                    asset.size = Profiler.GetRuntimeMemorySizeLong(res.assetObject);
+                    if (res.assetBundle != null)
+                    {
+                        asset.size = Profiler.GetRuntimeMemorySizeLong(res.assetObject);
+                    }
                     resourceAssets.Add(asset);
 
                     totalResourceAssetSize += asset.size;
@@ -302,13 +324,13 @@ namespace UFramework.Editor.Runtime
 
             });
 
-            assets.Sort((x, y) => x.size.CompareTo(y.size));
-            assetBundles.Sort((x, y) => x.size.CompareTo(y.size));
+            assetBundleRuntimeTable.assets.Sort((x, y) => x.size.CompareTo(y.size));
+            assetBundleRuntimeTable.assetBundles.Sort((x, y) => x.size.CompareTo(y.size));
             resourceAssets.Sort((x, y) => x.size.CompareTo(y.size));
 
-            m_totalAssetSizeString = EditorUtility.FormatBytes(totalAssetSize);
-            m_totalAssetBundleSizeString = EditorUtility.FormatBytes(totalAssetBundleSize);
-            m_totalResourceAssetSizeString = EditorUtility.FormatBytes(totalResourceAssetSize);
+            assetBundleRuntimeTable.totalAssetSizeString = EditorUtility.FormatBytes(assetBundleRuntimeTable.totalAssetSize);
+            assetBundleRuntimeTable.totalAssetBundleSizeString = EditorUtility.FormatBytes(assetBundleRuntimeTable.totalAssetBundleSize);
+            totalResourceAssetSizeString = EditorUtility.FormatBytes(totalResourceAssetSize);
         }
     }
 }

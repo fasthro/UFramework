@@ -49,10 +49,7 @@ namespace UFramework.Editor.Runtime
                 if (page != null)
                 {
                     GUILayout.Label(page.menuName);
-                    if (Application.isPlaying)
-                    {
-                        page.OnDrawFunctoinButton();
-                    }
+                    page.OnDrawFunctoinButton();
                 }
             }
             SirenixEditorGUI.EndHorizontalToolbar();
@@ -64,10 +61,7 @@ namespace UFramework.Editor.Runtime
             {
                 var selection = this.MenuTree.Selection.FirstOrDefault();
                 var page = selection.Value as IPage;
-                if (Application.isPlaying)
-                {
-                    page.OnRenderBefore();
-                }
+                page.OnRenderBefore();
             }
         }
     }
