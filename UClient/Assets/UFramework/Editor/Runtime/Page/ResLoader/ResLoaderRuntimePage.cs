@@ -275,7 +275,7 @@ namespace UFramework.Editor.Runtime
             assetBundleRuntimeTable.assetBundles.Clear();
             resourceAssets.Clear();
             
-            var resDictionary = ResPool.GetResDictionary()
+            var resDictionary = ResPool.GetResDictionary();
             resDictionary.ForEach((KeyValuePair<string, Res> item) =>
             {
                 var name = item.Key;
