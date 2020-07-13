@@ -172,7 +172,6 @@ namespace UFramework.Editor.Preferences
             languageItem.buildType = AssetBundleBuildPathType.DirectoryFile;
             languageItem.assetType = AssetBundleBuildAssetType.File;
             languageItem.pattern = "*.txt";
-
             builtInAssetPathItems.Add(languageItem);
 
             // table

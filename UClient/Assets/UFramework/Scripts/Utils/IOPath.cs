@@ -202,7 +202,7 @@ namespace UFramework
         /// <returns></returns>
         public static string PathRelativeAsset(string path)
         {
-            return "Assets" + path.Replace(Application.dataPath, "");
+            return path.Replace(PathParent(Application.dataPath), "");
         }
 
         #endregion
