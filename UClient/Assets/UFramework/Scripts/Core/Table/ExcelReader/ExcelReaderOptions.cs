@@ -36,7 +36,6 @@ namespace UFramework.Table
         public FormatOptions outFormatOptions;            // 导出格式
         public DataFormatOptions dataFormatOptions;       // 数据格式
         public string tableName;                          // 表名称
-        public string tableModelNamespace;                // tableModel 命名空间
         public string dataOutDirectory;                   // 数据文件输出目录
         public string tableModelOutDirectory;             // table model 文件输出目录
         public string luaOutDirectory;                    // lua 文件输出目录

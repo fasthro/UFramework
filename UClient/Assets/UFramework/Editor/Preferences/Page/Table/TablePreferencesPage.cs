@@ -21,11 +21,6 @@ namespace UFramework.Editor.Preferences
         [InfoBox("数据表数据首选项")]
         public FormatOptions outFormatOptions = FormatOptions.CSV;
 
-        /// <summary>
-        /// 对象命名空间
-        /// </summary>
-        public string tableModelNamespace;
-
         static TableConfig describeObject;
 
         public object GetInstance()
@@ -37,7 +32,6 @@ namespace UFramework.Editor.Preferences
         {
             describeObject = UConfig.Read<TableConfig>();
             outFormatOptions = describeObject.outFormatOptions;
-            tableModelNamespace = describeObject.tableModelNamespace;
         }
 
         public void OnDrawFunctoinButton()
@@ -48,7 +42,6 @@ namespace UFramework.Editor.Preferences
         public void OnApply()
         {
             describeObject.outFormatOptions = outFormatOptions;
-            describeObject.tableModelNamespace = tableModelNamespace;
             describeObject.Save();
         }
     }

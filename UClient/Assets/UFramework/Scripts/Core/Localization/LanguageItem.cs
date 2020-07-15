@@ -3,7 +3,7 @@
  * @Date: 2020-01-04 14:41:16
  * @Description: 语言Item
  */
-namespace UFramework.i18n
+namespace UFramework.Localization
 {
     public class LanguageItem
     {

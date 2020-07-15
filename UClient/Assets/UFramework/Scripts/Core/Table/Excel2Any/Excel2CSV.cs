@@ -71,27 +71,25 @@ namespace UFramework.Table
                     case FieldType.Double:
                     case FieldType.Boolean:
                         return content;
-                    case FieldType.i18n:
-                        return WrapI18nContext(content);
-                    case FieldType.Arrayi18n:
-                        return WrapArrayI18nContext(content);
+                    case FieldType.Language:
+                        return WrapLanguageContext(content);
+                    case FieldType.ArrayLanguage:
+                        return WrapArrayLanguageContext(content);
                     default:
                         return string.Format("\"{0}\"", content);
                 }
             }
         }
 
-        private string WrapI18nContext(string content)
+        private string WrapLanguageContext(string content)
         {
             char[] separator = new char[] { ':' };
             string[] datas = content.Split(separator, StringSplitOptions.RemoveEmptyEntries);
             if (datas.Length == 2)
             {
-                var model = typeof(LanguageModel);
-                var modelField = model.GetField(datas[0]);
-
-                var key = typeof(LanguageKey);
-                var keyField = key.GetField(string.Format("{0}_{1}", datas[0], datas[1]));
+                var language = typeof(UFramework.Automatic.Language);
+                var modelField = language.GetField(datas[0]);
+                var keyField = language.GetField(string.Format("{0}_{1}", datas[0], datas[1]));
 
                 if (modelField != null && keyField != null)
                 {
@@ -99,25 +97,25 @@ namespace UFramework.Table
                 }
                 else
                 {
-                    Debug.LogError("[" + m_reader.options.tableName + "] table not find i18n: " + datas[0] + ":" + datas[1]);
+                    Debug.LogError("[" + m_reader.options.tableName + "] table not find language: " + datas[0] + ":" + datas[1]);
                 }
             }
             else
             {
-                Debug.LogError("[" + m_reader.options.tableName + "] table i18n format error!");
+                Debug.LogError("[" + m_reader.options.tableName + "] table language format error!");
             }
 
             return "0:0";
         }
 
-        private string WrapArrayI18nContext(string content)
+        private string WrapArrayLanguageContext(string content)
         {
             char[] separator = new char[] { ',' };
             string[] datas = content.Split(separator, StringSplitOptions.RemoveEmptyEntries);
             string result = "";
             for (int i = 0; i < datas.Length; i++)
             {
-                result += WrapI18nContext(datas[i]);
+                result += WrapLanguageContext(datas[i]);
                 if (i != datas.Length - 1)
                 {
                     result += ",";

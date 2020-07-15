@@ -97,6 +97,8 @@ namespace UFramework
             lua.LuaGC(LuaGCOptions.LUA_GCCOLLECT);
         }
 
+        #region call function
+
         public static void Call(string funcName)
         {
             LuaFunction func = lua.GetFunction(funcName);
@@ -226,6 +228,8 @@ namespace UFramework
             if (func != null) return func.Invoke<T1, T2, T3, T4, T5, T6, T7, T8, T9, R1>(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
             return default(R1);
         }
+
+        #endregion
 
         protected override void OnUpdate(float deltaTime)
         {

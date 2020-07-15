@@ -11,16 +11,16 @@ namespace UFramework.Table
 {
     public class Excel2TableObject : Excel2Any
     {
-        private string template = @"// UFramework
-// excel2table auto generate
+        private string template = @"// UFramework Automatic.
 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UFramework;
 using UFramework.Table;
+using UFramework.Localization;
 
-namespace $namespace$
+namespace UFramework.Automatic
 {
     public class $tableName$TableData
     {
@@ -127,9 +127,6 @@ $variable$
 
         public Excel2TableObject(ExcelReader reader) : base(reader)
         {
-            if (string.IsNullOrEmpty(reader.options.tableModelNamespace)) reader.options.tableModelNamespace = "Table";
-
-            template = template.Replace("$namespace$", reader.options.tableModelNamespace);
             template = template.Replace("$tableName$", reader.options.tableName);
             template = template.Replace("$tableNameStr$", string.Format("\"{0}\"", reader.options.tableName));
             template = template.Replace("$dataFormat$", reader.options.dataFormatOptions.ToString());
@@ -143,9 +140,9 @@ $variable$
                 m_stringBuilder.AppendLine("        // " + reader.descriptions[i]);
                 m_stringBuilder.AppendLine(string.Format("        public {0} {1};", TypeUtils.FieldTypeToTypeContent(reader.types[i]), reader.fields[i]));
                 // 方便国家化字段调用,为国际化添加字段
-                if (reader.types[i] == FieldType.i18n)
+                if (reader.types[i] == FieldType.Language)
                 {
-                    m_stringBuilder.AppendLine(string.Format("        public string {0}_i18n {{ get {{ return {1}.ToString(); }} }}", reader.fields[i], reader.fields[i]));
+                    m_stringBuilder.AppendLine(string.Format("        public string {0}_language {{ get {{ return {1} != null ? {2}.ToString() : string.Empty; }} }}", reader.fields[i], reader.fields[i], reader.fields[i]));
                 }
             }
             template = template.Replace("$variable$", m_stringBuilder.ToString());

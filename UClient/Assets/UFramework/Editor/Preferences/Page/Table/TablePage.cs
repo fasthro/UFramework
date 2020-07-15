@@ -80,7 +80,7 @@ namespace UFramework.Editor.Preferences
             {
                 TableConfig tableConfig = UConfig.Read<TableConfig>();
 
-                IOPath.DirectoryClear(App.TableObjectDirectory);
+                IOPath.DirectoryClear(App.UserScriptAutomaticTableDirectory);
                 IOPath.DirectoryClear(App.TableDataDirectory);
 
                 tableConfig.tableDictionary.ForEach((System.Action<KeyValuePair<string, DataFormatOptions>>)((item) =>
@@ -88,11 +88,10 @@ namespace UFramework.Editor.Preferences
                     Debug.Log("Table Export: " + item.Key);
                     var options = new ExcelReaderOptions();
                     options.tableName = item.Key;
-                    options.tableModelNamespace = tableConfig.tableModelNamespace;
                     options.outFormatOptions = tableConfig.outFormatOptions;
                     options.dataFormatOptions = item.Value;
                     options.dataOutDirectory = App.TableDataDirectory;
-                    options.tableModelOutDirectory = App.TableObjectDirectory;
+                    options.tableModelOutDirectory = App.UserScriptAutomaticTableDirectory;
                     var reader = new ExcelReader(string.Format("{0}/{1}.xlsx", App.TableExcelDirectory, item.Key), options);
                     reader.Read();
                     switch (tableConfig.outFormatOptions)

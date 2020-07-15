@@ -61,6 +61,7 @@ namespace UFramework.Editor.Preferences
 
         protected override void OnBeginDrawEditors()
         {
+            if (this.MenuTree == null) return;
             var selection = this.MenuTree.Selection.FirstOrDefault();
             var toolbarHeight = this.MenuTree.Config.SearchToolbarHeight;
 

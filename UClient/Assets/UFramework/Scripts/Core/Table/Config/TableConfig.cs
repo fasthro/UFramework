@@ -16,7 +16,6 @@ namespace UFramework.Table
         public string name { get { return "TableConfig"; } }
 
         public FormatOptions outFormatOptions = FormatOptions.CSV;
-        public string tableModelNamespace;
         public Dictionary<string, DataFormatOptions> tableDictionary = new Dictionary<string, DataFormatOptions>();
 
         public void Save()

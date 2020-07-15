@@ -17,7 +17,7 @@ namespace UFramework.Language
             StringBuilder builder = new StringBuilder();
             for (int i = 1; i < columns.Length; i++)
             {
-                builder.AppendLine(string.Format("\t{0}_{1} = {2},", name, columns[i].key, i - 1));
+                builder.AppendLine(string.Format("\t\t{0}_{1} = {2},", name, columns[i].key, i - 1));
             }
             return builder.ToString().Trim('\r', '\n');
         }
@@ -27,7 +27,7 @@ namespace UFramework.Language
             StringBuilder builder = new StringBuilder();
             for (int i = 1; i < columns.Length; i++)
             {
-                builder.AppendLine(string.Format("\tpublic static int {0}_{1} = {2};", name, columns[i].key, i - 1));
+                builder.AppendLine(string.Format("\t\tpublic static int {0}_{1} = {2};", name, columns[i].key, i - 1));
             }
             return builder.ToString().Trim('\r', '\n');
         }

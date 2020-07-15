@@ -4,6 +4,7 @@
  * @Description: 字段类型
  */
 using System;
+using UFramework.Localization;
 using UnityEngine;
 
 namespace UFramework.Table
@@ -26,7 +27,7 @@ namespace UFramework.Table
             else if (FieldType.Boolean.ToString().Equals(ts)) return FieldType.Boolean;
             else if (FieldType.Vector2.ToString().Equals(ts)) return FieldType.Vector2;
             else if (FieldType.Vector3.ToString().Equals(ts)) return FieldType.Vector3;
-            else if (FieldType.i18n.ToString().Equals(ts)) return FieldType.i18n;
+            else if (FieldType.Language.ToString().Equals(ts)) return FieldType.Language;
             else if (FieldType.ArrayByte.ToString().Equals(ts)) return FieldType.ArrayByte;
             else if (FieldType.ArrayInt.ToString().Equals(ts)) return FieldType.ArrayInt;
             else if (FieldType.ArrayLong.ToString().Equals(ts)) return FieldType.ArrayLong;
@@ -36,7 +37,7 @@ namespace UFramework.Table
             else if (FieldType.ArrayBoolean.ToString().Equals(ts)) return FieldType.ArrayBoolean;
             else if (FieldType.ArrayVector2.ToString().Equals(ts)) return FieldType.ArrayVector2;
             else if (FieldType.ArrayVector3.ToString().Equals(ts)) return FieldType.ArrayVector3;
-            else if (FieldType.Arrayi18n.ToString().Equals(ts)) return FieldType.Arrayi18n;
+            else if (FieldType.ArrayLanguage.ToString().Equals(ts)) return FieldType.ArrayLanguage;
             else if (FieldType.Ignore.ToString().Equals(ts)) return FieldType.Ignore;
             else return FieldType.Unknow;
         }
@@ -62,8 +63,8 @@ namespace UFramework.Table
                     return "double";
                 case FieldType.String:
                     return "string";
-                case FieldType.i18n:
-                    return "i18nObject";
+                case FieldType.Language:
+                    return "LanguageItem";
                 case FieldType.Boolean:
                     return "bool";
                 case FieldType.Vector2:
@@ -88,8 +89,8 @@ namespace UFramework.Table
                     return "Vector2[]";
                 case FieldType.ArrayVector3:
                     return "Vector3[]";
-                case FieldType.Arrayi18n:
-                    return "i18nObject[]";
+                case FieldType.ArrayLanguage:
+                    return "LanguageItem[]";
                 default:
                     return "";
             }
@@ -107,16 +108,16 @@ namespace UFramework.Table
         }
 
         /// <summary>
-        /// content to i18nObject
+        /// content to LanguageItem
         /// </summary>
         /// <param name="content"></param>
         /// <returns></returns>
-        public static i18nObject ContentToI18nObjectValue(string content)
+        public static LanguageItem ContentToLanguageItemValue(string content)
         {
             if (string.IsNullOrEmpty(content)) return null;
             char[] separator = new char[] { ':' };
             string[] datas = content.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-            return new i18nObject(int.Parse(datas[0]), int.Parse(datas[1]));
+            return new LanguageItem(int.Parse(datas[0]), int.Parse(datas[1]));
         }
 
         /// <summary>
@@ -302,23 +303,23 @@ namespace UFramework.Table
         }
 
         /// <summary>
-        /// content to i18nObject array
+        /// content to LanguageItem array
         /// </summary>
         /// <param name="content"></param>
         /// <returns></returns>
-        public static i18nObject[] ContentToArrayI18nObjectValue(string content)
+        public static LanguageItem[] ContentToArrayLanguageItemValue(string content)
         {
             if (string.IsNullOrEmpty(content)) return null;
             char[] separatorArray = new char[] { ',' };
             string[] datasArray = content.Split(separatorArray, StringSplitOptions.RemoveEmptyEntries);
-            i18nObject[] result = new i18nObject[datasArray.Length];
+            LanguageItem[] result = new LanguageItem[datasArray.Length];
             for (int i = 0; i < datasArray.Length; i++)
             {
                 string dataContent = datasArray[i];
                 if (string.IsNullOrEmpty(dataContent)) continue;
                 char[] separator = new char[] { ':' };
                 string[] datas = dataContent.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-                result[i] = new i18nObject(int.Parse(datas[0]), int.Parse(datas[1]));
+                result[i] = new LanguageItem(int.Parse(datas[0]), int.Parse(datas[1]));
             }
             return result;
         }

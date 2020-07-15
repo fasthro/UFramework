@@ -1,13 +1,13 @@
-﻿// UFramework
-// excel2table auto generate
+﻿// UFramework Automatic.
 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UFramework;
 using UFramework.Table;
+using UFramework.Localization;
 
-namespace Table
+namespace UFramework.Automatic
 {
     public class TemplateTableData
     {
@@ -32,8 +32,8 @@ namespace Table
         // 描述9
         public Vector3 Vector3;
         // 多语言
-        public i18nObject language;
-        public string language_i18n { get { return language.ToString(); } }
+        public LanguageItem language;
+        public string language_language { get { return language != null ? language.ToString() : string.Empty; } }
         // 描述10
         public byte[] ArrayByte;
         // 描述11
@@ -53,7 +53,7 @@ namespace Table
         // 描述18
         public Vector3[] ArrayVector3;
         // 多语言数组
-        public i18nObject[] languages;
+        public LanguageItem[] languages;
 
     }
 

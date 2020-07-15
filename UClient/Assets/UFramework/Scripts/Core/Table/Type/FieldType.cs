@@ -16,7 +16,7 @@ namespace UFramework.Table
         Boolean,
         Vector2,
         Vector3,
-        i18n,
+        Language,
         ArrayByte,
         ArrayInt,
         ArrayLong,
@@ -26,7 +26,7 @@ namespace UFramework.Table
         ArrayBoolean,
         ArrayVector2,
         ArrayVector3,
-        Arrayi18n,
+        ArrayLanguage,
         Ignore,
         Unknow,
     }

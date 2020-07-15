@@ -128,24 +128,6 @@ namespace UFramework
                 return _tableDataDirectory;
             }
         }
-
-        private static string _tableObjectDirectory = null;
-
-        /// <summary>
-        /// Table TableObject 目录
-        /// </summary>
-        /// <returns></returns>
-        public static string TableObjectDirectory
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(_tableDataDirectory))
-                {
-                    _tableDataDirectory = IOPath.PathCombine(TableDirectory, "TableObject");
-                }
-                return _tableDataDirectory;
-            }
-        }
         #endregion
 
         #region bundle
@@ -253,24 +235,6 @@ namespace UFramework
                 return _languageDataDirectory;
             }
         }
-
-        static string _languageIndexDirectory;
-
-        /// <summary>
-        /// 语言Index目录
-        /// </summary>
-        /// <value></value>
-        public static string LanguageIndexDirectory
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(_languageIndexDirectory))
-                {
-                    _languageIndexDirectory = IOPath.PathCombine(LanguageDirectory, "Index");
-                }
-                return _languageIndexDirectory;
-            }
-        }
         #endregion
 
         #region data
@@ -313,22 +277,29 @@ namespace UFramework
         #endregion
 
         /// <summary>
-        /// 用户代码目录
+        /// 用户代码自动生成目录
         /// </summary>
-        /// <returns></returns>
-        public static string UserScriptDirectory()
-        {
-            return "Stripts";
-        }
+        public static string UserScriptAutomaticDirectory = "Assets/Scripts/Automatic";
 
         /// <summary>
-        /// Lua Wrap 目录
+        /// 用户代码自动生成目录 - 本地化
         /// </summary>
-        /// <returns></returns>
-        public static string ToLuaWrapDirectory()
-        {
-            return "Stripts/ToLuaWrap";
-        }
+        public static string UserScriptAutomaticLocalizationDirectory = "Assets/Scripts/Automatic/Localization";
+
+        /// <summary>
+        /// 用户代码自动生成目录 - Table
+        /// </summary>
+        public static string UserScriptAutomaticTableDirectory = "Assets/Scripts/Automatic/Table";
+
+        /// <summary>
+        /// 用户代码自动生成目录 - Lua Script
+        /// </summary>
+        public static string UserScriptAutomaticLuaDirectory = "Assets/Scripts/Automatic/Lua";
+
+        /// <summary>
+        /// 用户代码自动生成目录 - ToLua Wrap Source
+        /// </summary>
+        public static string UserScriptAutomaticToLuaDirectory = "Assets/Scripts/Automatic/ToLua";
 
         #endregion
     }

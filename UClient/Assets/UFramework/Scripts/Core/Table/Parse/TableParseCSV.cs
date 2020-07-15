@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+using UFramework.Localization;
 using UnityEngine;
 
 namespace UFramework.Table
@@ -174,9 +175,9 @@ namespace UFramework.Table
             {
                 field.SetValue(obj, TypeUtils.ContentToVector3Value(value));
             }
-            else if (field.FieldType == typeof(i18nObject))
+            else if (field.FieldType == typeof(LanguageItem))
             {
-                field.SetValue(obj, TypeUtils.ContentToI18nObjectValue(value));
+                field.SetValue(obj, TypeUtils.ContentToLanguageItemValue(value));
             }
             else if (field.FieldType == typeof(byte[]))
             {
@@ -214,9 +215,9 @@ namespace UFramework.Table
             {
                 field.SetValue(obj, TypeUtils.ContentToArrayVector3Value(value));
             }
-            else if (field.FieldType == typeof(i18nObject[]))
+            else if (field.FieldType == typeof(LanguageItem[]))
             {
-                field.SetValue(obj, TypeUtils.ContentToArrayI18nObjectValue(value));
+                field.SetValue(obj, TypeUtils.ContentToArrayLanguageItemValue(value));
             }
         }
 
