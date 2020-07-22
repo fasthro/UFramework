@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace UFramework.Editor.Preferences
 {
-    public class TablePage : IPage
+    public class TablePage : IPage, IPageBar
     {
         public string menuName { get { return "Table"; } }
 
@@ -73,7 +73,7 @@ namespace UFramework.Editor.Preferences
             tableDictionary = describeObject.tableDictionary;
         }
 
-        public void OnDrawFunctoinButton()
+        public void OnPageBarDraw()
         {
             // 生成数据按钮
             if (SirenixEditorGUI.ToolbarButton(new GUIContent("Generate")))
@@ -112,12 +112,12 @@ namespace UFramework.Editor.Preferences
                 UnityEditor.AssetDatabase.Refresh();
                 Debug.Log("Table Export Completed!");
             }
-        }
 
-        public void OnApply()
-        {
-            describeObject.tableDictionary = tableDictionary;
-            describeObject.Save();
+            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Apply")))
+            {
+                describeObject.tableDictionary = tableDictionary;
+                describeObject.Save();
+            }
         }
     }
 }

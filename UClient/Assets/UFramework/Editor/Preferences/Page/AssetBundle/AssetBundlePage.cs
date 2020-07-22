@@ -16,7 +16,7 @@ using UnityEngine.Profiling;
 
 namespace UFramework.Editor.Preferences
 {
-    public class AssetBundlePage : IPage
+    public class AssetBundlePage : IPage, IPageBar
     {
         public string menuName { get { return "AssetBundle"; } }
         static AssetBundleAssetItemConfig describeObject;
@@ -82,7 +82,7 @@ namespace UFramework.Editor.Preferences
             Refresh();
         }
 
-        public void OnDrawFunctoinButton()
+        public void OnPageBarDraw()
         {
             if (SirenixEditorGUI.ToolbarButton(new GUIContent("Refresh")))
             {
@@ -98,12 +98,12 @@ namespace UFramework.Editor.Preferences
             {
                 ClearuildAll();
             }
-        }
 
-        public void OnApply()
-        {
-            describeObject.assets = assets;
-            describeObject.Save();
+            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Apply")))
+            {
+                describeObject.assets = assets;
+                describeObject.Save();
+            }
         }
 
         private void OnAssetsTitleBarGUI()

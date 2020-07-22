@@ -17,7 +17,7 @@ namespace UFramework.Editor.Preferences
     /// <summary>
     /// Preferences Page
     /// </summary>
-    public class AssetBundlePreferencesPage : IPage
+    public class AssetBundlePreferencesPage : IPage, IPageBar
     {
         public string menuName { get { return "AssetBundle/Preferences"; } }
         static AssetBundleAssetPathItemConfig describeObject;
@@ -54,7 +54,7 @@ namespace UFramework.Editor.Preferences
             BuildBuiltInPathItems();
         }
 
-        public void OnDrawFunctoinButton()
+        public void OnPageBarDraw()
         {
             if (SirenixEditorGUI.ToolbarButton(new GUIContent("Validation")))
             {
@@ -64,13 +64,12 @@ namespace UFramework.Editor.Preferences
             {
                 DelectAssetAssetBundleNames();
             }
-        }
-
-        public void OnApply()
-        {
-            describeObject.assetPathItems = assetPathItems;
-            describeObject.builtInAssetPathItems = builtInAssetPathItems;
-            describeObject.Save();
+            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Apply")))
+            {
+                describeObject.assetPathItems = assetPathItems;
+                describeObject.builtInAssetPathItems = builtInAssetPathItems;
+                describeObject.Save();
+            }
         }
 
         /// <summary>

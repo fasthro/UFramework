@@ -6,12 +6,14 @@
 using System.Collections.Generic;
 using System.IO;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities.Editor;
 using UFramework.Config;
 using UFramework.Table;
+using UnityEngine;
 
 namespace UFramework.Editor.Preferences
 {
-    public class TablePreferencesPage : IPage
+    public class TablePreferencesPage : IPage, IPageBar
     {
         public string menuName { get { return "Table/Preferences"; } }
 
@@ -34,15 +36,13 @@ namespace UFramework.Editor.Preferences
             outFormatOptions = describeObject.outFormatOptions;
         }
 
-        public void OnDrawFunctoinButton()
+        public void OnPageBarDraw()
         {
-
-        }
-
-        public void OnApply()
-        {
-            describeObject.outFormatOptions = outFormatOptions;
-            describeObject.Save();
+            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Apply")))
+            {
+                describeObject.outFormatOptions = outFormatOptions;
+                describeObject.Save();
+            }
         }
     }
 }

@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace UFramework.Editor.Preferences
 {
-    public class LanguagePage : IPage
+    public class LanguagePage : IPage, IPageBar
     {
         public string menuName { get { return "Language"; } }
 
@@ -40,19 +40,29 @@ namespace UFramework.Editor.Preferences
             return this;
         }
 
-        public void OnApply()
-        {
-            describeObject.useSystemLanguage = useSystemLanguage;
-            describeObject.defaultLanguage = defaultLanguage;
-            describeObject.supportedLanguages = supportedLanguages;
-            describeObject.Save();
-        }
-
-        public void OnDrawFunctoinButton()
+        public void OnPageBarDraw()
         {
             if (SirenixEditorGUI.ToolbarButton(new GUIContent("Generate")))
             {
-                Generate();
+                var opt = new ExcelReaderOptions();
+                opt.languages = describeObject.supportedLanguages;
+                var reader = new ExcelReader(opt);
+                reader.Read();
+
+                new Excel2Text(reader);
+                new Excel2Index(reader);
+                // TODO 实现多语言Lua Index
+                // new Excel2LuaIndex(reader);
+
+                AssetDatabase.Refresh();
+            }
+
+            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Apply")))
+            {
+                describeObject.useSystemLanguage = useSystemLanguage;
+                describeObject.defaultLanguage = defaultLanguage;
+                describeObject.supportedLanguages = supportedLanguages;
+                describeObject.Save();
             }
         }
 
@@ -74,21 +84,6 @@ namespace UFramework.Editor.Preferences
             {
                 describeObject.Save();
             }
-        }
-
-        void Generate()
-        {
-            var opt = new ExcelReaderOptions();
-            opt.languages = describeObject.supportedLanguages;
-            var reader = new ExcelReader(opt);
-            reader.Read();
-
-            new Excel2Text(reader);
-            new Excel2Index(reader);
-            // TODO 实现多语言Lua Index
-            // new Excel2LuaIndex(reader);
-
-            AssetDatabase.Refresh();
         }
     }
 }

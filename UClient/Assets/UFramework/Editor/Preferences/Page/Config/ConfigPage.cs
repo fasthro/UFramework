@@ -7,12 +7,13 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities.Editor;
 using UFramework.Config;
 using UnityEngine;
 
 namespace UFramework.Editor.Preferences
 {
-    public class ConfigPage : IPage
+    public class ConfigPage : IPage, IPageBar
     {
         public string menuName { get { return "Config"; } }
         static BaseConfig describeObject;
@@ -52,15 +53,13 @@ namespace UFramework.Editor.Preferences
             addressDictionary = describeObject.addressDictionary;
         }
 
-        public void OnDrawFunctoinButton()
+        public void OnPageBarDraw()
         {
-
-        }
-
-        public void OnApply()
-        {
-            describeObject.addressDictionary = addressDictionary;
-            describeObject.Save();
+            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Apply")))
+            {
+                describeObject.addressDictionary = addressDictionary;
+                describeObject.Save();
+            }
         }
     }
 }

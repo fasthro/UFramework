@@ -214,7 +214,7 @@ namespace UFramework.Editor.Runtime
     /// <summary>
     /// Page
     /// </summary>
-    public class ResLoaderRuntimePage : IPage
+    public class ResLoaderRuntimePage : IPage, IPageBar
     {
         public string menuName { get { return "Res Loader"; } }
 
@@ -249,7 +249,7 @@ namespace UFramework.Editor.Runtime
             Refresh();
         }
 
-        public void OnDrawFunctoinButton()
+        public void OnPageBarDraw()
         {
             if (SirenixEditorGUI.ToolbarButton(new GUIContent("Refresh")))
             {

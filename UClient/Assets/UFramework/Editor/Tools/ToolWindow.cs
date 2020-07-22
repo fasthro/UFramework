@@ -10,21 +10,22 @@ using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
 
-namespace UFramework.Editor.Runtime
+namespace UFramework.Editor.Tool
 {
-    public class RuntimeWindow : OdinMenuWindow
+    public class ToolWindow : OdinMenuWindow
     {
-        [MenuItem("UFramework/Runtime")]
+        [MenuItem("UFramework/Tools")]
         private static void OpenWindow()
         {
-            var window = GetWindow<RuntimeWindow>();
-            window.titleContent = new GUIContent("UFramework Runtime");
+            var window = GetWindow<ToolWindow>();
+            window.titleContent = new GUIContent("UFramework Tools");
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(1000, 600);
         }
 
         protected override void OnInitialize()
         {
-            AddPage(new ResLoaderRuntimePage());
+            AddPage(new LuaPage());
+            AddPage(new SvnPage());
         }
     }
 }

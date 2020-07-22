@@ -1,9 +1,9 @@
 /*
  * @Author: fasthro
- * @Date: 2020-06-29 08:38:48
- * @Description: IPage
+ * @Date: 2020-07-23 00:54:22
+ * @Description: window page interface
  */
-namespace UFramework.Editor.Runtime
+namespace UFramework.Editor
 {
     public interface IPage
     {
@@ -23,10 +23,5 @@ namespace UFramework.Editor.Runtime
         /// 渲染之前
         /// </summary>
         void OnRenderBefore();
-
-        /// <summary>
-        /// 画功能按钮
-        /// </summary>
-        void OnDrawFunctoinButton();
     }
 }
