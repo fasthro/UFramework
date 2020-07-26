@@ -5,7 +5,7 @@
  */
 using System.Collections;
 
-namespace UFramework.Network
+namespace UFramework.Tools
 {
     public class DoubleQueue<T> where T : class
     {
@@ -41,15 +41,18 @@ namespace UFramework.Network
         {
             lock (m_produce)
             {
-                Queue temp = m_consume;
-                m_consume = m_produce;
-                m_produce = temp;
+                if (m_produce.Count > 0)
+                {
+                    Queue temp = m_consume;
+                    m_consume = m_produce;
+                    m_produce = temp;
+                }
             }
         }
 
         public void Clear()
         {
-            lock(m_produce)
+            lock (m_produce)
             {
                 m_produce.Clear();
                 m_consume.Clear();

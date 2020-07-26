@@ -59,6 +59,8 @@ namespace UFramework
             OnSingletonDestory();
         }
 
+        public void Default() { }
+
         public void SingletonAwake() { OnSingletonAwake(); }
 
         protected virtual void OnSingletonAwake() { }

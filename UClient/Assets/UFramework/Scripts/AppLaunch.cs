@@ -3,6 +3,7 @@
  * @Date: 2020-07-13 23:51:59
  * @Description: App Launch
  */
+using UFramework.Tools;
 using UnityEngine;
 
 namespace UFramework
@@ -12,5 +13,10 @@ namespace UFramework
     {
         public static AppLaunch main { get { return AppLaunch.Instance; } }
         public static GameObject mainGameObject { get { return AppLaunch.Instance.gameObject; } }
+
+        protected override void OnSingletonAwake()
+        {
+            ThreadQueue.Instance.Default();
+        }
     }
 }
