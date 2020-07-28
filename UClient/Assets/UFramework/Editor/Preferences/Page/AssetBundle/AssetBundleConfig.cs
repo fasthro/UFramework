@@ -193,6 +193,7 @@ namespace UFramework.Editor.Preferences
     {
         public string name { get { return "AssetBundleAssetPathItemConfig"; } }
         public List<AssetBundleAssetPathItem> assetPathItems = new List<AssetBundleAssetPathItem>();
+        public List<AssetBundleAssetPathItem> luaCodeAssetPathItems = new List<AssetBundleAssetPathItem>();
         public List<AssetBundleAssetPathItem> builtInAssetPathItems = new List<AssetBundleAssetPathItem>();
 
         public void Save()

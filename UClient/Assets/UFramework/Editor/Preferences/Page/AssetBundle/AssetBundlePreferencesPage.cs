@@ -32,6 +32,15 @@ namespace UFramework.Editor.Preferences
         public List<AssetBundleAssetPathItem> assetPathItems = new List<AssetBundleAssetPathItem>();
 
         /// <summary>
+        /// lua code 路径列表
+        /// </summary>
+        /// <typeparam name="AssetBundlePathItem"></typeparam>
+        /// <returns></returns>
+        [ShowInInspector]
+        [TabGroup("Lua Code")]
+        public List<AssetBundleAssetPathItem> luaCodeAssetPathItems = new List<AssetBundleAssetPathItem>();
+
+        /// <summary>
         /// 内置资源路径列表
         /// </summary>
         /// <typeparam name="AssetBundleAssetPathItem"></typeparam>
@@ -51,6 +60,7 @@ namespace UFramework.Editor.Preferences
         {
             describeObject = UConfig.Read<AssetBundleAssetPathItemConfig>();
             assetPathItems = describeObject.assetPathItems;
+            luaCodeAssetPathItems = describeObject.luaCodeAssetPathItems;
             BuildBuiltInPathItems();
         }
 
@@ -68,6 +78,7 @@ namespace UFramework.Editor.Preferences
             {
                 describeObject.assetPathItems = assetPathItems;
                 describeObject.builtInAssetPathItems = builtInAssetPathItems;
+                describeObject.luaCodeAssetPathItems = luaCodeAssetPathItems;
                 describeObject.Save();
             }
         }
