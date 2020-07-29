@@ -1,7 +1,7 @@
 package com.futureruler.uframework.service.gps.obb;
 
 public abstract class ObbHelperListener {
-    abstract void onSuccess();
+    public abstract void onSuccess();
 
-    abstract void onFailed();
+    public abstract void onFailed();
 }

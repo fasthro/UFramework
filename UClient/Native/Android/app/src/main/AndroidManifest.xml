@@ -23,12 +23,12 @@
          In order to start the service, it must be uniquely registered with
          the package manager here.
         -->
-        <service android:name="com.cclink.obbdownloader.download.ObbDownloadService" />
+        <service android:name="com.futureruler.uframework.service.gps.obb.download.ObbDownloadService" />
         <!--
          In order for the alarm manager to contact the downloader script, the receiver
          must be uniquely registered with the package manager here.
         -->
-        <receiver android:name="com.cclink.obbdownloader.download.ObbDownloadReceiver" />
+        <receiver android:name="com.futureruler.uframework.service.gps.obb.download.ObbDownloadReceiver" />
     </application>
 
     <!-- obb end -->

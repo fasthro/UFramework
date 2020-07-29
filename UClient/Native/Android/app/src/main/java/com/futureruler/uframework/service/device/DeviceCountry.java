@@ -16,7 +16,12 @@ import java.lang.reflect.Method;
 
 public class DeviceCountry {
 
-    public String get(Context context) {
+    /**
+     * 获取国家ISO
+     * @param context
+     * @return
+     */
+    public static String get(Context context) {
         String countryCode;
         TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         if (tm != null) {
@@ -52,11 +57,11 @@ public class DeviceCountry {
     }
 
     /**
-     * CDMA 设备获取国家
+     * CDMA 设备获取国家ISO
      *
      * @return
      */
-    private String getCDMACountryIso() {
+    private static String getCDMACountryIso() {
         try {
             // try to get country code from SystemProperties private class
             Class<?> systemProperties = Class.forName("android.os.SystemProperties");
