@@ -134,9 +134,6 @@ public class DownloadNotification implements IDownloaderClient {
             mCurrentTitle = mLabel.toString();
             mCurrentNotification.tickerText = mLabel + ": " + mCurrentText;
             mCurrentNotification.icon = iconResource;
-            // TODO
-//            mCurrentNotification.setLatestEventInfo(mContext, mCurrentTitle, mCurrentText,
-//                    mContentIntent);
             if (ongoingEvent) {
                 mCurrentNotification.flags |= Notification.FLAG_ONGOING_EVENT;
             } else {
@@ -157,8 +154,6 @@ public class DownloadNotification implements IDownloaderClient {
             // we just show the text
             mNotification.tickerText = mCurrentTitle;
             mNotification.icon = android.R.drawable.stat_sys_download;
-            //TODO
-//            mNotification.setLatestEventInfo(mContext, mLabel, mCurrentText, mContentIntent);
             mCurrentNotification = mNotification;
         } else {
             mCustomNotification.setCurrentBytes(progress.mOverallProgress);
@@ -217,13 +212,14 @@ public class DownloadNotification implements IDownloaderClient {
         mState = -1;
         mContext = ctx;
         mLabel = applicationLabel;
-        mNotificationManager = (NotificationManager)
-                mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        mCustomNotification = CustomNotificationFactory
-                .createCustomNotification();
-        mNotification = new Notification();
+        mNotificationManager = (NotificationManager)mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        mCustomNotification = CustomNotificationFactory.createCustomNotification();
+        mNotification = new Notification.Builder(mContext)
+                .setContentTitle(mLabel)
+                .setContentText(mCurrentText)
+                .setSmallIcon(android.R.drawable.stat_sys_download)
+                .build();
         mCurrentNotification = mNotification;
-
     }
 
     @Override

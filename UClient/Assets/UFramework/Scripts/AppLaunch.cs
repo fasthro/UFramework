@@ -3,6 +3,7 @@
  * @Date: 2020-07-13 23:51:59
  * @Description: App Launch
  */
+using UFramework.Native;
 using UFramework.Tools;
 using UnityEngine;
 
@@ -17,6 +18,7 @@ namespace UFramework
         protected override void OnSingletonAwake()
         {
             ThreadQueue.Instance.Default();
+            UNative.Instance.Default();
         }
     }
 }

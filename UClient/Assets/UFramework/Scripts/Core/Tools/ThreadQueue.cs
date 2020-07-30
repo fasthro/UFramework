@@ -18,6 +18,7 @@ using UFramework.Pool;
 
 namespace UFramework.Tools
 {
+    [MonoSingletonPath("UFramework/ThreadQueue")]
     public class ThreadQueue : MonoSingleton<ThreadQueue>
     {
         // 主线程ID

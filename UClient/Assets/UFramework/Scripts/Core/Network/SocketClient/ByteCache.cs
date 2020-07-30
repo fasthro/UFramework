@@ -80,7 +80,6 @@ namespace UFramework.Network
         /// </summary>
         public void Clear()
         {
-            m_cache = new byte[DEFAULT_CACHE_SIZE];
             m_cursor = 0;
             m_readCursor = 0;
         }

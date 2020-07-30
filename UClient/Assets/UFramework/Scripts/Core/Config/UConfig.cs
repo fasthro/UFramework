@@ -120,7 +120,7 @@ namespace UFramework.Config
 #if UNITY_EDITOR
                 content = IOPath.FileReadText(IOPath.PathCombine(App.ConfigDirectory, "BaseConfig.json"));
 #else
-                content = IOPath.FileReadText(IOPath.PathCombine(App.ConfigResourceDirectory(), "BaseConfig.json"));
+                content = IOPath.FileReadText(IOPath.PathCombine(App.ConfigResourceDirectory, "BaseConfig.json"));
 #endif
                 if (!string.IsNullOrEmpty(content))
                 {

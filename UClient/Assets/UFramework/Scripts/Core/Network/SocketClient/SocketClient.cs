@@ -353,6 +353,10 @@ namespace UFramework.Network
                 if (Time.time - m_sendStartTime < SendIntervalTime) return;
 
                 m_sendCache.Clear();
+                if (m_sendQueue.Count > 0)
+                {
+                    m_sendCache.Clear();
+                }
                 m_sendAsyncObj.cmds.Clear();
                 m_sendSize = 0;
                 for (; m_sendQueue.Count > 0;)
