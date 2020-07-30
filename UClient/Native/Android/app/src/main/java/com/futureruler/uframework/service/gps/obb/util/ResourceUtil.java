@@ -9,7 +9,6 @@ public class ResourceUtil {
     }
 
     public static String getString(Context context, String resName) {
-        Log.d("UFramework", "----------------------->> " + resName);
         return context.getString(getResourceId(context, resName, "string"));
     }
 }
