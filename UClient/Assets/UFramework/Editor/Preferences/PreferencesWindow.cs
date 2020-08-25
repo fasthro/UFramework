@@ -34,6 +34,8 @@ namespace UFramework.Editor.Preferences
             AddPage(new TablePreferencesPage());
             AddPage(new LanguagePage());
             AddPage(new SDKPage());
+            AddPage(new LuaPage());
+            AddPage(new WrapPage());
         }
     }
 }
