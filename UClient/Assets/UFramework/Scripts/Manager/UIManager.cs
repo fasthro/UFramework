@@ -15,6 +15,16 @@ namespace UFramework
         {
         }
 
+        protected override void OnLateUpdate()
+        {
+
+        }
+
+        protected override void OnFixedUpdate()
+        {
+
+        }
+
         protected override void OnDispose()
         {
         }

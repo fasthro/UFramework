@@ -7,19 +7,22 @@ using System;
 using LuaInterface;
 using UFramework.Config;
 using UFramework.Lua;
+using UnityEngine;
 
 namespace UFramework
 {
     public class LuaManager : BaseManager
     {
         static LuaState lua;
-
-        private LuaLoader m_loader;
         private LuaLooper m_loop = null;
+
+        private LuaTable luaApp;
+        private LuaFunction luaAppUpdateFunc;
+        private LuaFunction luaAppLateUpdateFunc;
+        private LuaFunction luaAppFixedUpdateFunc;
 
         protected override void OnInitialize()
         {
-            m_loader = new LuaLoader();
             lua = new LuaState();
             OpenLibs();
             lua.LuaSetTop(0);
@@ -30,11 +33,16 @@ namespace UFramework
 
             AddSearchPath();
             lua.Start();
+
             m_loop = AppLaunch.mainGameObject.AddComponent<LuaLooper>();
             m_loop.luaState = lua;
 
-            // 进入lua入口
-            DoFile("LuaMain");
+            DoFile("luaApp");
+            luaApp = lua.GetTable("luaApp");
+            luaAppUpdateFunc = luaApp.GetLuaFunction("update");
+            luaAppLateUpdateFunc = luaApp.GetLuaFunction("lateUpdate");
+            luaAppFixedUpdateFunc = luaApp.GetLuaFunction("fixedUpdate");
+            luaApp.Call("start");
         }
 
         #region lib
@@ -95,7 +103,7 @@ namespace UFramework
                 {
                     for (int i = 0; i < luaConfig.searchPaths.Length; i++)
                     {
-                        lua.AddSearchPath(luaConfig.searchPaths[i]);
+                        lua.AddSearchPath(IOPath.PathCombine(IOPath.PathParent(Application.dataPath), luaConfig.searchPaths[i]));
                     }
                 }
             }
@@ -251,16 +259,58 @@ namespace UFramework
 
         protected override void OnUpdate(float deltaTime)
         {
+            luaAppUpdateFunc.Call();
+        }
+
+        protected override void OnLateUpdate()
+        {
+            luaAppLateUpdateFunc.Call();
+        }
+
+        protected override void OnFixedUpdate()
+        {
+            luaAppFixedUpdateFunc.Call();
         }
 
         protected override void OnDispose()
         {
-            m_loop.Destroy();
-            m_loop = null;
+            if (luaAppUpdateFunc != null)
+            {
+                luaAppUpdateFunc.Dispose();
+                luaAppUpdateFunc = null;
+            }
 
-            lua.Dispose();
-            lua = null;
-            m_loader = null;
+            if (luaAppLateUpdateFunc != null)
+            {
+                luaAppLateUpdateFunc.Dispose();
+                luaAppLateUpdateFunc = null;
+            }
+
+            if (luaAppFixedUpdateFunc != null)
+            {
+                luaAppFixedUpdateFunc.Dispose();
+                luaAppFixedUpdateFunc = null;
+            }
+
+            if (luaApp != null)
+            {
+                luaApp.Call("destory");
+
+                luaApp.Dispose();
+                luaApp = null;
+            }
+
+            if (m_loop != null)
+            {
+                m_loop.Destroy();
+                m_loop = null;
+            }
+
+            if (lua != null)
+            {
+                lua.Dispose();
+                lua = null;
+            }
         }
     }
 }

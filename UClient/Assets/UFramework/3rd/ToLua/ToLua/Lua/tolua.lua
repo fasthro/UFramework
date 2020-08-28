@@ -3,6 +3,8 @@
 --      All rights reserved.
 --      Use, modification and distribution are subject to the "MIT License"
 --------------------------------------------------------------------------------
+require("TypeSystemHeader")
+
 if jit then		
 	if jit.opt then		
 		jit.opt.start(3)				

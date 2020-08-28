@@ -20,5 +20,30 @@ namespace UFramework
             ThreadQueue.Instance.Default();
             UNative.Instance.Default();
         }
+
+        protected override void OnSingletonStart()
+        {
+            App.Initialize();
+        }
+
+        protected override void OnSingletonUpdate(float deltaTime)
+        {
+            App.Update(deltaTime);
+        }
+
+        protected override void OnSingletonLateUpdate()
+        {
+            App.LateUpdate();
+        }
+
+        protected override void OnSingletonFixedUpdate()
+        {
+            App.FixedUpdate();
+        }
+
+        protected override void OnSingletonDestory()
+        {
+            App.Destory();
+        }
     }
 }

@@ -49,6 +49,16 @@ namespace UFramework
             OnSingletonUpdate(Time.deltaTime);
         }
 
+        void LateUpdate()
+        {
+            OnSingletonLateUpdate();
+        }
+
+        void FixedUpdate()
+        {
+            OnSingletonFixedUpdate();
+        }
+
         void OnDestroy()
         {
             isDestory = true;
@@ -70,6 +80,8 @@ namespace UFramework
         protected virtual void OnSingletonDestory() { }
 
         protected virtual void OnSingletonUpdate(float deltaTime) { }
+        protected virtual void OnSingletonLateUpdate() { }
+        protected virtual void OnSingletonFixedUpdate() { }
 
 
         public virtual void Dispose()

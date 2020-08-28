@@ -22,6 +22,20 @@ namespace UFramework
 
         protected abstract void OnUpdate(float deltaTime);
 
+        public void LateUpdate()
+        {
+            OnLateUpdate();
+        }
+
+        protected abstract void OnLateUpdate();
+
+        public void FixedUpdate()
+        {
+            OnFixedUpdate();
+        }
+
+        protected abstract void OnFixedUpdate();
+
         public void Dispose()
         {
             OnDispose();
