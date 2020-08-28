@@ -23,8 +23,9 @@ namespace UFramework.Editor.Preferences
 
         }
 
-        public void OnApply()
+        public void OnSaveDescribe()
         {
+
         }
     }
 }

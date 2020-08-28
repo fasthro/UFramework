@@ -22,12 +22,15 @@ namespace UFramework.Editor.Preferences
         /// <summary>
         /// 是否使用系统语言
         /// </summary>
-        [InfoBox("国际化语言设置")]
+        [BoxGroup("General Settings")]
+        [LabelText("    Use System Language")]
         public bool useSystemLanguage;
 
         /// <summary>
         /// 默认语言
         /// </summary>
+        [BoxGroup("General Settings")]
+        [LabelText("    Default Language")]
         public SystemLanguage defaultLanguage = SystemLanguage.ChineseSimplified;
 
         /// <summary>
@@ -38,32 +41,6 @@ namespace UFramework.Editor.Preferences
         public object GetInstance()
         {
             return this;
-        }
-
-        public void OnPageBarDraw()
-        {
-            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Generate")))
-            {
-                var opt = new ExcelReaderOptions();
-                opt.languages = describeObject.supportedLanguages;
-                var reader = new ExcelReader(opt);
-                reader.Read();
-
-                new Excel2Text(reader);
-                new Excel2Index(reader);
-                // TODO 实现多语言Lua Index
-                // new Excel2LuaIndex(reader);
-
-                AssetDatabase.Refresh();
-            }
-
-            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Apply")))
-            {
-                describeObject.useSystemLanguage = useSystemLanguage;
-                describeObject.defaultLanguage = defaultLanguage;
-                describeObject.supportedLanguages = supportedLanguages;
-                describeObject.Save();
-            }
         }
 
         public void OnRenderBefore()
@@ -84,6 +61,32 @@ namespace UFramework.Editor.Preferences
             {
                 describeObject.Save();
             }
+        }
+
+        public void OnPageBarDraw()
+        {
+            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Generate")))
+            {
+                var opt = new ExcelReaderOptions();
+                opt.languages = describeObject.supportedLanguages;
+                var reader = new ExcelReader(opt);
+                reader.Read();
+
+                new Excel2Text(reader);
+                new Excel2Index(reader);
+                // TODO 实现多语言Lua Index
+                // new Excel2LuaIndex(reader);
+
+                AssetDatabase.Refresh();
+            }
+        }
+
+        public void OnSaveDescribe()
+        {
+            describeObject.useSystemLanguage = useSystemLanguage;
+            describeObject.defaultLanguage = defaultLanguage;
+            describeObject.supportedLanguages = supportedLanguages;
+            describeObject.Save();
         }
     }
 }

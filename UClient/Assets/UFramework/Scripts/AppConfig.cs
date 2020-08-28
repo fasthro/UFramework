@@ -9,9 +9,43 @@ using UnityEngine;
 
 namespace UFramework
 {
+    /// <summary>
+    /// App类型
+    /// </summary>
+    public enum AppEnvironmentType
+    {
+        /// <summary>
+        /// 测试环境
+        /// </summary>
+        Debug,
+
+        /// <summary>
+        /// 正式环境
+        /// </summary>
+        Release,
+    }
+
     public class AppConfig : IConfigObject
     {
         public string name { get { return "AppConfig"; } }
+
+        #region version
+        /// <summary>
+        /// 开发版本
+        /// </summary>
+        public bool isDevelopmentVersion = true;
+
+        /// <summary>
+        /// App 环境类型
+        /// </summary>
+        public AppEnvironmentType appEnvironmentType = AppEnvironmentType.Debug;
+
+        /// <summary>
+        /// 日志
+        /// </summary>
+        public bool isLogEnable = true;
+
+        #endregion
 
         #region i18n language
 

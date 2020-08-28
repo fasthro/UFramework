@@ -98,12 +98,12 @@ namespace UFramework.Editor.Preferences
             {
                 ClearuildAll();
             }
+        }
 
-            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Apply")))
-            {
-                describeObject.assets = assets;
-                describeObject.Save();
-            }
+        public void OnSaveDescribe()
+        {
+            describeObject.assets = assets;
+            describeObject.Save();
         }
 
         private void OnAssetsTitleBarGUI()

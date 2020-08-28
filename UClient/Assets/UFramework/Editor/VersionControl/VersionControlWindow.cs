@@ -8,7 +8,7 @@ using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
 
-namespace UFramework.Editor.Version
+namespace UFramework.Editor.VersionControl
 {
     public class VersionControlWindow : OdinMenuWindow
     {
@@ -16,13 +16,13 @@ namespace UFramework.Editor.Version
         private static void OpenWindow()
         {
             var window = GetWindow<VersionControlWindow>();
-            window.titleContent = new GUIContent("UFramework Version Contorl");
+            window.titleContent = new GUIContent("Version Contorl");
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(1000, 600);
         }
 
         protected override void OnInitialize()
         {
-            drawSearchToolbar = false;
+            AddPage(new AppPage());
         }
     }
 }

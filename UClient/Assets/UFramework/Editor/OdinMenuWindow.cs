@@ -7,16 +7,28 @@ using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
+using UnityEditor;
 using UnityEngine;
 
 namespace UFramework.Editor
 {
     public abstract class OdinMenuWindow : OdinMenuEditorWindow
     {
+
         /// <summary>
         /// 是否画搜索Bar
         /// </summary>
         protected bool drawSearchToolbar = true;
+
+        protected OdinMenuItem menuItem;
+        protected IPage page;
+        protected IPageUpdate pageUpdate;
+
+        /// <summary>
+        /// 自动保存描述时间
+        /// </summary>
+        readonly static float AUTO_SAVE_DESCREIBE_TIME = 1f;
+        private float m_autoSaveDescribeTime = 0f;
 
         /// <summary>
         /// pages
@@ -36,6 +48,7 @@ namespace UFramework.Editor
 
         protected override void Initialize()
         {
+            m_autoSaveDescribeTime = Time.realtimeSinceStartup;
             OnInitialize();
         }
 
@@ -61,7 +74,7 @@ namespace UFramework.Editor
             }
 
             tree.Selection.SelectionChanged += SelectionChanged;
-
+            EditorApplication.update += Update;
             return tree;
         }
 
@@ -90,14 +103,51 @@ namespace UFramework.Editor
             }
         }
 
+        private void Update()
+        {
+            // aotu save describe
+            if (Time.realtimeSinceStartup - m_autoSaveDescribeTime >= AUTO_SAVE_DESCREIBE_TIME)
+            {
+                m_autoSaveDescribeTime = Time.realtimeSinceStartup;
+                if (page != null)
+                {
+                    page.OnSaveDescribe();
+                }
+            }
+
+            // page update
+            if (pageUpdate != null)
+            {
+                pageUpdate.OnUpdate();
+            }
+
+            OnUpdate();
+        }
+
+        protected virtual void OnUpdate() { }
+
         private void SelectionChanged(SelectionChangedType type)
         {
             if (type == SelectionChangedType.ItemAdded)
             {
-                var selection = this.MenuTree.Selection.FirstOrDefault();
-                var page = selection.Value as IPage;
+                if (page != null)
+                {
+                    page.OnSaveDescribe();
+                }
+                menuItem = this.MenuTree.Selection.FirstOrDefault();
+                page = menuItem.Value as IPage;
+                pageUpdate = menuItem.Value as IPageUpdate;
                 page.OnRenderBefore();
             }
+        }
+
+        protected override void OnDestroy()
+        {
+            if (page != null)
+            {
+                page.OnSaveDescribe();
+            }
+            EditorApplication.update -= Update;
         }
     }
 }

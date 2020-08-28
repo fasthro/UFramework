@@ -23,5 +23,10 @@ namespace UFramework.Editor
         /// 渲染之前
         /// </summary>
         void OnRenderBefore();
+
+        /// <summary>
+        /// 保存描述内容
+        /// </summary>
+        void OnSaveDescribe();
     }
 }

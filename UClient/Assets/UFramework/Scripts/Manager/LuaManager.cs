@@ -5,6 +5,7 @@
  */
 using System;
 using LuaInterface;
+using UFramework.Config;
 using UFramework.Lua;
 
 namespace UFramework
@@ -12,12 +13,13 @@ namespace UFramework
     public class LuaManager : BaseManager
     {
         static LuaState lua;
-        static LuaLoader loader;
-        static LuaLooper loop = null;
+
+        private LuaLoader m_loader;
+        private LuaLooper m_loop = null;
 
         protected override void OnInitialize()
         {
-            loader = new LuaLoader();
+            m_loader = new LuaLoader();
             lua = new LuaState();
             OpenLibs();
             lua.LuaSetTop(0);
@@ -28,18 +30,19 @@ namespace UFramework
 
             AddSearchPath();
             lua.Start();
-            loop = AppLaunch.mainGameObject.AddComponent<LuaLooper>();
-            loop.luaState = lua;
+            m_loop = AppLaunch.mainGameObject.AddComponent<LuaLooper>();
+            m_loop.luaState = lua;
 
             // 进入lua入口
-            DoFile("LuaLaunch");
+            DoFile("LuaMain");
         }
 
         #region lib
 
         private void OpenLibs()
         {
-            // lua.OpenLibs(LuaDLL.luaopen_protobuf_c);
+            lua.OpenLibs(LuaDLL.luaopen_pb);
+            lua.OpenLibs(LuaDLL.luaopen_struct);
             lua.OpenLibs(LuaDLL.luaopen_lpeg);
             lua.OpenLibs(LuaDLL.luaopen_bit);
 
@@ -84,7 +87,22 @@ namespace UFramework
 
         private void AddSearchPath()
         {
-            // TODO Lua Path, Dev and Release
+            var appConfig = UConfig.Read<AppConfig>();
+            if (appConfig.isDevelopmentVersion)
+            {
+                var luaConfig = UConfig.Read<LuaConfig>();
+                if (luaConfig.searchPaths != null)
+                {
+                    for (int i = 0; i < luaConfig.searchPaths.Length; i++)
+                    {
+                        lua.AddSearchPath(luaConfig.searchPaths[i]);
+                    }
+                }
+            }
+            else
+            {
+                lua.AddSearchPath(App.luaDataDirectory);
+            }
         }
 
         public void DoFile(string filename)
@@ -237,12 +255,12 @@ namespace UFramework
 
         protected override void OnDispose()
         {
-            loop.Destroy();
-            loop = null;
+            m_loop.Destroy();
+            m_loop = null;
 
             lua.Dispose();
             lua = null;
-            loader = null;
+            m_loader = null;
         }
     }
 }

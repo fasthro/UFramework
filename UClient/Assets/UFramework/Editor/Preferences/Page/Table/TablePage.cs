@@ -22,7 +22,6 @@ namespace UFramework.Editor.Preferences
         // 数据表
         [ShowInInspector]
         [DictionaryDrawerSettings(IsReadOnly = true, KeyLabel = "Name", ValueLabel = "Format")]
-        [InfoBox("数据表数据存储格式设置")]
         public Dictionary<string, DataFormatOptions> tableDictionary = new Dictionary<string, DataFormatOptions>();
 
         public object GetInstance()
@@ -112,12 +111,12 @@ namespace UFramework.Editor.Preferences
                 UnityEditor.AssetDatabase.Refresh();
                 Debug.Log("Table Export Completed!");
             }
+        }
 
-            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Apply")))
-            {
-                describeObject.tableDictionary = tableDictionary;
-                describeObject.Save();
-            }
+        public void OnSaveDescribe()
+        {
+            describeObject.tableDictionary = tableDictionary;
+            describeObject.Save();
         }
     }
 }

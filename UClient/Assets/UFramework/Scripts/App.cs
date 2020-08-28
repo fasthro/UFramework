@@ -237,6 +237,26 @@ namespace UFramework
         }
         #endregion
 
+        #region lua
+        private static string _luaDataDirectory = null;
+
+        /// <summary>
+        /// lua script 所在数据目录(非开发模式读取此目录)
+        /// </summary>
+        /// <value></value>
+        public static string luaDataDirectory
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_luaDataDirectory))
+                {
+                    _luaDataDirectory = IOPath.PathCombine(DataDirectory, "Scripts");
+                }
+                return _luaDataDirectory;
+            }
+        }
+        #endregion
+
         #region data
 
         private static string _dataDirectory = null;
@@ -299,7 +319,7 @@ namespace UFramework
         /// <summary>
         /// 用户代码自动生成目录 - ToLua Wrap Source
         /// </summary>
-        public static string UserScriptAutomaticToLuaDirectory = "Assets/Scripts/Automatic/ToLua";
+        public static string UserScriptAutomaticToLuaDirectory = "Assets/Scripts/Automatic/WrapSource";
 
         #endregion
     }

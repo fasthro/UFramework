@@ -188,7 +188,7 @@ namespace UFramework
                 for (int i = 0; i < ps.Length - index; i++)
                 {
                     stringBuilder.Append(ps[i]);
-                    stringBuilder.Append(Path.DirectorySeparatorChar);
+                    stringBuilder.Append(Path.AltDirectorySeparatorChar);
                 }
                 return stringBuilder.ToString();
             }

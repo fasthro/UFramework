@@ -21,7 +21,7 @@ namespace UFramework.Editor.Preferences
         private static void OpenWindow()
         {
             var window = GetWindow<Preferences>();
-            window.titleContent = new GUIContent("UFramework Preferences");
+            window.titleContent = new GUIContent("Preferences");
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(1000, 600);
         }
 
@@ -31,11 +31,9 @@ namespace UFramework.Editor.Preferences
             AddPage(new AssetBundlePreferencesPage());
             AddPage(new ConfigPage());
             AddPage(new TablePage());
-            AddPage(new TablePreferencesPage());
             AddPage(new LanguagePage());
             AddPage(new SDKPage());
             AddPage(new LuaPage());
-            AddPage(new WrapPage());
         }
     }
 }

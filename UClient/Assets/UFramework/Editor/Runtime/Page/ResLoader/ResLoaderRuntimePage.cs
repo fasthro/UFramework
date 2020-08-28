@@ -257,6 +257,11 @@ namespace UFramework.Editor.Runtime
             }
         }
 
+        public void OnSaveDescribe()
+        {
+
+        }
+
         private void OnResourceTitleBarGUI()
         {
             if (totalResourceAssetSize > 0)

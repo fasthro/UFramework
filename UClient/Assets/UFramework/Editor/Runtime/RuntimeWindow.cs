@@ -18,7 +18,7 @@ namespace UFramework.Editor.Runtime
         private static void OpenWindow()
         {
             var window = GetWindow<RuntimeWindow>();
-            window.titleContent = new GUIContent("UFramework Runtime");
+            window.titleContent = new GUIContent("Runtime");
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(1000, 600);
         }
 

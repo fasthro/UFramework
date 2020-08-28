@@ -20,7 +20,6 @@ namespace UFramework.Editor.Preferences
 
         [ShowInInspector]
         [DictionaryDrawerSettings(IsReadOnly = true, KeyLabel = "Name", ValueLabel = "Address")]
-        [InfoBox("配置文件地址设置")]
         public Dictionary<string, FileAddress> addressDictionary = new Dictionary<string, FileAddress>();
 
         public object GetInstance()
@@ -55,11 +54,13 @@ namespace UFramework.Editor.Preferences
 
         public void OnPageBarDraw()
         {
-            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Apply")))
-            {
-                describeObject.addressDictionary = addressDictionary;
-                describeObject.Save();
-            }
+
+        }
+
+        public void OnSaveDescribe()
+        {
+            describeObject.addressDictionary = addressDictionary;
+            describeObject.Save();
         }
     }
 }
