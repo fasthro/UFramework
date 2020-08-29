@@ -20,7 +20,7 @@ namespace UFramework.Editor.VersionControl
         /// </summary>
         [BoxGroup("General Settings")]
         [LabelText("    Editor Development")]
-        public bool isDevelopmentVersion = true;
+        public bool isDevelopmentVersion;
 
         /// <summary>
         /// App 环境类型
@@ -44,6 +44,9 @@ namespace UFramework.Editor.VersionControl
         public void OnRenderBefore()
         {
             describeObject = UConfig.Read<AppConfig>();
+            isDevelopmentVersion = describeObject.isDevelopmentVersion;
+            appEnvironmentType = describeObject.appEnvironmentType;
+            isLogEnable = describeObject.isLogEnable;
         }
 
         public void OnPageBarDraw()

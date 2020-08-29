@@ -174,7 +174,10 @@ public class DownloaderClientMarshaller {
             mContext = c;
             Intent bindIntent = new Intent(c, mDownloaderServiceClass);
             bindIntent.putExtra(PARAM_MESSENGER, mMessenger);
-            if ( !c.bindService(bindIntent, mConnection, Context.BIND_DEBUG_UNBIND) ) {
+            // 原始版本
+            // if ( !c.bindService(bindIntent, mConnection, Context.BIND_DEBUG_UNBIND) ) {
+            // 修復后版本
+            if ( !c.bindService(bindIntent, mConnection, Context.BIND_AUTO_CREATE) ) {
                 if ( Constants.LOGVV ) {
                     Log.d(Constants.TAG, "Service Unbound");
                 }

@@ -296,6 +296,29 @@ namespace UFramework
 
         #endregion
 
+
+        #region Native
+
+        private static string _androidNativeDirectory;
+
+        /// <summary>
+        /// Android Native Directory
+        /// </summary>
+        /// <value></value>
+        public static string AndroidNativeDirectory
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_androidNativeDirectory))
+                {
+                    _androidNativeDirectory = IOPath.PathUnitySeparator(IOPath.PathCombine(IOPath.PathParent(Application.dataPath), "Native", "Android"));
+                }
+                return _androidNativeDirectory;
+            }
+        }
+
+        #endregion
+
         /// <summary>
         /// 用户代码自动生成目录
         /// </summary>

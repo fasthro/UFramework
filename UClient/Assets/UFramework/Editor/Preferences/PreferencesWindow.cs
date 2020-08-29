@@ -3,24 +3,19 @@
  * @Date: 2020-06-28 14:01:30
  * @Description: framework preferences window
  */
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
-using UFramework.Config;
 using UnityEditor;
 using UnityEngine;
 
 namespace UFramework.Editor.Preferences
 {
-    public class Preferences : OdinMenuWindow
+    public class PreferencesWindow : OdinMenuWindow
     {
-        [MenuItem("UFramework/Preferences")]
+        [MenuItem("UFramework/Preferences", false, 1000)]
         private static void OpenWindow()
         {
-            var window = GetWindow<Preferences>();
+            var window = GetWindow<PreferencesWindow>();
             window.titleContent = new GUIContent("Preferences");
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(1000, 600);
         }

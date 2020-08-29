@@ -9,7 +9,7 @@ namespace UFramework.Native.Service
     {
         public void Check()
         {
-            NativeAndroid.mainNative.CallStatic("checkGPSObb");
+            NativeAndroid.mainNative.CallStatic("checkGPSObb", 162);
         }
     }
 }

@@ -81,8 +81,8 @@ public class LicenseChecker implements ServiceConnection {
     private final Queue<LicenseValidator> mPendingChecks = new LinkedList<LicenseValidator>();
 
     /**
-     * @param context a Context
-     * @param policy implementation of Policy
+     * @param context          a Context
+     * @param policy           implementation of Policy
      * @param encodedPublicKey Base64-encoded RSA public key
      * @throws IllegalArgumentException if encodedPublicKey is invalid
      */
@@ -100,7 +100,7 @@ public class LicenseChecker implements ServiceConnection {
     /**
      * Generates a PublicKey instance from a string containing the
      * Base64-encoded public key.
-     * 
+     *
      * @param encodedPublicKey Base64-encoded public key
      * @throws IllegalArgumentException if encodedPublicKey is invalid
      */
@@ -131,6 +131,7 @@ public class LicenseChecker implements ServiceConnection {
      * <p>
      * source string: "com.android.vending.licensing.ILicensingService"
      * <p>
+     *
      * @param callback
      */
     public synchronized void checkAccess(LicenseCheckerCallback callback) {
@@ -145,12 +146,44 @@ public class LicenseChecker implements ServiceConnection {
 
             if (mService == null) {
                 Log.i(TAG, "Binding to licensing service.");
+// 原始版本
+//                try {
+//                    boolean bindResult = mContext
+//                            .bindService(
+//                                    new Intent(
+//                                            new String(
+//                                                    Base64.decode("Y29tLmFuZHJvaWQudmVuZGluZy5saWNlbnNpbmcuSUxpY2Vuc2luZ1NlcnZpY2U="))),
+//                                    this, // ServiceConnection.
+//                                    Context.BIND_AUTO_CREATE);
+//
+//                    if (bindResult) {
+//                        mPendingChecks.offer(validator);
+//                    } else {
+//                        Log.e(TAG, "Could not bind to service.");
+//                        handleServiceConnectionError(validator);
+//                    }
+//                } catch (SecurityException e) {
+//                    callback.applicationError(LicenseCheckerCallback.ERROR_MISSING_PERMISSION);
+//                } catch (Base64DecoderException e) {
+//                    e.printStackTrace();
+//                }
+
+                // 修复后版本
                 try {
+                    // fix the crash in Android 5.0
+                    // see: http://stackoverflow.com/questions/26530565/android-5-0-l-service-intent-must-be-explicit-in-google-analytics
+                    //      https://github.com/cclink/ObbDownloadHelper/blob/master/images/Image%20408.png
+                    Intent serviceIntent = new Intent(
+                            new String(Base64.decode("Y29tLmFuZHJvaWQudmVuZGluZy5saWNlbnNpbmcuSUxpY2Vuc2luZ1NlcnZpY2U=")));
+                    serviceIntent.setPackage("com.android.vending");
+
+//                    boolean bindResult = mContext.bindService(new Intent(new String(Base64.decode("Y29tLmFuZHJvaWQudmVuZGluZy5saWNlbnNpbmcuSUxpY2Vuc2luZ1NlcnZpY2U="))),
+//                            this, // ServiceConnection.
+//                            Context.BIND_AUTO_CREATE);
+
                     boolean bindResult = mContext
                             .bindService(
-                                    new Intent(
-                                            new String(
-                                                    Base64.decode("Y29tLmFuZHJvaWQudmVuZGluZy5saWNlbnNpbmcuSUxpY2Vuc2luZ1NlcnZpY2U="))),
+                                    serviceIntent,
                                     this, // ServiceConnection.
                                     Context.BIND_AUTO_CREATE);
 
@@ -218,7 +251,7 @@ public class LicenseChecker implements ServiceConnection {
         // Runs in IPC thread pool. Post it to the Handler, so we can guarantee
         // either this or the timeout runs.
         public void verifyLicense(final int responseCode, final String signedData,
-                final String signature) {
+                                  final String signature) {
             mHandler.post(new Runnable() {
                 public void run() {
                     Log.i(TAG, "Received response.");
@@ -300,7 +333,9 @@ public class LicenseChecker implements ServiceConnection {
         }
     }
 
-    /** Unbinds service if necessary and removes reference to it. */
+    /**
+     * Unbinds service if necessary and removes reference to it.
+     */
     private void cleanupService() {
         if (mService != null) {
             try {
@@ -327,14 +362,16 @@ public class LicenseChecker implements ServiceConnection {
         mHandler.getLooper().quit();
     }
 
-    /** Generates a nonce (number used once). */
+    /**
+     * Generates a nonce (number used once).
+     */
     private int generateNonce() {
         return RANDOM.nextInt();
     }
 
     /**
      * Get version code for the application package name.
-     * 
+     *
      * @param context
      * @param packageName application package name
      * @return the version code or empty string if package not found

@@ -110,8 +110,9 @@ public class MainNative {
 
     /**
      * 检查 Google Play Obb
+     * @param mainObbVersion main obb version (Unity PlayerSetting BundleVersionCode)
      */
-    public static void checkGPSObb() {
+    public static void checkGPSObb(int mainObbVersion) {
         gpsObbHelper = new ObbHelper(mainContext, new ObbInfo() {
 
             // This function must be override to return your app's public key
@@ -124,26 +125,26 @@ public class MainNative {
             // The returned version must be greater than 0
             @Override
             public int getMainObbVersion() {
-                return 3;
+                return mainObbVersion;
             }
 
             // This function must be override to return the main obb file size
             // The returned size must be greater than 0
             @Override
             public long getMainObbFileSize() {
-                return 1546530L;
+                return 1;
             }
 
             // If you donn't have patch obb file, you don't need override this function
             @Override
             public int getPatchObbVersion() {
-                return 3;
+                return 160;
             }
 
             // If you donn't have patch obb file, you don't need override this function
             @Override
             public long getPatchObbFileSize() {
-                return 5570L;
+                return 0;
             }
         });
 

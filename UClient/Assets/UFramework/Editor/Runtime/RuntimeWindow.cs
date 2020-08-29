@@ -14,7 +14,7 @@ namespace UFramework.Editor.Runtime
 {
     public class RuntimeWindow : OdinMenuWindow
     {
-        [MenuItem("UFramework/Runtime")]
+        [MenuItem("UFramework/Runtime", false, 200)]
         private static void OpenWindow()
         {
             var window = GetWindow<RuntimeWindow>();

@@ -12,7 +12,7 @@ namespace UFramework.Editor.VersionControl
 {
     public class VersionControlWindow : OdinMenuWindow
     {
-        [MenuItem("UFramework/Version Control")]
+        [MenuItem("UFramework/Version Control", false, 100)]
         private static void OpenWindow()
         {
             var window = GetWindow<VersionControlWindow>();

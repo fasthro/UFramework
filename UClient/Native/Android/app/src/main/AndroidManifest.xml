@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.futureruler.uframework">
 
     <!-- device id -->
@@ -6,6 +7,7 @@
 
     <!-- obb begin -->
     <!-- Required to access Google Play Licensing -->
+    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="com.android.vending.CHECK_LICENSE" />
     <!-- Required to keep CPU alive while downloading files (NOT to keep screen awake) -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />

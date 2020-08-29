@@ -40,7 +40,9 @@ public class Helpers {
 
     public static Random sRandom = new Random(SystemClock.uptimeMillis());
 
-    /** Regex used to parse content-disposition headers */
+    /**
+     * Regex used to parse content-disposition headers
+     */
     private static final Pattern CONTENT_DISPOSITION_PATTERN = Pattern
             .compile("attachment;\\s*filename\\s*=\\s*\"([^\"]*)\"");
 
@@ -86,7 +88,7 @@ public class Helpers {
         if (!Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
             // No SD card found.
-            if ( Constants.LOGVV ) {
+            if (Constants.LOGVV) {
                 Log.d(Constants.TAG, "no external storage");
             }
             return false;
@@ -96,7 +98,7 @@ public class Helpers {
 
     /**
      * @return the number of bytes available on the filesystem rooted at the
-     *         given File
+     * given File
      */
     public static long getAvailableBytes(File root) {
         StatFs stat = new StatFs(root.getPath());
@@ -111,7 +113,7 @@ public class Helpers {
      */
     public static boolean isFilenameValid(String filename) {
         filename = filename.replaceFirst("/+", "/"); // normalize leading
-                                                     // slashes
+        // slashes
         return filename.startsWith(Environment.getDownloadCacheDirectory().toString())
                 || filename.startsWith(Environment.getExternalStorageDirectory().toString());
     }
@@ -119,7 +121,8 @@ public class Helpers {
     /*
      * Delete the given file from device
      */
-    /* package */static void deleteFile(String path) {
+    /* package */
+    static void deleteFile(String path) {
         try {
             File file = new File(path);
             file.delete();
@@ -132,7 +135,7 @@ public class Helpers {
      * Showing progress in MB here. It would be nice to choose the unit (KB, MB,
      * GB) based on total file size, but given what we know about the expected
      * ranges of file sizes for APK expansion files, it's probably not necessary.
-     * 
+     *
      * @param overallProgress
      * @param overallTotal
      * @return
@@ -140,7 +143,7 @@ public class Helpers {
 
     static public String getDownloadProgressString(long overallProgress, long overallTotal) {
         if (overallTotal == 0) {
-            if ( Constants.LOGVV ) {
+            if (Constants.LOGVV) {
                 Log.e(Constants.TAG, "Notification called when total is zero");
             }
             return "";
@@ -154,15 +157,15 @@ public class Helpers {
 
     /**
      * Adds a percentile to getDownloadProgressString.
-     * 
+     *
      * @param overallProgress
      * @param overallTotal
      * @return
      */
     static public String getDownloadProgressStringNotification(long overallProgress,
-            long overallTotal) {
+                                                               long overallTotal) {
         if (overallTotal == 0) {
-            if ( Constants.LOGVV ) {
+            if (Constants.LOGVV) {
                 Log.e(Constants.TAG, "Notification called when total is zero");
             }
             return "";
@@ -173,7 +176,7 @@ public class Helpers {
 
     public static String getDownloadProgressPercent(long overallProgress, long overallTotal) {
         if (overallTotal == 0) {
-            if ( Constants.LOGVV ) {
+            if (Constants.LOGVV) {
                 Log.e(Constants.TAG, "Notification called when total is zero");
             }
             return "";
@@ -198,9 +201,9 @@ public class Helpers {
     /**
      * Returns the file name (without full path) for an Expansion APK file from
      * the given context.
-     * 
-     * @param c the context
-     * @param mainFile true for main file, false for patch file
+     *
+     * @param c           the context
+     * @param mainFile    true for main file, false for patch file
      * @param versionCode the version of the file
      * @return String the file name of the expansion file
      */
@@ -227,36 +230,40 @@ public class Helpers {
     /**
      * Helper function to ascertain the existence of a file and return
      * true/false appropriately
-     * 
-     * @param c the app/activity/service context
-     * @param fileName the name (sans path) of the file to query
-     * @param fileSize the size that the file must match
+     *
+     * @param c                    the app/activity/service context
+     * @param fileName             the name (sans path) of the file to query
+     * @param fileSize             the size that the file must match
      * @param deleteFileOnMismatch if the file sizes do not match, delete the
-     *            file
+     *                             file
      * @return true if it does exist, false otherwise
      */
     static public boolean doesFileExist(Context c, String fileName, long fileSize,
-            boolean deleteFileOnMismatch) {
+                                        boolean deleteFileOnMismatch) {
         // the file may have been delivered by Market --- let's make sure
         // it's the size we expect
         File fileForNewFile = new File(Helpers.generateSaveFileName(c, fileName));
         if (fileForNewFile.exists()) {
-            if (fileForNewFile.length() == fileSize) {
-                return true;
-            }
-            if (deleteFileOnMismatch) {
-                // delete the file --- we won't be able to resume
-                // because we cannot confirm the integrity of the file
-                fileForNewFile.delete();
-            }
+// 原始版本
+//            if (fileForNewFile.length() == fileSize) {
+//                return true;
+//            }
+//            if (deleteFileOnMismatch) {
+//                // delete the file --- we won't be able to resume
+//                // because we cannot confirm the integrity of the file
+//                fileForNewFile.delete();
+//            }
+            // 修改后版本
+            return true;
         }
         return false;
     }
 
     /**
-     * Converts download states that are returned by the {@link 
+     * Converts download states that are returned by the {@link
      * IDownloaderClient#onDownloadStateChanged} callback into usable strings.
      * This is useful if using the state strings built into the library to display user messages.
+     *
      * @param state One of the STATE_* constants from {@link IDownloaderClient}.
      * @return string resource ID for the corresponding string.
      */
