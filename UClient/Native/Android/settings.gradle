@@ -1,2 +1,3 @@
-include ':app', ':downloader_library', ':zip_file', ':market_licensing'
+include ':obbdownloader'
+include ':app'
 rootProject.name = "Android"

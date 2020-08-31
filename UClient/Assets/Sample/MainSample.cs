@@ -7,7 +7,7 @@ namespace UFramework.Sample
 {
     public class MainSample : MonoBehaviour
     {
-        static string[] sceneNames = new string[] { "NativeSample" };
+        static string[] sceneNames = new string[] { "NativeSample", "ObbDownloaderSample" };
 
         void OnGUI()
         {

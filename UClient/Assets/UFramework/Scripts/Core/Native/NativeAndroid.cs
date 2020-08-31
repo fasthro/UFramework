@@ -10,12 +10,17 @@ namespace UFramework.Native
 {
     public class NativeAndroid
     {
+        /// <summary>
+        /// main package
+        /// </summary>
+        public readonly static string MAIN_PACKAGE = "com.futureruler.uframework";
+
         private static AndroidJavaObject _context;
 
         /// <summary>
         /// context
         /// </summary>
-        public static AndroidJavaObject context
+        public static AndroidJavaObject Context
         {
             get
             {
@@ -27,39 +32,84 @@ namespace UFramework.Native
             }
         }
 
-        private static AndroidJavaClass _mainNative;
+        private static string _packageName;
 
         /// <summary>
-        /// mainNative
+        /// package name
         /// </summary>
-        public static AndroidJavaClass mainNative
+        /// <value></value>
+        public static string PackageName
         {
             get
             {
-                if (_mainNative == null)
+                if (string.IsNullOrEmpty(_packageName))
                 {
-                    _mainNative = new AndroidJavaClass("com.futureruler.uframework.MainNative");
+                    _packageName = Context.Call<string>("getPackageName");
                 }
-                return _mainNative;
+                return _packageName;
             }
         }
 
-        /// <summary>
-        /// Google Play Service
-        /// </summary>
-        /// <returns></returns>
-        public static GooglePlayService googlePlayService { get; private set; }
+        private static AndroidJavaObject _packageInfo;
 
+        /// <summary>
+        /// package info
+        /// </summary>
+        /// <value></value>
+        public static AndroidJavaObject PackageInfo
+        {
+            get
+            {
+                if (_packageInfo == null)
+                {
+                    _packageInfo = Context.Call<AndroidJavaObject>("getPackageManager").Call<AndroidJavaObject>("getPackageInfo", PackageName, 0);
+                }
+                return _packageInfo;
+            }
+        }
+
+        private static int _versionCode = -1;
+
+        /// <summary>
+        /// version code
+        /// </summary>
+        /// <value></value>
+        public static int VersionCode
+        {
+            get
+            {
+                if (_versionCode == -1)
+                {
+                    _versionCode = PackageInfo.Get<int>("versionCode");
+                }
+                return _versionCode;
+            }
+        }
+
+        private static AndroidJavaClass _appNative;
+
+        /// <summary>
+        /// app
+        /// </summary>
+        public static AndroidJavaClass AppNative
+        {
+            get
+            {
+                if (_appNative == null)
+                {
+                    _appNative = new AndroidJavaClass(MAIN_PACKAGE + ".App");
+                }
+                return _appNative;
+            }
+        }
 
         /// <summary>
         /// 初始化
         /// </summary>
         public static void Initialize()
         {
-            mainNative.CallStatic("initialize", context);
-
-            googlePlayService = new GooglePlayService();
-            googlePlayService.Initialize();
+            AppNative.CallStatic("initialize", Context);
+            ObbDownloader.Initialize();
         }
     }
 }

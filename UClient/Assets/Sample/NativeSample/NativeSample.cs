@@ -9,11 +9,6 @@ namespace UFramework.Sample
     {
         protected override void OnRenderGUI()
         {
-            if (GUILayout.Button("Obb Check", GUILayout.Width(300), GUILayout.Height(100)))
-            {
-                NativeAndroid.googlePlayService.obb.Check();
-            }
-
             if (GUILayout.Button("Device Id", GUILayout.Width(300), GUILayout.Height(100)))
             {
                 Debug.Log("设备唯一标识：" + UNative.device.DeviceId());

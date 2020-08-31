@@ -120,7 +120,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 0.0.162
+  bundleVersion: 0.0.166
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -166,7 +166,7 @@ PlayerSettings:
   applicationIdentifier:
     Android: com.Northbridge.RiseOfWarfare
   buildNumber: {}
-  AndroidBundleVersionCode: 162
+  AndroidBundleVersionCode: 166
   AndroidMinSdkVersion: 16
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
@@ -177,7 +177,7 @@ PlayerSettings:
   ForceInternetPermission: 0
   ForceSDCardPermission: 0
   CreateWallpaper: 0
-  APKExpansionFiles: 0
+  APKExpansionFiles: 1
   keepLoadedShadersAlive: 0
   StripUnusedMeshComponents: 0
   VertexChannelCompressionMask: 4054

@@ -4,6 +4,7 @@
  * @Description: Android Page
  */
 using System.Collections.Generic;
+using System.IO;
 using Sirenix.OdinInspector;
 using UFramework.Config;
 using UnityEngine;
@@ -60,11 +61,13 @@ namespace UFramework.Editor.Native
             {
                 var moduleName = modules[i];
 
+                var libsRoot = IOPath.PathCombine(App.AndroidNativeDirectory, moduleName, "libs");
+
                 var sourceRoot = IOPath.PathCombine(App.AndroidNativeDirectory, moduleName, "build/outputs/aar/");
                 var sourceFile = IOPath.PathCombine(sourceRoot, moduleName + suffix);
 
                 var destRoot = IOPath.PathCombine(Application.dataPath, "UFramework/Plugins/Android/libs");
-                var destFile = IOPath.PathCombine(destRoot, moduleName + ".aar");
+                var destFile = IOPath.PathCombine(destRoot, "uframework-" + moduleName + ".aar");
 
                 if (!IOPath.DirectoryExists(sourceRoot))
                 {
@@ -73,6 +76,21 @@ namespace UFramework.Editor.Native
                 }
 
                 IOPath.FileDelete(IOPath.PathCombine(destRoot, "uframework-" + moduleName + ".aar"));
+                
+                // TODO settting libs
+                // if (IOPath.DirectoryExists(libsRoot))
+                // {
+                //     var libs = Directory.GetFiles(libsRoot, "*.jar", SearchOption.AllDirectories);
+                //     for (int k = 0; k < libs.Length; k++)
+                //     {
+                //         var sourceLibFile = libs[k];
+                //         var libFileName = IOPath.FileName(sourceLibFile, true);
+                //         var destLibFile = IOPath.PathCombine(destRoot, libFileName);
+                //         IOPath.FileDelete(destLibFile);
+                //         IOPath.FileCopy(sourceLibFile, destLibFile);
+                //     }
+                // }
+
                 IOPath.FileCopy(sourceFile, destFile);
             }
         }
