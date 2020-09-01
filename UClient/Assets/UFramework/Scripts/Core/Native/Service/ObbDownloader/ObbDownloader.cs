@@ -12,17 +12,20 @@ namespace UFramework.Native.Service
     /// </summary>
     public enum ObbDownloaderStatus
     {
-        None = 0,
+        /// <summary>
+        /// 不需要下载 obb 扩展文件
+        /// </summary>
+        NoDownloadRequired = 0,
 
         /// <summary>
-        /// 没有权限（外部存储权限不可用）
+        /// 需要下载 Obb 扩展文件
         /// </summary>
-        PermissionsError,
+        DownloadRequired = 1,
 
         /// <summary>
-        /// Obb 文件不存在
+        /// Error（外部存储权限不可用 or ...）
         /// </summary>
-        ObbNotExist,
+        Error = 2,
     }
 
     public class ObbDownloader
@@ -114,12 +117,7 @@ namespace UFramework.Native.Service
         }
 
         /// <summary>
-        /// 扩展文件下载回调
-        /// </summary>
-        private static IObbDownloadListener obbDownloadListener;
-
-        /// <summary>
-        /// 扩展文件下载适配器
+        /// 扩展文件下载回调适配器
         /// </summary>
         private static ObbDownloadListenerAdapter obbDownloadListenerAdapter;
 
@@ -128,15 +126,28 @@ namespace UFramework.Native.Service
         /// </summary>
         public static void Initialize()
         {
-            obbDownloaderNative.CallStatic("initialize", NativeAndroid.Context, true);
+            obbDownloaderNative.CallStatic("initialize", NativeAndroid.Context, false);
             obbDownloaderNative.SetStatic("PUBLIC_KEY", "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwINnSEZSgRJL+ASiU/iF/a2RSC/hzDG/PB2bQrxFWN0BURjhZH2UV6ysT7sjIv57CHulOq31VHyBjE5kQyivhcK2sOiHByyH8z3aLn2lxnAXAA38Cb0QbL3PV6Gifl29lyxtrGcAlO/fI5GxqLvwT312g/SeOncXroLQwVxFW/EPWjz9PrJ6R4BL5ivs1Us2/NW1eWh89d+aWp0LSbBXq0YUoiqV5Nju1k9toqOYH1Ztxp308RmhNx31iPowiwOlTU0WRUZzVifmz27BbjSW/ufWPYPWhBKafQCDIt5UdkZ82zsbkrf7/T8k+FSJxLMJBdq7muruXvF/QXBh8MpHkwIDAQAB");
             obbDownloaderNative.SetStatic("SALT", new byte[] { 1, 43, 256 - 12, 256 - 1, 54, 98, 256 - 100, 256 - 12, 43, 2, 256 - 8, 256 - 4, 9, 5, 256 - 106, 256 - 108, 256 - 33, 45, 256 - 1, 84 });
             obbDownloaderNative.SetStatic("MAIN_OBB_VERSION", NativeAndroid.VersionCode);
             // TODO Patch Obb
             // obbDownloaderNative.SetStatic("PATCH_OBB_VERSION", NativeAndroid.VersionCode);
+        }
 
-            // obbDownloadListenerAdapter = new ObbDownloadListenerAdapter();
-            // obbDownloaderNative.CallStatic("", )
+        /// <summary>
+        /// connect
+        /// </summary>
+        public static void Connect()
+        {
+            obbDownloaderNative.CallStatic("connect");
+        }
+
+        /// <summary>
+        /// disconnect
+        /// </summary>
+        public static void Disconnect()
+        {
+            obbDownloaderNative.CallStatic("disconnect");
         }
 
         /// <summary>
@@ -148,24 +159,66 @@ namespace UFramework.Native.Service
             // 外部存储不可用
             if (string.IsNullOrEmpty(ExpansionFileDirectory))
             {
-                return ObbDownloaderStatus.PermissionsError;
+                return ObbDownloaderStatus.Error;
             }
             // TODO Patch Obb
             // else if (string.IsNullOrEmpty(MainObbPath) || string.IsNullOrEmpty(PatchObbPath))
             else if (string.IsNullOrEmpty(MainObbPath))
             {
-                return ObbDownloaderStatus.ObbNotExist;
+                return ObbDownloaderStatus.DownloadRequired;
             }
-            return ObbDownloaderStatus.None;
+            return ObbDownloaderStatus.NoDownloadRequired;
+        }
+
+        #region 下载扩展文件文件
+
+        /// <summary>
+        /// 设置下载扩展文件回调
+        /// </summary>
+        /// <param name="listener"></param>
+        public static void SetDownloadListener(IObbDownloadListener listener)
+        {
+            if (listener != null)
+            {
+                obbDownloadListenerAdapter = new ObbDownloadListenerAdapter(listener);
+                obbDownloaderNative.CallStatic("setDownloadListener", obbDownloadListenerAdapter);
+            }
         }
 
         /// <summary>
         /// 下载扩展文件
         /// </summary>
+        /// <param name="listener"></param>
         public static void DownloadExpansion()
         {
             obbDownloaderNative.CallStatic("downloadExpansion");
         }
+
+        /// <summary>
+        /// 继续下载扩展文件
+        /// </summary>
+        public static void ContinueDownload()
+        {
+            obbDownloaderNative.CallStatic("continueDownload");
+        }
+
+        /// <summary>
+        /// 暂停下载扩展文件
+        /// </summary>
+        public static void PauseDownload()
+        {
+            obbDownloaderNative.CallStatic("pauseDownload");
+        }
+
+        /// <summary>
+        /// 取消下载扩展文件
+        /// </summary>
+        public static void AbortDownload()
+        {
+            obbDownloaderNative.CallStatic("abortDownload");
+        }
+
+        #endregion
 
         /// <summary>
         /// Obb Path

@@ -12,14 +12,17 @@ namespace UFramework.Native.Service
     {
         void OnProgress(int progress);
         void OnSuccess();
-        void OnFailed(int errorCode);
+        void OnFailed();
+        void OnPause(bool pause);
+        void OnAbort();
+        void OnError(int errorCode);
     }
 
     public class ObbDownloadListenerAdapter : AndroidJavaProxy
     {
         readonly IObbDownloadListener listener;
 
-        public ObbDownloadListenerAdapter(IObbDownloadListener listener) : base(NativeAndroid.MAIN_PACKAGE +  ".obbdownloader.UObbDownloadListener")
+        public ObbDownloadListenerAdapter(IObbDownloadListener listener) : base(NativeAndroid.MAIN_PACKAGE + ".obbdownloader.core.download.ObbDownloadListener")
         {
             this.listener = listener;
         }
@@ -28,13 +31,30 @@ namespace UFramework.Native.Service
         {
             listener.OnProgress(progress);
         }
-        void onSuccess(string name)
+
+        void onSuccess()
         {
             listener.OnSuccess();
         }
-        void onFailed(int errorCode)
+
+        void onFailed()
         {
-            listener.OnFailed(errorCode);
+            listener.OnFailed();
+        }
+
+        void onPause(bool pause)
+        {
+            listener.OnPause(pause);
+        }
+
+        void onAbort()
+        {
+            listener.OnAbort();
+        }
+
+        void onError(int errorCode)
+        {
+            listener.OnError(errorCode);
         }
     }
 }

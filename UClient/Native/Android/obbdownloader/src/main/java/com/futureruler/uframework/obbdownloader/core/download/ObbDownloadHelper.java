@@ -1,6 +1,7 @@
 package com.futureruler.uframework.obbdownloader.core.download;
 
 import com.futureruler.uframework.obbdownloader.core.ObbInfo;
+import com.futureruler.uframework.obbdownloader.core.ObbStatus;
 import com.futureruler.uframework.obbdownloader.core.common.XAPKFile;
 import com.futureruler.uframework.obbdownloader.core.util.ResourceUtil;
 import com.google.android.vending.expansion.downloader.DownloadProgressInfo;
@@ -25,6 +26,7 @@ import android.view.WindowManager;
 public class ObbDownloadHelper implements IDownloaderClient {
 
     private Context mContext;
+    private boolean mNativeUI;
     private ObbDownloadListener mListener;
     private IStub mDownloaderClientStub;
     private IDownloaderService mRemoteService;
@@ -32,11 +34,14 @@ public class ObbDownloadHelper implements IDownloaderClient {
     private XAPKFile[] xAPKS;
     private boolean mIsConnected;
     private boolean mIsFinished;
+    private boolean mIsDownloadPaused;
 
-    public ObbDownloadHelper(Context context, ObbInfo obbInfo) {
+    public ObbDownloadHelper(Context context, ObbInfo obbInfo, boolean nativeUI) {
         mContext = context;
+        mNativeUI = nativeUI;
         mIsConnected = false;
         mIsFinished = false;
+        mIsDownloadPaused = false;
         int mainVer = obbInfo.getMainObbVersion();
         long mainSize = obbInfo.getMainObbFileSize();
         int patchVer = obbInfo.getPatchObbVersion();
@@ -124,43 +129,19 @@ public class ObbDownloadHelper implements IDownloaderClient {
                 Log.i("APKExpansionDownloader", "Try to download obb files");
                 mDownloaderClientStub = DownloaderClientMarshaller.CreateStub(this, ObbDownloadService.class);
                 // Create and show the progress dialog
-                mDownloadProgressDlg = new MyProgressDialog(activity);
-                mDownloadProgressDlg.show();
+                if (mNativeUI) {
+                    mDownloadProgressDlg = new MyProgressDialog(activity);
+                    mDownloadProgressDlg.show();
+                }
             }
             // No need to download obb files
             else {
                 Log.i("APKExpansionDownloader", "No need to download obb files");
-                downloadSuccess();
+                onDownloadError(ObbStatus.NoDownloadRequired);
             }
         } catch (NameNotFoundException e) {
             e.printStackTrace();
-            downloadFailed();
-        }
-    }
-
-    private void downloadProgress(int progress) {
-        if (mListener != null) {
-            mListener.onProgress(progress);
-        }
-    }
-
-    private void downloadSuccess() {
-        if (!mIsFinished) {
-            disconnect();
-            if (mListener != null) {
-                mListener.onDownloadComplete();
-            }
-            mIsFinished = true;
-        }
-    }
-
-    private void downloadFailed() {
-        if (!mIsFinished) {
-            disconnect();
-            if (mListener != null) {
-                mListener.onDownloadFailed();
-            }
-            mIsFinished = true;
+            onDownloadFailed();
         }
     }
 
@@ -188,6 +169,107 @@ public class ObbDownloadHelper implements IDownloaderClient {
         }
     }
 
+    /**
+     * 继续下载
+     */
+    public void continueDownload() {
+        if (mIsFinished || mRemoteService == null) {
+            return;
+        }
+        if (mIsDownloadPaused) {
+            mRemoteService.requestContinueDownload();
+            onContinueDownload();
+        }
+    }
+
+    private void onContinueDownload() {
+        mIsDownloadPaused = false;
+
+        if (mListener != null) {
+            mListener.onPause(false);
+        }
+    }
+
+    /**
+     * 暂停下载
+     */
+    public void pauseDownload() {
+        if (mIsFinished || mRemoteService == null) {
+            return;
+        }
+        if (!mIsDownloadPaused) {
+            mRemoteService.requestPauseDownload();
+            onPauseDownload();
+        }
+    }
+
+    private void onPauseDownload() {
+        mIsDownloadPaused = true;
+
+        if (mListener != null) {
+            mListener.onPause(true);
+        }
+    }
+
+    /**
+     * 取消下载
+     */
+    public void abortDownload() {
+        if (mRemoteService != null && !mIsFinished) {
+            mRemoteService.requestAbortDownload();
+
+            onAbortDownload();
+        }
+    }
+
+    private void onAbortDownload() {
+        if (!mIsFinished) {
+            disconnect();
+            if (mListener != null) {
+                mListener.onAbort();
+            }
+            mIsFinished = true;
+        }
+    }
+
+    private void onProgressDownload(int progress) {
+        if (!mIsFinished) {
+            if (mListener != null) {
+                mListener.onProgress(progress);
+            }
+        }
+    }
+
+    private void onDownloadSuccess() {
+        if (!mIsFinished) {
+            disconnect();
+            if (mListener != null) {
+                mListener.onSuccess();
+            }
+            mIsFinished = true;
+        }
+    }
+
+    private void onDownloadFailed() {
+        if (!mIsFinished) {
+            disconnect();
+            if (mListener != null) {
+                mListener.onFailed();
+            }
+            mIsFinished = true;
+        }
+    }
+
+    private void onDownloadError(int errorCode) {
+        if (!mIsFinished) {
+            disconnect();
+            if (mListener != null) {
+                mListener.onError(errorCode);
+            }
+            mIsFinished = true;
+        }
+    }
+
     @Override
     public void onServiceConnected(Messenger m) {
         mRemoteService = DownloaderServiceMarshaller.CreateProxy(m);
@@ -201,14 +283,24 @@ public class ObbDownloadHelper implements IDownloaderClient {
         switch (newState) {
             // Download success
             case IDownloaderClient.STATE_COMPLETED:
-                mDownloadProgressDlg.success();
+                if (mNativeUI) {
+                    mDownloadProgressDlg.success();
+                } else {
+                    onProgressDownload(100);
+                    onDownloadSuccess();
+                }
                 break;
             // Download failure
             case IDownloaderClient.STATE_FAILED_CANCELED:
             case IDownloaderClient.STATE_FAILED_FETCHING_URL:
             case IDownloaderClient.STATE_FAILED_UNLICENSED:
             case IDownloaderClient.STATE_FAILED:
-                mDownloadProgressDlg.failed();
+                if (mNativeUI) {
+                    mDownloadProgressDlg.failed();
+                } else {
+                    onDownloadFailed();
+                }
+                mIsDownloadPaused = true;
                 break;
             // Download paused
             case IDownloaderClient.STATE_PAUSED_NEED_CELLULAR_PERMISSION:
@@ -216,7 +308,12 @@ public class ObbDownloadHelper implements IDownloaderClient {
             case IDownloaderClient.STATE_PAUSED_BY_REQUEST:
             case IDownloaderClient.STATE_PAUSED_ROAMING:
             case IDownloaderClient.STATE_PAUSED_SDCARD_UNAVAILABLE:
-                mDownloadProgressDlg.paused();
+                if (mNativeUI) {
+                    mDownloadProgressDlg.paused();
+                } else {
+                    onPauseDownload();
+                }
+                mIsDownloadPaused = true;
                 break;
             // Download resume (do nothing)
             case IDownloaderClient.STATE_IDLE:
@@ -234,8 +331,10 @@ public class ObbDownloadHelper implements IDownloaderClient {
     public void onDownloadProgress(DownloadProgressInfo progress) {
         int progressInPercent = (int) (progress.mOverallProgress * 100 / progress.mOverallTotal);
         Log.i("APKExpansionDownloader", "DownloadProgress: " + progressInPercent);
-        mDownloadProgressDlg.setProgress(progressInPercent);
-        downloadProgress(progressInPercent);
+        if (mNativeUI) {
+            mDownloadProgressDlg.setProgress(progressInPercent);
+        }
+        onProgressDownload(progressInPercent);
     }
 
     // Custom progress dialog
@@ -296,6 +395,7 @@ public class ObbDownloadHelper implements IDownloaderClient {
                             mRemoteService.requestContinueDownload();
                             setTitle(mDlgTitleDownloading);
                             getButton(DialogInterface.BUTTON_POSITIVE).setText(mDlgPauseBtnText);
+                            onContinueDownload();
                             Log.i("APKExpansionDownloader", "download continued by user");
                         }
                         // Current download state is downloading.
@@ -305,6 +405,7 @@ public class ObbDownloadHelper implements IDownloaderClient {
                             mRemoteService.requestPauseDownload();
                             setTitle(mDlgTitlePaused);
                             getButton(DialogInterface.BUTTON_POSITIVE).setText(mDlgResumeBtnText);
+                            onPauseDownload();
                             Log.i("APKExpansionDownloader", "download paused by user");
                         }
                         mIsPaused = !mIsPaused;
@@ -327,7 +428,7 @@ public class ObbDownloadHelper implements IDownloaderClient {
                     // Dismiss the dialog
                     trueDismiss();
                     // Inform the download has been canceled
-                    downloadFailed();
+                    onAbortDownload();
                 }
             });
         }
@@ -350,13 +451,14 @@ public class ObbDownloadHelper implements IDownloaderClient {
             // So a check is necessary
             if (!mIsComplete) {
                 setProgress(100);
+                onProgressDownload(100);
                 setTitle(mDlgTitleComplete);
                 // Close the dialog after two seconds
                 getWindow().getDecorView().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         trueDismiss();
-                        downloadSuccess();
+                        onDownloadSuccess();
                     }
                 }, 2000);
                 mIsComplete = true;

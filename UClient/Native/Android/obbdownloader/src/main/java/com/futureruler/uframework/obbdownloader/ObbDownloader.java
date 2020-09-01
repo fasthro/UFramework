@@ -5,8 +5,8 @@ import android.content.Context;
 import android.widget.Toast;
 
 import com.futureruler.uframework.obbdownloader.core.ObbHelper;
-import com.futureruler.uframework.obbdownloader.core.ObbHelperListener;
 import com.futureruler.uframework.obbdownloader.core.ObbInfo;
+import com.futureruler.uframework.obbdownloader.core.ObbStatus;
 import com.futureruler.uframework.obbdownloader.core.download.ObbDownloadListener;
 
 // obb file download helper
@@ -31,18 +31,21 @@ public class ObbDownloader {
     // obb helper
     static ObbHelper obbHelper;
 
+    // native ui
+    static boolean nativeUI = true;
+
     // 下载接口
-    static UObbDownloadListener uObbDownloadListener;
+    static ObbDownloadListener obbDownloadListener;
 
     /**
      * 初始化
      *
      * @param context
-     * @param isNative 是否使用原生界面
+     * @param nativeUI 是否使用原生界面
      */
-    public static void initialize(Context context, boolean isNative) {
+    public static void initialize(Context context, boolean nativeUI) {
         mainContext = context;
-
+        nativeUI = true;
         obbHelper = new ObbHelper(context, new ObbInfo() {
 
             // This function must be override to return your app's public key
@@ -64,7 +67,7 @@ public class ObbDownloader {
             public long getMainObbFileSize() {
                 return 1546530L;
             }
-        });
+        }, nativeUI);
     }
 
     /**
@@ -95,12 +98,26 @@ public class ObbDownloader {
     }
 
     /**
+     * connect
+     */
+    public static void connect() {
+        obbHelper.connect();
+    }
+
+    /**
+     * disconnect
+     */
+    public static void disconnect() {
+        obbHelper.disconnect();
+    }
+
+    /**
      * 设置下载回调接口
      *
      * @param listener
      */
-    public static void setDownloadListener(UObbDownloadListener listener) {
-        uObbDownloadListener = listener;
+    public static void setDownloadListener(ObbDownloadListener listener) {
+        obbDownloadListener = listener;
     }
 
     /**
@@ -112,31 +129,95 @@ public class ObbDownloader {
             obbHelper.downloadExpansionFiles(getActivity(), new ObbDownloadListener() {
                 @Override
                 public void onProgress(int progress) {
-                    if (uObbDownloadListener != null) {
-                        uObbDownloadListener.onProgress(progress);
+                    if (obbDownloadListener != null) {
+                        obbDownloadListener.onProgress(progress);
                     }
                 }
 
                 @Override
-                public void onDownloadComplete() {
-                    showToast("Download success.");
-                    if (uObbDownloadListener != null) {
-                        uObbDownloadListener.onSuccess();
+                public void onSuccess() {
+                    if (nativeUI) {
+                        showToast("download success.");
+                    }
+                    if (obbDownloadListener != null) {
+                        obbDownloadListener.onSuccess();
                     }
                 }
 
                 @Override
-                public void onDownloadFailed() {
-                    showToast("Download failed.");
-                    if (uObbDownloadListener != null) {
-                        uObbDownloadListener.onFailed(0);
+                public void onFailed() {
+                    if (nativeUI) {
+                        showToast("download failed.");
+                    }
+                    if (obbDownloadListener != null) {
+                        obbDownloadListener.onFailed();
+                    }
+                }
+
+                @Override
+                public void onPause(boolean pause) {
+                    if (nativeUI) {
+                        if (pause) {
+                            showToast("download paused.");
+                        } else {
+                            showToast("download continue.");
+                        }
+                    }
+                    if (obbDownloadListener != null) {
+                        obbDownloadListener.onPause(pause);
+                    }
+                }
+
+                @Override
+                public void onAbort() {
+                    if (nativeUI) {
+                        showToast("download abort.");
+                    }
+                    if (obbDownloadListener != null) {
+                        obbDownloadListener.onAbort();
+                    }
+                }
+
+                @Override
+                public void onError(int errorCode) {
+                    if (nativeUI) {
+                        showToast("errorCode: " + errorCode);
+                    }
+                    if (obbDownloadListener != null) {
+                        obbDownloadListener.onError(errorCode);
                     }
                 }
             });
 
             obbHelper.connect();
         } else {
-            showToast("Expansion files are already delivered.");
+            if (nativeUI) {
+                showToast("Expansion files are already delivered.");
+            }
+            if (obbDownloadListener != null) {
+                obbDownloadListener.onError(ObbStatus.NoDownloadRequired);
+            }
         }
+    }
+
+    /**
+     * 继续下载扩展文件
+     */
+    public static void continueDownload() {
+        obbHelper.continueDownload();
+    }
+
+    /**
+     * 暂停下载扩展文件
+     */
+    public static void pauseDownload() {
+        obbHelper.pauseDownload();
+    }
+
+    /**
+     * 取消下载扩展文件
+     */
+    public static void abortDownload() {
+        obbHelper.abortDownload();
     }
 }

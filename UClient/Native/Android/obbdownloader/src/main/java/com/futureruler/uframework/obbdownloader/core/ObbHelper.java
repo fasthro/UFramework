@@ -12,19 +12,21 @@ import android.content.Context;
 
 /*
  * This is a wrapper class of ObbDownloadHelper ObbCopyHelper and ObbUnzipHelper
- * Use this class, you can download, unzip or copy the obb files. 
+ * Use this class, you can download, unzip or copy the obb files.
  */
 public class ObbHelper {
 
     private Context mContext;
     private ObbInfo mObbInfo;
+    private boolean mNativeUI;
     private ObbDownloadHelper mDownloadHelper;
     private ObbCopyHelper mCopyHelper;
     private ObbUnzipHelper mUnzipHelper;
 
-    public ObbHelper(Context context, ObbInfo obbInfo) {
+    public ObbHelper(Context context, ObbInfo obbInfo, boolean nativeUI) {
         mContext = context;
         mObbInfo = obbInfo;
+        mNativeUI = nativeUI;
     }
 
     // Check whether the expansion files (obb files) have already delivered
@@ -47,6 +49,27 @@ public class ObbHelper {
     // Call disconnect() in onStop() method of activity
     public void disconnect() {
         getDownloaderHelper().disconnect();
+    }
+
+    /**
+     * 继续下载
+     */
+    public void continueDownload() {
+        getDownloaderHelper().continueDownload();
+    }
+
+    /**
+     * 暂停下载
+     */
+    public void pauseDownload() {
+        getDownloaderHelper().pauseDownload();
+    }
+
+    /**
+     * 取消下载
+     */
+    public void abortDownload() {
+        getDownloaderHelper().abortDownload();
     }
 
     // Copy all obb files to the target folder
@@ -81,7 +104,7 @@ public class ObbHelper {
 
     private ObbDownloadHelper getDownloaderHelper() {
         if (mDownloadHelper == null) {
-            mDownloadHelper = new ObbDownloadHelper(mContext, mObbInfo);
+            mDownloadHelper = new ObbDownloadHelper(mContext, mObbInfo, mNativeUI);
         }
         return mDownloadHelper;
     }
