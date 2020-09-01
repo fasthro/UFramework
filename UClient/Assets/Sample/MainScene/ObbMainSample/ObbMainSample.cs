@@ -1,3 +1,4 @@
+using UFramework.Native;
 using UFramework.Native.Service;
 using UnityEngine;
 
@@ -61,6 +62,11 @@ namespace UFramework.Sample
             if (GUILayout.Button("Abort Download", GUILayout.Width(300), GUILayout.Height(100)))
             {
                 ObbDownloader.AbortDownload();
+            }
+
+            if (GUILayout.Button("Restart App", GUILayout.Width(300), GUILayout.Height(100)))
+            {
+                UNative.utils.Restart();
             }
         }
 

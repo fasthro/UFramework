@@ -86,20 +86,16 @@ namespace UFramework.Native
             }
         }
 
-        private static AndroidJavaClass _appNative;
-
-        /// <summary>
-        /// app
-        /// </summary>
-        public static AndroidJavaClass AppNative
+        private static AndroidJavaClass _native;
+        public static AndroidJavaClass native
         {
             get
             {
-                if (_appNative == null)
+                if (_native == null)
                 {
-                    _appNative = new AndroidJavaClass(MAIN_PACKAGE + ".App");
+                    _native = new AndroidJavaClass(MAIN_PACKAGE + ".App");
                 }
-                return _appNative;
+                return _native;
             }
         }
 
@@ -108,7 +104,7 @@ namespace UFramework.Native
         /// </summary>
         public static void Initialize()
         {
-            AppNative.CallStatic("initialize", Context);
+            native.CallStatic("initialize", Context);
             ObbDownloader.Initialize();
         }
     }

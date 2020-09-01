@@ -4,7 +4,6 @@
  * @Description: Native
  */
 using UFramework.Native.Service;
-using UnityEngine;
 
 namespace UFramework.Native
 {
@@ -19,11 +18,18 @@ namespace UFramework.Native
         public static Device device { get; private set; }
 
         /// <summary>
+        /// utils
+        /// </summary>
+        /// <returns></returns>
+        public static Service.Utils utils { get; private set; }
+
+        /// <summary>
         /// awake
         /// </summary>
         protected override void OnSingletonAwake()
         {
             device = new Device();
+            utils = new Service.Utils();
 
 #if !UNITY_EDITOR && UNITY_ANDROID
             NativeAndroid.Initialize();

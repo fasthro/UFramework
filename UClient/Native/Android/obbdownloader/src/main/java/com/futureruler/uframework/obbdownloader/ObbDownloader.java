@@ -41,11 +41,11 @@ public class ObbDownloader {
      * 初始化
      *
      * @param context
-     * @param nativeUI 是否使用原生界面
+     * @param isNativeUI 是否使用原生界面
      */
-    public static void initialize(Context context, boolean nativeUI) {
+    public static void initialize(Context context, boolean isNativeUI) {
         mainContext = context;
-        nativeUI = true;
+        nativeUI = isNativeUI;
         obbHelper = new ObbHelper(context, new ObbInfo() {
 
             // This function must be override to return your app's public key

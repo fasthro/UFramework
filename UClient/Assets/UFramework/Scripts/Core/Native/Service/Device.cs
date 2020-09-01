@@ -19,21 +19,34 @@ namespace UFramework.Native.Service
         /// <returns></returns>
         string DeviceCountryISO();
     }
-    
-    public class DeviceAndroid : IDevice
+
+    public class AndroidDevice : IDevice
     {
         public string DeviceId()
         {
-            return NativeAndroid.AppNative.CallStatic<string>("getDeviceId");
+            return NativeAndroid.native.CallStatic<string>("getDeviceId");
         }
 
         public string DeviceCountryISO()
         {
-            return NativeAndroid.AppNative.CallStatic<string>("getDeviceCountry");
+            return NativeAndroid.native.CallStatic<string>("getDeviceCountry");
         }
     }
 
-    public class DeviceIOS : IDevice
+    public class IOSDevice : IDevice
+    {
+        public string DeviceId()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public string DeviceCountryISO()
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
+    public class UnknownDevice : IDevice
     {
         public string DeviceId()
         {
@@ -51,24 +64,17 @@ namespace UFramework.Native.Service
     /// </summary>
     public class Device : IDevice
     {
-#if !UNITY_EDITOR && UNITY_ANDROID
-        static DeviceAndroid android = new DeviceAndroid();
-#elif !UNITY_EDITOR && UNITY_IOS
-        static DeviceIOS ios = new DeviceIOS();
-#endif
+        private IOSDevice unknown = new IOSDevice();
+        private AndroidDevice android = new AndroidDevice();
+        private IOSDevice ios = new IOSDevice();
+
         /// <summary>
         /// 设备唯一标识
         /// </summary>
         /// <returns></returns>
         public string DeviceId()
         {
-#if !UNITY_EDITOR && UNITY_ANDROID
-            return android.DeviceId();
-#elif !UNITY_EDITOR && UNITY_IOS
-            return ios.DeviceId();
-#else
-            return null;
-#endif
+            return GetChannel().DeviceId();
         }
 
         /// <summary>
@@ -77,12 +83,17 @@ namespace UFramework.Native.Service
         /// <returns></returns>
         public string DeviceCountryISO()
         {
+            return GetChannel().DeviceCountryISO();
+        }
+
+        IDevice GetChannel()
+        {
 #if !UNITY_EDITOR && UNITY_ANDROID
-            return android.DeviceCountryISO();
+            return android;
 #elif !UNITY_EDITOR && UNITY_IOS
-            return ios.DeviceCountryISO();
+            return ios;
 #else
-            return null;
+            return unknown;
 #endif
         }
     }
