@@ -18,6 +18,21 @@ namespace UFramework.Sample
             {
                 Debug.Log("设备所处国家ISO：" + UNative.device.DeviceCountryISO());
             }
+
+            if (GUILayout.Button("Restart App", GUILayout.Width(300), GUILayout.Height(100)))
+            {
+                UNative.utils.Restart();
+            }
+
+            if (GUILayout.Button("Set ClipBoard", GUILayout.Width(300), GUILayout.Height(100)))
+            {
+                UNative.utils.SetClipBoard("UFramework-" + Random.Range(1, 100));
+            }
+
+            if (GUILayout.Button("Get ClipBoard", GUILayout.Width(300), GUILayout.Height(100)))
+            {
+                Debug.Log("ClipBoard Text: " + UNative.utils.GetClipBoard());
+            }
         }
     }
 }

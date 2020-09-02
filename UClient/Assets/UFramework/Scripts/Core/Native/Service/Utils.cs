@@ -13,6 +13,17 @@ namespace UFramework.Native.Service
         /// 重启应用
         /// </summary>
         void Restart();
+
+        /// <summary>
+        /// 设置剪切板（Copy）
+        /// </summary>
+        /// <param name="text"></param>
+        void SetClipBoard(string text);
+
+        /// <summary>
+        /// 从剪切板获取文本
+        /// </summary>
+        string GetClipBoard();
     }
 
     public class AndroidUtils : IUtils
@@ -34,6 +45,16 @@ namespace UFramework.Native.Service
         {
             native.CallStatic("restart");
         }
+
+        public void SetClipBoard(string text)
+        {
+            native.CallStatic("setClipBoard", text);
+        }
+
+        public string GetClipBoard()
+        {
+            return native.CallStatic<string>("getClipBoard");
+        }
     }
 
     public class IOSUtils : IUtils
@@ -42,11 +63,31 @@ namespace UFramework.Native.Service
         {
             throw new System.NotImplementedException();
         }
+
+        public void SetClipBoard(string text)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public string GetClipBoard()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 
     public class UnknownUtils : IUtils
     {
         public void Restart()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void SetClipBoard(string text)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public string GetClipBoard()
         {
             throw new System.NotImplementedException();
         }
@@ -64,6 +105,24 @@ namespace UFramework.Native.Service
         public void Restart()
         {
             GetChannel().Restart();
+        }
+
+        /// <summary>
+        /// 设置剪切板（Copy）
+        /// </summary>
+        /// <param name="text"></param>
+        public void SetClipBoard(string text)
+        {
+            GetChannel().SetClipBoard(text);
+        }
+
+        /// <summary>
+        /// 从剪切板获取文本
+        /// </summary>
+        /// <returns></returns>
+        public string GetClipBoard()
+        {
+            return GetChannel().GetClipBoard();
         }
 
         IUtils GetChannel()
