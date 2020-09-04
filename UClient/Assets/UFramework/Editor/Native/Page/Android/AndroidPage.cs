@@ -76,21 +76,6 @@ namespace UFramework.Editor.Native
                 }
 
                 IOPath.FileDelete(IOPath.PathCombine(destRoot, "uframework-" + moduleName + ".aar"));
-                
-                // TODO settting libs
-                // if (IOPath.DirectoryExists(libsRoot))
-                // {
-                //     var libs = Directory.GetFiles(libsRoot, "*.jar", SearchOption.AllDirectories);
-                //     for (int k = 0; k < libs.Length; k++)
-                //     {
-                //         var sourceLibFile = libs[k];
-                //         var libFileName = IOPath.FileName(sourceLibFile, true);
-                //         var destLibFile = IOPath.PathCombine(destRoot, libFileName);
-                //         IOPath.FileDelete(destLibFile);
-                //         IOPath.FileCopy(sourceLibFile, destLibFile);
-                //     }
-                // }
-
                 IOPath.FileCopy(sourceFile, destFile);
             }
         }

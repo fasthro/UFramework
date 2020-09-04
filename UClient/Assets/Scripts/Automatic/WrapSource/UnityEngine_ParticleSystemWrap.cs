@@ -11,6 +11,10 @@ public class UnityEngine_ParticleSystemWrap
 		L.RegFunction("GetParticles", GetParticles);
 		L.RegFunction("SetCustomParticleData", SetCustomParticleData);
 		L.RegFunction("GetCustomParticleData", GetCustomParticleData);
+		L.RegFunction("GetPlaybackState", GetPlaybackState);
+		L.RegFunction("SetPlaybackState", SetPlaybackState);
+		L.RegFunction("GetTrails", GetTrails);
+		L.RegFunction("SetTrails", SetTrails);
 		L.RegFunction("Simulate", Simulate);
 		L.RegFunction("Play", Play);
 		L.RegFunction("Pause", Pause);
@@ -20,7 +24,6 @@ public class UnityEngine_ParticleSystemWrap
 		L.RegFunction("Emit", Emit);
 		L.RegFunction("TriggerSubEmitter", TriggerSubEmitter);
 		L.RegFunction("ResetPreMappedBufferMemory", ResetPreMappedBufferMemory);
-		L.RegFunction("ClearJob", ClearJob);
 		L.RegFunction("New", _CreateUnityEngine_ParticleSystem);
 		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", ToLua.op_ToString);
@@ -88,27 +91,51 @@ public class UnityEngine_ParticleSystemWrap
 		{
 			int count = LuaDLL.lua_gettop(L);
 
-			if (count == 2)
+			if (count == 2 && TypeChecker.CheckTypes<UnityEngine.ParticleSystem.Particle[]>(L, 2))
 			{
 				UnityEngine.ParticleSystem obj = (UnityEngine.ParticleSystem)ToLua.CheckObject(L, 1, typeof(UnityEngine.ParticleSystem));
-				UnityEngine.ParticleSystem.Particle[] arg0 = ToLua.CheckStructArray<UnityEngine.ParticleSystem.Particle>(L, 2);
+				UnityEngine.ParticleSystem.Particle[] arg0 = ToLua.ToStructArray<UnityEngine.ParticleSystem.Particle>(L, 2);
 				obj.SetParticles(arg0);
 				return 0;
 			}
-			else if (count == 3)
+			else if (count == 2 && TypeChecker.CheckTypes<Unity.Collections.NativeArray<UnityEngine.ParticleSystem.Particle>>(L, 2))
 			{
 				UnityEngine.ParticleSystem obj = (UnityEngine.ParticleSystem)ToLua.CheckObject(L, 1, typeof(UnityEngine.ParticleSystem));
-				UnityEngine.ParticleSystem.Particle[] arg0 = ToLua.CheckStructArray<UnityEngine.ParticleSystem.Particle>(L, 2);
-				int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+				Unity.Collections.NativeArray<UnityEngine.ParticleSystem.Particle> arg0 = StackTraits<Unity.Collections.NativeArray<UnityEngine.ParticleSystem.Particle>>.To(L, 2);
+				obj.SetParticles(arg0);
+				return 0;
+			}
+			else if (count == 3 && TypeChecker.CheckTypes<UnityEngine.ParticleSystem.Particle[], int>(L, 2))
+			{
+				UnityEngine.ParticleSystem obj = (UnityEngine.ParticleSystem)ToLua.CheckObject(L, 1, typeof(UnityEngine.ParticleSystem));
+				UnityEngine.ParticleSystem.Particle[] arg0 = ToLua.ToStructArray<UnityEngine.ParticleSystem.Particle>(L, 2);
+				int arg1 = (int)LuaDLL.lua_tonumber(L, 3);
 				obj.SetParticles(arg0, arg1);
 				return 0;
 			}
-			else if (count == 4)
+			else if (count == 3 && TypeChecker.CheckTypes<Unity.Collections.NativeArray<UnityEngine.ParticleSystem.Particle>, int>(L, 2))
 			{
 				UnityEngine.ParticleSystem obj = (UnityEngine.ParticleSystem)ToLua.CheckObject(L, 1, typeof(UnityEngine.ParticleSystem));
-				UnityEngine.ParticleSystem.Particle[] arg0 = ToLua.CheckStructArray<UnityEngine.ParticleSystem.Particle>(L, 2);
-				int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
-				int arg2 = (int)LuaDLL.luaL_checknumber(L, 4);
+				Unity.Collections.NativeArray<UnityEngine.ParticleSystem.Particle> arg0 = StackTraits<Unity.Collections.NativeArray<UnityEngine.ParticleSystem.Particle>>.To(L, 2);
+				int arg1 = (int)LuaDLL.lua_tonumber(L, 3);
+				obj.SetParticles(arg0, arg1);
+				return 0;
+			}
+			else if (count == 4 && TypeChecker.CheckTypes<UnityEngine.ParticleSystem.Particle[], int, int>(L, 2))
+			{
+				UnityEngine.ParticleSystem obj = (UnityEngine.ParticleSystem)ToLua.CheckObject(L, 1, typeof(UnityEngine.ParticleSystem));
+				UnityEngine.ParticleSystem.Particle[] arg0 = ToLua.ToStructArray<UnityEngine.ParticleSystem.Particle>(L, 2);
+				int arg1 = (int)LuaDLL.lua_tonumber(L, 3);
+				int arg2 = (int)LuaDLL.lua_tonumber(L, 4);
+				obj.SetParticles(arg0, arg1, arg2);
+				return 0;
+			}
+			else if (count == 4 && TypeChecker.CheckTypes<Unity.Collections.NativeArray<UnityEngine.ParticleSystem.Particle>, int, int>(L, 2))
+			{
+				UnityEngine.ParticleSystem obj = (UnityEngine.ParticleSystem)ToLua.CheckObject(L, 1, typeof(UnityEngine.ParticleSystem));
+				Unity.Collections.NativeArray<UnityEngine.ParticleSystem.Particle> arg0 = StackTraits<Unity.Collections.NativeArray<UnityEngine.ParticleSystem.Particle>>.To(L, 2);
+				int arg1 = (int)LuaDLL.lua_tonumber(L, 3);
+				int arg2 = (int)LuaDLL.lua_tonumber(L, 4);
 				obj.SetParticles(arg0, arg1, arg2);
 				return 0;
 			}
@@ -130,29 +157,56 @@ public class UnityEngine_ParticleSystemWrap
 		{
 			int count = LuaDLL.lua_gettop(L);
 
-			if (count == 2)
+			if (count == 2 && TypeChecker.CheckTypes<UnityEngine.ParticleSystem.Particle[]>(L, 2))
 			{
 				UnityEngine.ParticleSystem obj = (UnityEngine.ParticleSystem)ToLua.CheckObject(L, 1, typeof(UnityEngine.ParticleSystem));
-				UnityEngine.ParticleSystem.Particle[] arg0 = ToLua.CheckStructArray<UnityEngine.ParticleSystem.Particle>(L, 2);
+				UnityEngine.ParticleSystem.Particle[] arg0 = ToLua.ToStructArray<UnityEngine.ParticleSystem.Particle>(L, 2);
 				int o = obj.GetParticles(arg0);
 				LuaDLL.lua_pushinteger(L, o);
 				return 1;
 			}
-			else if (count == 3)
+			else if (count == 2 && TypeChecker.CheckTypes<Unity.Collections.NativeArray<UnityEngine.ParticleSystem.Particle>>(L, 2))
 			{
 				UnityEngine.ParticleSystem obj = (UnityEngine.ParticleSystem)ToLua.CheckObject(L, 1, typeof(UnityEngine.ParticleSystem));
-				UnityEngine.ParticleSystem.Particle[] arg0 = ToLua.CheckStructArray<UnityEngine.ParticleSystem.Particle>(L, 2);
-				int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+				Unity.Collections.NativeArray<UnityEngine.ParticleSystem.Particle> arg0 = StackTraits<Unity.Collections.NativeArray<UnityEngine.ParticleSystem.Particle>>.To(L, 2);
+				int o = obj.GetParticles(arg0);
+				LuaDLL.lua_pushinteger(L, o);
+				return 1;
+			}
+			else if (count == 3 && TypeChecker.CheckTypes<UnityEngine.ParticleSystem.Particle[], int>(L, 2))
+			{
+				UnityEngine.ParticleSystem obj = (UnityEngine.ParticleSystem)ToLua.CheckObject(L, 1, typeof(UnityEngine.ParticleSystem));
+				UnityEngine.ParticleSystem.Particle[] arg0 = ToLua.ToStructArray<UnityEngine.ParticleSystem.Particle>(L, 2);
+				int arg1 = (int)LuaDLL.lua_tonumber(L, 3);
 				int o = obj.GetParticles(arg0, arg1);
 				LuaDLL.lua_pushinteger(L, o);
 				return 1;
 			}
-			else if (count == 4)
+			else if (count == 3 && TypeChecker.CheckTypes<Unity.Collections.NativeArray<UnityEngine.ParticleSystem.Particle>, int>(L, 2))
 			{
 				UnityEngine.ParticleSystem obj = (UnityEngine.ParticleSystem)ToLua.CheckObject(L, 1, typeof(UnityEngine.ParticleSystem));
-				UnityEngine.ParticleSystem.Particle[] arg0 = ToLua.CheckStructArray<UnityEngine.ParticleSystem.Particle>(L, 2);
-				int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
-				int arg2 = (int)LuaDLL.luaL_checknumber(L, 4);
+				Unity.Collections.NativeArray<UnityEngine.ParticleSystem.Particle> arg0 = StackTraits<Unity.Collections.NativeArray<UnityEngine.ParticleSystem.Particle>>.To(L, 2);
+				int arg1 = (int)LuaDLL.lua_tonumber(L, 3);
+				int o = obj.GetParticles(arg0, arg1);
+				LuaDLL.lua_pushinteger(L, o);
+				return 1;
+			}
+			else if (count == 4 && TypeChecker.CheckTypes<UnityEngine.ParticleSystem.Particle[], int, int>(L, 2))
+			{
+				UnityEngine.ParticleSystem obj = (UnityEngine.ParticleSystem)ToLua.CheckObject(L, 1, typeof(UnityEngine.ParticleSystem));
+				UnityEngine.ParticleSystem.Particle[] arg0 = ToLua.ToStructArray<UnityEngine.ParticleSystem.Particle>(L, 2);
+				int arg1 = (int)LuaDLL.lua_tonumber(L, 3);
+				int arg2 = (int)LuaDLL.lua_tonumber(L, 4);
+				int o = obj.GetParticles(arg0, arg1, arg2);
+				LuaDLL.lua_pushinteger(L, o);
+				return 1;
+			}
+			else if (count == 4 && TypeChecker.CheckTypes<Unity.Collections.NativeArray<UnityEngine.ParticleSystem.Particle>, int, int>(L, 2))
+			{
+				UnityEngine.ParticleSystem obj = (UnityEngine.ParticleSystem)ToLua.CheckObject(L, 1, typeof(UnityEngine.ParticleSystem));
+				Unity.Collections.NativeArray<UnityEngine.ParticleSystem.Particle> arg0 = StackTraits<Unity.Collections.NativeArray<UnityEngine.ParticleSystem.Particle>>.To(L, 2);
+				int arg1 = (int)LuaDLL.lua_tonumber(L, 3);
+				int arg2 = (int)LuaDLL.lua_tonumber(L, 4);
 				int o = obj.GetParticles(arg0, arg1, arg2);
 				LuaDLL.lua_pushinteger(L, o);
 				return 1;
@@ -198,6 +252,74 @@ public class UnityEngine_ParticleSystemWrap
 			int o = obj.GetCustomParticleData(arg0, arg1);
 			LuaDLL.lua_pushinteger(L, o);
 			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int GetPlaybackState(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			UnityEngine.ParticleSystem obj = (UnityEngine.ParticleSystem)ToLua.CheckObject(L, 1, typeof(UnityEngine.ParticleSystem));
+			UnityEngine.ParticleSystem.PlaybackState o = obj.GetPlaybackState();
+			ToLua.PushValue(L, o);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int SetPlaybackState(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			UnityEngine.ParticleSystem obj = (UnityEngine.ParticleSystem)ToLua.CheckObject(L, 1, typeof(UnityEngine.ParticleSystem));
+			UnityEngine.ParticleSystem.PlaybackState arg0 = StackTraits<UnityEngine.ParticleSystem.PlaybackState>.Check(L, 2);
+			obj.SetPlaybackState(arg0);
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int GetTrails(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			UnityEngine.ParticleSystem obj = (UnityEngine.ParticleSystem)ToLua.CheckObject(L, 1, typeof(UnityEngine.ParticleSystem));
+			UnityEngine.ParticleSystem.Trails o = obj.GetTrails();
+			ToLua.PushValue(L, o);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int SetTrails(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			UnityEngine.ParticleSystem obj = (UnityEngine.ParticleSystem)ToLua.CheckObject(L, 1, typeof(UnityEngine.ParticleSystem));
+			UnityEngine.ParticleSystem.Trails arg0 = StackTraits<UnityEngine.ParticleSystem.Trails>.Check(L, 2);
+			obj.SetTrails(arg0);
+			return 0;
 		}
 		catch (Exception e)
 		{
@@ -504,22 +626,6 @@ public class UnityEngine_ParticleSystemWrap
 		{
 			ToLua.CheckArgsCount(L, 0);
 			UnityEngine.ParticleSystem.ResetPreMappedBufferMemory();
-			return 0;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int ClearJob(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 1);
-			UnityEngine.ParticleSystem obj = (UnityEngine.ParticleSystem)ToLua.CheckObject(L, 1, typeof(UnityEngine.ParticleSystem));
-			obj.ClearJob();
 			return 0;
 		}
 		catch (Exception e)

@@ -28,6 +28,19 @@ namespace UFramework.Editor.Preferences
         public string path;
 
         /// <summary>
+        /// path md5 value
+        /// </summary>
+        /// <value></value>
+        [HideInInspector]
+        public string pathMD5
+        {
+            get
+            {
+                return Utils.Str2MD5(path);
+            }
+        }
+
+        /// <summary>
         /// 用于排序
         /// </summary>
         [HideInInspector]

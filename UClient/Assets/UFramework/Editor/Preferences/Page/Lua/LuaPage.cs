@@ -4,6 +4,7 @@
  * @Description: Lua/ToLua Page
  */
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using LuaInterface;
@@ -14,6 +15,7 @@ using UFramework.Lua;
 using UnityEditor;
 using UnityEngine;
 using static ToLuaMenu;
+using Debug = UnityEngine.Debug;
 
 namespace UFramework.Editor.Preferences
 {
@@ -67,6 +69,16 @@ namespace UFramework.Editor.Preferences
             {
                 ClearWrap();
             }
+
+            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Build Code")))
+            {
+                BuildCode(false);
+            }
+
+            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Build Encode Code")))
+            {
+                BuildCode(true);
+            }
         }
 
         public void OnSaveDescribe()
@@ -103,8 +115,6 @@ namespace UFramework.Editor.Preferences
         {
             string[] builtIns = new string[] { "Assets/UFramework/3rd/ToLua/ToLua/Lua",
             "Assets/UFramework/Scripts/Lua",
-            "Assets/UFramework/Scripts/Lua/Core",
-            "Assets/UFramework/Scripts/Lua/Core/TypeSystem",
             "Assets/Scripts/Lua" };
             for (int i = 0; i < builtIns.Length; i++)
             {
@@ -281,5 +291,94 @@ namespace UFramework.Editor.Preferences
         }
 
         #endregion
+
+        #region build code
+
+        /// <summary>
+        /// 构建lua代码
+        /// </summary>
+        private void BuildCode(bool encode)
+        {
+            IOPath.DirectoryClear(App.LuaDataDirectory);
+
+            for (int i = 0; i < searchPaths.Count; i++)
+            {
+                var searchItem = searchPaths[i];
+                var files = IOPath.DirectoryGetFiles(searchItem.path);
+                foreach (string file in files)
+                {
+                    if (file.EndsWith(".meta")) continue;
+                    var newFile = IOPath.PathCombine(App.LuaDataDirectory, searchItem.pathMD5) + IOPath.PathReplace(file, searchItem.path);
+                    var root = Path.GetDirectoryName(newFile);
+                    if (!IOPath.DirectoryExists(root)) IOPath.DirectoryCreate(root);
+                    if (encode)
+                    {
+                        EncodeLuaFile(file, newFile);
+                    }
+                    else
+                    {
+                        IOPath.FileCopy(file, newFile);
+                    }
+
+                    UpdateProgress(i, files.Length, newFile);
+                }
+                EditorUtility.ClearProgressBar();
+            }
+            AssetDatabase.Refresh();
+        }
+
+        /// <summary>
+        /// encode lua
+        /// </summary>
+        /// <param name="srcFile"></param>
+        /// <param name="outFile"></param>
+        static void EncodeLuaFile(string srcFile, string outFile)
+        {
+            srcFile = Path.GetFullPath(srcFile);
+            if (!srcFile.ToLower().EndsWith(".lua"))
+            {
+                File.Copy(srcFile, outFile, true);
+                return;
+            }
+            bool isWin = true;
+            string luaexe = string.Empty;
+            string args = string.Empty;
+            string exedir = string.Empty;
+            string currDir = Directory.GetCurrentDirectory();
+            if (Application.platform == RuntimePlatform.WindowsEditor)
+            {
+                isWin = true;
+                luaexe = "luajit.exe";
+                args = "-b -g " + srcFile + " " + outFile;
+                exedir = IOPath.PathCombine(IOPath.PathParent(Application.dataPath), "LuaEncoder", "luajit");
+            }
+            else if (Application.platform == RuntimePlatform.OSXEditor)
+            {
+                isWin = false;
+                luaexe = "./luajit";
+                args = "-b -g " + srcFile + " " + outFile;
+                exedir = IOPath.PathCombine(IOPath.PathParent(Application.dataPath), "LuaEncoder", "luajit_mac");
+            }
+            Directory.SetCurrentDirectory(exedir);
+            ProcessStartInfo info = new ProcessStartInfo();
+            info.FileName = luaexe;
+            info.Arguments = args;
+            info.WindowStyle = ProcessWindowStyle.Hidden;
+            info.UseShellExecute = isWin;
+            info.ErrorDialog = true;
+            Debug.Log(info.FileName + " " + info.Arguments);
+
+            Process pro = Process.Start(info);
+            pro.WaitForExit();
+            Directory.SetCurrentDirectory(currDir);
+        }
+        #endregion
+
+        static void UpdateProgress(int progress, int progressMax, string desc)
+        {
+            string title = "Processing...[" + progress + " - " + progressMax + "]";
+            float value = (float)progress / (float)progressMax;
+            EditorUtility.DisplayProgressBar(title, desc, value);
+        }
     }
 }

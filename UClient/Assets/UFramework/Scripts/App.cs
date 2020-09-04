@@ -244,7 +244,7 @@ namespace UFramework
         /// lua script 所在数据目录(非开发模式读取此目录)
         /// </summary>
         /// <value></value>
-        public static string luaDataDirectory
+        public static string LuaDataDirectory
         {
             get
             {

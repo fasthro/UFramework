@@ -84,6 +84,20 @@ namespace UFramework
             }
         }
 
+        /// <summary>
+        /// GetFiles 目录
+        /// </summary>
+        /// <param name="directory"></param>
+        /// <param name="searchPattern"></param>
+        /// <param name="searchOption"></param>
+        /// <returns></returns>
+        public static string[] DirectoryGetFiles(string directory, string searchPattern = "*.*", SearchOption searchOption = SearchOption.AllDirectories)
+        {
+            if (!Directory.Exists(directory))
+                return new string[0];
+            return Directory.GetFiles(directory, searchPattern, searchOption);
+        }
+
         #endregion
 
         #region Path
@@ -194,6 +208,19 @@ namespace UFramework
             }
             return null;
         }
+
+        /// <summary>
+        /// Replace Path
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="oldValue"></param>
+        /// <param name="newValue"></param>
+        /// <returns></returns>
+        public static string PathReplace(string path, string oldValue, string newValue = "")
+        {
+            return path.Replace(oldValue, newValue);
+        }
+
 
         /// <summary>
         /// Reset Relatative To Assets Path

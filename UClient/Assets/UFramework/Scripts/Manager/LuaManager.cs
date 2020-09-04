@@ -109,7 +109,7 @@ namespace UFramework
             }
             else
             {
-                lua.AddSearchPath(App.luaDataDirectory);
+                lua.AddSearchPath(App.LuaDataDirectory);
             }
         }
 
