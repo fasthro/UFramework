@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using UFramework.Config;
 using UnityEngine;
 
 namespace UFramework
@@ -30,6 +31,24 @@ namespace UFramework
                     _assetsDirectory = IOPath.PathUnitySeparator(IOPath.PathCombine(Application.dataPath, "UAssets"));
                 }
                 return _assetsDirectory;
+            }
+        }
+
+        private static string _tempDirectory;
+
+        /// <summary>
+        /// 临时目录
+        /// </summary>
+        /// <value></value>
+        public static string UTempDirectory
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_tempDirectory))
+                {
+                    _tempDirectory = IOPath.PathCombine(IOPath.PathParent(Application.dataPath), "UTemp");
+                }
+                return _tempDirectory;
             }
         }
 
@@ -158,6 +177,24 @@ namespace UFramework
             }
         }
 
+        public static string _editorBundleDirectory = null;
+
+        /// <summary>
+        /// Bundle Temp 目录
+        /// </summary>
+        /// <value></value>
+        public static string BundleTempDirectory
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_editorBundleDirectory))
+                {
+                    _editorBundleDirectory = IOPath.PathCombine(UTempDirectory, BundlePlatformName);
+                }
+                return _editorBundleDirectory;
+            }
+        }
+
         public static string _bundleDirectory = null;
 
         /// <summary>
@@ -168,13 +205,16 @@ namespace UFramework
         {
             get
             {
-                if (_bundleDirectory == null)
+                if (string.IsNullOrEmpty(_bundleDirectory))
                 {
                     if (!Application.isPlaying)
                     {
                         _bundleDirectory = IOPath.PathCombine(Application.streamingAssetsPath, BundlePlatformName);
                     }
-                    _bundleDirectory = IOPath.PathCombine(DataDirectory, BundlePlatformName);
+                    else
+                    {
+                        _bundleDirectory = IOPath.PathCombine(DataDirectory, BundlePlatformName);
+                    }
                 }
                 return _bundleDirectory;
             }
@@ -238,6 +278,26 @@ namespace UFramework
         #endregion
 
         #region lua
+        
+        private static string _luaTempDataDirectory = null;
+
+        /// <summary>
+        /// lua temp script 所在数据目录(非开发模式读取此目录)
+        /// </summary>
+        /// <value></value>
+        public static string LuaTempDataDirectory
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_luaTempDataDirectory))
+                {
+                    _luaTempDataDirectory = IOPath.PathCombine(UTempDirectory, "Scripts");
+                }
+                return _luaTempDataDirectory;
+            }
+        }
+
+
         private static string _luaDataDirectory = null;
 
         /// <summary>

@@ -11,7 +11,7 @@ public class UnityGuiConsole : MonoBehaviour
 
     private static readonly int MAX_LOG = 250;
     private static readonly int WND_ID = 0x1435;
-    private static readonly float EDGE_X = 16, EDGE_Y = 1280;
+    private static readonly float EDGE_X = 350, EDGE_Y = 0;
 
     public bool Visible = false;
 

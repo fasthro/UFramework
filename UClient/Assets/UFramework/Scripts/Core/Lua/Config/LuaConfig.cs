@@ -15,6 +15,12 @@ namespace UFramework.Lua
         public string name { get { return "LuaConfig"; } }
 
         /// <summary>
+        /// 使用字节编码
+        /// </summary>
+        /// <value></value>
+        public bool byteEncode { get; set; }
+
+        /// <summary>
         /// lua search paths
         /// </summary>
         /// <value></value>

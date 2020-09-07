@@ -12,6 +12,7 @@ using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
 using UFramework.Config;
 using UFramework.Lua;
+using UFramework.Tools;
 using UnityEditor;
 using UnityEngine;
 using static ToLuaMenu;
@@ -23,6 +24,12 @@ namespace UFramework.Editor.Preferences
     {
         public string menuName { get { return "Lua"; } }
         static LuaConfig describeObject;
+        static AppConfig app;
+
+        [ShowInInspector]
+        [BoxGroup("General Setting")]
+        [LabelText("Build Use Byte Encode")]
+        public bool byteEncode = true;
 
         /// <summary>
         /// lua 搜索路径
@@ -52,8 +59,10 @@ namespace UFramework.Editor.Preferences
 
         public void OnRenderBefore()
         {
+            app = UConfig.Read<AppConfig>();
             describeObject = UConfig.Read<LuaConfig>();
 
+            InitGeneralSetting();
             InitBuiltInSearchPathItemList();
             InitWrap();
         }
@@ -70,14 +79,9 @@ namespace UFramework.Editor.Preferences
                 ClearWrap();
             }
 
-            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Build Code")))
+            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Build Scripts")))
             {
-                BuildCode(false);
-            }
-
-            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Build Encode Code")))
-            {
-                BuildCode(true);
+                BuildCode(byteEncode);
             }
         }
 
@@ -85,8 +89,27 @@ namespace UFramework.Editor.Preferences
         {
             SearchPathItemDescribeSave();
             WrapDescribeSave();
+            GeneralSettingSave();
+
             describeObject.Save();
         }
+
+        #region General Setting
+
+        /// <summary>
+        /// 初始化基础设置
+        /// </summary>
+        private void InitGeneralSetting()
+        {
+            byteEncode = describeObject.byteEncode;
+        }
+
+        private void GeneralSettingSave()
+        {
+            describeObject.byteEncode = byteEncode;
+        }
+
+        #endregion
 
         #region builtIn Search Path Item
 
@@ -299,16 +322,19 @@ namespace UFramework.Editor.Preferences
         /// </summary>
         private void BuildCode(bool encode)
         {
+            IOPath.DirectoryClear(App.LuaTempDataDirectory);
             IOPath.DirectoryClear(App.LuaDataDirectory);
 
+            int n = 0;
             for (int i = 0; i < searchPaths.Count; i++)
             {
                 var searchItem = searchPaths[i];
                 var files = IOPath.DirectoryGetFiles(searchItem.path);
+                n = 0;
                 foreach (string file in files)
                 {
                     if (file.EndsWith(".meta")) continue;
-                    var newFile = IOPath.PathCombine(App.LuaDataDirectory, searchItem.pathMD5) + IOPath.PathReplace(file, searchItem.path);
+                    var newFile = IOPath.PathCombine(App.LuaTempDataDirectory, searchItem.pathMD5) + IOPath.PathReplace(file, searchItem.path);
                     var root = Path.GetDirectoryName(newFile);
                     if (!IOPath.DirectoryExists(root)) IOPath.DirectoryCreate(root);
                     if (encode)
@@ -320,11 +346,24 @@ namespace UFramework.Editor.Preferences
                         IOPath.FileCopy(file, newFile);
                     }
 
-                    UpdateProgress(i, files.Length, newFile);
+                    UpdateProgress(n++, files.Length, newFile);
                 }
                 EditorUtility.ClearProgressBar();
             }
             AssetDatabase.Refresh();
+
+            var zipfile = IOPath.PathCombine(App.DataDirectory, "Scripts.zip");
+            IOPath.FileDelete(zipfile);
+            IOPath.DirectoryDelete(App.LuaDataDirectory);
+            if (app.isDevelopmentVersion)
+            {
+                IOPath.DirectoryCopy(App.LuaTempDataDirectory, App.LuaDataDirectory);
+            }
+            else
+            {
+                UZip.Zip(new string[] { App.LuaTempDataDirectory }, zipfile);
+            }
+            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
         }
 
         /// <summary>

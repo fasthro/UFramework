@@ -61,4 +61,5 @@ crashlytics-build.properties
 
 # custom
 [Aa]ssets/StreamingAssets/*
+UTemp/*
 

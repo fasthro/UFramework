@@ -4,6 +4,7 @@
  * @Description: LuaManager
  */
 using System;
+using System.IO;
 using LuaInterface;
 using UFramework.Config;
 using UFramework.Lua;
@@ -109,7 +110,11 @@ namespace UFramework
             }
             else
             {
-                lua.AddSearchPath(App.LuaDataDirectory);
+                var dirs = Directory.GetDirectories(App.LuaDataDirectory);
+                for (int i = 0; i < dirs.Length; i++)
+                {
+                    lua.AddSearchPath(dirs[i]);
+                }
             }
         }
 

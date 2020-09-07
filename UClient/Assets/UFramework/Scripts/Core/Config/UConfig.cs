@@ -73,7 +73,6 @@ namespace UFramework.Config
                 content = IOPath.FileReadText(IOPath.PathCombine(App.ConfigDirectory, fileName));
             }
 #endif
-
             if (!string.IsNullOrEmpty(content))
             {
                 config = JsonMapper.ToObject<T>(content);

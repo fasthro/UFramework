@@ -10,6 +10,7 @@ using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
 using UFramework.Config;
 using UFramework.ResLoader;
+using UFramework.Tools;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
@@ -20,6 +21,7 @@ namespace UFramework.Editor.Preferences
     {
         public string menuName { get { return "AssetBundle"; } }
         static AssetBundleAssetItemConfig describeObject;
+        static AppConfig app;
 
         private HashSet<string> assetRecorder = new HashSet<string>();
 
@@ -77,6 +79,7 @@ namespace UFramework.Editor.Preferences
         }
         public void OnRenderBefore()
         {
+            app = UConfig.Read<AppConfig>();
             describeObject = UConfig.Read<AssetBundleAssetItemConfig>();
             assets = describeObject.assets;
             Refresh();
@@ -89,14 +92,9 @@ namespace UFramework.Editor.Preferences
                 Refresh();
             }
 
-            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Build All")))
+            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Build Assests Bundle")))
             {
-                BuildAll();
-            }
-
-            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Clear Build All")))
-            {
-                ClearuildAll();
+                BuildAssetsBundle();
             }
         }
 
@@ -566,22 +564,30 @@ namespace UFramework.Editor.Preferences
         }
 
         /// <summary>
-        /// Buid All Bundle
+        /// Buid Assets Bundle
         /// </summary>
-        private void BuildAll()
-        {
-            if (!IOPath.DirectoryExists(App.BundleDirectory))
-            {
-                IOPath.DirectoryClear(App.BundleDirectory);
-            }
-            BuildPipeline.BuildAssetBundles(App.BundleDirectory, BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
-            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
-        }
-
-        private void ClearuildAll()
+        private void BuildAssetsBundle()
         {
             IOPath.DirectoryClear(App.BundleDirectory);
-            BuildAll();
+            if (!IOPath.DirectoryExists(App.BundleTempDirectory))
+            {
+                IOPath.DirectoryClear(App.BundleTempDirectory);
+            }
+            BuildPipeline.BuildAssetBundles(App.BundleTempDirectory, BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
+            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+
+            var zipfile = IOPath.PathCombine(App.DataDirectory, "AssetsBundle.zip");
+            IOPath.FileDelete(zipfile);
+            IOPath.DirectoryDelete(App.BundleDirectory);
+            if (app.isDevelopmentVersion)
+            {
+                IOPath.DirectoryCopy(App.BundleTempDirectory, App.BundleDirectory);
+            }
+            else
+            {
+                UZip.Zip(new string[] { App.BundleTempDirectory }, zipfile);
+            }
+            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
         }
     }
 }

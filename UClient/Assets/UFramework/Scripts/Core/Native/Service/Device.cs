@@ -64,7 +64,7 @@ namespace UFramework.Native.Service
     /// </summary>
     public class Device : IDevice
     {
-        private IOSDevice unknown = new IOSDevice();
+        private UnknownDevice unknown = new UnknownDevice();
         private AndroidDevice android = new AndroidDevice();
         private IOSDevice ios = new IOSDevice();
 
