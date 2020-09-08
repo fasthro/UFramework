@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities.Editor;
 using UFramework.Config;
 using UnityEngine;
 
@@ -20,17 +21,9 @@ namespace UFramework.Editor.Native
         /// module
         /// </summary>
         [ShowInInspector]
-        public List<string> modules = new List<string>();
-
-        [Button]
-        [HorizontalGroup("AAR")]
-        [LabelText("Update AAR Debug")]
-        private void CopyAARDebug() { CopyAAR(true); }
-
-        [Button]
-        [HorizontalGroup("AAR")]
-        [LabelText("Update AAR Release")]
-        private void CopyAARRelease() { CopyAAR(false); }
+        [ListDrawerSettings(OnTitleBarGUI = "OnUpdateAllAARTitleBarGUI")]
+        [LabelText("Modules AAR")]
+        public List<AndroidNativeModule> modules = new List<AndroidNativeModule>();
 
         public object GetInstance()
         {
@@ -41,6 +34,7 @@ namespace UFramework.Editor.Native
         {
             describeObject = UConfig.Read<AndroidNativeConfig>();
             modules.Clear();
+            for (int i = 0; i < describeObject.modules.Length; i++) { }
             modules.AddRange(describeObject.modules);
         }
 
@@ -50,33 +44,51 @@ namespace UFramework.Editor.Native
             describeObject.Save();
         }
 
+        private void OnUpdateAllAARTitleBarGUI()
+        {
+            if (SirenixEditorGUI.ToolbarButton(EditorIcons.Refresh))
+            {
+                UpdateAllAAR(false);
+            }
+        }
+
         /// <summary>
-        /// Copy AAR
+        /// Update All AAR
         /// </summary>
         /// <param name="isDebug"></param>
-        private void CopyAAR(bool isDebug)
+        private void UpdateAllAAR(bool isDebug)
         {
-            var suffix = isDebug ? "-debug.aar" : "-release.aar";
             for (int i = 0; i < modules.Count; i++)
             {
-                var moduleName = modules[i];
+                UpdateAAR(isDebug, modules[i].name);
+            }
+        }
 
-                var libsRoot = IOPath.PathCombine(App.AndroidNativeDirectory, moduleName, "libs");
+        /// <summary>
+        /// Update Modul ARR
+        /// </summary>
+        /// <param name="isDebug"></param>
+        /// <param name="moduleName"></param>
+        public static void UpdateAAR(bool isDebug, string moduleName)
+        {
+            var suffix = isDebug ? "-debug.aar" : "-release.aar";
+            var libsRoot = IOPath.PathCombine(App.AndroidNativeDirectory, moduleName, "libs");
 
-                var sourceRoot = IOPath.PathCombine(App.AndroidNativeDirectory, moduleName, "build/outputs/aar/");
-                var sourceFile = IOPath.PathCombine(sourceRoot, moduleName + suffix);
+            var sourceRoot = IOPath.PathCombine(App.AndroidNativeDirectory, moduleName, "build/outputs/aar/");
+            var sourceFile = IOPath.PathCombine(sourceRoot, moduleName + suffix);
 
-                var destRoot = IOPath.PathCombine(Application.dataPath, "UFramework/Plugins/Android/libs");
-                var destFile = IOPath.PathCombine(destRoot, "uframework-" + moduleName + ".aar");
+            var destRoot = IOPath.PathCombine(Application.dataPath, "UFramework/Plugins/Android/libs");
+            var destFile = IOPath.PathCombine(destRoot, "uframework-" + moduleName + ".aar");
 
-                if (!IOPath.DirectoryExists(sourceRoot))
-                {
-                    Debug.LogError("Android Native Update AAR Failled. [" + moduleName + "] Module AAR File Not Exist.");
-                    continue;
-                }
-
+            if (IOPath.DirectoryExists(sourceRoot))
+            {
                 IOPath.FileDelete(IOPath.PathCombine(destRoot, "uframework-" + moduleName + ".aar"));
                 IOPath.FileCopy(sourceFile, destFile);
+                Debug.Log("Android Native Update [" + moduleName + "] AAR Succeed.");
+            }
+            else
+            {
+                Debug.LogError("Android Native Update AAR Failled. [" + moduleName + "] Module AAR File Not Exist.");
             }
         }
     }

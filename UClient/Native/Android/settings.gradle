@@ -1,3 +1,4 @@
-include ':obbdownloader'
 include ':app'
+include ':obbdownloader'
+include ':uframework'
 rootProject.name = "Android"

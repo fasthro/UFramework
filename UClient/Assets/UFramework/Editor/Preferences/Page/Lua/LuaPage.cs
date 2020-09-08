@@ -136,9 +136,11 @@ namespace UFramework.Editor.Preferences
         /// </summary>
         private void CheckBuiltInSearchPathItem()
         {
-            string[] builtIns = new string[] { "Assets/UFramework/3rd/ToLua/ToLua/Lua",
-            "Assets/UFramework/Scripts/Lua",
-            "Assets/Scripts/Lua" };
+            string[] builtIns = new string[] {
+                "Assets/UFramework/3rd/ToLua/ToLua/Lua",
+                "Assets/UFramework/Scripts/Lua",
+                "Assets/Scripts/Lua",
+                "Assets/Scripts/Automatic/Lua" };
             for (int i = 0; i < builtIns.Length; i++)
             {
                 var path = builtIns[i];
