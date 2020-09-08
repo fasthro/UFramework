@@ -6,6 +6,7 @@
 using System;
 using System.Reflection;
 using Sirenix.OdinInspector;
+using UFramework.Config;
 using UnityEngine;
 using static ToLuaMenu;
 

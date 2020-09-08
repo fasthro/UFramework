@@ -62,6 +62,7 @@ namespace UFramework.Editor.Native
     public class AndroidNativeConfig : IConfigObject
     {
         public string name { get { return "AndroidNativeConfig"; } }
+        public FileAddress address { get { return FileAddress.Editor; } }
 
         /// <summary>
         /// Modules

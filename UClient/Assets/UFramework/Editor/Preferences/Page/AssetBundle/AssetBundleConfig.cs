@@ -192,6 +192,8 @@ namespace UFramework.Editor.Preferences
     public class AssetBundleAssetPathItemConfig : IConfigObject
     {
         public string name { get { return "AssetBundleAssetPathItemConfig"; } }
+        public FileAddress address { get { return FileAddress.Editor; } }
+
         public List<AssetBundleAssetPathItem> assetPathItems = new List<AssetBundleAssetPathItem>();
         public List<AssetBundleAssetPathItem> builtInAssetPathItems = new List<AssetBundleAssetPathItem>();
 
@@ -207,6 +209,8 @@ namespace UFramework.Editor.Preferences
     public class AssetBundleAssetItemConfig : IConfigObject
     {
         public string name { get { return "AssetBundleAssetItemConfig"; } }
+        public FileAddress address { get { return FileAddress.Editor; } }
+        
         public List<AssetBundleAssetItem> assets = new List<AssetBundleAssetItem>();
 
         public void Save()

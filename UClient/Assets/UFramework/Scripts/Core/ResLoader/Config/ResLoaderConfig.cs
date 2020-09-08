@@ -36,6 +36,7 @@ namespace UFramework.ResLoader
     public class ResLoaderConfig : IConfigObject
     {
         public string name { get { return "ResConfig"; } }
+        public FileAddress address { get { return FileAddress.Data; } }
 
         /// <summary>
         /// 资源映射关系

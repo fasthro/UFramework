@@ -15,6 +15,12 @@ namespace UFramework.Config
         string name { get; }
 
         /// <summary>
+        /// 配置文件路径
+        /// </summary>
+        /// <value></value>
+        FileAddress address { get; }
+
+        /// <summary>
         /// 保存配置
         /// </summary>
         void Save();

@@ -16,11 +16,18 @@ namespace UFramework.Editor.Preferences
     public class ConfigPage : IPage, IPageBar
     {
         public string menuName { get { return "Config"; } }
-        static BaseConfig describeObject;
 
         [ShowInInspector]
         [DictionaryDrawerSettings(IsReadOnly = true, KeyLabel = "Name", ValueLabel = "Address")]
-        public Dictionary<string, FileAddress> addressDictionary = new Dictionary<string, FileAddress>();
+        [ReadOnly]
+        [LabelText("Editor")]
+        public Dictionary<string, FileAddress> editorAddressDictionary = new Dictionary<string, FileAddress>();
+
+        [ShowInInspector]
+        [DictionaryDrawerSettings(IsReadOnly = true, KeyLabel = "Name", ValueLabel = "Address")]
+        [ReadOnly]
+        [LabelText("Runtime")]
+        public Dictionary<string, FileAddress> runtimeAddressDictionary = new Dictionary<string, FileAddress>();
 
         public object GetInstance()
         {
@@ -29,27 +36,54 @@ namespace UFramework.Editor.Preferences
 
         public void OnRenderBefore()
         {
-            describeObject = UConfig.Read<BaseConfig>();
+            editorAddressDictionary.Clear();
+            runtimeAddressDictionary.Clear();
 
-            bool hasNew = false;
-            Type[] types = Assembly.Load("Assembly-CSharp").GetTypes();
+            Type[] types = Assembly.Load("Assembly-CSharp-Editor").GetTypes();
             for (int i = 0; i < types.Length; i++)
             {
-                if (types[i].GetInterface("IConfigObject") != null)
+                Type type = types[i];
+                if (type.GetInterface("IConfigObject") != null)
                 {
-                    var configName = types[i].Name;
-                    if (!describeObject.addressDictionary.ContainsKey(configName))
+                    var configName = type.Name;
+                    if (!editorAddressDictionary.ContainsKey(configName))
                     {
-                        hasNew = true;
-                        describeObject.addressDictionary.Add(configName, FileAddress.Editor);
+                        var ctors = type.GetConstructors();
+                        var address = (FileAddress)type.GetProperty("address").GetValue(ctors[0].Invoke(null));
+                        if (address == FileAddress.Editor)
+                        {
+                            editorAddressDictionary.Add(configName, address);
+                        }
+                        else
+                        {
+                            runtimeAddressDictionary.Add(configName, address);
+                        }
                     }
                 }
             }
-            if (hasNew)
+
+            types = Assembly.Load("Assembly-CSharp").GetTypes();
+            for (int i = 0; i < types.Length; i++)
             {
-                describeObject.Save();
+                Type type = types[i];
+                if (types[i].GetInterface("IConfigObject") != null)
+                {
+                    var configName = types[i].Name;
+                    if (!runtimeAddressDictionary.ContainsKey(configName))
+                    {
+                        var ctors = type.GetConstructors();
+                        var address = (FileAddress)type.GetProperty("address").GetValue(ctors[0].Invoke(null));
+                        if (address != FileAddress.Editor)
+                        {
+                            runtimeAddressDictionary.Add(configName, address);
+                        }
+                        else
+                        {
+                            editorAddressDictionary.Add(configName, address);
+                        }
+                    }
+                }
             }
-            addressDictionary = describeObject.addressDictionary;
         }
 
         public void OnPageBarDraw()
@@ -59,8 +93,7 @@ namespace UFramework.Editor.Preferences
 
         public void OnSaveDescribe()
         {
-            describeObject.addressDictionary = addressDictionary;
-            describeObject.Save();
+
         }
     }
 }

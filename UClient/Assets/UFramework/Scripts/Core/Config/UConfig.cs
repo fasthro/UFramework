@@ -3,6 +3,7 @@
  * @Date: 2020-05-26 23:07:50
  * @Description: UConfig
  */
+using System;
 using System.Collections.Generic;
 using LitJson;
 using UnityEngine;
@@ -23,17 +24,15 @@ namespace UFramework.Config
         /// </summary>
         Data,
         /// <summary>
-        /// Resource目录
+        /// Resources 目录
         /// </summary>
-        Resource,
+        Resources,
     }
 
     public class UConfig
     {
         // 配置缓存字字典
         static Dictionary<string, IConfigObject> configDictionart = new Dictionary<string, IConfigObject>();
-        // 基础配置
-        static BaseConfig baseConfig;
 
         /// <summary>
         /// 读取配置
@@ -42,8 +41,6 @@ namespace UFramework.Config
         /// <returns></returns>
         public static T Read<T>() where T : IConfigObject, new()
         {
-            ReadBaseConfig();
-
             string configName = typeof(T).Name;
 
             IConfigObject config;
@@ -52,34 +49,21 @@ namespace UFramework.Config
                 return (T)config;
             }
 
+            config = new T();
+            var type = config.GetType();
+            FileAddress address = (FileAddress)type.GetProperty("address").GetValue(config, null);
+
             string content;
             string fileName = configName + ".json";
 #if UNITY_EDITOR
-            content = IOPath.FileReadText(IOPath.PathCombine(App.ConfigDirectory, fileName));
+            content = IOPath.FileReadText(IOPath.PathCombine(App.ConfigDirectory, address.ToString(), fileName));
 #else
-            if (baseConfig.addressDictionary.ContainsKey(configName))
-            {
-                if (baseConfig.addressDictionary[configName] == FileAddress.Resource)
-                {
-                    content = IOPath.FileReadText(IOPath.PathCombine(App.ConfigResourceDirectory, fileName));
-                }
-                else
-                {
-                    content = IOPath.FileReadText(IOPath.PathCombine(App.ConfigDirectory, fileName));
-                }
-            }
-            else
-            {
-                content = IOPath.FileReadText(IOPath.PathCombine(App.ConfigDirectory, fileName));
-            }
+            // TODO 真机目录
+            content = IOPath.FileReadText(IOPath.PathCombine(App.ConfigDirectory, address.ToString(), fileName));
 #endif
             if (!string.IsNullOrEmpty(content))
             {
                 config = JsonMapper.ToObject<T>(content);
-            }
-            else
-            {
-                config = new T();
             }
             configDictionart.Add(configName, config);
             return (T)config;
@@ -94,6 +78,8 @@ namespace UFramework.Config
         public static void Write<T>(object config) where T : IConfigObject, new()
         {
 #if UNITY_EDITOR
+            Type type = typeof(T);
+            FileAddress address = (FileAddress)type.GetProperty("address").GetValue(config, null);
             string configName = typeof(T).Name;
 
             if (configDictionart.ContainsKey(configName))
@@ -103,33 +89,9 @@ namespace UFramework.Config
 
             string fileName = configName + ".json";
             string content = JsonMapper.ToJson(config);
-            string path = IOPath.PathCombine(App.ConfigDirectory, fileName);
+            string path = IOPath.PathCombine(App.ConfigDirectory, address.ToString(), fileName);
             IOPath.FileCreateText(path, content);
 #endif
-        }
-
-        /// <summary>
-        /// 读取基础配置
-        /// </summary>
-        private static void ReadBaseConfig()
-        {
-            if (baseConfig == null)
-            {
-                string content;
-#if UNITY_EDITOR
-                content = IOPath.FileReadText(IOPath.PathCombine(App.ConfigDirectory, "BaseConfig.json"));
-#else
-                content = IOPath.FileReadText(IOPath.PathCombine(App.ConfigResourceDirectory, "BaseConfig.json"));
-#endif
-                if (!string.IsNullOrEmpty(content))
-                {
-                    baseConfig = JsonMapper.ToObject<BaseConfig>(content);
-                }
-                else
-                {
-                    baseConfig = new BaseConfig();
-                }
-            }
         }
     }
 }
