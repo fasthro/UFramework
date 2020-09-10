@@ -1,7 +1,8 @@
 fileFormatVersion: 2
-guid: 4abecae432a0b4203bdc4c882a40b55c
-PrefabImporter:
+guid: 0c7d0785553aa344381cad377c2c0675
+NativeFormatImporter:
   externalObjects: {}
+  mainObjectFileID: 0
   userData: 
   assetBundleName: assets/art/dependencies/gameobject.prefab
   assetBundleVariant: 

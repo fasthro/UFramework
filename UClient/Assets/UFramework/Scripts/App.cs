@@ -14,6 +14,14 @@ namespace UFramework
 {
     public class App
     {
+        #region const
+        /// <summary>
+        /// Asset Bundle 文件后缀
+        /// </summary>
+        readonly public static string AssetBundleSuffix = ".unity3d";
+
+        #endregion
+
         #region path
 
         private static string _assetsDirectory;
@@ -28,7 +36,11 @@ namespace UFramework
             {
                 if (string.IsNullOrEmpty(_assetsDirectory))
                 {
+#if UNITY_EDITOR
                     _assetsDirectory = IOPath.PathUnitySeparator(IOPath.PathCombine(Application.dataPath, "UAssets"));
+#else
+                     _assetsDirectory = IOPath.PathUnitySeparator(IOPath.PathCombine("Assets", "UAssets"));
+#endif
                 }
                 return _assetsDirectory;
             }
@@ -71,6 +83,25 @@ namespace UFramework
                 return _configDirectory;
             }
         }
+
+        static string _configDataDirectory;
+
+        /// <summary>
+        /// Config Data 目录
+        /// </summary>
+        /// <returns></returns>
+        public static string ConfigDataDirectory
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_configDataDirectory))
+                {
+                    _configDataDirectory = IOPath.PathCombine(ConfigDirectory, FileAddress.Data.ToString());
+                }
+                return _configDataDirectory;
+            }
+        }
+
 
         static string _configResourceDirectory;
 
@@ -278,7 +309,7 @@ namespace UFramework
         #endregion
 
         #region lua
-        
+
         private static string _luaTempDataDirectory = null;
 
         /// <summary>

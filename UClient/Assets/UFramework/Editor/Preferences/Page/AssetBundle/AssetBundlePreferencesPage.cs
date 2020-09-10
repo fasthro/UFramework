@@ -12,7 +12,7 @@ using UFramework.Config;
 using UnityEditor;
 using UnityEngine;
 
-namespace UFramework.Editor.Preferences
+namespace UFramework.Editor.Preferences.Assets
 {
     /// <summary>
     /// Preferences Page
@@ -20,7 +20,34 @@ namespace UFramework.Editor.Preferences
     public class AssetBundlePreferencesPage : IPage, IPageBar
     {
         public string menuName { get { return "AssetBundle/Preferences"; } }
-        static AssetBundleAssetPathItemConfig describeObject;
+        static AssetBundle_AssetSearchPathConfig describeObject;
+
+        #region search pattern
+        [BoxGroup("Pattern")]
+        public string patternAsset = "*.asset";
+
+        [BoxGroup("Pattern")]
+        public string patternController = "*.controller";
+
+        [BoxGroup("Pattern")]
+        public string patternDir = "*";
+
+        [BoxGroup("Pattern")]
+        public string patternMaterial = "*.mat";
+
+        [BoxGroup("Pattern")]
+        public string patternTexture = "*.png";
+
+        [BoxGroup("Pattern")]
+        public string patternPrefab = "*.prefab";
+
+        [BoxGroup("Pattern")]
+        public string patternScene = "*.unity";
+
+        [BoxGroup("Pattern")]
+        public string patternText = "*.txt,*.bytes,*.json,*.csv,*.xml,*htm,*.html,*.yaml,*.fnt";
+
+        #endregion
 
         /// <summary>
         /// 资源路径列表
@@ -29,7 +56,8 @@ namespace UFramework.Editor.Preferences
         /// <returns></returns>
         [ShowInInspector]
         [TabGroup("Custom")]
-        public List<AssetBundleAssetPathItem> assetPathItems = new List<AssetBundleAssetPathItem>();
+        [LabelText("Assets Serach")]
+        public List<AssetSearchItem> assetPathItems = new List<AssetSearchItem>();
 
         /// <summary>
         /// 内置资源路径列表
@@ -38,9 +66,10 @@ namespace UFramework.Editor.Preferences
         /// <returns></returns>
         [ShowInInspector]
         [TabGroup("Built-In")]
+        [LabelText("Assets Serach")]
         [ReadOnly]
         [ListDrawerSettings(HideAddButton = true, HideRemoveButton = true)]
-        public List<AssetBundleAssetPathItem> builtInAssetPathItems = new List<AssetBundleAssetPathItem>();
+        public List<AssetSearchItem> builtInAssetPathItems = new List<AssetSearchItem>();
 
         public object GetInstance()
         {
@@ -49,7 +78,7 @@ namespace UFramework.Editor.Preferences
 
         public void OnRenderBefore()
         {
-            describeObject = UConfig.Read<AssetBundleAssetPathItemConfig>();
+            describeObject = UConfig.Read<AssetBundle_AssetSearchPathConfig>();
             assetPathItems = describeObject.assetPathItems;
             BuildBuiltInPathItems();
         }
@@ -60,9 +89,13 @@ namespace UFramework.Editor.Preferences
             {
                 ValidationPathItem();
             }
-            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Delect AssetBundle Name")))
+            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Apply")))
             {
-                DelectAssetAssetBundleNames();
+                Apply();
+            }
+            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Remove AssetBundle Name")))
+            {
+                RemoveAssetBundleName();
             }
         }
 
@@ -164,30 +197,42 @@ namespace UFramework.Editor.Preferences
         private void BuildBuiltInPathItems()
         {
             builtInAssetPathItems.Clear();
+
             // config
+            var config = new AssetSearchItem();
+            config.path = IOPath.PathRelativeAsset(App.ConfigDataDirectory);
+            config.nameType = NameType.Path;
+            config.pattern = "*.json";
+            builtInAssetPathItems.Add(config);
 
             // language
-            var languageItem = new AssetBundleAssetPathItem();
+            var languageItem = new AssetSearchItem();
             languageItem.path = IOPath.PathRelativeAsset(App.LanguageDataDirectory);
-            languageItem.buildType = AssetBundleBuildPathType.DirectoryFile;
-            languageItem.assetType = AssetBundleBuildAssetType.File;
+            languageItem.nameType = NameType.Path;
             languageItem.pattern = "*.txt";
             builtInAssetPathItems.Add(languageItem);
 
             // table
-            var tableItem = new AssetBundleAssetPathItem();
+            var tableItem = new AssetSearchItem();
             tableItem.path = IOPath.PathRelativeAsset(App.TableDataDirectory);
-            tableItem.buildType = AssetBundleBuildPathType.DirectoryFile;
-            tableItem.assetType = AssetBundleBuildAssetType.File;
-            tableItem.pattern = "*.*";
+            tableItem.nameType = NameType.Path;
+            tableItem.pattern = "*.csv";
 
             builtInAssetPathItems.Add(tableItem);
         }
 
         /// <summary>
-        /// 删除所有资源 AseetBundle Name
+        /// 
         /// </summary>
-        private void DelectAssetAssetBundleNames()
+        private void Apply()
+        {
+
+        }
+
+        /// <summary>
+        /// Remove AssetBundle Name
+        /// </summary>
+        private void RemoveAssetBundleName()
         {
             AssetDatabase.RemoveUnusedAssetBundleNames();
 

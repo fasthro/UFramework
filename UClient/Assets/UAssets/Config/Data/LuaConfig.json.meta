@@ -3,5 +3,5 @@ guid: 87c78b2271f7f2f47b3a1c015bd9bb0c
 TextScriptImporter:
   externalObjects: {}
   userData: 
-  assetBundleName: 
+  assetBundleName: assets/uassets/config/data/luaconfig.json
   assetBundleVariant: 

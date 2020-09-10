@@ -53,13 +53,30 @@ namespace UFramework.Config
             var type = config.GetType();
             FileAddress address = (FileAddress)type.GetProperty("address").GetValue(config, null);
 
-            string content;
+            string content = null;
             string fileName = configName + ".json";
 #if UNITY_EDITOR
             content = IOPath.FileReadText(IOPath.PathCombine(App.ConfigDirectory, address.ToString(), fileName));
 #else
-            // TODO 真机目录
-            content = IOPath.FileReadText(IOPath.PathCombine(App.ConfigDirectory, address.ToString(), fileName));
+            if (address == FileAddress.Resources)
+            {
+                var loader = ResLoader.ResourceLoader.Allocate(IOPath.PathCombine(App.ConfigResourceDirectory, fileName));
+                bool ready = loader.LoadSync();
+                if (ready)
+                {
+                    var textAsset = loader.resourceAssetRes.GetAsset<TextAsset>();
+                    if (textAsset != null)
+                    {
+                        content = textAsset.text;
+                    }
+                }
+                loader.Unload();
+                loader = null;
+            }
+            else
+            {
+                content = IOPath.FileReadText(IOPath.PathCombine(App.ConfigDirectory, address.ToString(), fileName));
+            }
 #endif
             if (!string.IsNullOrEmpty(content))
             {
