@@ -16,9 +16,9 @@ namespace UFramework
     {
         #region const
         /// <summary>
-        /// Asset Bundle 文件后缀
+        /// Asset Bundle 文件扩展名
         /// </summary>
-        readonly public static string AssetBundleSuffix = ".unity3d";
+        readonly public static string AssetBundleExtension = ".unity3d";
 
         #endregion
 

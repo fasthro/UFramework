@@ -1,0 +1,107 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df8bcf0750449544e884141488b01869, type: 3}
+  m_Name: Manifest
+  m_EditorClassIdentifier: 
+  activeVariants: []
+  dirs:
+  - Assets/Art/Cube/Prefab
+  - Assets/Art/Cube/Prefab 1
+  - Assets/Art/Dependencies
+  - Assets/Art/File
+  - Assets/Art/Icon/Image1
+  - Assets/Art/Icon/Image2
+  assets:
+  - name: Cube1.prefab
+    bundle: 2
+    dir: 0
+  - name: Cube2.prefab
+    bundle: 2
+    dir: 0
+  - name: Cube1.prefab
+    bundle: 5
+    dir: 1
+  - name: GameObject.prefab
+    bundle: 6
+    dir: 2
+  - name: Opening_credits_1.mp4
+    bundle: 9
+    dir: 3
+  - name: Sphere.prefab
+    bundle: 4
+    dir: 3
+  - name: herocard_10001.png
+    bundle: 7
+    dir: 4
+  - name: herocard_10002.png
+    bundle: 3
+    dir: 4
+  - name: herocard_10002.png
+    bundle: 1
+    dir: 5
+  - name: herocard_10003.png
+    bundle: 8
+    dir: 5
+  - name: test.shader
+    bundle: 0
+    dir: 2
+  bundles:
+  - name: 1aa355706e1767666124331a716c7890.unity3d
+    id: 0
+    dependencies: 
+    size: 59496
+    hash: e9f5de99456e27c5602b8b9bda6c9d20
+  - name: 1cd373766b68a0f2202e55d964f81080.unity3d
+    id: 1
+    dependencies: 
+    size: 56842
+    hash: 824b9bb75b3f477db47a58c2011e07b5
+  - name: 1f2bfad739aa6f6851cc3d2c9fbe46da.unity3d
+    id: 2
+    dependencies: 0000000006000000
+    size: 91694
+    hash: 0d9a361a5d7b716900a5d56a4fd15b64
+  - name: 3dfa02270d232ab5ffd128945e1b9608.unity3d
+    id: 3
+    dependencies: 
+    size: 55257
+    hash: 855e1101f4c54bdc5f9747480b589af4
+  - name: 6190803a3454932c9678b91a3d667858.unity3d
+    id: 4
+    dependencies: 
+    size: 90969
+    hash: e0e51f20675efcf17389238f1a253e5f
+  - name: 6cc870c6724739e0150d745ca81acb1e.unity3d
+    id: 5
+    dependencies: 0000000006000000
+    size: 91425
+    hash: 59c16f548b946a80d3bce53e8fddb618
+  - name: 7538bb62b8ebb4f7694303bb8fd12914.unity3d
+    id: 6
+    dependencies: 00000000
+    size: 3687
+    hash: cd6c8d2b570e2f42d36c2155879198b6
+  - name: a4d9ffbd66e560eebfedc8ed9e94714b.unity3d
+    id: 7
+    dependencies: 
+    size: 55257
+    hash: ffbdc676ee25396723304deb599d2238
+  - name: aeaedb426bbd2121797e40b1111f57fe.unity3d
+    id: 8
+    dependencies: 
+    size: 56842
+    hash: 98ea80e1ceb5308b9356387525bbed60
+  - name: b0649837b145731e3ee04a7b95224ee2.unity3d
+    id: 9
+    dependencies: 
+    size: 14119428
+    hash: 6507595c52ddd6d353c24c2db170287c

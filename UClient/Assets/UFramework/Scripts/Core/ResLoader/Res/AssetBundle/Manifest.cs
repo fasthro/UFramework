@@ -7,7 +7,7 @@
 using System;
 using UnityEngine;
 
-namespace UFramework
+namespace UFramework.ResLoader
 {
     [Serializable]
     public class AssetRef
@@ -22,13 +22,15 @@ namespace UFramework
     {
         public string name;
         public int id;
-        public int[] deps;
-        public long len;
+        public int[] dependencies;
+        public long size;
         public string hash;
     }
 
     public class Manifest : ScriptableObject
     {
+        readonly public static string AssetPath = "Assets/Manifest.asset";
+        
         public string[] activeVariants = new string[0];
         public string[] dirs = new string[0];
         public AssetRef[] assets = new AssetRef[0];

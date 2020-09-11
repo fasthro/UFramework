@@ -56,6 +56,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -100,11 +101,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3570503378365745647}
     m_Modifications:
-    - target: {fileID: 8648930546756432423, guid: 4abecae432a0b4203bdc4c882a40b55c,
-        type: 3}
-      propertyPath: m_Name
-      value: GameObject
-      objectReference: {fileID: 0}
     - target: {fileID: 7941859338925997744, guid: 4abecae432a0b4203bdc4c882a40b55c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -159,6 +155,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8648930546756432423, guid: 4abecae432a0b4203bdc4c882a40b55c,
+        type: 3}
+      propertyPath: m_Name
+      value: GameObject
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4abecae432a0b4203bdc4c882a40b55c, type: 3}
