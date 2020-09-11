@@ -3,7 +3,9 @@
  * @Date: 2020-06-30 11:55:50
  * @Description: 
  */
+using System;
 using System.Collections.Generic;
+using System.IO;
 using Sirenix.OdinInspector;
 using UFramework.Config;
 using UnityEditor;
@@ -26,7 +28,7 @@ namespace UFramework.Editor.Preferences.Assets
 
         // 上层文件夹命名
         // - 搜索路径文件夹
-        TopDirectory
+        TopDirectory,
     }
 
     /// <summary>
@@ -34,8 +36,148 @@ namespace UFramework.Editor.Preferences.Assets
     /// </summary>
     public enum SortType
     {
-        Title,    // 按照标题字母
-        Size,     // 按照文件尺寸
+        Title,          // 按照标题字母
+        FileSize,       // 按照文件尺寸
+        BundleSize,     // 按照bundle尺寸
+    }
+
+    /// <summary>
+    /// sort ruler
+    /// </summary>
+    public class SortRuler
+    {
+        private SortType _sortType = SortType.Title;
+
+        /// <summary>
+        /// 排序类型
+        /// </summary>
+        public SortType sortType
+        {
+            get { return _sortType; }
+            set
+            {
+                _sortType = value;
+                Sort();
+            }
+        }
+
+        /// <summary>
+        /// 是否为升序
+        /// </summary>
+        public bool ascendingOrder = true;
+
+        private bool _ascendingOrderActive = true;
+
+        /// <summary>
+        /// 升序激活
+        /// </summary>
+        public bool ascendingOrderActive
+        {
+            get { return _ascendingOrderActive; }
+            set
+            {
+                _ascendingOrderActive = value;
+                if (value)
+                {
+                    if (!ascendingOrder)
+                        Sort();
+                    descendingOrderActive = false;
+                    ascendingOrder = true;
+                }
+            }
+        }
+
+        private bool _descendingOrderActive = false;
+
+        /// <summary>
+        /// 降序激活
+        /// </summary>
+        public bool descendingOrderActive
+        {
+            get { return _ascendingOrderActive; }
+            set
+            {
+                _ascendingOrderActive = value;
+                if (value)
+                {
+                    if (ascendingOrder)
+                        Sort();
+                    ascendingOrderActive = false;
+                    ascendingOrder = false;
+                }
+            }
+        }
+
+        private List<BundleItem> bundleItems;
+        private List<BundleAssetItem> bundleAssetItems;
+
+        public SortRuler(List<BundleItem> items)
+        {
+            bundleItems = items;
+        }
+
+        public SortRuler(List<BundleAssetItem> items)
+        {
+            bundleAssetItems = items;
+        }
+
+        /// <summary>
+        /// 排序
+        /// </summary>
+        public void Sort()
+        {
+            if (bundleItems != null) SortBundleItems();
+            else if (bundleAssetItems != null) SortBundleAssetItems();
+        }
+
+        /// <summary>
+        /// sort bundle items
+        /// </summary>
+        private void SortBundleItems()
+        {
+            if (sortType == SortType.Title)
+            {
+                if (ascendingOrder)
+                    bundleItems.Sort((a, b) => string.Compare(a.bundleName, b.bundleName, StringComparison.Ordinal));
+                else
+                    bundleItems.Sort((a, b) => string.Compare(b.bundleName, a.bundleName, StringComparison.Ordinal));
+            }
+            else if (sortType == SortType.FileSize)
+            {
+                if (ascendingOrder)
+                    bundleItems.Sort((x, y) => x.fileSize.CompareTo(y.fileSize));
+                else
+                    bundleItems.Sort((x, y) => y.fileSize.CompareTo(x.fileSize));
+            }
+            else if (sortType == SortType.BundleSize)
+            {
+                if (ascendingOrder)
+                    bundleItems.Sort((x, y) => x.bundleSize.CompareTo(y.bundleSize));
+                else
+                    bundleItems.Sort((x, y) => y.bundleSize.CompareTo(x.bundleSize));
+            }
+        }
+
+        /// <summary>
+        /// sort bundle asset items
+        /// </summary>
+        public void SortBundleAssetItems()
+        {
+            if (sortType == SortType.Title)
+            {
+                if (ascendingOrder)
+                    bundleAssetItems.Sort((a, b) => string.Compare(a.bundleName, b.bundleName, StringComparison.Ordinal));
+                else
+                    bundleAssetItems.Sort((a, b) => string.Compare(b.bundleName, a.bundleName, StringComparison.Ordinal));
+            }
+            else if (sortType == SortType.FileSize)
+            {
+                if (ascendingOrder)
+                    bundleAssetItems.Sort((x, y) => x.size.CompareTo(y.size));
+                else
+                    bundleAssetItems.Sort((x, y) => y.size.CompareTo(x.size));
+            }
+        }
     }
 
     /// <summary>
@@ -45,7 +187,7 @@ namespace UFramework.Editor.Preferences.Assets
     public class AssetSearchItem
     {
         /// <summary>
-        /// 目录/文件
+        /// 目录
         /// </summary>
         [ShowInInspector]
         [HideLabel]
@@ -74,9 +216,57 @@ namespace UFramework.Editor.Preferences.Assets
         private string validateInputPathMsg;
         private bool ValidateInputPath(string value)
         {
-            if (string.IsNullOrEmpty(value) || (!IOPath.FileExists(value) && !IOPath.DirectoryExists(value)))
+            if (string.IsNullOrEmpty(value) || !IOPath.DirectoryExists(value))
             {
-                validateInputPathMsg = "error: path not exists.";
+                validateInputPathMsg = "error: directory not exists.";
+                return false;
+            }
+            return true;
+        }
+        #endregion
+    }
+
+    /// <summary>
+    /// search file item
+    /// </summary>
+    [System.Serializable]
+    public class AssetSearchFileItem
+    {
+        /// <summary>
+        /// 文件路径
+        /// </summary>
+        [ShowInInspector]
+        [HideLabel]
+        [HorizontalGroup]
+        [ValidateInput("ValidateInputPath", "$validateInputPathMsg", InfoMessageType.Error)]
+        [FilePath]
+        public string path;
+
+        /// <summary>
+        /// Name类型
+        /// </summary>
+        [ShowInInspector]
+        [HideLabel]
+        [HorizontalGroup(120f)]
+        [ReadOnly]
+        public NameType nameType = NameType.Path;
+
+        /// <summary>
+        /// 匹配模式
+        /// </summary>
+        [ShowInInspector]
+        [HideLabel]
+        [HorizontalGroup(100f)]
+        [ReadOnly]
+        public string pattern = "*";
+
+        #region 路径验证
+        private string validateInputPathMsg;
+        private bool ValidateInputPath(string value)
+        {
+            if (string.IsNullOrEmpty(value) || !IOPath.FileExists(value))
+            {
+                validateInputPathMsg = "error: file path not exists.";
                 return false;
             }
             return true;
@@ -103,13 +293,7 @@ namespace UFramework.Editor.Preferences.Assets
         /// display bundle name
         /// </summary>
         [HideInInspector]
-        public string displayBundleName;
-
-        /// <summary>
-        /// bundle Name(采用 md5)
-        /// </summary>
-        /// <value></value>
-        public string bundleName { get { return UHash.GetMD5Hash(displayBundleName) + App.AssetBundleSuffix; } }
+        public string bundleName;
 
         /// <summary>
         /// 资源大小
@@ -122,7 +306,7 @@ namespace UFramework.Editor.Preferences.Assets
         /// </summary>
         [ShowInInspector]
         [HideLabel]
-        [HorizontalGroup(50f)]
+        [HorizontalGroup(70f)]
         [ReadOnly]
         public string sizeString
         {
@@ -141,6 +325,27 @@ namespace UFramework.Editor.Preferences.Assets
         /// </summary>
         [HideInInspector]
         public bool IsDependencies = false;
+
+        /// <summary>
+        /// 是否为材质球资源
+        /// </summary>
+        /// <returns></returns>
+        [HideInInspector]
+        public bool isMaterial { get { return Path.GetExtension(path).Equals(".mat"); } }
+
+        /// <summary>
+        /// 是否为贴图资源
+        /// </summary>
+        /// <returns></returns>
+        [HideInInspector]
+        public bool isTexture
+        {
+            get
+            {
+                var extension = Path.GetExtension(path);
+                return extension.Equals(".png") || extension.Equals(".tga");
+            }
+        }
     }
 
     [System.Serializable]
@@ -153,13 +358,7 @@ namespace UFramework.Editor.Preferences.Assets
         [HideLabel]
         [HorizontalGroup]
         [ReadOnly]
-        public string displayBundleName;
-
-        /// <summary>
-        /// bundle Name(采用 md5)
-        /// </summary>
-        /// <value></value>
-        public string bundleName { get { return UHash.GetMD5Hash(displayBundleName) + App.AssetBundleSuffix; } }
+        public string bundleName;
 
         /// <summary>
         /// 资源
@@ -171,27 +370,52 @@ namespace UFramework.Editor.Preferences.Assets
         public List<BundleAssetItem> assets;
 
         /// <summary>
-        /// 资源大小
+        /// 资源总大小
         /// </summary>
         [HideInInspector]
-        public long size;
+        public long fileSize;
 
         /// <summary>
-        /// 资源大小文本
+        /// 资源总大小文本
         /// </summary>
         [ShowInInspector]
         [HideLabel]
-        [HorizontalGroup(50f)]
+        [HorizontalGroup(70f)]
         [ReadOnly]
-        public string sizeString
+        public string fileSizeString
         {
             get
             {
-                if (size == 0)
+                if (fileSize == 0)
                 {
                     return "--";
                 }
-                return EditorUtility.FormatBytes(size);
+                return EditorUtility.FormatBytes(fileSize);
+            }
+        }
+
+        /// <summary>
+        /// assetBundle大小
+        /// </summary>
+        [HideInInspector]
+        public long bundleSize;
+
+        /// <summary>
+        /// assetBundle大小文本
+        /// </summary>
+        [ShowInInspector]
+        [HideLabel]
+        [HorizontalGroup(70f)]
+        [ReadOnly]
+        public string bundleSizeString
+        {
+            get
+            {
+                if (bundleSize == 0)
+                {
+                    return "--";
+                }
+                return EditorUtility.FormatBytes(bundleSize);
             }
         }
 
@@ -226,6 +450,7 @@ namespace UFramework.Editor.Preferences.Assets
         public FileAddress address { get { return FileAddress.Editor; } }
 
         public List<AssetSearchItem> assetPathItems = new List<AssetSearchItem>();
+        public List<AssetSearchFileItem> assetFileItems = new List<AssetSearchFileItem>();
         public List<AssetSearchItem> builtInAssetPathItems = new List<AssetSearchItem>();
 
         public void Save()
@@ -242,7 +467,10 @@ namespace UFramework.Editor.Preferences.Assets
         public string name { get { return "AssetBundle_AssetConfig"; } }
         public FileAddress address { get { return FileAddress.Editor; } }
 
+        public List<BundleItem> bundles = new List<BundleItem>();
         public List<BundleAssetItem> assets = new List<BundleAssetItem>();
+        public List<BundleAssetItem> dependencieAssets = new List<BundleAssetItem>();
+        public List<BundleAssetItem> builtInAssets = new List<BundleAssetItem>();
 
         public void Save()
         {

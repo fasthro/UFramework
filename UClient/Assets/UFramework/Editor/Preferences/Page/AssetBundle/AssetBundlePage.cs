@@ -24,6 +24,10 @@ namespace UFramework.Editor.Preferences.Assets
 
         [BoxGroup("General Setting")]
         public int version;
+        [BoxGroup("General Setting")]
+        public bool buildNameHash = true;
+        [BoxGroup("General Setting")]
+        public bool importerBundleName = false;
 
         /// <summary>
         /// AssetBundle列表
@@ -73,29 +77,18 @@ namespace UFramework.Editor.Preferences.Assets
         private BundleItem shaderBundle = new BundleItem();
 
         // temp
-        private HashSet<string> assetTracker = new HashSet<string>();
+        private Dictionary<string, BundleAssetItem> assetTracker = new Dictionary<string, BundleAssetItem>();
         private Dictionary<string, BundleItem> bundleTracker = new Dictionary<string, BundleItem>();
         private HashSet<string> dependenciesTracker = new HashSet<string>();
         private Dictionary<string, HashSet<string>> dependenciesAnalysisTracker = new Dictionary<string, HashSet<string>>();
         private Dictionary<string, HashSet<string>> dependenciesBundleAnalysisTracker = new Dictionary<string, HashSet<string>>();
+        private HashSet<string> dependenciesRefTracker = new HashSet<string>();
 
-        /// <summary>
-        /// 排序类型
-        /// </summary>
-        [HideInInspector]
-        public SortType sortType = SortType.Title;
-
-        /// <summary>
-        /// 是否为升序
-        /// </summary>
-        [HideInInspector]
-        public bool ascendingOrder = true;
-
-        [HideInInspector]
-        public bool ascendingOrderActive = true;
-
-        [HideInInspector]
-        public bool descendingOrderActive = false;
+        // sort ruler
+        private SortRuler bundleSortRuler;
+        private SortRuler assetSortRuler;
+        private SortRuler dependenciesAssetSortRuler;
+        private SortRuler builtInAssetSortRuler;
 
         public object GetInstance()
         {
@@ -103,22 +96,34 @@ namespace UFramework.Editor.Preferences.Assets
         }
         public void OnRenderBefore()
         {
+            bundleSortRuler = new SortRuler(bundles);
+            assetSortRuler = new SortRuler(assets);
+            dependenciesAssetSortRuler = new SortRuler(dependencieAssets);
+            builtInAssetSortRuler = new SortRuler(builtInAssets);
+
             app = UConfig.Read<AppConfig>();
             describeObject = UConfig.Read<AssetBundle_AssetConfig>();
+            bundles = describeObject.bundles;
             assets = describeObject.assets;
-            AnalysisAssets();
+            dependencieAssets = describeObject.dependencieAssets;
+            builtInAssets = describeObject.builtInAssets;
+
+            if (bundles.Count <= 0)
+            {
+                AnalysisAssets();
+            }
         }
 
         public void OnPageBarDraw()
         {
             if (SirenixEditorGUI.ToolbarButton(new GUIContent("Build Assest Bundle")))
             {
-                BuildAssetsBundle(true);
+                BuildAssetsBundle(false);
             }
 
             if (SirenixEditorGUI.ToolbarButton(new GUIContent("Force Build Assest Bundle")))
             {
-                BuildAssetsBundle(false);
+                BuildAssetsBundle(true);
             }
 
             if (SirenixEditorGUI.ToolbarButton(EditorIcons.Refresh))
@@ -129,148 +134,62 @@ namespace UFramework.Editor.Preferences.Assets
 
         public void OnSaveDescribe()
         {
+            describeObject.bundles = bundles;
             describeObject.assets = assets;
+            describeObject.dependencieAssets = dependencieAssets;
+            describeObject.builtInAssets = builtInAssets;
             describeObject.Save();
         }
 
         private void OnBundlesTitleBarGUI()
         {
-            if (SirenixEditorGUI.ToolbarToggle(sortType == SortType.Title, "Title Sort"))
-            {
-                sortType = SortType.Title;
-                SortBundleList(bundles);
-            }
+            if (SirenixEditorGUI.ToolbarToggle(bundleSortRuler.sortType == SortType.Title, "Title"))
+                bundleSortRuler.sortType = SortType.Title;
 
-            if (SirenixEditorGUI.ToolbarToggle(sortType == SortType.Size, "File Size Sort"))
-            {
-                sortType = SortType.Size;
-                SortBundleList(bundles);
-            }
+            if (SirenixEditorGUI.ToolbarToggle(bundleSortRuler.sortType == SortType.FileSize, "File Size"))
+                bundleSortRuler.sortType = SortType.FileSize;
 
-            if (ascendingOrderActive = SirenixEditorGUI.ToolbarToggle(ascendingOrderActive, EditorIcons.ArrowUp))
-            {
-                if (!ascendingOrder)
-                {
-                    SortBundleList(bundles);
-                }
-                descendingOrderActive = false;
-                ascendingOrder = true;
-            }
+            if (SirenixEditorGUI.ToolbarToggle(bundleSortRuler.sortType == SortType.BundleSize, "Bundle Size"))
+                bundleSortRuler.sortType = SortType.BundleSize;
 
-            if (descendingOrderActive = SirenixEditorGUI.ToolbarToggle(descendingOrderActive, EditorIcons.ArrowDown))
-            {
-                if (ascendingOrder)
-                {
-                    SortBundleList(bundles);
-                }
-                ascendingOrderActive = false;
-                ascendingOrder = false;
-            }
+            bundleSortRuler.ascendingOrderActive = SirenixEditorGUI.ToolbarToggle(bundleSortRuler.ascendingOrderActive, EditorIcons.ArrowUp);
+            bundleSortRuler.descendingOrderActive = SirenixEditorGUI.ToolbarToggle(bundleSortRuler.descendingOrderActive, EditorIcons.ArrowDown);
         }
 
         private void OnAssetsTitleBarGUI()
         {
-            if (SirenixEditorGUI.ToolbarToggle(sortType == SortType.Title, "Title Sort"))
-            {
-                sortType = SortType.Title;
-                SortBundleAssetList(assets);
-            }
+            if (SirenixEditorGUI.ToolbarToggle(assetSortRuler.sortType == SortType.Title, "Title"))
+                assetSortRuler.sortType = SortType.Title;
 
-            if (SirenixEditorGUI.ToolbarToggle(sortType == SortType.Size, "File Size Sort"))
-            {
-                sortType = SortType.Size;
-                SortBundleAssetList(assets);
-            }
+            if (SirenixEditorGUI.ToolbarToggle(assetSortRuler.sortType == SortType.FileSize, "File Size"))
+                assetSortRuler.sortType = SortType.FileSize;
 
-            if (ascendingOrderActive = SirenixEditorGUI.ToolbarToggle(ascendingOrderActive, EditorIcons.ArrowUp))
-            {
-                if (!ascendingOrder)
-                {
-                    SortBundleAssetList(assets);
-                }
-                descendingOrderActive = false;
-                ascendingOrder = true;
-            }
-
-            if (descendingOrderActive = SirenixEditorGUI.ToolbarToggle(descendingOrderActive, EditorIcons.ArrowDown))
-            {
-                if (ascendingOrder)
-                {
-                    SortBundleAssetList(assets);
-                }
-                ascendingOrderActive = false;
-                ascendingOrder = false;
-            }
+            assetSortRuler.ascendingOrderActive = SirenixEditorGUI.ToolbarToggle(assetSortRuler.ascendingOrderActive, EditorIcons.ArrowUp);
+            assetSortRuler.descendingOrderActive = SirenixEditorGUI.ToolbarToggle(assetSortRuler.descendingOrderActive, EditorIcons.ArrowDown);
         }
 
         private void OnDependenciesTitleBarGUI()
         {
-            if (SirenixEditorGUI.ToolbarToggle(sortType == SortType.Title, "Title Sort"))
-            {
-                sortType = SortType.Title;
-                SortBundleAssetList(dependencieAssets);
-            }
+            if (SirenixEditorGUI.ToolbarToggle(dependenciesAssetSortRuler.sortType == SortType.Title, "Title"))
+                dependenciesAssetSortRuler.sortType = SortType.Title;
 
-            if (SirenixEditorGUI.ToolbarToggle(sortType == SortType.Size, "File Size Sort"))
-            {
-                sortType = SortType.Size;
-                SortBundleAssetList(dependencieAssets);
-            }
+            if (SirenixEditorGUI.ToolbarToggle(dependenciesAssetSortRuler.sortType == SortType.FileSize, "File Size"))
+                dependenciesAssetSortRuler.sortType = SortType.FileSize;
 
-            if (ascendingOrderActive = SirenixEditorGUI.ToolbarToggle(ascendingOrderActive, EditorIcons.ArrowUp))
-            {
-                if (!ascendingOrder)
-                {
-                    SortBundleAssetList(dependencieAssets);
-                }
-                descendingOrderActive = false;
-                ascendingOrder = true;
-            }
-
-            if (descendingOrderActive = SirenixEditorGUI.ToolbarToggle(descendingOrderActive, EditorIcons.ArrowDown))
-            {
-                if (ascendingOrder)
-                {
-                    SortBundleAssetList(dependencieAssets);
-                }
-                ascendingOrderActive = false;
-                ascendingOrder = false;
-            }
+            dependenciesAssetSortRuler.ascendingOrderActive = SirenixEditorGUI.ToolbarToggle(dependenciesAssetSortRuler.ascendingOrderActive, EditorIcons.ArrowUp);
+            dependenciesAssetSortRuler.descendingOrderActive = SirenixEditorGUI.ToolbarToggle(dependenciesAssetSortRuler.descendingOrderActive, EditorIcons.ArrowDown);
         }
 
         private void OnBuiltInTitleBarGUI()
         {
-            if (SirenixEditorGUI.ToolbarToggle(sortType == SortType.Title, "Title Sort"))
-            {
-                sortType = SortType.Title;
-                SortBundleAssetList(builtInAssets);
-            }
+            if (SirenixEditorGUI.ToolbarToggle(builtInAssetSortRuler.sortType == SortType.Title, "Title"))
+                builtInAssetSortRuler.sortType = SortType.Title;
 
-            if (SirenixEditorGUI.ToolbarToggle(sortType == SortType.Size, "File Size Sort"))
-            {
-                sortType = SortType.Size;
-                SortBundleAssetList(builtInAssets);
-            }
+            if (SirenixEditorGUI.ToolbarToggle(builtInAssetSortRuler.sortType == SortType.FileSize, "File Size"))
+                builtInAssetSortRuler.sortType = SortType.FileSize;
 
-            if (ascendingOrderActive = SirenixEditorGUI.ToolbarToggle(ascendingOrderActive, EditorIcons.ArrowUp))
-            {
-                if (!ascendingOrder)
-                {
-                    SortBundleAssetList(builtInAssets);
-                }
-                descendingOrderActive = false;
-                ascendingOrder = true;
-            }
-
-            if (descendingOrderActive = SirenixEditorGUI.ToolbarToggle(descendingOrderActive, EditorIcons.ArrowDown))
-            {
-                if (ascendingOrder)
-                {
-                    SortBundleAssetList(builtInAssets);
-                }
-                ascendingOrderActive = false;
-                ascendingOrder = false;
-            }
+            builtInAssetSortRuler.ascendingOrderActive = SirenixEditorGUI.ToolbarToggle(builtInAssetSortRuler.ascendingOrderActive, EditorIcons.ArrowUp);
+            builtInAssetSortRuler.descendingOrderActive = SirenixEditorGUI.ToolbarToggle(builtInAssetSortRuler.descendingOrderActive, EditorIcons.ArrowDown);
         }
 
         /// <summary>
@@ -278,6 +197,17 @@ namespace UFramework.Editor.Preferences.Assets
         /// </summary>
         private void AnalysisAssets()
         {
+            // remove bundle name
+            if (importerBundleName)
+            {
+                AssetBundlePreferencesPage.RemoveAssetBundleName();
+            }
+
+            // progress
+            int progress = 0;
+            string progressTitle = "";
+            string progressDes = "";
+
             // analysis search path
             assets.Clear();
             assetTracker.Clear();
@@ -291,14 +221,46 @@ namespace UFramework.Editor.Preferences.Assets
                     item.path = IOPath.PathUnitySeparator(item.path);
                     item.size = IOPath.FileSize(item.path);
 
-                    if (!assetTracker.Contains(item.path))
+                    if (!assetTracker.ContainsKey(item.path))
                     {
-                        assetTracker.Add(item.path);
+                        assetTracker.Add(item.path, item);
                         assets.Add(item);
-                        SetAssetBundleName(item);
                     }
+
+                    progressTitle = "analysis search path";
+                    progress = k;
+                    progressDes = item.path;
+                    UpdateProgress(progressTitle, progressDes, progress, items.Count);
                 }
             }
+
+            for (int i = 0; i < pathConfig.assetFileItems.Count; i++)
+            {
+                var fileItem = pathConfig.assetFileItems[i];
+                if (ValidateAssetPath(fileItem.path))
+                {
+                    var pathItem = new AssetSearchItem();
+                    pathItem.path = fileItem.path;
+                    pathItem.nameType = fileItem.nameType;
+
+                    var item = new BundleAssetItem();
+                    item.path = IOPath.PathUnitySeparator(pathItem.path);
+                    item.bundleName = FormatAssetBundleName(pathItem, pathItem.path);
+                    item.size = IOPath.FileSize(item.path);
+
+                    if (!assetTracker.ContainsKey(item.path))
+                    {
+                        assetTracker.Add(item.path, item);
+                        assets.Add(item);
+                    }
+                }
+
+                progressTitle = "analysis file path";
+                progress = i;
+                progressDes = fileItem.path;
+                UpdateProgress(progressTitle, progressDes, progress, pathConfig.assetFileItems.Count);
+            }
+
 
             // analysis built-in
             builtInAssets.Clear();
@@ -312,7 +274,10 @@ namespace UFramework.Editor.Preferences.Assets
                     item.size = IOPath.FileSize(item.path);
                     builtInAssets.Add(item);
 
-                    SetAssetBundleName(item);
+                    progressTitle = "analysis built-in";
+                    progress = k;
+                    progressDes = item.path;
+                    UpdateProgress(progressTitle, progressDes, progress, items.Count);
                 }
             }
 
@@ -326,14 +291,20 @@ namespace UFramework.Editor.Preferences.Assets
                 if (!bundleTracker.TryGetValue(asset.bundleName, out bundle))
                 {
                     bundle = new BundleItem();
-                    bundle.displayBundleName = asset.displayBundleName;
+                    bundle.bundleName = asset.bundleName;
                     bundle.assets = new List<BundleAssetItem>();
+                    bundle.bundleSize = GetBuildBundleSize(bundle);
                     bundleTracker.Add(asset.bundleName, bundle);
 
                     bundles.Add(bundle);
                 }
-                bundle.size += asset.size;
+                bundle.fileSize += asset.size;
                 bundle.assets.Add(asset);
+
+                progressTitle = "analysis bundle";
+                progress = i;
+                progressDes = asset.path;
+                UpdateProgress(progressTitle, progressDes, progress, assets.Count);
             }
 
             // analysis dependencies
@@ -342,6 +313,8 @@ namespace UFramework.Editor.Preferences.Assets
             dependenciesAnalysisTracker.Clear();
             for (int i = 0; i < bundles.Count; i++)
             {
+                progress = 0;
+
                 var bundle = bundles[i];
                 var dependencies = AssetDatabase.GetDependencies(bundle.GetAssetPaths().ToArray(), true);
                 if (dependencies.Length > 0)
@@ -356,24 +329,33 @@ namespace UFramework.Editor.Preferences.Assets
                                 temps = new HashSet<string>();
                                 dependenciesAnalysisTracker.Add(asset, temps);
                             }
-                            temps.Add(bundle.displayBundleName);
+                            temps.Add(bundle.bundleName);
                             if (temps.Count > 1)
                             {
                                 if (!dependenciesTracker.Contains(asset))
                                 {
+
                                     var pathItem = new AssetSearchItem();
                                     pathItem.path = asset;
                                     pathItem.nameType = NameType.Path;
 
                                     var assetItem = new BundleAssetItem();
                                     assetItem.path = IOPath.PathUnitySeparator(pathItem.path);
-                                    assetItem.displayBundleName = FormatAssetBundleName(pathItem, pathItem.path);
+                                    assetItem.bundleName = FormatAssetBundleName(pathItem, pathItem.path);
                                     assetItem.size = IOPath.FileSize(pathItem.path);
 
                                     dependenciesTracker.Add(asset);
                                     dependencieAssets.Add(assetItem);
                                 }
                             }
+
+                            // asset ref count
+                            dependenciesRefTracker.Add(asset);
+
+                            progressTitle = "analysis bundle dependencies";
+                            progress++;
+                            progressDes = asset;
+                            UpdateProgress(progressTitle, progressDes, progress, dependencies.Length);
                         }
                     }
                 }
@@ -383,9 +365,10 @@ namespace UFramework.Editor.Preferences.Assets
             dependenciesBundleAnalysisTracker.Clear();
             for (int i = 0; i < dependencieAssets.Count; i++)
             {
+                progress = 0;
+
                 var asset = dependencieAssets[i];
                 var dependencies = AssetDatabase.GetDependencies(asset.path, true);
-
                 HashSet<string> temps;
                 if (!dependenciesBundleAnalysisTracker.TryGetValue(asset.path, out temps))
                 {
@@ -399,29 +382,61 @@ namespace UFramework.Editor.Preferences.Assets
                     {
                         temps.Add(file);
                     }
+
+                    progressTitle = "analysis dependencies";
+                    progress++;
+                    progressDes = file;
+                    UpdateProgress(progressTitle, progressDes, progress, dependencies.Length);
                 }
             }
 
+            // 合并依赖资源
+            // 如果有材质球引用贴图资源，那么贴图资源不会单独打包
             List<BundleAssetItem> removeDps = new List<BundleAssetItem>();
             for (int i = 0; i < dependencieAssets.Count; i++)
             {
                 var tAsset = dependencieAssets[i];
-                bool hasRef = false;
-                foreach (KeyValuePair<string, HashSet<string>> asset in dependenciesBundleAnalysisTracker)
+                if (tAsset.isTexture)
                 {
-                    foreach (var item in asset.Value)
+                    int refCount = 0;
+                    foreach (KeyValuePair<string, HashSet<string>> asset in dependenciesBundleAnalysisTracker)
                     {
-                        if (tAsset.path.Equals(item))
+                        foreach (var item in asset.Value)
                         {
-                            hasRef = true;
-                            break;
+                            if (tAsset.path.Equals(item))
+                            {
+                                refCount++;
+                            }
                         }
                     }
-                    if (hasRef) break;
+                    if (refCount == 1 && !dependenciesRefTracker.Contains(tAsset.path))
+                    {
+                        removeDps.Add(tAsset);
+                    }
                 }
-                if (hasRef)
+            }
+
+            // 如果有Prefab引用材质球，那么材质球不会单独打包
+            for (int i = 0; i < dependencieAssets.Count; i++)
+            {
+                var tAsset = dependencieAssets[i];
+                if (tAsset.isMaterial)
                 {
-                    removeDps.Add(tAsset);
+                    int refCount = 0;
+                    foreach (KeyValuePair<string, HashSet<string>> asset in dependenciesBundleAnalysisTracker)
+                    {
+                        foreach (var item in asset.Value)
+                        {
+                            if (tAsset.path.Equals(item))
+                            {
+                                refCount++;
+                            }
+                        }
+                    }
+                    if (refCount == 1 && !dependenciesRefTracker.Contains(tAsset.path))
+                    {
+                        removeDps.Add(tAsset);
+                    }
                 }
             }
 
@@ -430,85 +445,136 @@ namespace UFramework.Editor.Preferences.Assets
                 dependencieAssets.Remove(item);
             }
 
+            progress = 0;
             foreach (var asset in dependencieAssets)
             {
-                // assets
-                if (!assetTracker.Contains(asset.path))
+                BundleAssetItem assetItem;
+                BundleItem bundleItem;
+                // 剔除已存在bundle中的资源，使其单独打包
+                if (assetTracker.TryGetValue(asset.path, out assetItem))
                 {
-                    var pathItem = new AssetSearchItem();
-                    pathItem.path = asset.path;
-                    pathItem.nameType = NameType.Path;
-
-                    var assetItem = new BundleAssetItem();
-                    assetItem.path = IOPath.PathUnitySeparator(pathItem.path);
-                    assetItem.displayBundleName = FormatAssetBundleName(pathItem, pathItem.path);
-                    assetItem.size = IOPath.FileSize(pathItem.path);
-                    assetItem.IsDependencies = true;
-
-                    assetTracker.Add(asset.path);
-
-                    assets.Add(assetItem);
+                    assets.Remove(assetItem);
+                    assetTracker.Remove(asset.path);
+                    if (bundleTracker.TryGetValue(assetItem.bundleName, out bundleItem))
+                    {
+                        bundleItem.assets.Remove(assetItem);
+                        if (bundleItem.assets.Count <= 0)
+                        {
+                            bundles.Remove(bundleItem);
+                            bundleTracker.Remove(assetItem.bundleName);
+                        }
+                    }
                 }
+
+                // assets
+                var pathItem = new AssetSearchItem();
+                pathItem.path = asset.path;
+                pathItem.nameType = NameType.Path;
+
+                assetItem = new BundleAssetItem();
+                assetItem.path = IOPath.PathUnitySeparator(pathItem.path);
+                assetItem.bundleName = FormatAssetBundleName(pathItem, pathItem.path);
+                assetItem.size = IOPath.FileSize(pathItem.path);
+                assetItem.IsDependencies = true;
+
+                assetTracker.Add(asset.path, asset);
+                assets.Add(assetItem);
 
                 // bundles
-                BundleItem bundle;
-                if (!bundleTracker.TryGetValue(asset.bundleName, out bundle))
+                if (!bundleTracker.TryGetValue(asset.bundleName, out bundleItem))
                 {
-                    bundle = new BundleItem();
-                    bundle.displayBundleName = asset.displayBundleName;
-                    bundle.assets = new List<BundleAssetItem>();
-                    bundle.IsDependencies = true;
-                    bundleTracker.Add(asset.bundleName, bundle);
+                    bundleItem = new BundleItem();
+                    bundleItem.bundleName = asset.bundleName;
+                    bundleItem.assets = new List<BundleAssetItem>();
+                    bundleItem.IsDependencies = true;
+                    bundleTracker.Add(asset.bundleName, bundleItem);
 
-                    bundles.Add(bundle);
+                    bundles.Add(bundleItem);
                 }
-                bundle.size += asset.size;
-                bundle.assets.Add(asset);
+                bundleItem.fileSize += asset.size;
+                bundleItem.bundleSize = GetBuildBundleSize(bundleItem);
+                bundleItem.assets.Add(asset);
 
-                // bundle name
-                SetAssetBundleName(asset);
-                var dependencies = AssetDatabase.GetDependencies(asset.path, true);
-                foreach (var dAsset in dependencies)
-                {
-                    var dItem = new BundleAssetItem();
-                    dItem.path = dAsset;
-                    dItem.displayBundleName = asset.displayBundleName;
-                    SetAssetBundleName(dItem);
-                }
+                progressTitle = "analysis dependencies";
+                progress++;
+                progressDes = asset.path;
+                UpdateProgress(progressTitle, progressDes, progress, dependencieAssets.Count);
             }
 
             // optimiz shader package
             // shader
             shaderBundle = new BundleItem();
-            shaderBundle.displayBundleName = "shaders";
+            shaderBundle.bundleName = "shaders";
             shaderBundle.assets = new List<BundleAssetItem>();
 
             foreach (var bundle in bundles)
             {
+                progress = 0;
+
                 var dependencies = AssetDatabase.GetDependencies(bundle.GetAssetPaths().ToArray(), true);
                 foreach (var asset in dependencies)
                 {
                     if (asset.EndsWith(".shader"))
                     {
-                        if (!assetTracker.Contains(asset))
+                        if (!assetTracker.ContainsKey(asset))
                         {
                             var shaderAsset = new BundleAssetItem();
                             shaderAsset.path = asset;
                             shaderAsset.size = IOPath.FileSize(asset);
-                            shaderAsset.displayBundleName = "shaders";
+                            shaderAsset.bundleName = "shaders";
 
-                            assetTracker.Add(asset);
+                            assetTracker.Add(asset, shaderAsset);
                             assets.Add(shaderAsset);
 
+                            shaderBundle.fileSize += shaderAsset.size;
                             shaderBundle.assets.Add(shaderAsset);
-
-                            SetAssetBundleName(shaderAsset);
                         }
                     }
+
+                    progressTitle = "optimiz bundle";
+                    progress++;
+                    progressDes = asset;
+                    UpdateProgress(progressTitle, progressDes, progress, dependencieAssets.Count);
+                }
+            }
+            shaderBundle.bundleSize = GetBuildBundleSize(shaderBundle);
+            if (shaderBundle.assets.Count > 0)
+            {
+                bundles.Add(shaderBundle);
+            }
+
+            // remove empty bundle
+            List<BundleItem> removes = new List<BundleItem>();
+            foreach (var bundle in bundles)
+            {
+                if (bundle.assets.Count <= 0)
+                {
+                    removes.Add(bundle);
+                }
+            }
+            foreach (var bundle in removes)
+            {
+                removes.Remove(bundle);
+                bundleTracker.Remove(bundle.bundleName);
+            }
+
+            // bundle name
+            if (importerBundleName)
+            {
+                for (int i = 0; i < assets.Count; i++)
+                {
+                    var assetItem = assets[i];
+                    AssetImporter assetImporter = AssetImporter.GetAtPath(assetItem.path);
+                    assetImporter.assetBundleName = GetBuildBundleName(assetItem.bundleName);
+
+                    progressTitle = "bundle name";
+                    progress = i;
+                    progressDes = assetItem.path;
+                    UpdateProgress(progressTitle, progressDes, progress, dependencieAssets.Count);
                 }
             }
 
-            bundles.Add(shaderBundle);
+            EditorUtility.ClearProgressBar();
         }
 
         /// <summary>
@@ -518,36 +584,24 @@ namespace UFramework.Editor.Preferences.Assets
         private List<BundleAssetItem> ParsePathItem(AssetSearchItem pathItem)
         {
             List<BundleAssetItem> assetItems = new List<BundleAssetItem>();
-            var fileExists = IOPath.FileExists(pathItem.path);
-            var directoryExists = IOPath.DirectoryExists(pathItem.path);
-            if (fileExists && ValidateAssetPath(pathItem.path))
+            var patterns = pathItem.pattern.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var item in patterns)
             {
-                var assetItem = new BundleAssetItem();
-                assetItem.path = IOPath.PathUnitySeparator(pathItem.path);
-                assetItem.displayBundleName = FormatAssetBundleName(pathItem, pathItem.path);
-                assetItems.Add(assetItem);
-            }
-            else if (directoryExists)
-            {
-                var patterns = pathItem.pattern.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-
-                foreach (var item in patterns)
+                var files = Directory.GetFiles(pathItem.path, item, SearchOption.AllDirectories);
+                foreach (var file in files)
                 {
-                    var files = Directory.GetFiles(pathItem.path, item, SearchOption.AllDirectories);
-                    foreach (var file in files)
-                    {
-                        if (Directory.Exists(file)) continue;
-                        var ext = Path.GetExtension(file).ToLower();
-                        if ((ext == ".fbx" || ext == ".anim") && !item.Contains(ext)) continue;
-                        if (!ValidateAssetPath(file)) continue;
+                    if (Directory.Exists(file)) continue;
+                    var ext = Path.GetExtension(file).ToLower();
+                    if ((ext == ".fbx" || ext == ".anim") && !item.Contains(ext)) continue;
+                    if (!ValidateAssetPath(file)) continue;
 
-                        var assetItem = new BundleAssetItem();
-                        assetItem.path = IOPath.PathUnitySeparator(file);
-                        assetItem.displayBundleName = FormatAssetBundleName(pathItem, file);
-                        assetItems.Add(assetItem);
-                    }
+                    var assetItem = new BundleAssetItem();
+                    assetItem.path = IOPath.PathUnitySeparator(file);
+                    assetItem.bundleName = FormatAssetBundleName(pathItem, file);
+                    assetItems.Add(assetItem);
                 }
             }
+
             return assetItems;
         }
 
@@ -594,13 +648,27 @@ namespace UFramework.Editor.Preferences.Assets
         }
 
         /// <summary>
-        /// 设置 AssetBundle Name
+        /// 获取打包的 bundle 名称
         /// </summary>
-        /// <param name="assetItem"></param>
-        private void SetAssetBundleName(BundleAssetItem assetItem)
+        /// <param name="bundle"></param>
+        /// <returns></returns>
+        private string GetBuildBundleName(string bundle)
         {
-            AssetImporter assetImporter = AssetImporter.GetAtPath(assetItem.path);
-            assetImporter.assetBundleName = assetItem.displayBundleName;
+            if (buildNameHash) return UHash.GetMD5Hash(bundle) + App.AssetBundleExtension;
+            return bundle.ToLower() + App.AssetBundleExtension;
+        }
+
+        /// <summary>
+        /// 获取 bundle size
+        /// </summary>
+        /// <param name="bundle"></param>
+        /// <returns></returns>
+        private long GetBuildBundleSize(BundleItem bundle)
+        {
+            var path = IOPath.PathCombine(App.BundleTempDirectory, GetBuildBundleName(bundle.bundleName));
+            if (IOPath.FileExists(path))
+                return IOPath.FileSize(path);
+            return 0;
         }
 
         /// <summary>
@@ -611,56 +679,11 @@ namespace UFramework.Editor.Preferences.Assets
         private ResAssetInfo GenResAssetInfo(BundleAssetItem assetItem)
         {
             var resInfo = new ResAssetInfo();
-            resInfo.assetBundleName = assetItem.displayBundleName;
+            resInfo.assetBundleName = assetItem.bundleName;
             resInfo.size = assetItem.size;
             resInfo.md5 = IOPath.FileMD5(assetItem.path);
             return resInfo;
         }
-
-        /// <summary>
-        /// Bundle列表排序
-        /// </summary>
-        /// <param name="items"></param>
-        private void SortBundleList(List<BundleItem> items)
-        {
-            if (sortType == SortType.Title)
-            {
-                if (ascendingOrder)
-                    items.Sort((a, b) => string.Compare(a.displayBundleName, b.displayBundleName, StringComparison.Ordinal));
-                else
-                    items.Sort((a, b) => string.Compare(b.displayBundleName, a.displayBundleName, StringComparison.Ordinal));
-            }
-            else if (sortType == SortType.Size)
-            {
-                if (ascendingOrder)
-                    items.Sort((x, y) => x.size.CompareTo(y.size));
-                else
-                    items.Sort((x, y) => y.size.CompareTo(x.size));
-            }
-        }
-
-        /// <summary>
-        /// BundleAsset列表排序
-        /// </summary>
-        /// <param name="items"></param>
-        private void SortBundleAssetList(List<BundleAssetItem> items)
-        {
-            if (sortType == SortType.Title)
-            {
-                if (ascendingOrder)
-                    items.Sort((a, b) => string.Compare(a.path, b.path, StringComparison.Ordinal));
-                else
-                    items.Sort((a, b) => string.Compare(b.path, a.path, StringComparison.Ordinal));
-            }
-            else if (sortType == SortType.Size)
-            {
-                if (ascendingOrder)
-                    items.Sort((x, y) => x.size.CompareTo(y.size));
-                else
-                    items.Sort((x, y) => y.size.CompareTo(x.size));
-            }
-        }
-
 
         /// <summary>
         /// Buid Assets Bundle
@@ -681,27 +704,104 @@ namespace UFramework.Editor.Preferences.Assets
                 }
             }
 
+            BuildAssetBundleOptions options = BuildAssetBundleOptions.ChunkBasedCompression;
             AssetBundleBuild[] builds = GetAssetBundleBuilds();
-            var assetBundleManifest = BuildPipeline.BuildAssetBundles(App.BundleTempDirectory, builds, BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
-            if (assetBundleManifest == null)
+            var assetBundleManifest = BuildPipeline.BuildAssetBundles(App.BundleTempDirectory, builds, options, EditorUserBuildSettings.activeBuildTarget);
+            if (assetBundleManifest == null) return;
+
+            // manifest
+            var manifest = GetAsset<Manifest>(Manifest.AssetPath);
+
+            var bundle2Ids = new Dictionary<string, int>();
+            var assetBundles = assetBundleManifest.GetAllAssetBundles();
+            for (int i = 0; i < assetBundles.Length; i++)
             {
-                return;
+                bundle2Ids[assetBundles[i]] = i;
             }
 
+            var bundleRefs = new List<BundleRef>();
+            for (int i = 0; i < assetBundles.Length; i++)
+            {
+                var bundle = assetBundles[i];
+                var dependencies = assetBundleManifest.GetAllDependencies(bundle);
+                var path = IOPath.PathCombine(App.BundleTempDirectory, bundle);
+                if (File.Exists(path))
+                {
+                    using (var stream = File.OpenRead(path))
+                    {
+                        bundleRefs.Add(new BundleRef
+                        {
+                            name = bundle,
+                            id = i,
+                            dependencies = Array.ConvertAll(dependencies, input => bundle2Ids[input]),
+                            size = stream.Length,
+                            hash = assetBundleManifest.GetAssetBundleHash(bundle).ToString(),
+                        });
+                    }
+                }
+                else
+                {
+                    Debug.LogError(path + " file not exsit.");
+                }
+            }
+
+            var dirs = new List<string>();
+            var assetRefs = new List<AssetRef>();
+            for (var i = 0; i < assets.Count; i++)
+            {
+                var item = assets[i];
+                var path = item.path;
+                var dir = IOPath.PathUnitySeparator(Path.GetDirectoryName(path));
+                var index = dirs.FindIndex(o => o.Equals(dir));
+                if (index == -1)
+                {
+                    index = dirs.Count;
+                    dirs.Add(dir);
+                }
+                var asset = new AssetRef { bundle = bundle2Ids[GetBuildBundleName(item.bundleName)], dir = index, name = Path.GetFileName(path) };
+                assetRefs.Add(asset);
+            }
+
+            manifest.dirs = dirs.ToArray();
+            manifest.assets = assetRefs.ToArray();
+            manifest.bundles = bundleRefs.ToArray();
+
+            EditorUtility.SetDirty(manifest);
+            AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
-            // var zipfile = IOPath.PathCombine(App.DataDirectory, "res.zip");
-            // IOPath.FileDelete(zipfile);
-            // IOPath.DirectoryDelete(App.BundleDirectory);
-            // if (app.isDevelopmentVersion)
-            // {
-            //     IOPath.DirectoryCopy(App.BundleTempDirectory, App.BundleDirectory);
-            // }
-            // else
-            // {
-            //     UZip.Zip(new string[] { App.BundleTempDirectory }, zipfile);
-            // }
-            // AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+            // build manifest
+            var manifestBundleName = "manifest" + App.AssetBundleExtension;
+            builds = new[] {
+                new AssetBundleBuild {
+                    assetNames = new[] { AssetDatabase.GetAssetPath (manifest), },
+                    assetBundleName = manifestBundleName
+                }
+            };
+
+            BuildPipeline.BuildAssetBundles(App.BundleTempDirectory, builds, options, EditorUserBuildSettings.activeBuildTarget);
+            ArrayUtility.Add(ref assetBundles, manifestBundleName);
+
+            // zip
+            var zipfile = IOPath.PathCombine(App.DataDirectory, "res.zip");
+            IOPath.FileDelete(zipfile);
+            IOPath.DirectoryDelete(App.BundleDirectory);
+            if (app.isDevelopmentVersion)
+            {
+                IOPath.DirectoryCopy(App.BundleTempDirectory, App.BundleDirectory);
+            }
+            else
+            {
+                string[] files = new string[assetBundles.Length];
+                string[] parents = new string[assetBundles.Length];
+                for (int i = 0; i < assetBundles.Length; i++)
+                {
+                    files[i] = IOPath.PathCombine(App.BundleTempDirectory, assetBundles[i]);
+                    parents[i] = App.BundlePlatformName;
+                }
+                UZip.Zip(files, parents, zipfile);
+            }
+            AssetDatabase.Refresh();
         }
 
         /// <summary>
@@ -716,10 +816,38 @@ namespace UFramework.Editor.Preferences.Assets
                 builds.Add(new AssetBundleBuild
                 {
                     assetNames = bundle.GetAssetPaths().ToArray(),
-                    assetBundleName = bundle.bundleName
+                    assetBundleName = GetBuildBundleName(bundle.bundleName)
                 });
             }
             return builds.ToArray();
+        }
+
+        /// <summary>
+        /// 更新进度条
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="des"></param>
+        /// <param name="value"></param>
+        /// <param name="max"></param>
+        private void UpdateProgress(string title, string des, int value, int max)
+        {
+            value = value == 0 ? value + 1 : value;
+            max = max <= 0 ? value : max;
+            if (value > max) value = max;
+            EditorUtility.DisplayProgressBar(title, des, (float)value / (float)max);
+        }
+
+        private T GetAsset<T>(string path) where T : ScriptableObject
+        {
+            var asset = AssetDatabase.LoadAssetAtPath<T>(path);
+            if (asset == null)
+            {
+                asset = ScriptableObject.CreateInstance<T>();
+                AssetDatabase.CreateAsset(asset, path);
+                AssetDatabase.SaveAssets();
+            }
+
+            return asset;
         }
     }
 }

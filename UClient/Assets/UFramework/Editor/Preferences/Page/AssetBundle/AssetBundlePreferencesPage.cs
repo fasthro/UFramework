@@ -56,8 +56,18 @@ namespace UFramework.Editor.Preferences.Assets
         /// <returns></returns>
         [ShowInInspector]
         [TabGroup("Custom")]
-        [LabelText("Assets Serach")]
+        [LabelText("Assets Serach Directorys")]
         public List<AssetSearchItem> assetPathItems = new List<AssetSearchItem>();
+
+        /// <summary>
+        /// 资源路径列表
+        /// </summary>
+        /// <typeparam name="AssetBundlePathItem"></typeparam>
+        /// <returns></returns>
+        [ShowInInspector]
+        [TabGroup("Custom")]
+        [LabelText("Assets Serach File Paths")]
+        public List<AssetSearchFileItem> assetFileItems = new List<AssetSearchFileItem>();
 
         /// <summary>
         /// 内置资源路径列表
@@ -80,18 +90,16 @@ namespace UFramework.Editor.Preferences.Assets
         {
             describeObject = UConfig.Read<AssetBundle_AssetSearchPathConfig>();
             assetPathItems = describeObject.assetPathItems;
+            assetFileItems = describeObject.assetFileItems;
             BuildBuiltInPathItems();
         }
 
         public void OnPageBarDraw()
         {
-            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Validation")))
+            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Optimize")))
             {
-                ValidationPathItem();
-            }
-            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Apply")))
-            {
-                Apply();
+                OptimizePaths();
+                OptimizeFiles();
             }
             if (SirenixEditorGUI.ToolbarButton(new GUIContent("Remove AssetBundle Name")))
             {
@@ -102,14 +110,15 @@ namespace UFramework.Editor.Preferences.Assets
         public void OnSaveDescribe()
         {
             describeObject.assetPathItems = assetPathItems;
+            describeObject.assetFileItems = assetFileItems;
             describeObject.builtInAssetPathItems = builtInAssetPathItems;
             describeObject.Save();
         }
 
         /// <summary>
-        /// 验证 PathItem
+        /// optimize path
         /// </summary>
-        private void ValidationPathItem()
+        private void OptimizePaths()
         {
             // 去重/路径是否
             List<int> removeEmptyIndexs = new List<int>();
@@ -122,7 +131,7 @@ namespace UFramework.Editor.Preferences.Assets
                 // pattern
                 if (string.IsNullOrEmpty(item.pattern))
                 {
-                    item.pattern = "*.*";
+                    item.pattern = "*";
                 }
 
                 if (string.IsNullOrEmpty(item.path))
@@ -132,7 +141,7 @@ namespace UFramework.Editor.Preferences.Assets
                 }
                 else
                 {
-                    if (!IOPath.FileExists(item.path) && !Directory.Exists(item.path))
+                    if (!Directory.Exists(item.path))
                     {
                         // 路径不存在
                         removeNoExistsIndexs.Add(i);
@@ -155,42 +164,94 @@ namespace UFramework.Editor.Preferences.Assets
             // 移除空路径
             for (int i = removeEmptyIndexs.Count - 1; i >= 0; i--)
             {
-                assetPathItems.RemoveAt(removeEmptyIndexs[i]);
+                int index = removeEmptyIndexs[i];
+                EditorUtility.DisplayProgressBar("optimize empty", assetPathItems[index].path, (i + 1) / removeEmptyIndexs.Count);
+                assetPathItems.RemoveAt(index);
             }
-            // 提示错误路径
-            StringBuilder builder = new StringBuilder();
             // 重复路径
-            if (removeDuplicateIndexs.Count > 0)
-            {
-                builder.AppendLine("Duplicate Error:");
-            }
             for (int i = removeDuplicateIndexs.Count - 1; i >= 0; i--)
             {
-                var index = removeDuplicateIndexs[i];
-                builder.AppendLine("  ->" + assetPathItems[index].path);
+                int index = removeDuplicateIndexs[i];
+                EditorUtility.DisplayProgressBar("optimize duplicate", assetPathItems[index].path, (i + 1) / removeDuplicateIndexs.Count);
                 assetPathItems.RemoveAt(index);
             }
             // 不存在路径
-            if (removeNoExistsIndexs.Count > 0)
-            {
-                builder.AppendLine("No Exists Error:");
-            }
             for (int i = removeNoExistsIndexs.Count - 1; i >= 0; i--)
             {
-                var index = removeNoExistsIndexs[i];
-                builder.AppendLine("  ->" + assetPathItems[index].path);
+                int index = removeNoExistsIndexs[i];
+                EditorUtility.DisplayProgressBar("optimize not exists", assetPathItems[index].path, (i + 1) / removeNoExistsIndexs.Count);
                 assetPathItems.RemoveAt(index);
             }
-            if (builder.Length > 0)
-            {
-                EditorUtility.DisplayDialog("Notice", builder.ToString(), "Sure");
-            }
-            else
-            {
-                EditorUtility.DisplayDialog("Notice", "Validation Succeed!", "Sure");
-            }
+            EditorUtility.ClearProgressBar();
         }
 
+        /// <summary>
+        /// optimize file
+        /// </summary>
+        private void OptimizeFiles()
+        {
+            List<int> removeEmptyIndexs = new List<int>();
+            List<int> removeDuplicateIndexs = new List<int>();
+            List<int> removeNoExistsIndexs = new List<int>();
+            HashSet<string> paths = new HashSet<string>();
+            for (int i = 0; i < assetFileItems.Count; i++)
+            {
+                var item = assetFileItems[i];
+                // pattern
+                if (string.IsNullOrEmpty(item.pattern))
+                {
+                    item.pattern = "*";
+                }
+
+                if (string.IsNullOrEmpty(item.path))
+                {
+                    // 路径为空
+                    removeEmptyIndexs.Add(i);
+                }
+                else
+                {
+                    if (!IOPath.FileExists(item.path))
+                    {
+                        // 路径不存在
+                        removeNoExistsIndexs.Add(i);
+                    }
+                    else
+                    {
+                        if (!paths.Contains(item.path))
+                        {
+                            paths.Add(item.path);
+                        }
+                        else
+                        {
+                            // 重复
+                            removeDuplicateIndexs.Add(i);
+                        }
+                    }
+                }
+            }
+            // 移除空路径
+            for (int i = removeEmptyIndexs.Count - 1; i >= 0; i--)
+            {
+                int index = removeEmptyIndexs[i];
+                EditorUtility.DisplayProgressBar("optimize empty", assetFileItems[index].path, (i + 1) / removeEmptyIndexs.Count);
+                assetFileItems.RemoveAt(index);
+            }
+            // 重复路径
+            for (int i = removeDuplicateIndexs.Count - 1; i >= 0; i--)
+            {
+                int index = removeDuplicateIndexs[i];
+                EditorUtility.DisplayProgressBar("optimize duplicate", assetFileItems[index].path, (i + 1) / removeDuplicateIndexs.Count);
+                assetFileItems.RemoveAt(index);
+            }
+            // 不存在路径
+            for (int i = removeNoExistsIndexs.Count - 1; i >= 0; i--)
+            {
+                int index = removeNoExistsIndexs[i];
+                EditorUtility.DisplayProgressBar("optimize not exists", assetFileItems[index].path, (i + 1) / removeNoExistsIndexs.Count);
+                assetFileItems.RemoveAt(index);
+            }
+            EditorUtility.ClearProgressBar();
+        }
         /// <summary>
         /// 构建内部资源路径列表
         /// </summary>
@@ -222,17 +283,9 @@ namespace UFramework.Editor.Preferences.Assets
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        private void Apply()
-        {
-
-        }
-
-        /// <summary>
         /// Remove AssetBundle Name
         /// </summary>
-        private void RemoveAssetBundleName()
+        public static void RemoveAssetBundleName()
         {
             AssetDatabase.RemoveUnusedAssetBundleNames();
 
@@ -241,8 +294,7 @@ namespace UFramework.Editor.Preferences.Assets
             {
                 AssetDatabase.RemoveAssetBundleName(bundleNames[i], true);
             }
-
-            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+            AssetDatabase.Refresh();
         }
     }
 }
