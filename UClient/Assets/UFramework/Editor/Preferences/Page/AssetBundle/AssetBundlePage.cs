@@ -501,6 +501,13 @@ namespace UFramework.Editor.Preferences.Assets
                 UpdateProgress(progressTitle, progressDes, progress, dependencieAssets.Count);
             }
 
+            // built-In
+            // foreach (var asset in builtInAssets)
+            // {
+            //     var item = new BundleAssetItem();
+
+            // }
+
             // optimiz shader package
             // shader
             shaderBundle = new BundleItem();
