@@ -21,8 +21,8 @@ namespace UFramework.Editor.Native
         /// module
         /// </summary>
         [ShowInInspector]
-        [ListDrawerSettings(OnTitleBarGUI = "OnUpdateAllAARTitleBarGUI")]
-        [LabelText("Modules AAR")]
+        [ListDrawerSettings(Expanded = true, OnTitleBarGUI = "OnUpdateAllAARTitleBarGUI")]
+        [LabelText("Module AAR")]
         public List<AndroidNativeModule> modules = new List<AndroidNativeModule>();
 
         public object GetInstance()

@@ -17,7 +17,7 @@ namespace UFramework.Editor.VersionControl
         {
             var window = GetWindow<VersionControlWindow>();
             window.titleContent = new GUIContent("Version Contorl");
-            window.position = GUIHelper.GetEditorWindowRect().AlignCenter(1000, 600);
+            window.position = GUIHelper.GetEditorWindowRect().AlignCenter(1280, 720);
         }
 
         protected override void OnInitialize()

@@ -55,6 +55,7 @@ namespace UFramework.Editor.Preferences.Assets
         /// <typeparam name="AssetBundlePathItem"></typeparam>
         /// <returns></returns>
         [ShowInInspector]
+        [TableList(AlwaysExpanded = true)]
         [TabGroup("Custom")]
         [LabelText("Assets Serach Directorys")]
         public List<AssetSearchItem> assetPathItems = new List<AssetSearchItem>();
@@ -65,6 +66,7 @@ namespace UFramework.Editor.Preferences.Assets
         /// <typeparam name="AssetBundlePathItem"></typeparam>
         /// <returns></returns>
         [ShowInInspector]
+        [TableList(AlwaysExpanded = true)]
         [TabGroup("Custom")]
         [LabelText("Assets Serach File Paths")]
         public List<AssetSearchFileItem> assetFileItems = new List<AssetSearchFileItem>();
@@ -75,10 +77,9 @@ namespace UFramework.Editor.Preferences.Assets
         /// <typeparam name="AssetBundleAssetPathItem"></typeparam>
         /// <returns></returns>
         [ShowInInspector]
+        [TableList(IsReadOnly = true, AlwaysExpanded = true)]
         [TabGroup("Built-In")]
         [LabelText("Assets Serach")]
-        [ReadOnly]
-        [ListDrawerSettings(HideAddButton = true, HideRemoveButton = true)]
         public List<AssetSearchItem> builtInAssetPathItems = new List<AssetSearchItem>();
 
         public object GetInstance()

@@ -36,6 +36,7 @@ namespace UFramework.Editor.Preferences
         /// <summary>
         /// 支持的语言列表
         /// </summary>
+        [ListDrawerSettings(Expanded = true)]
         public List<SystemLanguage> supportedLanguages = new List<SystemLanguage>();
 
         public object GetInstance()

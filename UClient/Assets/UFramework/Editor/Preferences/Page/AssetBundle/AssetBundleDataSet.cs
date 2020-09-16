@@ -189,27 +189,25 @@ namespace UFramework.Editor.Preferences.Assets
         /// <summary>
         /// 目录
         /// </summary>
-        [ShowInInspector]
-        [HideLabel]
-        [HorizontalGroup]
+        [ShowInInspector, HideLabel, FolderPath]
+        [HorizontalGroup("Search Path")]
         [ValidateInput("ValidateInputPath", "$validateInputPathMsg", InfoMessageType.Error)]
-        [FolderPath]
         public string path;
 
         /// <summary>
         /// Name类型
         /// </summary>
-        [ShowInInspector]
-        [HideLabel]
-        [HorizontalGroup(120f)]
+        [ShowInInspector, HideLabel]
+        [HorizontalGroup("Name Type")]
+        [TableColumnWidth(120, false)]
         public NameType nameType;
 
         /// <summary>
         /// 匹配模式
         /// </summary>
-        [ShowInInspector]
-        [HideLabel]
-        [HorizontalGroup(100f)]
+        [ShowInInspector, HideLabel]
+        [HorizontalGroup("Pattern")]
+        [TableColumnWidth(150, false)]
         public string pattern = "*";
 
         #region 路径验证
@@ -235,29 +233,25 @@ namespace UFramework.Editor.Preferences.Assets
         /// <summary>
         /// 文件路径
         /// </summary>
-        [ShowInInspector]
-        [HideLabel]
-        [HorizontalGroup]
+        [ShowInInspector, HideLabel, FilePath]
+        [HorizontalGroup("File Path")]
         [ValidateInput("ValidateInputPath", "$validateInputPathMsg", InfoMessageType.Error)]
-        [FilePath]
         public string path;
 
         /// <summary>
         /// Name类型
         /// </summary>
-        [ShowInInspector]
-        [HideLabel]
-        [HorizontalGroup(120f)]
-        [ReadOnly]
+        [ShowInInspector, HideLabel, ReadOnly]
+        [HorizontalGroup("Name Type")]
+        [TableColumnWidth(120, false)]
         public NameType nameType = NameType.Path;
 
         /// <summary>
         /// 匹配模式
         /// </summary>
-        [ShowInInspector]
-        [HideLabel]
-        [HorizontalGroup(100f)]
-        [ReadOnly]
+        [ShowInInspector, HideLabel, ReadOnly]
+        [HorizontalGroup("Pattern")]
+        [TableColumnWidth(150, false)]
         public string pattern = "*";
 
         #region 路径验证

@@ -13,21 +13,34 @@ using UnityEngine;
 
 namespace UFramework.Editor.Preferences
 {
+    [System.Serializable]
+    public class ConfigItem
+    {
+        [ShowInInspector, HideLabel, ReadOnly]
+        [HorizontalGroup("Config Name")]
+        public string name;
+
+        [ShowInInspector, HideLabel, ReadOnly]
+        [HorizontalGroup("Address")]
+        public FileAddress address;
+    }
+
     public class ConfigPage : IPage, IPageBar
     {
         public string menuName { get { return "Config"; } }
 
         [ShowInInspector]
-        [DictionaryDrawerSettings(IsReadOnly = true, KeyLabel = "Name", ValueLabel = "Address")]
-        [ReadOnly]
+        [TableList(IsReadOnly = true, AlwaysExpanded = true)]
         [LabelText("Editor")]
-        public Dictionary<string, FileAddress> editorAddressDictionary = new Dictionary<string, FileAddress>();
+        public List<ConfigItem> editors = new List<ConfigItem>();
 
         [ShowInInspector]
-        [DictionaryDrawerSettings(IsReadOnly = true, KeyLabel = "Name", ValueLabel = "Address")]
-        [ReadOnly]
+        [TableList(IsReadOnly = true, AlwaysExpanded = true)]
         [LabelText("Runtime")]
-        public Dictionary<string, FileAddress> runtimeAddressDictionary = new Dictionary<string, FileAddress>();
+        public List<ConfigItem> runtimes = new List<ConfigItem>();
+
+        private Dictionary<string, FileAddress> editorAddressDictionary = new Dictionary<string, FileAddress>();
+        private Dictionary<string, FileAddress> runtimeAddressDictionary = new Dictionary<string, FileAddress>();
 
         public object GetInstance()
         {
@@ -83,6 +96,26 @@ namespace UFramework.Editor.Preferences
                         }
                     }
                 }
+            }
+
+            editors.Clear();
+            foreach (KeyValuePair<string, FileAddress> item in editorAddressDictionary)
+            {
+                var cItem = new ConfigItem();
+                cItem.name = item.Key;
+                cItem.address = item.Value;
+
+                editors.Add(cItem);
+            }
+
+            runtimes.Clear();
+            foreach (KeyValuePair<string, FileAddress> item in runtimeAddressDictionary)
+            {
+                var cItem = new ConfigItem();
+                cItem.name = item.Key;
+                cItem.address = item.Value;
+
+                runtimes.Add(cItem);
             }
         }
 

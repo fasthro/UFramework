@@ -230,7 +230,7 @@ namespace UFramework.Editor.Preferences.Assets
                     progressTitle = "analysis search path";
                     progress = k;
                     progressDes = item.path;
-                    UpdateProgress(progressTitle, progressDes, progress, items.Count);
+                    Utils.UpdateProgress(progressTitle, progressDes, progress, items.Count);
                 }
             }
 
@@ -258,7 +258,7 @@ namespace UFramework.Editor.Preferences.Assets
                 progressTitle = "analysis file path";
                 progress = i;
                 progressDes = fileItem.path;
-                UpdateProgress(progressTitle, progressDes, progress, pathConfig.assetFileItems.Count);
+                Utils.UpdateProgress(progressTitle, progressDes, progress, pathConfig.assetFileItems.Count);
             }
 
 
@@ -277,7 +277,7 @@ namespace UFramework.Editor.Preferences.Assets
                     progressTitle = "analysis built-in";
                     progress = k;
                     progressDes = item.path;
-                    UpdateProgress(progressTitle, progressDes, progress, items.Count);
+                    Utils.UpdateProgress(progressTitle, progressDes, progress, items.Count);
                 }
             }
 
@@ -304,7 +304,7 @@ namespace UFramework.Editor.Preferences.Assets
                 progressTitle = "analysis bundle";
                 progress = i;
                 progressDes = asset.path;
-                UpdateProgress(progressTitle, progressDes, progress, assets.Count);
+                Utils.UpdateProgress(progressTitle, progressDes, progress, assets.Count);
             }
 
             // analysis dependencies
@@ -355,7 +355,7 @@ namespace UFramework.Editor.Preferences.Assets
                             progressTitle = "analysis bundle dependencies";
                             progress++;
                             progressDes = asset;
-                            UpdateProgress(progressTitle, progressDes, progress, dependencies.Length);
+                            Utils.UpdateProgress(progressTitle, progressDes, progress, dependencies.Length);
                         }
                     }
                 }
@@ -386,7 +386,7 @@ namespace UFramework.Editor.Preferences.Assets
                     progressTitle = "analysis dependencies";
                     progress++;
                     progressDes = file;
-                    UpdateProgress(progressTitle, progressDes, progress, dependencies.Length);
+                    Utils.UpdateProgress(progressTitle, progressDes, progress, dependencies.Length);
                 }
             }
 
@@ -498,7 +498,7 @@ namespace UFramework.Editor.Preferences.Assets
                 progressTitle = "analysis dependencies";
                 progress++;
                 progressDes = asset.path;
-                UpdateProgress(progressTitle, progressDes, progress, dependencieAssets.Count);
+                Utils.UpdateProgress(progressTitle, progressDes, progress, dependencieAssets.Count);
             }
 
             // built-In
@@ -541,7 +541,7 @@ namespace UFramework.Editor.Preferences.Assets
                     progressTitle = "optimiz bundle";
                     progress++;
                     progressDes = asset;
-                    UpdateProgress(progressTitle, progressDes, progress, dependencieAssets.Count);
+                    Utils.UpdateProgress(progressTitle, progressDes, progress, dependencieAssets.Count);
                 }
             }
             shaderBundle.bundleSize = GetBuildBundleSize(shaderBundle);
@@ -571,17 +571,17 @@ namespace UFramework.Editor.Preferences.Assets
                 for (int i = 0; i < assets.Count; i++)
                 {
                     var assetItem = assets[i];
-                    AssetImporter assetImporter = AssetImporter.GetAtPath(assetItem.path);
+                    UnityEditor.AssetImporter assetImporter = UnityEditor.AssetImporter.GetAtPath(assetItem.path);
                     assetImporter.assetBundleName = GetBuildBundleName(assetItem.bundleName);
 
                     progressTitle = "bundle name";
                     progress = i;
                     progressDes = assetItem.path;
-                    UpdateProgress(progressTitle, progressDes, progress, dependencieAssets.Count);
+                    Utils.UpdateProgress(progressTitle, progressDes, progress, dependencieAssets.Count);
                 }
             }
-
-            EditorUtility.ClearProgressBar();
+            
+            Utils.HideProgress();
         }
 
         /// <summary>
@@ -827,21 +827,6 @@ namespace UFramework.Editor.Preferences.Assets
                 });
             }
             return builds.ToArray();
-        }
-
-        /// <summary>
-        /// 更新进度条
-        /// </summary>
-        /// <param name="title"></param>
-        /// <param name="des"></param>
-        /// <param name="value"></param>
-        /// <param name="max"></param>
-        private void UpdateProgress(string title, string des, int value, int max)
-        {
-            value = value == 0 ? value + 1 : value;
-            max = max <= 0 ? value : max;
-            if (value > max) value = max;
-            EditorUtility.DisplayProgressBar(title, des, (float)value / (float)max);
         }
 
         private T GetAsset<T>(string path) where T : ScriptableObject

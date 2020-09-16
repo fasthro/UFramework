@@ -17,7 +17,7 @@ namespace UFramework.Editor.Native
         {
             var window = GetWindow<NativeWindow>();
             window.titleContent = new GUIContent("Native");
-            window.position = GUIHelper.GetEditorWindowRect().AlignCenter(1000, 600);
+            window.position = GUIHelper.GetEditorWindowRect().AlignCenter(1280, 720);
         }
 
         protected override void OnInitialize()

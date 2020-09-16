@@ -37,7 +37,7 @@ namespace UFramework.Editor.Preferences
         /// <typeparam name="string"></typeparam>
         /// <returns></returns>
         [ShowInInspector]
-        [ListDrawerSettings(CustomRemoveElementFunction = "OnSearchPathItemCustomRemoveElementFunction")]
+        [ListDrawerSettings(Expanded = true, CustomRemoveElementFunction = "OnSearchPathItemCustomRemoveElementFunction")]
         public List<LuaSearchPathItem> searchPaths = new List<LuaSearchPathItem>();
 
         /// <summary>
@@ -348,9 +348,11 @@ namespace UFramework.Editor.Preferences
                         IOPath.FileCopy(file, newFile);
                     }
 
-                    UpdateProgress(n++, files.Length, newFile);
+                    n++;
+                    string title = "Processing...[" + n + " - " + files.Length + "]";
+                    Utils.UpdateProgress(title, newFile, n, files.Length);
                 }
-                EditorUtility.ClearProgressBar();
+                Utils.HideProgress();
             }
             AssetDatabase.Refresh();
 
@@ -414,12 +416,5 @@ namespace UFramework.Editor.Preferences
             Directory.SetCurrentDirectory(currDir);
         }
         #endregion
-
-        static void UpdateProgress(int progress, int progressMax, string desc)
-        {
-            string title = "Processing...[" + progress + " - " + progressMax + "]";
-            float value = (float)progress / (float)progressMax;
-            EditorUtility.DisplayProgressBar(title, desc, value);
-        }
     }
 }

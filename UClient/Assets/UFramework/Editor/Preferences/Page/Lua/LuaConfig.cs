@@ -6,9 +6,9 @@
 using System;
 using System.Reflection;
 using Sirenix.OdinInspector;
-using UFramework.Config;
 using UnityEngine;
 using static ToLuaMenu;
+using utils = UFramework.Utils;
 
 namespace UFramework.Editor.Preferences
 {
@@ -37,7 +37,7 @@ namespace UFramework.Editor.Preferences
         {
             get
             {
-                return Utils.Str2MD5(path);
+                return utils.Str2MD5(path);
             }
         }
 

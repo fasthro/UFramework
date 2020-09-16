@@ -13,16 +13,30 @@ using UnityEngine;
 
 namespace UFramework.Editor.Preferences
 {
+    [System.Serializable]
+    public class TableItem
+    {
+        [ShowInInspector, HideLabel, ReadOnly]
+        [HorizontalGroup("Table Name")]
+        public string name;
+
+        [ShowInInspector, HideLabel]
+        [HorizontalGroup("Format")]
+        public DataFormatOptions format;
+    }
+
+
     public class TablePage : IPage, IPageBar
     {
         public string menuName { get { return "Table"; } }
 
         static TableConfig describeObject;
 
-        // 数据表
         [ShowInInspector]
-        [DictionaryDrawerSettings(IsReadOnly = true, KeyLabel = "Name", ValueLabel = "Format")]
-        public Dictionary<string, DataFormatOptions> tableDictionary = new Dictionary<string, DataFormatOptions>();
+        [TableList(IsReadOnly = true, AlwaysExpanded = true, HideToolbar = true)]
+        public List<TableItem> tables = new List<TableItem>();
+
+        private Dictionary<string, DataFormatOptions> tableDictionary = new Dictionary<string, DataFormatOptions>();
 
         public object GetInstance()
         {
@@ -70,6 +84,16 @@ namespace UFramework.Editor.Preferences
             }
 
             tableDictionary = describeObject.tableDictionary;
+
+            tables.Clear();
+            foreach (KeyValuePair<string, DataFormatOptions> item in tableDictionary)
+            {
+                var tItem = new TableItem();
+                tItem.name = item.Key;
+                tItem.format = item.Value;
+
+                tables.Add(tItem);
+            }
         }
 
         public void OnPageBarDraw()
@@ -115,6 +139,10 @@ namespace UFramework.Editor.Preferences
 
         public void OnSaveDescribe()
         {
+            foreach (var item in tables)
+            {
+                tableDictionary[item.name] = item.format;
+            }
             describeObject.tableDictionary = tableDictionary;
             describeObject.Save();
         }
