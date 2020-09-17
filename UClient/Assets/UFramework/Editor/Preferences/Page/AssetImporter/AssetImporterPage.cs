@@ -6,11 +6,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
 using UFramework.Config;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace UFramework.Editor.Preferences.Assets
 {
@@ -112,7 +114,7 @@ namespace UFramework.Editor.Preferences.Assets
                     item.androidFormat = texture.androidFormat;
                     item.iosFormat = texture.iosFormat;
                     item.maxSize = texture.maxSize;
-
+                    item.Update();
                     textures.Add(item);
                 }
             }

@@ -18,17 +18,9 @@ namespace UFramework.Editor.Preferences.Assets
     /// </summary>
     public enum NameType
     {
-        // 路径命名
-        // - 搜索路径
         Path,
-
-        // 文件夹命名
-        // - 搜索路径下层文件夹
+        MultipleDirectory,
         Directory,
-
-        // 上层文件夹命名
-        // - 搜索路径文件夹
-        TopDirectory,
     }
 
     /// <summary>
@@ -199,7 +191,7 @@ namespace UFramework.Editor.Preferences.Assets
         /// </summary>
         [ShowInInspector, HideLabel]
         [HorizontalGroup("Name Type")]
-        [TableColumnWidth(120, false)]
+        [TableColumnWidth(140, false)]
         public NameType nameType;
 
         /// <summary>
@@ -277,11 +269,15 @@ namespace UFramework.Editor.Preferences.Assets
         /// <summary>
         /// 资源路径
         /// </summary>
-        [ShowInInspector]
-        [HideLabel]
-        [HorizontalGroup]
-        [ReadOnly]
+        [ShowInInspector, HideLabel, HorizontalGroup, ReadOnly]
         public string path;
+
+        /// <summary>
+        /// 目标对象
+        /// </summary>
+        [ShowInInspector, HideLabel]
+        [HorizontalGroup(200)]
+        private UnityEngine.Object target;
 
         /// <summary>
         /// display bundle name
@@ -298,10 +294,8 @@ namespace UFramework.Editor.Preferences.Assets
         /// <summary>
         /// 资源大小文本
         /// </summary>
-        [ShowInInspector]
-        [HideLabel]
+        [ShowInInspector, HideLabel, ReadOnly]
         [HorizontalGroup(70f)]
-        [ReadOnly]
         public string sizeString
         {
             get
@@ -319,6 +313,14 @@ namespace UFramework.Editor.Preferences.Assets
         /// </summary>
         [HideInInspector]
         public bool IsDependencies = false;
+
+        /// <summary>
+        /// 是否为Prefab资源
+        /// </summary>
+        /// <returns></returns>
+        [HideInInspector]
+        public bool isPrefab { get { return Path.GetExtension(path).Equals(".prefab"); } }
+
 
         /// <summary>
         /// 是否为材质球资源
@@ -340,6 +342,29 @@ namespace UFramework.Editor.Preferences.Assets
                 return extension.Equals(".png") || extension.Equals(".tga");
             }
         }
+
+        /// <summary>
+        /// 是否为Shader资源
+        /// </summary>
+        /// <returns></returns>
+        [HideInInspector]
+        public bool isShader { get { return Path.GetExtension(path).Equals(".shader"); } }
+
+        /// <summary>
+        /// update
+        /// </summary>
+        public void Update()
+        {
+            // target 
+            if (isPrefab) target = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            else if (isMaterial) target = AssetDatabase.LoadAssetAtPath<Material>(path);
+            else if (isTexture) target = AssetDatabase.LoadAssetAtPath<Texture>(path);
+            else if (isShader) target = AssetDatabase.LoadAssetAtPath<Shader>(path);
+            else target = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(path);
+
+            // size
+            size = IOPath.FileSize(path);
+        }
     }
 
     [System.Serializable]
@@ -348,19 +373,15 @@ namespace UFramework.Editor.Preferences.Assets
         /// <summary>
         /// display bundle name
         /// </summary>
-        [ShowInInspector]
-        [HideLabel]
-        [HorizontalGroup]
-        [ReadOnly]
+        [ShowInInspector, HideLabel, HorizontalGroup, ReadOnly]
         public string bundleName;
 
         /// <summary>
         /// 资源
         /// </summary>
-        [ShowInInspector]
-        [HideLabel]
-        [HorizontalGroup]
-        [ReadOnly]
+        [ShowInInspector, HideLabel, HorizontalGroup]
+        [ListDrawerSettings(HideAddButton = true, HideRemoveButton = true)]
+        [LabelText("Assets")]
         public List<BundleAssetItem> assets;
 
         /// <summary>
@@ -372,10 +393,8 @@ namespace UFramework.Editor.Preferences.Assets
         /// <summary>
         /// 资源总大小文本
         /// </summary>
-        [ShowInInspector]
-        [HideLabel]
+        [ShowInInspector, HideLabel, ReadOnly]
         [HorizontalGroup(70f)]
-        [ReadOnly]
         public string fileSizeString
         {
             get
@@ -397,10 +416,8 @@ namespace UFramework.Editor.Preferences.Assets
         /// <summary>
         /// assetBundle大小文本
         /// </summary>
-        [ShowInInspector]
-        [HideLabel]
+        [ShowInInspector, HideLabel, ReadOnly]
         [HorizontalGroup(70f)]
-        [ReadOnly]
         public string bundleSizeString
         {
             get
@@ -433,7 +450,6 @@ namespace UFramework.Editor.Preferences.Assets
             return paths;
         }
     }
-
 
     /// <summary>
     /// asset search path config

@@ -219,7 +219,7 @@ namespace UFramework.Editor.Preferences.Assets
                 {
                     var item = items[k];
                     item.path = IOPath.PathUnitySeparator(item.path);
-                    item.size = IOPath.FileSize(item.path);
+                    item.Update();
 
                     if (!assetTracker.ContainsKey(item.path))
                     {
@@ -246,7 +246,7 @@ namespace UFramework.Editor.Preferences.Assets
                     var item = new BundleAssetItem();
                     item.path = IOPath.PathUnitySeparator(pathItem.path);
                     item.bundleName = FormatAssetBundleName(pathItem, pathItem.path);
-                    item.size = IOPath.FileSize(item.path);
+                    item.Update();
 
                     if (!assetTracker.ContainsKey(item.path))
                     {
@@ -271,7 +271,7 @@ namespace UFramework.Editor.Preferences.Assets
                 {
                     var item = items[k];
                     item.path = IOPath.PathUnitySeparator(item.path);
-                    item.size = IOPath.FileSize(item.path);
+                    item.Update();
                     builtInAssets.Add(item);
 
                     progressTitle = "analysis built-in";
@@ -342,7 +342,7 @@ namespace UFramework.Editor.Preferences.Assets
                                     var assetItem = new BundleAssetItem();
                                     assetItem.path = IOPath.PathUnitySeparator(pathItem.path);
                                     assetItem.bundleName = FormatAssetBundleName(pathItem, pathItem.path);
-                                    assetItem.size = IOPath.FileSize(pathItem.path);
+                                    assetItem.Update();
 
                                     dependenciesTracker.Add(asset);
                                     dependencieAssets.Add(assetItem);
@@ -474,8 +474,8 @@ namespace UFramework.Editor.Preferences.Assets
                 assetItem = new BundleAssetItem();
                 assetItem.path = IOPath.PathUnitySeparator(pathItem.path);
                 assetItem.bundleName = FormatAssetBundleName(pathItem, pathItem.path);
-                assetItem.size = IOPath.FileSize(pathItem.path);
                 assetItem.IsDependencies = true;
+                assetItem.Update();
 
                 assetTracker.Add(asset.path, asset);
                 assets.Add(assetItem);
@@ -527,8 +527,8 @@ namespace UFramework.Editor.Preferences.Assets
                         {
                             var shaderAsset = new BundleAssetItem();
                             shaderAsset.path = asset;
-                            shaderAsset.size = IOPath.FileSize(asset);
                             shaderAsset.bundleName = "shaders";
+                            shaderAsset.Update();
 
                             assetTracker.Add(asset, shaderAsset);
                             assets.Add(shaderAsset);
@@ -580,7 +580,7 @@ namespace UFramework.Editor.Preferences.Assets
                     Utils.UpdateProgress(progressTitle, progressDes, progress, dependencieAssets.Count);
                 }
             }
-            
+
             Utils.HideProgress();
         }
 
@@ -638,7 +638,7 @@ namespace UFramework.Editor.Preferences.Assets
             {
                 return filePath;
             }
-            else if (item.nameType == NameType.Directory)
+            else if (item.nameType == NameType.MultipleDirectory)
             {
                 var sps = searchPath.Split(Path.AltDirectorySeparatorChar);
                 var fps = filePath.Split(Path.AltDirectorySeparatorChar);
@@ -647,7 +647,7 @@ namespace UFramework.Editor.Preferences.Assets
                     return IOPath.PathCombine(searchPath, fps[sps.Length]);
                 }
             }
-            else if (item.nameType == NameType.TopDirectory)
+            else if (item.nameType == NameType.Directory)
             {
                 return searchPath;
             }

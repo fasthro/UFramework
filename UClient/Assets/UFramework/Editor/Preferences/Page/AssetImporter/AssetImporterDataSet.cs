@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UFramework.Config;
 using UnityEditor;
+using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace UFramework.Editor.Preferences.Assets
 {
@@ -124,6 +126,14 @@ namespace UFramework.Editor.Preferences.Assets
         public string path;
 
         /// <summary>
+        /// target
+        /// </summary>
+        [ShowInInspector, HideLabel]
+        [HorizontalGroup("Target")]
+        [TableColumnWidth(100, false)]
+        private UnityEngine.Object target;
+
+        /// <summary>
         /// Texture Type
         /// </summary>
         [ShowInInspector, HideLabel, ReadOnly]
@@ -161,7 +171,20 @@ namespace UFramework.Editor.Preferences.Assets
         [ShowInInspector, HideLabel, ReadOnly]
         [HorizontalGroup("File Size")]
         [TableColumnWidth(70, false)]
-        public string fileSize = "100.9 MB";
+        public string fileSizeStr
+        {
+            get
+            {
+                if (fileSize == 0)
+                {
+                    return "--";
+                }
+                return EditorUtility.FormatBytes(fileSize);
+            }
+        }
+
+        [HideInInspector]
+        public long fileSize;
 
         /// <summary>
         /// 内存占用大小
@@ -169,7 +192,20 @@ namespace UFramework.Editor.Preferences.Assets
         [ShowInInspector, HideLabel, ReadOnly]
         [HorizontalGroup("Memory")]
         [TableColumnWidth(70, false)]
-        public string memorySize;
+        public string memorySizeStr
+        {
+            get
+            {
+                if (memorySize == 0)
+                {
+                    return "--";
+                }
+                return EditorUtility.FormatBytes(memorySize);
+            }
+        }
+
+        [HideInInspector]
+        public long memorySize;
 
         /// <summary>
         /// TextureMaxSize to int
@@ -189,6 +225,16 @@ namespace UFramework.Editor.Preferences.Assets
                 case TextureMaxSize.MaxSize_32: return 32;
             }
             return 1024;
+        }
+
+        /// <summary>
+        /// update
+        /// </summary>
+        public void Update()
+        {
+            target = AssetDatabase.LoadAssetAtPath<Texture>(path);
+            fileSize = IOPath.FileSize(path);
+            memorySize = Profiler.GetRuntimeMemorySizeLong(target as Texture);
         }
     }
 
