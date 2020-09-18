@@ -4,7 +4,7 @@
  * @Description: table parse
  */
 using System.Collections.Generic;
-using UFramework.ResLoader;
+using UFramework.Asset;
 using UnityEngine;
 
 namespace UFramework.Table
@@ -24,11 +24,11 @@ namespace UFramework.Table
 #if UNITY_EDITOR
             m_content = IOPath.FileReadText(filePath);
 #else
-            var loader = AssetBundleLoader.AllocateRes(filePath, null);
+            var loader = BundleLoader.AllocateAsset(filePath);
             var ready = loader.LoadSync();
             if (ready)
             {
-                var ta = loader.bundleAssetRes.GetAsset<TextAsset>();
+                var ta = loader.asset.GetAsset<TextAsset>();
                 if (ta != null)
                 {
                     m_content = ta.text;

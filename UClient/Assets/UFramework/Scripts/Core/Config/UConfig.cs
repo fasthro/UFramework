@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using LitJson;
+using UFramework.Asset;
 using UnityEngine;
 
 namespace UFramework.Config
@@ -60,7 +61,7 @@ namespace UFramework.Config
 #else
             if (address == FileAddress.Resources)
             {
-                var loader = ResLoader.ResourceLoader.Allocate(IOPath.PathCombine(App.ConfigResourceDirectory, fileName));
+                var loader = ResourceLoader.Allocate(IOPath.PathCombine(App.ConfigResourceDirectory, fileName));
                 bool ready = loader.LoadSync();
                 if (ready)
                 {

@@ -8,8 +8,8 @@ using System.Collections.Generic;
 using System.IO;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
+using UFramework.Asset;
 using UFramework.Config;
-using UFramework.ResLoader;
 using UFramework.Tools;
 using UnityEditor;
 using UnityEngine;
@@ -108,7 +108,9 @@ namespace UFramework.Editor.Preferences.Assets
             dependencieAssets = describeObject.dependencieAssets;
             builtInAssets = describeObject.builtInAssets;
 
-            if (bundles.Count <= 0)
+            if (bundles.Count <= 0
+                || (assets.Count > 0 && assets[0].GetTarget() == null)
+                || (builtInAssets.Count > 0 && builtInAssets[0].GetTarget() == null))
             {
                 AnalysisAssets();
             }
@@ -134,6 +136,8 @@ namespace UFramework.Editor.Preferences.Assets
 
         public void OnSaveDescribe()
         {
+            if (describeObject == null) return;
+
             describeObject.bundles = bundles;
             describeObject.assets = assets;
             describeObject.dependencieAssets = dependencieAssets;
@@ -261,7 +265,6 @@ namespace UFramework.Editor.Preferences.Assets
                 Utils.UpdateProgress(progressTitle, progressDes, progress, pathConfig.assetFileItems.Count);
             }
 
-
             // analysis built-in
             builtInAssets.Clear();
             for (int i = 0; i < pathConfig.builtInAssetPathItems.Count; i++)
@@ -279,6 +282,30 @@ namespace UFramework.Editor.Preferences.Assets
                     progressDes = item.path;
                     Utils.UpdateProgress(progressTitle, progressDes, progress, items.Count);
                 }
+            }
+
+            // analysis built-in file
+            for (int i = 0; i < pathConfig.builtInAssetFileItems.Count; i++)
+            {
+                var fileItem = pathConfig.builtInAssetFileItems[i];
+                if (ValidateAssetPath(fileItem.path))
+                {
+                    var pathItem = new AssetSearchItem();
+                    pathItem.path = fileItem.path;
+                    pathItem.nameType = fileItem.nameType;
+
+                    var item = new BundleAssetItem();
+                    item.path = IOPath.PathUnitySeparator(pathItem.path);
+                    item.bundleName = FormatAssetBundleName(pathItem, pathItem.path);
+                    item.Update();
+
+                    builtInAssets.Add(item);
+                }
+
+                progressTitle = "analysis built-in file path";
+                progress = i;
+                progressDes = fileItem.path;
+                Utils.UpdateProgress(progressTitle, progressDes, progress, pathConfig.assetFileItems.Count);
             }
 
             // analysis bundles
@@ -501,13 +528,6 @@ namespace UFramework.Editor.Preferences.Assets
                 Utils.UpdateProgress(progressTitle, progressDes, progress, dependencieAssets.Count);
             }
 
-            // built-In
-            // foreach (var asset in builtInAssets)
-            // {
-            //     var item = new BundleAssetItem();
-
-            // }
-
             // optimiz shader package
             // shader
             shaderBundle = new BundleItem();
@@ -679,20 +699,6 @@ namespace UFramework.Editor.Preferences.Assets
         }
 
         /// <summary>
-        /// 生成 ResAssetInfo
-        /// </summary>
-        /// <param name="assetItem"></param>
-        /// <returns></returns>
-        private ResAssetInfo GenResAssetInfo(BundleAssetItem assetItem)
-        {
-            var resInfo = new ResAssetInfo();
-            resInfo.assetBundleName = assetItem.bundleName;
-            resInfo.size = assetItem.size;
-            resInfo.md5 = IOPath.FileMD5(assetItem.path);
-            return resInfo;
-        }
-
-        /// <summary>
         /// Buid Assets Bundle
         /// </summary>
         /// <param name="clean"></param>
@@ -717,7 +723,7 @@ namespace UFramework.Editor.Preferences.Assets
             if (assetBundleManifest == null) return;
 
             // manifest
-            var manifest = GetAsset<Manifest>(Manifest.AssetPath);
+            var manifest = GetAsset<Manifest>(Manifest.PATH);
 
             var bundle2Ids = new Dictionary<string, int>();
             var assetBundles = assetBundleManifest.GetAllAssetBundles();
@@ -765,11 +771,26 @@ namespace UFramework.Editor.Preferences.Assets
                     index = dirs.Count;
                     dirs.Add(dir);
                 }
-                var asset = new AssetRef { bundle = bundle2Ids[GetBuildBundleName(item.bundleName)], dir = index, name = Path.GetFileName(path) };
+                var asset = new AssetRef { bundle = bundle2Ids[GetBuildBundleName(item.bundleName)], directory = index, name = Path.GetFileName(path) };
                 assetRefs.Add(asset);
             }
 
-            manifest.dirs = dirs.ToArray();
+            for (var i = 0; i < builtInAssets.Count; i++)
+            {
+                var item = builtInAssets[i];
+                var path = item.path;
+                var dir = IOPath.PathUnitySeparator(Path.GetDirectoryName(path));
+                var index = dirs.FindIndex(o => o.Equals(dir));
+                if (index == -1)
+                {
+                    index = dirs.Count;
+                    dirs.Add(dir);
+                }
+                var asset = new AssetRef { bundle = bundle2Ids[GetBuildBundleName(item.bundleName)], directory = index, name = Path.GetFileName(path) };
+                assetRefs.Add(asset);
+            }
+
+            manifest.directorys = dirs.ToArray();
             manifest.assets = assetRefs.ToArray();
             manifest.bundles = bundleRefs.ToArray();
 
@@ -826,6 +847,34 @@ namespace UFramework.Editor.Preferences.Assets
                     assetBundleName = GetBuildBundleName(bundle.bundleName)
                 });
             }
+
+            // analysis bundles
+            var _builtInBundleTracker = new Dictionary<string, BundleItem>();
+            var _builtInBundles = new List<BundleItem>();
+            for (int i = 0; i < builtInAssets.Count; i++)
+            {
+                var asset = builtInAssets[i];
+                BundleItem bundle;
+                if (!_builtInBundleTracker.TryGetValue(asset.bundleName, out bundle))
+                {
+                    bundle = new BundleItem();
+                    bundle.bundleName = asset.bundleName;
+                    bundle.assets = new List<BundleAssetItem>();
+                    _builtInBundleTracker.Add(asset.bundleName, bundle);
+
+                    _builtInBundles.Add(bundle);
+                }
+                bundle.assets.Add(asset);
+            }
+            foreach (var bundle in _builtInBundles)
+            {
+                builds.Add(new AssetBundleBuild
+                {
+                    assetNames = bundle.GetAssetPaths().ToArray(),
+                    assetBundleName = GetBuildBundleName(bundle.bundleName)
+                });
+            }
+
             return builds.ToArray();
         }
 

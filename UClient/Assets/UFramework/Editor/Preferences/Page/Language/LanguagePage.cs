@@ -84,6 +84,7 @@ namespace UFramework.Editor.Preferences
 
         public void OnSaveDescribe()
         {
+            if (describeObject == null) return;
             describeObject.useSystemLanguage = useSystemLanguage;
             describeObject.defaultLanguage = defaultLanguage;
             describeObject.supportedLanguages = supportedLanguages;

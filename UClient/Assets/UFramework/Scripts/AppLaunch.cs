@@ -3,6 +3,7 @@
  * @Date: 2020-07-13 23:51:59
  * @Description: App Launch
  */
+using UFramework.Asset;
 using UFramework.Native;
 using UFramework.Tools;
 using UnityEngine;
@@ -19,6 +20,11 @@ namespace UFramework
         {
             ThreadQueue.Instance.Default();
             UNative.Instance.Default();
+
+            UAsset.Instance.Initialize(false, (result) =>
+            {
+                Debug.Log("UAsset Initlized Result: " + result);
+            });
         }
 
         protected override void OnSingletonStart()

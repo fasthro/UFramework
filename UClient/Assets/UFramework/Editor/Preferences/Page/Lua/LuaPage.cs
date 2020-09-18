@@ -87,6 +87,8 @@ namespace UFramework.Editor.Preferences
 
         public void OnSaveDescribe()
         {
+            if (describeObject == null) return;
+            
             SearchPathItemDescribeSave();
             WrapDescribeSave();
             GeneralSettingSave();

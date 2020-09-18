@@ -8,6 +8,7 @@ using System.IO;
 using System.Text;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
+using UFramework.Asset;
 using UFramework.Config;
 using UnityEditor;
 using UnityEngine;
@@ -82,6 +83,18 @@ namespace UFramework.Editor.Preferences.Assets
         [LabelText("Assets Serach")]
         public List<AssetSearchItem> builtInAssetPathItems = new List<AssetSearchItem>();
 
+        /// <summary>
+        /// 内置资源文件列表
+        /// </summary>
+        /// <typeparam name="AssetBundlePathItem"></typeparam>
+        /// <returns></returns>
+        [ShowInInspector]
+        [TableList(IsReadOnly = true, AlwaysExpanded = true)]
+        [TabGroup("Built-In")]
+        [LabelText("Assets Serach File Paths")]
+        public List<AssetSearchFileItem> builtInAssetFileItems = new List<AssetSearchFileItem>();
+
+
         public object GetInstance()
         {
             return this;
@@ -110,9 +123,12 @@ namespace UFramework.Editor.Preferences.Assets
 
         public void OnSaveDescribe()
         {
+            if (describeObject == null) return;
+
             describeObject.assetPathItems = assetPathItems;
             describeObject.assetFileItems = assetFileItems;
             describeObject.builtInAssetPathItems = builtInAssetPathItems;
+            describeObject.builtInAssetFileItems = builtInAssetFileItems;
             describeObject.Save();
         }
 
@@ -281,6 +297,17 @@ namespace UFramework.Editor.Preferences.Assets
             tableItem.pattern = "*.csv";
 
             builtInAssetPathItems.Add(tableItem);
+
+            // files
+            builtInAssetFileItems.Clear();
+
+            // manifest
+            var manifestItem = new AssetSearchFileItem();
+            manifestItem.path = IOPath.PathRelativeAsset(Manifest.PATH);
+            manifestItem.nameType = NameType.Path;
+            manifestItem.pattern = "*.asset";
+
+            builtInAssetFileItems.Add(manifestItem);
         }
 
         /// <summary>

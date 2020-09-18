@@ -24,7 +24,7 @@ namespace UFramework.Editor.Runtime
 
         protected override void OnInitialize()
         {
-            AddPage(new ResLoaderRuntimePage());
+            AddPage(new AssetPage());
         }
     }
 }

@@ -1,1 +1,1 @@
-﻿{"name":"AppConfig","address":2,"isDevelopmentVersion":false,"appEnvironmentType":0,"isLogEnable":false,"useSystemLanguage":false,"defaultLanguage":40,"supportedLanguages":[40,10]}
+﻿{"name":"AppConfig","address":2,"isDevelopmentVersion":true,"appEnvironmentType":0,"isLogEnable":false,"useSystemLanguage":false,"defaultLanguage":40,"supportedLanguages":[40,10]}
