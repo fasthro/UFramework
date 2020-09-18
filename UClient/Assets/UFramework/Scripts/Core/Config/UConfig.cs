@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using LitJson;
+using UFramework.Assets;
 using UnityEngine;
 
 namespace UFramework.Config
@@ -60,22 +61,15 @@ namespace UFramework.Config
 #else
             if (address == FileAddress.Resources)
             {
-                var loader = ResLoader.ResourceLoader.Allocate(IOPath.PathCombine(App.ConfigResourceDirectory, fileName));
-                bool ready = loader.LoadSync();
-                if (ready)
-                {
-                    var textAsset = loader.resourceAssetRes.GetAsset<TextAsset>();
-                    if (textAsset != null)
-                    {
-                        content = textAsset.text;
-                    }
-                }
-                loader.Unload();
-                loader = null;
+                var asset = Asset.LoadResourceAsset(IOPath.PathCombine(App.ConfigResourceDirectory, address.ToString(), fileName), typeof(TextAsset));
+                content = asset.GetAsset<TextAsset>().text;
+                asset.Unload();
             }
             else
             {
-                content = IOPath.FileReadText(IOPath.PathCombine(App.ConfigDirectory, address.ToString(), fileName));
+                var asset = Asset.LoadAsset(IOPath.PathCombine(App.ConfigDataDirectory, address.ToString(), fileName), typeof(TextAsset));
+                content = asset.GetAsset<TextAsset>().text;
+                asset.Unload();
             }
 #endif
             if (!string.IsNullOrEmpty(content))

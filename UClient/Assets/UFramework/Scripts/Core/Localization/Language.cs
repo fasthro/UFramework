@@ -4,8 +4,8 @@
  * @Description: 国际化语言
  */
 using System.Collections.Generic;
+using UFramework.Assets;
 using UFramework.Config;
-using UFramework.ResLoader;
 using UnityEngine;
 
 namespace UFramework.Localization
@@ -92,17 +92,9 @@ namespace UFramework.Localization
 #if UNITY_EDITOR
             text = IOPath.FileReadText(dataPath);
 #else
-            var resLoader = AssetBundleLoader.AllocateRes(dataPath);
-            var ready = resLoader.LoadSync();
-            if (ready)
-            {
-                var ta = resLoader.bundleAssetRes.GetAsset<TextAsset>();
-                if (ta != null)
-                {
-                    text = ta.text;
-                }
-            }
-            resLoader.Unload();
+            var asset = Asset.LoadAsset(dataPath, typeof(TextAsset));
+            text = asset.GetAsset<TextAsset>().text;
+            asset.Unload();
 #endif
             m_modelDictonary.Add(model, text.Split('\n'));
         }

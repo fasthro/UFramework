@@ -101,6 +101,7 @@ namespace UFramework.Editor.Preferences.Assets
 
         public void OnSaveDescribe()
         {
+            if (describeObject == null) return;
             describeObject.texturePaths = textures;
             describeObject.modePaths = modes;
             describeObject.audioPaths = audios;

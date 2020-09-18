@@ -10,8 +10,8 @@ using UnityEngine.Networking;
 
 namespace UFramework.Download
 {
-    [MonoSingletonPath("UFramework/Download")]
-    public class UDownload : MonoSingleton<UDownload>
+    [MonoSingletonPath("UFramework/UDownload")]
+    public class UDownloader : MonoSingleton<UDownloader>
     {
         // 并行下载数量(默认支持2个同时下载)
         private static int multiDownloadCount = 2;

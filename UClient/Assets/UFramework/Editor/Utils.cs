@@ -5,6 +5,7 @@
  */
 
 using UnityEditor;
+using UnityEngine;
 
 namespace UFramework.Editor
 {
@@ -31,6 +32,25 @@ namespace UFramework.Editor
         public static void HideProgress()
         {
             EditorUtility.ClearProgressBar();
+        }
+
+        /// <summary>
+        /// GetAsset
+        /// </summary>
+        /// <param name="path"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T GetAsset<T>(string path) where T : ScriptableObject
+        {
+            var asset = AssetDatabase.LoadAssetAtPath<T>(path);
+            if (asset == null)
+            {
+                asset = ScriptableObject.CreateInstance<T>();
+                AssetDatabase.CreateAsset(asset, path);
+                AssetDatabase.SaveAssets();
+            }
+
+            return asset;
         }
     }
 }

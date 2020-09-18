@@ -235,7 +235,7 @@ namespace UFramework.Editor.Preferences.Assets
         /// </summary>
         [ShowInInspector, HideLabel, ReadOnly]
         [HorizontalGroup("Name Type")]
-        [TableColumnWidth(120, false)]
+        [TableColumnWidth(140, false)]
         public NameType nameType = NameType.Path;
 
         /// <summary>
@@ -278,6 +278,7 @@ namespace UFramework.Editor.Preferences.Assets
         [ShowInInspector, HideLabel]
         [HorizontalGroup(200)]
         private UnityEngine.Object target;
+        public UnityEngine.Object GetTarget() { return target; }
 
         /// <summary>
         /// display bundle name
@@ -462,6 +463,7 @@ namespace UFramework.Editor.Preferences.Assets
         public List<AssetSearchItem> assetPathItems = new List<AssetSearchItem>();
         public List<AssetSearchFileItem> assetFileItems = new List<AssetSearchFileItem>();
         public List<AssetSearchItem> builtInAssetPathItems = new List<AssetSearchItem>();
+        public List<AssetSearchFileItem> builtInAssetFileItems = new List<AssetSearchFileItem>();
 
         public void Save()
         {

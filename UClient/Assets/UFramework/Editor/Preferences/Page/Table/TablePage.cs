@@ -139,6 +139,8 @@ namespace UFramework.Editor.Preferences
 
         public void OnSaveDescribe()
         {
+            if (describeObject == null) return;
+            
             foreach (var item in tables)
             {
                 tableDictionary[item.name] = item.format;

@@ -60,6 +60,7 @@ namespace UFramework.Editor.Preferences.Assets
 
         public void OnSaveDescribe()
         {
+            if (describeObject == null) return;
             describeObject.textures = textures;
             describeObject.modes = modes;
             describeObject.audios = audios;

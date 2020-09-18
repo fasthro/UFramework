@@ -1,0 +1,145 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4efd3d0189a600447ad360358041a551, type: 3}
+  m_Name: AssetManifest
+  m_EditorClassIdentifier: 
+  directorys:
+  - Assets/Art/Cube/Prefab
+  - Assets/Art/Cube/Prefab 1
+  - Assets/Art/Dependencies
+  - Assets/UAssets/Config/Data
+  - Assets/UAssets/Language/Data/ChineseSimplified
+  - Assets/UAssets/Language/Data/English
+  - Assets/UAssets/Table/Data
+  - Assets
+  assets:
+  - name: Cube1.prefab
+    bundle: 6
+    directory: 0
+  - name: Cube2.prefab
+    bundle: 11
+    directory: 0
+  - name: Cube1.prefab
+    bundle: 14
+    directory: 1
+  - name: GameObject.prefab
+    bundle: 8
+    directory: 2
+  - name: test.mat
+    bundle: 9
+    directory: 2
+  - name: test.shader
+    bundle: 2
+    directory: 2
+  - name: LuaConfig.json
+    bundle: 0
+    directory: 3
+  - name: ResLoaderConfig.json
+    bundle: 1
+    directory: 3
+  - name: TableConfig.json
+    bundle: 4
+    directory: 3
+  - name: 0.txt
+    bundle: 5
+    directory: 4
+  - name: 1.txt
+    bundle: 12
+    directory: 4
+  - name: 0.txt
+    bundle: 10
+    directory: 5
+  - name: 1.txt
+    bundle: 13
+    directory: 5
+  - name: Template.csv
+    bundle: 3
+    directory: 6
+  - name: AssetManifest.asset
+    bundle: 7
+    directory: 7
+  bundles:
+  - name: 0398755cd73160a0e82adcdf20ac1f12.unity3d
+    id: 0
+    dependencies: 
+    size: 1339
+    hash: a7bfbeb8ae55a079b4e7a1466acc37fa
+  - name: 10ab32e20e1c115b9cad5bc3dbf5da71.unity3d
+    id: 1
+    dependencies: 
+    size: 2019
+    hash: c3f8ee3df1910ab2f749e66becfb809e
+  - name: 16da4324914619194d99807f8a0e3255.unity3d
+    id: 2
+    dependencies: 
+    size: 59496
+    hash: 9ee48c64c3f917fc2b67050129735fb9
+  - name: 2038ca226310debdde227b05e104e969.unity3d
+    id: 3
+    dependencies: 
+    size: 1462
+    hash: 19b6a8b6feb05b21dc405937ebec5865
+  - name: 23e279975cfd550cd4e87899ec6ba807.unity3d
+    id: 4
+    dependencies: 
+    size: 1286
+    hash: d1c2f596d50b53950733ab2247fb78ca
+  - name: 2e8b0eb683f58e1884b970a3282272cf.unity3d
+    id: 5
+    dependencies: 
+    size: 1204
+    hash: c691103f59defb973de84e6425fd2ec2
+  - name: 61bfba083e6ebf49176967e269c7b2c1.unity3d
+    id: 6
+    dependencies: 020000000800000009000000
+    size: 91194
+    hash: df10d4a800206d842c8ea34d20e8b520
+  - name: 666833d8f837500e936121a5a2871e2a.unity3d
+    id: 7
+    dependencies: 
+    size: 3544
+    hash: eb6078e506d59fbf0f63a04fed9cf736
+  - name: 7538bb62b8ebb4f7694303bb8fd12914.unity3d
+    id: 8
+    dependencies: 0200000009000000
+    size: 2610
+    hash: 113903928b11779b895ccbe8379b3bdd
+  - name: 75a83924272243486abbef54ee192f63.unity3d
+    id: 9
+    dependencies: 02000000
+    size: 2333
+    hash: 321a4297663fb5a4d6a847ca2b6b5166
+  - name: 7fcfb0d6535a39ccd09f9870466a7ca6.unity3d
+    id: 10
+    dependencies: 
+    size: 1191
+    hash: e4f1626706bdfc21172b2746d98af36a
+  - name: 96af0fa9f8620e92912a88d85457c896.unity3d
+    id: 11
+    dependencies: 020000000800000009000000
+    size: 91181
+    hash: c1d01b91c916fbc061aea3ad98d34ed4
+  - name: 97e43a8abac9eae00e8a5a7916f6948c.unity3d
+    id: 12
+    dependencies: 
+    size: 1203
+    hash: 9409a7329b793d334e2b0267b1792090
+  - name: de57736ec43b776c6e6bdd832a9e9810.unity3d
+    id: 13
+    dependencies: 
+    size: 1191
+    hash: 0785a07267231feab95847241b9b7d63
+  - name: eeee237f7bd13e6f60c0d1f74fb6aa20.unity3d
+    id: 14
+    dependencies: 020000000800000009000000
+    size: 91223
+    hash: fde0d7c15c15982be056b22b8e3f720b

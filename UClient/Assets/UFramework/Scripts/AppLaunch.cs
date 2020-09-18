@@ -3,6 +3,7 @@
  * @Date: 2020-07-13 23:51:59
  * @Description: App Launch
  */
+using UFramework.Assets;
 using UFramework.Native;
 using UFramework.Tools;
 using UnityEngine;
@@ -19,6 +20,20 @@ namespace UFramework
         {
             ThreadQueue.Instance.Default();
             UNative.Instance.Default();
+
+            Asset.Instance.Initialize(OnAssetCompleted);
+        }
+
+        private void OnAssetCompleted(bool result)
+        {
+            if (!result)
+            {
+                return;
+            }
+            var asset = Asset.LoadAssetAsync("Assets/Art/Cube/Prefab/Cube1.prefab", typeof(GameObject), (request) =>
+            {
+                var go = GameObject.Instantiate(request.asset, Vector3.zero, Quaternion.identity) as GameObject;
+            });
         }
 
         protected override void OnSingletonStart()

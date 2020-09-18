@@ -56,6 +56,8 @@ namespace UFramework.Editor.VersionControl
 
         public void OnSaveDescribe()
         {
+            if (describeObject == null) return;
+            
             // General
             describeObject.isDevelopmentVersion = isDevelopmentVersion;
             describeObject.appEnvironmentType = appEnvironmentType;

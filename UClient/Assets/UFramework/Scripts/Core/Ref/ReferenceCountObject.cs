@@ -35,10 +35,10 @@ namespace UFramework.Ref
             refCount--;
             if (refCount == 0)
             {
-                OnEmptyRef();
+                OnReferenceEmpty();
             }
         }
 
-        protected virtual void OnEmptyRef() { }
+        protected virtual void OnReferenceEmpty() { }
     }
 }
