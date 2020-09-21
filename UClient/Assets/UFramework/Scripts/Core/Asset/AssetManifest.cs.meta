@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:UClient/Assets/UFramework/Scripts/Core/Asset/AssetManifest.cs.meta
 guid: 4efd3d0189a600447ad360358041a551
+=======
+guid: 0d45fa29f329f8046947b0b175972c7e
+>>>>>>> 9b10d35868572eee73829c584ae1543af5057d4f:UClient/Assets/UFramework/Scripts/Core/Asset/Asset/AssetBundle/Bundle.cs.meta
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2

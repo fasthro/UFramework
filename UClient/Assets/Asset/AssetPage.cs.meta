@@ -1,13 +1,9 @@
 fileFormatVersion: 2
-<<<<<<< HEAD
 <<<<<<< HEAD:UClient/Assets/UFramework/Scripts/Core/Asset/Request/AssetRequest.cs.meta
-guid: 20dcb547f9b90df44a06d10004aef548
+guid: 644f5fa464720994e9d75fb1594d3ca3
 =======
 guid: d2ea36fa6c579394993de416ff46e1d1
 >>>>>>> 9b10d35868572eee73829c584ae1543af5057d4f:UClient/Assets/Asset/AssetPage.cs.meta
-=======
-guid: 20dcb547f9b90df44a06d10004aef548
->>>>>>> 9b10d35868572eee73829c584ae1543af5057d4f
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
