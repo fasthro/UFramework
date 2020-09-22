@@ -101,6 +101,7 @@ namespace UFramework.Timers
             _timeElapsedBeforePause = null;
             _onComplete = null;
             _onUpdate = null;
+            isCompleted = false;
         }
 
         public virtual void Recycle()

@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using LuaInterface;
 using UFramework.Messenger;
+using UnityEngine;
 
 namespace UFramework.Timers
 {
@@ -107,7 +108,6 @@ namespace UFramework.Timers
                 timer.OnUpdate();
                 if (timer.isIneffective)
                 {
-                    timer.Recycle();
                     removes.Add(i);
                 }
             }
@@ -115,7 +115,9 @@ namespace UFramework.Timers
             {
                 for (int i = removes.Count - 1; i >= 0; i--)
                 {
-                    timers.RemoveAt(removes[i]);
+                    var index = removes[i];
+                    timers[index].Recycle();
+                    timers.RemoveAt(index);
                 }
             }
         }
