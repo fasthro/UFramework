@@ -4,50 +4,84 @@
  * @Description: 资源 Manager（AssetsBundle/Resources）
  */
 
+using System;
+using UFramework.Assets;
+using UFramework.Messenger;
+
 namespace UFramework
 {
     public class ResManager : BaseManager
     {
-        protected override void OnInitialize()
-        {
+        protected override void OnInitialize() { }
+        protected override void OnUpdate(float deltaTime) { }
+        protected override void OnLateUpdate() { }
+        protected override void OnFixedUpdate() { }
+        protected override void OnDispose() { }
 
+        /// <summary>
+        /// bundle
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="type"></param>
+        /// <param name="callback"></param>
+        /// <returns></returns>
+        public AssetRequest LoadAssetAsync(string path, Type type, UCallback<AssetRequest> callback)
+        {
+            return Asset.LoadAssetAsync(path, type, callback);
         }
 
-        #region api
-
-        public T LoadAsset<T>(string path)
+        /// <summary>
+        /// bundle
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public AssetRequest LoadAsset(string path, Type type)
         {
-            return default(T);
+            return Asset.LoadAsset(path, type);
         }
 
-        protected override void OnUpdate(float deltaTime)
+        /// <summary>
+        /// resource
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="type"></param>
+        /// <param name="callback"></param>
+        /// <returns></returns>
+        public AssetRequest LoadResourceAssetAsync(string path, Type type, UCallback<AssetRequest> callback)
         {
-            throw new System.NotImplementedException();
+            return Asset.LoadResourceAssetAsync(path, type, callback);
         }
 
-        protected override void OnLateUpdate()
+        /// <summary>
+        /// resource
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public AssetRequest LoadResourceAsset(string path, Type type)
         {
-            throw new System.NotImplementedException();
+            return Asset.LoadResourceAsset(path, type);
         }
 
-        protected override void OnFixedUpdate()
+        /// <summary>
+        /// resource
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public AssetRequest LoadWebAsset(string path, Type type, UCallback<AssetRequest> callback)
         {
-            throw new System.NotImplementedException();
+            return Asset.LoadWebAsset(path, type, callback);
         }
 
-        protected override void OnDispose()
+        /// <summary>
+        /// unload
+        /// </summary>
+        /// <param name="asset"></param>
+        public void UnloadAsset(AssetRequest asset)
         {
-            throw new System.NotImplementedException();
+            Asset.UnloadAsset(asset);
         }
-
-        #endregion
-
-        #region assetsbundle
-
-        #endregion
-
-        #region resources
-
-        #endregion
     }
 }

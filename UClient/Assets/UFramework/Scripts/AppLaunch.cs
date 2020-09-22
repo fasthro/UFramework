@@ -4,7 +4,8 @@
  * @Description: App Launch
  */
 using UFramework.Assets;
-using UFramework.Native;
+using UFramework.Natives;
+using UFramework.Timers;
 using UFramework.Tools;
 using UnityEngine;
 
@@ -19,21 +20,17 @@ namespace UFramework
         protected override void OnSingletonAwake()
         {
             ThreadQueue.Instance.Default();
-            UNative.Instance.Default();
+            Native.Instance.Default();
+            Timer.Instance.Default();
 
             Asset.Instance.Initialize(OnAssetCompleted);
+
+            DontDestroyOnLoad(this);
         }
 
         private void OnAssetCompleted(bool result)
         {
-            if (!result)
-            {
-                return;
-            }
-            var asset = Asset.LoadAssetAsync("Assets/Art/Cube/Prefab/Cube1.prefab", typeof(GameObject), (request) =>
-            {
-                var go = GameObject.Instantiate(request.asset, Vector3.zero, Quaternion.identity) as GameObject;
-            });
+
         }
 
         protected override void OnSingletonStart()
