@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Sample/SampleScene/AssetSample/AssetSample.unity
     guid: 88b55cac199cb8842acab45c128ef8a3
+  - enabled: 1
+    path: Assets/Sample/SampleScene/DownloadSample/DownloadSample.unity
+    guid: 3721cfa5d0f77a343979e088f6c0e0d3
   m_configObjects: {}

@@ -37,6 +37,7 @@ namespace UFramework
         {
             isDestory = false;
             SingletonAwake();
+            DontDestroyOnLoad(this);
         }
 
         void Start()
