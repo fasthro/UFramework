@@ -8,7 +8,7 @@ namespace UFramework.Sample
 {
     public class LaunchScene : MonoBehaviour, IObbDownloadListener
     {
-        static string[] sceneNames = new string[] { "NativeSample", "TimerSample", "AssetSample" };
+        static string[] sceneNames = new string[] { "NativeSample", "TimerSample", "AssetSample", "DownloadSample" };
 
         /// <summary>
         /// 是否开启Obb下载

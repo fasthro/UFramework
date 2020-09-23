@@ -22,10 +22,9 @@ namespace UFramework
             ThreadQueue.Instance.Default();
             Native.Instance.Default();
             Timer.Instance.Default();
+            Download.Instance.Default();
 
             Asset.Instance.Initialize(OnAssetCompleted);
-
-            DontDestroyOnLoad(this);
         }
 
         private void OnAssetCompleted(bool result)
