@@ -1,0 +1,11 @@
+{
+  "name": "Publish",
+  "displayName": "Publish",
+  "description": "发布包资源\n发布组件代码\n发布UI界面代码",
+  "version": "1.0",
+  "author": {
+    "name": "fasthro"
+  },
+  "icon": "",
+  "main": "main.lua"
+}

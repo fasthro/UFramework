@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="2048,1152">
+  <displayList>
+    <component id="n0_un8u" name="_n0" src="un8u1" fileName="Components/Test.xml" xy="198,-8"/>
+    <image id="n1_jgzf" name="_n1" src="jgzf2" fileName="Images/chatchannel_bg_input_text.png" xy="456,161"/>
+    <component id="n3_jgzf" name="_n3" src="jgzf3" fileName="Components/Button1.xml" xy="220,253"/>
+    <component id="n4_jgzf" name="_n4" src="jgzf7" fileName="Components/ProgressBar1.xml" xy="272,36">
+      <ProgressBar value="50" max="100"/>
+    </component>
+    <text id="n5_jgzf" name="_n5" xy="38,4" size="40,19" fontSize="12" text=""/>
+    <richtext id="n6_jgzf" name="_n6" xy="1032,85" size="40,19" fontSize="12" text=""/>
+    <text id="n7_jgzf" name="_n7" xy="1261,90" size="40,19" fontSize="12" text="" input="true"/>
+    <graph id="n8_jgzf" name="_n8" xy="1512,42" size="100,100" type="rect"/>
+    <list id="n9_jgzf" name="_n9" xy="581,123" size="200,300" overflow="scroll"/>
+    <loader id="n10_jgzf" name="_n10" xy="993,238" size="50,50"/>
+    <loader3D id="n11_jgzf" name="_n11" xy="1239,159" size="100,100" animation="" skin="" loop="true"/>
+    <component id="n16_jgzf" name="n16" src="jgzfc" fileName="Components/ComboBox1.xml" xy="1409,351">
+      <ComboBox visibleItemCount="10"/>
+    </component>
+    <movieclip id="n13_jgzf" name="_n13" src="jgzfg" fileName="Components/MovieClip1.jta" xy="258,434" group="n17_jgzf"/>
+    <component id="n14_jgzf" name="_n14" src="jgzfe" fileName="Components/Slider1.xml" xy="641,527" group="n17_jgzf">
+      <Slider value="50" max="100"/>
+    </component>
+    <component id="n15_jgzf" name="_n15" src="jgzf9" fileName="Components/Label1.xml" xy="869,249" group="n17_jgzf"/>
+    <group id="n17_jgzf" name="_n17" xy="258,249" size="1011,400" advanced="true"/>
+  </displayList>
+</component>
