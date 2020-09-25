@@ -3,8 +3,9 @@
   "libview.iconScale": 0,
   "doc.openedDocs": [
     "ui://9fwlj8d0gmfc0",
-    "ui://9fwlj8d0un8u1",
-    "ui://9a14j3pc8a1u0"
+    "ui://9fwlj8d0jgzf9",
+    "ui://9fwlj8d0jgzfc",
+    "ui://9fwlj8d0jgzfe"
   ],
   "auxline1": true,
   "canvasColor": 10066329,
@@ -16,6 +17,8 @@
     "/",
     "9fwlj8d0",
     "/Components/",
+    "9fwlj8d0",
+    "/Images/",
     "9a14j3pc",
     "/"
   ],

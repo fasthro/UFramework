@@ -38,7 +38,7 @@ namespace UFramework
             m_loop = AppLaunch.mainGameObject.AddComponent<LuaLooper>();
             m_loop.luaState = lua;
 
-            DoFile("luaApp");
+            DoFile("LuaApp");
             luaApp = lua.GetTable("luaApp");
             luaAppUpdateFunc = luaApp.GetLuaFunction("update");
             luaAppLateUpdateFunc = luaApp.GetLuaFunction("lateUpdate");
@@ -50,6 +50,7 @@ namespace UFramework
 
         private void OpenLibs()
         {
+            lua.OpenLibs(LuaDLL.luaopen_socket_core); 
             lua.OpenLibs(LuaDLL.luaopen_pb);
             lua.OpenLibs(LuaDLL.luaopen_struct);
             lua.OpenLibs(LuaDLL.luaopen_lpeg);

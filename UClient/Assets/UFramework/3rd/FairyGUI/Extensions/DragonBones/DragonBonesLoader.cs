@@ -38,6 +38,12 @@ namespace FairyGUI
             _armatureComponent.gameObject.transform.localPosition = new Vector3(anchor.x, -anchor.y, 0);
             SetWrapTarget(_armatureComponent.gameObject, true, width, height);
 
+            var ct = _armatureComponent.color;
+            ct.redMultiplier = _color.r;
+            ct.greenMultiplier = _color.g;
+            ct.blueMultiplier = _color.b;
+            _armatureComponent.color = ct;
+
             OnChangeDragonBones(null);
         }
 
@@ -54,6 +60,16 @@ namespace FairyGUI
         {
             if (_armatureComponent == null)
                 return;
+
+            if (propertyName == "color")
+            {
+                var ct = _armatureComponent.color;
+                ct.redMultiplier = _color.r;
+                ct.greenMultiplier = _color.g;
+                ct.blueMultiplier = _color.b;
+                _armatureComponent.color = ct;
+                return;
+            }
 
             if (!string.IsNullOrEmpty(_animationName))
             {
@@ -75,6 +91,16 @@ namespace FairyGUI
                     GameObject.Destroy(_armatureComponent.gameObject);
                 else
                     GameObject.DestroyImmediate(_armatureComponent.gameObject);
+            }
+        }
+
+        protected void OnUpdateDragonBones(UpdateContext context)
+        {
+            if (_armatureComponent != null)
+            {
+                var ct = _armatureComponent.color;
+                ct.alphaMultiplier = context.alpha * _content.alpha;
+                _armatureComponent.color = ct;
             }
         }
     }

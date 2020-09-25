@@ -13,7 +13,8 @@ namespace FairyGUI
         Destroy,
         Unload,
         None,
-        ReleaseTemp
+        ReleaseTemp,
+        Custom
     }
 
     /// <summary>
@@ -21,6 +22,11 @@ namespace FairyGUI
     /// </summary>
     public class NTexture
     {
+        /// <summary>
+        /// This event will trigger when a texture is destroying if its destroyMethod is Custom
+        /// </summary>
+        public static event Action<Texture> CustomDestroyMethod;
+
         /// <summary>
         /// 
         /// </summary>
@@ -47,9 +53,14 @@ namespace FairyGUI
         public DestroyMethod destroyMethod;
 
         /// <summary>
-        /// 
+        /// This event will trigger when texture reloaded and size changed.
         /// </summary>
-        public event Action onSizeChanged;
+        public event Action<NTexture> onSizeChanged;
+
+        /// <summary>
+        /// This event will trigger when ref count is zero.
+        /// </summary>
+        public event Action<NTexture> onRelease;
 
         Texture _nativeTexture;
         Texture _alphaTexture;
@@ -146,8 +157,11 @@ namespace FairyGUI
             _nativeTexture = texture;
             _region = region;
             _originalSize = new Vector2(_region.width, _region.height);
-            uvRect = new Rect(region.x / _nativeTexture.width, 1 - region.yMax / _nativeTexture.height,
-                region.width / _nativeTexture.width, region.height / _nativeTexture.height);
+            if (_nativeTexture != null)
+                uvRect = new Rect(region.x / _nativeTexture.width, 1 - region.yMax / _nativeTexture.height,
+                    region.width / _nativeTexture.width, region.height / _nativeTexture.height);
+            else
+                uvRect.Set(0, 0, 1, 1);
         }
 
         /// <summary>
@@ -401,28 +415,38 @@ namespace FairyGUI
             RefreshMaterials();
 
             if (onSizeChanged != null && lastSize != _originalSize)
-                onSizeChanged();
+                onSizeChanged(this);
         }
 
         void DestroyTexture()
         {
-            if (destroyMethod == DestroyMethod.Destroy)
+            switch (destroyMethod)
             {
-                Object.DestroyImmediate(_nativeTexture, true);
-                if (_alphaTexture != null)
-                    Object.DestroyImmediate(_alphaTexture, true);
-            }
-            else if (destroyMethod == DestroyMethod.Unload)
-            {
-                Resources.UnloadAsset(_nativeTexture);
-                if (_alphaTexture != null)
-                    Resources.UnloadAsset(_alphaTexture);
-            }
-            else if (destroyMethod == DestroyMethod.ReleaseTemp)
-            {
-                RenderTexture.ReleaseTemporary((RenderTexture)_nativeTexture);
-                if (_alphaTexture is RenderTexture)
-                    RenderTexture.ReleaseTemporary((RenderTexture)_alphaTexture);
+                case DestroyMethod.Destroy:
+                    Object.DestroyImmediate(_nativeTexture, true);
+                    if (_alphaTexture != null)
+                        Object.DestroyImmediate(_alphaTexture, true);
+                    break;
+                case DestroyMethod.Unload:
+                    Resources.UnloadAsset(_nativeTexture);
+                    if (_alphaTexture != null)
+                        Resources.UnloadAsset(_alphaTexture);
+                    break;
+                case DestroyMethod.ReleaseTemp:
+                    RenderTexture.ReleaseTemporary((RenderTexture)_nativeTexture);
+                    if (_alphaTexture is RenderTexture)
+                        RenderTexture.ReleaseTemporary((RenderTexture)_alphaTexture);
+                    break;
+                case DestroyMethod.Custom:
+                    if (CustomDestroyMethod == null)
+                        Debug.LogWarning("NTexture.CustomDestroyMethod must be set to handle DestroyMethod.Custom");
+                    else
+                    {
+                        CustomDestroyMethod(_nativeTexture);
+                        if (_alphaTexture != null)
+                            CustomDestroyMethod(_alphaTexture);
+                    }
+                    break;
             }
 
             _nativeTexture = null;
@@ -451,6 +475,34 @@ namespace FairyGUI
             }
         }
 
+        public void AddRef()
+        {
+            if (_root == null) //disposed
+                return;
+
+            if (_root != this && refCount == 0)
+                _root.AddRef();
+
+            refCount++;
+        }
+
+        public void ReleaseRef()
+        {
+            if (_root == null) //disposed
+                return;
+
+            refCount--;
+
+            if (refCount == 0)
+            {
+                if (_root != this)
+                    _root.ReleaseRef();
+
+                if (onRelease != null)
+                    onRelease(this);
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -463,6 +515,7 @@ namespace FairyGUI
                 Unload(true);
             _root = null;
             onSizeChanged = null;
+            onRelease = null;
         }
     }
 }

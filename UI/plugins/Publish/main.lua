@@ -5,6 +5,7 @@ Description:
 --]]
 
 require(PluginPath..'/utils')
+require(PluginPath..'/writer')
 local runner = require(PluginPath..'/runner')
 
 function onPublish(handler)

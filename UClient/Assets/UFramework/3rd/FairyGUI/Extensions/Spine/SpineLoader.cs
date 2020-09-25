@@ -21,27 +21,16 @@ namespace FairyGUI
             get { return _spineAnimation; }
         }
 
-        public Color color
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="asset"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="anchor"></param>
+        public void SetSpine(SkeletonDataAsset asset, int width, int height, Vector2 anchor)
         {
-            get => this._color;
-            set
-            {
-                this._color = value;
-                if (this._spineAnimation == null || this._spineAnimation.skeleton == null)
-                    return;
-                this._spineAnimation.skeleton.R = this.color.r;
-                this._spineAnimation.skeleton.G = this.color.g;
-                this._spineAnimation.skeleton.B = this.color.b;
-            }
-        }
-        
-        protected override void HandleAlphaChanged()
-        {
-            base.HandleAlphaChanged();
-            if (this._spineAnimation != null && this._spineAnimation.skeleton != null)
-            {
-                this._spineAnimation.skeleton.A = this.alpha;
-            }
+            SetSpine(asset, width, height, anchor, true);
         }
 
         /// <summary>
@@ -50,7 +39,9 @@ namespace FairyGUI
         /// <param name="asset"></param>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public void SetSpine(SkeletonDataAsset asset, int width, int height, Vector2 anchor)
+        /// <param name="anchor"></param>
+        /// <param name="cloneMaterial"></param>
+        public void SetSpine(SkeletonDataAsset asset, int width, int height, Vector2 anchor, bool cloneMaterial)
         {
             if (_spineAnimation != null)
                 FreeSpine();
@@ -60,7 +51,11 @@ namespace FairyGUI
             Spine.SkeletonData dat = asset.GetSkeletonData(false);
             _spineAnimation.gameObject.transform.localScale = new Vector3(1 / asset.scale, 1 / asset.scale, 1);
             _spineAnimation.gameObject.transform.localPosition = new Vector3(anchor.x, -anchor.y, 0);
-            SetWrapTarget(_spineAnimation.gameObject, true, width, height);
+            SetWrapTarget(_spineAnimation.gameObject, cloneMaterial, width, height);
+
+            _spineAnimation.skeleton.R = _color.r;
+            _spineAnimation.skeleton.G = _color.g;
+            _spineAnimation.skeleton.B = _color.b;
 
             OnChangeSpine(null);
         }
@@ -78,6 +73,14 @@ namespace FairyGUI
         {
             if (_spineAnimation == null)
                 return;
+
+            if (propertyName == "color")
+            {
+                _spineAnimation.skeleton.R = _color.r;
+                _spineAnimation.skeleton.G = _color.g;
+                _spineAnimation.skeleton.B = _color.b;
+                return;
+            }
 
             var skeletonData = _spineAnimation.skeleton.Data;
 
@@ -110,10 +113,6 @@ namespace FairyGUI
                 _spineAnimation.skeleton.SetSkin(skin);
                 _spineAnimation.skeleton.SetSlotsToSetupPose();
             }
-            
-            // change color and alpha
-            color = _color;
-            HandleAlphaChanged();
         }
 
         protected void FreeSpine()
@@ -125,6 +124,12 @@ namespace FairyGUI
                 else
                     GameObject.DestroyImmediate(_spineAnimation.gameObject);
             }
+        }
+
+        protected void OnUpdateSpine(UpdateContext context)
+        {
+            if (_spineAnimation != null)
+                _spineAnimation.skeleton.A = context.alpha * _content.alpha;
         }
     }
 }

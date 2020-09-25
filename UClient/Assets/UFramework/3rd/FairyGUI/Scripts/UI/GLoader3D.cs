@@ -20,6 +20,7 @@ namespace FairyGUI
         int _frame;
         bool _loop;
         bool _updatingLayout;
+        Color _color;
 
         protected PackageItem _contentItem;
         protected GoWrapper _content;
@@ -30,6 +31,7 @@ namespace FairyGUI
             _align = AlignType.Left;
             _verticalAlign = VertAlignType.Top;
             _playing = true;
+            _color = Color.white;
         }
 
         override protected void CreateDisplayObject()
@@ -38,6 +40,7 @@ namespace FairyGUI
             displayObject.gOwner = this;
 
             _content = new GoWrapper();
+            _content.onUpdate += OnUpdateContent;
             ((Container)displayObject).AddChild(_content);
             ((Container)displayObject).opaque = true;
         }
@@ -269,17 +272,23 @@ namespace FairyGUI
             set { _content.shader = value; }
         }
 
-        private Color _color = Color.white;
-#if !FAIRYGUI_SPINE
         /// <summary>
-        /// Not implemented.
+        /// 
         /// </summary>
         public Color color
         {
-            get;
-            set;
+            get { return _color; }
+            set
+            {
+                if (_color != value)
+                {
+                    _color = value;
+                    UpdateGear(4);
+
+                    OnChange("color");
+                }
+            }
         }
-#endif // FAIRYGUI_SPINE
 
         /// <summary>
         /// 
@@ -355,20 +364,21 @@ namespace FairyGUI
 
         virtual protected void OnChange(string propertyName)
         {
-            if (_contentItem != null)
+            if (_contentItem == null)
+                return;
+
+
+            if (_contentItem.type == PackageItemType.Spine)
             {
-                if (_contentItem.type == PackageItemType.Spine)
-                {
 #if FAIRYGUI_SPINE
-                    OnChangeSpine(propertyName);
+                OnChangeSpine(propertyName);
 #endif
-                }
-                else if (_contentItem.type == PackageItemType.DragoneBones)
-                {
+            }
+            else if (_contentItem.type == PackageItemType.DragoneBones)
+            {
 #if FAIRYGUI_DRAGONBONES
-                    OnChangeDragonBones(propertyName);
+                OnChangeDragonBones(propertyName);
 #endif
-                }
             }
         }
 
@@ -495,6 +505,26 @@ namespace FairyGUI
             _contentItem = null;
         }
 
+        protected void OnUpdateContent(UpdateContext context)
+        {
+            if (_contentItem == null)
+                return;
+
+
+            if (_contentItem.type == PackageItemType.Spine)
+            {
+#if FAIRYGUI_SPINE
+                OnUpdateSpine(context);
+#endif
+            }
+            else if (_contentItem.type == PackageItemType.DragoneBones)
+            {
+#if FAIRYGUI_DRAGONBONES
+                OnUpdateDragonBones(context);
+#endif
+            }
+        }
+
         override protected void HandleSizeChanged()
         {
             base.HandleSizeChanged();
@@ -522,7 +552,7 @@ namespace FairyGUI
             _loop = buffer.ReadBool();
 
             if (buffer.ReadBool())
-                _color = buffer.ReadColor(); //color
+                this.color = buffer.ReadColor(); //color
 
             if (!string.IsNullOrEmpty(_url))
                 LoadContent();

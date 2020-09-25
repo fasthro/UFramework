@@ -3,10 +3,12 @@
  * @Date: 2020-08-08 19:39:10
  * @Description: Lua/ToLua Page
  */
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using FairyGUI;
 using LuaInterface;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
@@ -30,6 +32,11 @@ namespace UFramework.Editor.Preferences
         [BoxGroup("General Setting")]
         [LabelText("Build Use Byte Encode")]
         public bool byteEncode = true;
+
+        [ShowInInspector]
+        [BoxGroup("General Setting")]
+        [LabelText("Use FairyGUI")]
+        public bool useFairyGUI = true;
 
         /// <summary>
         /// lua 搜索路径
@@ -88,7 +95,7 @@ namespace UFramework.Editor.Preferences
         public void OnSaveDescribe()
         {
             if (describeObject == null) return;
-            
+
             SearchPathItemDescribeSave();
             WrapDescribeSave();
             GeneralSettingSave();
@@ -104,11 +111,13 @@ namespace UFramework.Editor.Preferences
         private void InitGeneralSetting()
         {
             byteEncode = describeObject.byteEncode;
+            useFairyGUI = describeObject.useFairyGUI;
         }
 
         private void GeneralSettingSave()
         {
             describeObject.byteEncode = byteEncode;
+            describeObject.useFairyGUI = useFairyGUI;
         }
 
         #endregion
@@ -245,6 +254,49 @@ namespace UFramework.Editor.Preferences
             for (int i = 0; i < wrapBindTypes.Count; i++)
             {
                 bindTypes.Add(wrapBindTypes[i].bindType);
+            }
+            // fairyGUI
+            if (useFairyGUI)
+            {
+                bindTypes.Add(_GT(typeof(EventContext)));
+                bindTypes.Add(_GT(typeof(EventDispatcher)));
+                bindTypes.Add(_GT(typeof(EventListener)));
+                bindTypes.Add(_GT(typeof(InputEvent)));
+                bindTypes.Add(_GT(typeof(DisplayObject)));
+                bindTypes.Add(_GT(typeof(Container)));
+                bindTypes.Add(_GT(typeof(Stage)));
+                bindTypes.Add(_GT(typeof(FairyGUI.Controller)));
+                bindTypes.Add(_GT(typeof(GObject)));
+                bindTypes.Add(_GT(typeof(GGraph)));
+                bindTypes.Add(_GT(typeof(GGroup)));
+                bindTypes.Add(_GT(typeof(GImage)));
+                bindTypes.Add(_GT(typeof(GLoader)));
+                bindTypes.Add(_GT(typeof(GMovieClip)));
+                bindTypes.Add(_GT(typeof(TextFormat)));
+                bindTypes.Add(_GT(typeof(GTextField)));
+                bindTypes.Add(_GT(typeof(GRichTextField)));
+                bindTypes.Add(_GT(typeof(GTextInput)));
+                bindTypes.Add(_GT(typeof(GComponent)));
+                bindTypes.Add(_GT(typeof(GList)));
+                bindTypes.Add(_GT(typeof(GRoot)));
+                bindTypes.Add(_GT(typeof(GLabel)));
+                bindTypes.Add(_GT(typeof(GButton)));
+                bindTypes.Add(_GT(typeof(GComboBox)));
+                bindTypes.Add(_GT(typeof(GProgressBar)));
+                bindTypes.Add(_GT(typeof(GSlider)));
+                bindTypes.Add(_GT(typeof(PopupMenu)));
+                bindTypes.Add(_GT(typeof(ScrollPane)));
+                bindTypes.Add(_GT(typeof(Transition)));
+                bindTypes.Add(_GT(typeof(UIPackage)));
+                bindTypes.Add(_GT(typeof(Window)));
+                bindTypes.Add(_GT(typeof(GObjectPool)));
+                bindTypes.Add(_GT(typeof(Relations)));
+                bindTypes.Add(_GT(typeof(RelationType)));
+                bindTypes.Add(_GT(typeof(GTween)));
+                bindTypes.Add(_GT(typeof(GTweener)));
+                bindTypes.Add(_GT(typeof(EaseType)));
+                bindTypes.Add(_GT(typeof(TweenValue)));
+                bindTypes.Add(_GT(typeof(UIObjectFactory)));
             }
             CustomSettings.customTypeList = bindTypes.ToArray();
 
@@ -418,5 +470,7 @@ namespace UFramework.Editor.Preferences
             Directory.SetCurrentDirectory(currDir);
         }
         #endregion
+
+        public static BindType _GT(Type t) { return new BindType(t); }
     }
 }

@@ -414,7 +414,12 @@ namespace FairyGUI
 
             string newText = buffer.ToString();
             if (maxLength > 0)
-                newText = TruncateText(newText, maxLength);
+            {
+                string newText2 = TruncateText(newText, maxLength);
+                if (newText2.Length != newText.Length)
+                    _caretPosition += (newText2.Length - newText.Length);
+                newText = newText2;
+            }
 
             this.text = newText;
             OnChanged();
@@ -813,7 +818,7 @@ namespace FairyGUI
                         return v;
                 }
                 else if (firstInLine != -1)
-                    break;
+                    return v;
             }
 
             return textField.charPositions[i - 1];
@@ -1014,7 +1019,7 @@ namespace FairyGUI
             {
                 context.StopPropagation();
 
-                TextField.CharPosition cp = GetCharPosition(Vector2.zero);
+                TextField.CharPosition cp = GetCharPosition(new Vector2(GUTTER_X, GUTTER_Y));
                 int vScroll = cp.lineIndex;
                 int hScroll = cp.charIndex - textField.lines[cp.lineIndex].charIndex;
                 if (context.inputEvent.mouseWheelDelta < 0)

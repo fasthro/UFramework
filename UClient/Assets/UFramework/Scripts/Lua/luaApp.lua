@@ -4,10 +4,11 @@ Date: 2020-08-28 12:15:46
 Description: Lua App
 --]]
 
+require("Define")
+
 local _new = typesys.new
 local _setRootObject = typesys.setRootObject
 local _typesys_gc = typesys.gc
-
 
 luaApp = typesys.def.LuaApp{
     date = "",
@@ -15,7 +16,7 @@ luaApp = typesys.def.LuaApp{
 
 -- 构造函数
 function luaApp:__ctor()
-
+    
 end
 
 -- 析构函数

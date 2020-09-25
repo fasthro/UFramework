@@ -36,6 +36,21 @@ function utils.directoryGetFiles(dir, pattern)
     return _directory.GetFiles(dir, pattern)
 end
 
+function utils.fileExists(path)
+    return _file.Exists(path)
+end
+
+function utils.fileDelete(path)
+    if _file.Exists(path) then
+        _file.Delete(path)
+    end
+end
+
+function utils.fileCreateText(path, content)
+    utils.fileDelete(path)
+    _file.WriteAllText(path, content);
+end
+
 function utils.split(str, delimiter)
 	if (delimiter == '') then return false end
 	local pos, arr = 0, {}

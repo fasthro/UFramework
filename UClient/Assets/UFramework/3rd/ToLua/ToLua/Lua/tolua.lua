@@ -3,7 +3,7 @@
 --      All rights reserved.
 --      Use, modification and distribution are subject to the "MIT License"
 --------------------------------------------------------------------------------
-require("typesys.TypeSystemHeader")
+require("TypeSystem.TypeSystemHeader")
 
 if jit then		
 	if jit.opt then		
