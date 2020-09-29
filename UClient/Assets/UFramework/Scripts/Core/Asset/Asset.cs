@@ -238,6 +238,35 @@ namespace UFramework.Assets
         /// <param name="type"></param>
         /// <param name="callback"></param>
         /// <returns></returns>
+        public static AssetRequest LoadBundleAsync(string path, UCallback<AssetRequest> callback)
+        {
+            var asset = Instance.GetBundle<BundleAsyncRequest>(path, true);
+            asset.AddCallback(callback);
+            asset.Load();
+            return asset;
+        }
+
+        /// <summary>
+        /// bundle
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="type"></param>
+        /// <param name="callback"></param>
+        /// <returns></returns>
+        public static AssetRequest LoadBundle(string path)
+        {
+            var asset = Instance.GetBundle<BundleRequest>(path, false);
+            asset.Load();
+            return asset;
+        }
+
+        /// <summary>
+        /// bundle asset
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="type"></param>
+        /// <param name="callback"></param>
+        /// <returns></returns>
         public static AssetRequest LoadAssetAsync(string path, Type type, UCallback<AssetRequest> callback)
         {
             var asset = Instance.GetAsset<BundleAssetAsyncRequest>(path, type, true);
@@ -247,7 +276,7 @@ namespace UFramework.Assets
         }
 
         /// <summary>
-        /// bundle
+        /// bundle asset
         /// </summary>
         /// <param name="path"></param>
         /// <param name="type"></param>

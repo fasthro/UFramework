@@ -111,13 +111,12 @@ namespace UFramework.Editor.Preferences
         private void InitGeneralSetting()
         {
             byteEncode = describeObject.byteEncode;
-            useFairyGUI = describeObject.useFairyGUI;
+            useFairyGUI = UConfig.Read<AppConfig>().useFairyGUI;
         }
 
         private void GeneralSettingSave()
         {
             describeObject.byteEncode = byteEncode;
-            describeObject.useFairyGUI = useFairyGUI;
         }
 
         #endregion

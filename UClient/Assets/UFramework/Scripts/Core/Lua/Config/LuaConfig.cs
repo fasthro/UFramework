@@ -22,12 +22,6 @@ namespace UFramework.Lua
         public bool byteEncode { get; set; }
 
         /// <summary>
-        /// 使用FairyGUI
-        /// </summary>
-        /// <value></value>
-        public bool useFairyGUI { get; set; }
-
-        /// <summary>
         /// lua search paths
         /// </summary>
         /// <value></value>

@@ -38,6 +38,8 @@ namespace UFramework.Editor.Preferences
             AddPage(new SDKPage());
 
             AddPage(new TablePage());
+
+            AddPage(new ProjrectPage());
         }
     }
 }

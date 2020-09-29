@@ -67,6 +67,19 @@ namespace UFramework
 
         #endregion
 
+        #region UI
+        /// <summary>
+        /// 使用 FairyGUI
+        /// </summary>
+        public bool useFairyGUI = true;
+
+        /// <summary>
+        /// UI 所在目录
+        /// </summary>
+        public string uiDirectory = "Assets/Arts/UI";
+
+        #endregion
+
         public void Save()
         {
             UConfig.Write<AppConfig>(this);

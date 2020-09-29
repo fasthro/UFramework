@@ -21,7 +21,7 @@ namespace UFramework.Assets
         Unload,
     }
 
-    public abstract class AssetRequest : ReferenceCountObject, IPoolObject, IUCoroutineTaskRunner
+    public abstract class AssetRequest : ReferenceObject, IPoolObject, IUCoroutineTaskRunner
     {
         #region interface
 
