@@ -3,7 +3,6 @@ Author: fasthro
 Date: 2020-09-24 15:18:37
 Description: 
 --]]
-
 local AS_TYPE = {
     ["GImage"] = "asImage",
     ["GComponent"] = "asCom",
@@ -23,15 +22,15 @@ local AS_TYPE = {
     ["GTree"] = "asTree",
     ["GTreeNode"] = "treeNode",
     ["GRoot"] = "root",
-    ["GLoader3D"] = "asLoader3D",
+    ["GLoader3D"] = "asLoader3D"
 }
 
 local EXTENTION_TYPE = {
     ["Button"] = "asButton",
     ["ProgressBar"] = "asProgress",
-    ["ComboBox"] =  "asComboBox",
+    ["ComboBox"] = "asComboBox",
     ["Slider"] = "asSlider",
-    ["Label"] = "asLabel",
+    ["Label"] = "asLabel"
 }
 
 local runner = fclass()
@@ -42,13 +41,27 @@ function runner:ctor(handler)
     self.settings = handler.project:GetSettings("Publish").codeGeneration
 
     self.packageName = handler:ToFilename(handler.pkg.name)
-    self.exportPath = handler.exportPath .. '/'.. self.packageName
-    self.exportCodePath = handler.exportCodePath .. '/'.. self.packageName
+    self.exportPath = handler.exportPath .. "/" .. self.packageName
+    self.exportCodePath = handler.exportCodePath .. "/Automatic/Lua/FairyGUI/" .. self.packageName
+    self.exportPanelCodePath = handler.exportCodePath .. "/Lua/Panel"
 
     -- 不使用 FairyGUI 提供的类导出功能
     handler.genCode = false
-    handler.exportPath = self.exportPath
-    
+
+    -- 是否为Resources Pakcage
+    self.isResourcePackage = string.sub(self.packageName, 1, 3) == "RP_"
+    if not self.isResourcePackage then
+        handler.exportPath = self.exportPath
+    else
+        local _erp = ""
+        local ps = utils.split(handler.exportPath, "\\")
+        for k = 1, #ps - 2 do
+            _erp = _erp .. ps[k] .. "\\"
+        end
+        _erp = _erp .. "UFramework\\Resources\\UI\\" .. self.packageName
+        handler.exportPath = _erp
+    end
+
     self.items = handler.items
     self.classes = handler:CollectClasses(self.settings.ignoreNoname, self.settings.ignoreNoname, "")
 
@@ -57,17 +70,24 @@ end
 
 function runner:_init()
     -- 清理目录
-    utils.directoryClear(self.exportPath)
-    utils.directoryClear(self.exportCodePath)
+    utils.directoryClear(self.handler.exportPath)
+    
+    if not self.isResourcePackage then
+        utils.directoryClear(self.exportCodePath)
+    end
 end
 
 function runner:execute()
+    if self.isResourcePackage then
+        return
+    end
+
     for i = 0, self.classes.Count - 1 do
-        local class = self.classes[i];
+        local class = self.classes[i]
         self:_genComponentCode(class)
         -- 根路径下的组件视为UIPanel
         if class.res.path == "/" then
-            self:_genUICode(class)
+            self:_genPanelCode(class)
         end
     end
 end
@@ -83,7 +103,7 @@ function runner:_genComponentCode(info)
     -- ctor
     writer:writeln()
     writer:writeln("function component:ctor()")
-    
+
     -- 有效字段
     local validCount = 0
     for i = 0, info.members.Count - 1 do
@@ -105,7 +125,7 @@ function runner:_genComponentCode(info)
             validCount = validCount + 1
         end
     end
-    
+
     writer:writeln("end")
     writer:writeln()
 
@@ -137,7 +157,7 @@ function runner:_parseMemberType(member)
     if not type then
         if member.res ~= nil then
             local res = member.res
-            local filePath = res.owner.basePath .. res.path .. "/" .. res.name ..".xml"
+            local filePath = res.owner.basePath .. res.path .. "/" .. res.name .. ".xml"
             local xml = CS.FairyEditor.XMLExtension.Load(filePath)
             local extention = xml:GetAttribute("extention")
             if extention ~= nil then
@@ -196,8 +216,54 @@ function runner:_getMemberMethod(member)
     return writer:tostring()
 end
 
-function runner:_genUICode(info)
-    
+function runner:_genPanelCode(info)
+    --
+    local _panelName = info.className .. "Panel"
+    local _panelPath = self.exportPanelCodePath .. "/" .. _panelName .. ".lua"
+
+    if utils.fileExists(_panelPath) then
+        return
+    end
+
+    local writer = CodeFileWriter.new()
+    writer:reset()
+    writer:writeln("-- uframework automatically generated")
+
+    writer:writeln()
+    writer:writeln("local panel = typesys.def." .. _panelName .. "{")
+    writer:writelnTab("__super = UIPanel,")
+    writer:writeln("}")
+    writer:writeln()
+
+    writer:writeln("function panel:__ctor()")
+    writer:writelnTab('self._name = "' .. info.className .. '"')
+    writer:writelnTab('self._package = "' .. self.packageName .. '"')
+    writer:writelnTab("self._layer = UI_LAYER.PANEL")
+    writer:writelnTab("self._dependences = nil")
+    writer:writeln()
+    writer:writelnTab("panel.__super.__ctor(self)")
+    writer:writeln("end")
+    writer:writeln()
+
+    writer:writeln("function panel:_onShow()")
+    writer:writeln("end")
+    writer:writeln()
+
+    writer:writeln("function panel:_onHide()")
+    writer:writeln("end")
+    writer:writeln()
+
+    writer:writeln("function panel:_onNotification(id)")
+    writer:writeln("end")
+    writer:writeln()
+
+    writer:writeln("function panel:_onNetMessage()")
+    writer:writeln("end")
+    writer:writeln()
+
+    writer:writeln("return panel")
+
+    writer:save(_panelPath)
 end
 
 return runner

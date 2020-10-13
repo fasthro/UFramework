@@ -3,16 +3,16 @@
  * @Date: 2020-09-29 11:20:22
  * @Description: fiary package
  */
+using System.Collections.Generic;
 using FairyGUI;
 using UFramework.Assets;
 using UFramework.Config;
-using UFramework.Messenger;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 using UnityEngine;
 
-namespace UFramework.UI.FairyGUI
+namespace UFramework.UI
 {
     public class FairyPackage : Package
     {
@@ -22,22 +22,8 @@ namespace UFramework.UI.FairyGUI
 
         public FairyPackage(string packageName) : base(packageName) { }
 
-        public override void Load(UCallback onCompleted)
+        protected override void LoadMain()
         {
-            if (loadState == LoadState.Unloaded) return;
-
-            base.Load(onCompleted);
-
-            if (loadState == LoadState.Loaded)
-            {
-                OnLoadAsset();
-                return;
-            }
-            else if (loadState == LoadState.Load)
-            {
-                return;
-            }
-
 #if UNITY_EDITOR
             package = UIPackage.AddPackage(IOPath.PathCombine(UConfig.Read<AppConfig>().uiDirectory, string.Format("{0}/{1}", packageName, packageName)),
                 (string name, string extension, System.Type type, out DestroyMethod destroyMethod) =>
@@ -46,28 +32,67 @@ namespace UFramework.UI.FairyGUI
                     return AssetDatabase.LoadAssetAtPath(name + extension, type);
                 }
             );
-            OnLoadAsset();
+            LoadDependen();
 #else
             m_bundleRequest = Asset.LoadBundleAsync(IOPath.PathCombine(UConfig.Read<AppConfig>().uiDirectory, packageName), (request) =>
             {
-                if (!m_isUnloadMark)
+                if (!isStandby)
                 {
                     package = UIPackage.AddPackage(request.asset as AssetBundle);
+                    LoadDependen();
                 }
-                OnLoadAsset();
+                else LoadCompleted();
             });
 #endif
         }
 
+        protected override void LoadDependen()
+        {
+            if (package != null)
+            {
+                for (int i = 0; i < package.dependencies.Length; i++)
+                {
+                    foreach (KeyValuePair<string, string> item in package.dependencies[i])
+                    {
+                        if (item.Key == "name")
+                        {
+                            if (!dependences.Contains(item.Value) && !packageName.Equals(item.Value))
+                            {
+                                dependences.Add(item.Value);
+                            }
+                        }
+                    }
+                }
+
+                dependenCount = dependences.Count;
+                foreach (var item in dependences)
+                    PackageAgents.Load(item, OnDependen);
+                if (dependenCount == 0) LoadCompleted();
+            }
+        }
+
+        private void OnDependen()
+        {
+            dependenCount--;
+            if (dependenCount <= 0)
+            {
+                LoadCompleted();
+            }
+        }
+
         protected override void OnReferenceEmpty()
         {
-            if (m_remain) return;
+            if (isStandby) return;
 
             base.OnReferenceEmpty();
 
             if (package != null)
                 UIPackage.RemovePackage(package.id);
             package = null;
+
+            foreach (var item in dependences)
+                PackageAgents.Unload(item);
+            dependences.Clear();
 
             if (m_bundleRequest != null)
                 m_bundleRequest.Unload();

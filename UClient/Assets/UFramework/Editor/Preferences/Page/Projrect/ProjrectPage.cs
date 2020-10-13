@@ -27,6 +27,20 @@ namespace UFramework.Editor.Preferences
         public bool useFairyGUI;
 
         /// <summary>
+        /// 设计分辨率
+        /// </summary>
+        [BoxGroup("UI Settings")]
+        [LabelText("    Design Resolution X")]
+        public int designResolutionX = 2048;
+
+        /// <summary>
+        /// 设计分辨率
+        /// </summary>
+        [BoxGroup("UI Settings")]
+        [LabelText("    Design Resolution Y")]
+        public int designResolutionY = 1152;
+
+        /// <summary>
         /// UI 资源目录
         /// </summary>
         [BoxGroup("UI Settings")]
@@ -43,6 +57,8 @@ namespace UFramework.Editor.Preferences
         {
             describeObject = UConfig.Read<AppConfig>();
             useFairyGUI = describeObject.useFairyGUI;
+            designResolutionX = describeObject.designResolutionX;
+            designResolutionY = describeObject.designResolutionY;
             uiDirectory = describeObject.uiDirectory;
         }
 
@@ -55,6 +71,8 @@ namespace UFramework.Editor.Preferences
         {
             if (describeObject == null) return;
             describeObject.useFairyGUI = useFairyGUI;
+            describeObject.designResolutionX = designResolutionX;
+            describeObject.designResolutionY = designResolutionY;
             describeObject.uiDirectory = uiDirectory;
             describeObject.Save();
         }

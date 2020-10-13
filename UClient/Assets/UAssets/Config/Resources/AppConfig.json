@@ -1,1 +1,1 @@
-﻿{"name":"AppConfig","address":2,"isDevelopmentVersion":true,"appEnvironmentType":0,"isLogEnable":false,"useSystemLanguage":false,"defaultLanguage":40,"supportedLanguages":[40,10],"useFairyGUI":true,"uiDirectory":"Assets/Arts/UI"}
+﻿{"name":"AppConfig","address":2,"isDevelopmentVersion":true,"appEnvironmentType":0,"isLogEnable":false,"useSystemLanguage":false,"defaultLanguage":40,"supportedLanguages":[40,10],"useFairyGUI":true,"designResolutionX":2048,"designResolutionY":1152,"uiDirectory":"Assets/Arts/UI"}

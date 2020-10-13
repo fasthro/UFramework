@@ -133,6 +133,13 @@ public static class LuaBinder
 		L.RegFunction("GLoaderCreator", FairyGUI_UIObjectFactory_GLoaderCreator);
 		L.EndModule();
 		L.EndModule();
+		L.BeginModule("UFramework");
+		L.BeginModule("UI");
+		UFramework_UI_UIPanelWrap.Register(L);
+		UFramework_UI_FiaryPanelWrap.Register(L);
+		UFramework_UI_LayerWrap.Register(L);
+		L.EndModule();
+		L.EndModule();
 		L.BeginModule("System");
 		L.RegFunction("Action", System_Action);
 		L.RegFunction("Predicate_int", System_Predicate_int);

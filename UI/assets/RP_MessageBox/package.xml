@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="9a14j3pc">
+  <resources>
+    <component id="8a1u0" name="MessageBox.xml" path="/" exported="true"/>
+    <component id="nx0v7" name="Background.xml" path="/Components/"/>
+    <image id="nmjq9" name="Clean-Minimalistic_Info-Alert.png" path="/Design/"/>
+    <image id="nmjqa" name="Dark-Popup-Background.png" path="/Images/" scale="9grid" scale9grid="200,200,400,400"/>
+    <image id="nmjqb" name="Dark-Popup-Top.png" path="/Images/" scale="9grid" scale9grid="200,26,400,52"/>
+    <component id="nmjqc" name="Background-Center.xml" path="/Components/"/>
+    <image id="nmjqd" name="Alert-Icon-Small.png" path="/Images/"/>
+    <image id="nmjqe" name="Close-Icon-Small.png" path="/Images/"/>
+    <component id="nmjqf" name="Close.xml" path="/Components/"/>
+    <image id="nmjqg" name="Black-Button.png" path="/Images/" scale="9grid" scale9grid="87,25,174,50"/>
+    <image id="nmjqh" name="White-Button-Outline.png" path="/Images/" scale="9grid" scale9grid="87,25,174,50"/>
+    <component id="nmjqi" name="OK.xml" path="/Components/"/>
+    <component id="nmjqj" name="Cancel.xml" path="/Components/"/>
+    <component id="kivak" name="Center.xml" path="/"/>
+  </resources>
+  <publish name=""/>
+</packageDescription>

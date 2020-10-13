@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="2048,1152" designImageAlpha="55">
+  <controller name="_bar" pages="0,,1," selected="0"/>
+  <displayList>
+    <component id="n0_elb2" name="n0" src="s9qeo" fileName="Components/Backgound.xml" xy="0,0" size="2048,1152">
+      <relation target="" sidePair="width-width,height-height"/>
+    </component>
+    <component id="n25_s9qe" name="n25" src="kivaw" fileName="Components/Launch/Logo.xml" xy="623,468">
+      <relation target="" sidePair="center-center,middle-middle"/>
+    </component>
+    <component id="n19_s9qe" name="_bar" src="s9qer" fileName="Components/Launch/ProgressBar.xml" xy="383,1004" size="1280,12" group="n23_s9qe">
+      <ProgressBar value="50" max="100"/>
+    </component>
+    <text id="n22_s9qe" name="_content" xy="921,941" size="204,36" group="n23_s9qe" fontSize="26" color="#ffffff" align="center" text="Update (100/23)"/>
+    <group id="n23_s9qe" name="bottom" xy="383,941" size="1280,75" advanced="true">
+      <gearDisplay controller="_bar" pages="1"/>
+      <relation target="" sidePair="center-center,bottom-bottom"/>
+    </group>
+  </displayList>
+  <transition name="_show" autoPlay="true">
+    <item time="0" type="Alpha" target="n25_s9qe" tween="true" startValue="0" endValue="0.6" duration="24"/>
+    <item time="24" type="Alpha" target="n25_s9qe" tween="true" startValue="0.6" endValue="1" duration="12" ease="Linear"/>
+  </transition>
+</component>

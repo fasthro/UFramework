@@ -74,6 +74,12 @@ namespace UFramework
         public bool useFairyGUI = true;
 
         /// <summary>
+        /// 设计分辨率
+        /// </summary>
+        public int designResolutionX = 2048;
+        public int designResolutionY = 1152;
+
+        /// <summary>
         /// UI 所在目录
         /// </summary>
         public string uiDirectory = "Assets/Arts/UI";

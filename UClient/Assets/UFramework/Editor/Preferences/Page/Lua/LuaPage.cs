@@ -296,7 +296,12 @@ namespace UFramework.Editor.Preferences
                 bindTypes.Add(_GT(typeof(EaseType)));
                 bindTypes.Add(_GT(typeof(TweenValue)));
                 bindTypes.Add(_GT(typeof(UIObjectFactory)));
+
+                bindTypes.Add(_GT(typeof(UFramework.UI.UIPanel)));
+                bindTypes.Add(_GT(typeof(UFramework.UI.FiaryPanel)));
             }
+            bindTypes.Add(_GT(typeof(UFramework.UI.Layer)));
+            
             CustomSettings.customTypeList = bindTypes.ToArray();
 
             ToLuaMenu.GenLuaAll();

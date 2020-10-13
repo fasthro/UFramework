@@ -1,0 +1,11 @@
+{
+  "name": "Tools",
+  "displayName": "工具",
+  "description": "创建包\n",
+  "version": "1.0",
+  "author": {
+    "name": "fasthro"
+  },
+  "icon": "",
+  "main": "main.lua"
+}

@@ -7,14 +7,14 @@ namespace UFramework.UI
     /// </summary>
     public enum Layer
     {
-        Scene = 0,
-        Panel,
-        MessageBox,
-        Guide,
-        Notification,
-        Network,
-        Loader,
-        Top,
+        SCNEN = 0,
+        PANEL,
+        MESSAGE_BOX,
+        GUIDE,
+        NOTIFICATION,
+        NETWORK,
+        LOADER,
+        TOP,
     }
 
     /// <summary>

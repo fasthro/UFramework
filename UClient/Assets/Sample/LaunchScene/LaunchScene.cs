@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UFramework.Natives;
+using UFramework.Panel.FairyGUI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,7 +15,7 @@ namespace UFramework.Sample
         /// 是否开启Obb下载
         /// </summary>
         public bool obbdownloader = false;
-
+        MessageBox box;
         void OnGUI()
         {
             for (int i = 0; i < sceneNames.Length; i++)
@@ -24,6 +25,11 @@ namespace UFramework.Sample
                 {
                     SampleScene.LoadScene(sceneName);
                 }
+            }
+
+            if (GUILayout.Button("Test", GUILayout.Width(300), GUILayout.Height(100)))
+            {
+                box = MessageBox.Allocate().Show("提示", "前方高能预警", "OK", "Cancel").OnlyOK();
             }
             if (obbdownloader) OnRenderObbDownloaderGUI();
         }

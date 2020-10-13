@@ -3,10 +3,14 @@
  * @Date: 2020-07-13 23:51:59
  * @Description: App Launch
  */
+using FairyGUI;
 using UFramework.Assets;
+using UFramework.Config;
 using UFramework.Natives;
+using UFramework.Panel.FairyGUI;
 using UFramework.Timers;
 using UFramework.Tools;
+using UFramework.Version;
 using UnityEngine;
 
 namespace UFramework
@@ -17,44 +21,68 @@ namespace UFramework
         public static AppLaunch main { get { return AppLaunch.Instance; } }
         public static GameObject mainGameObject { get { return AppLaunch.Instance.gameObject; } }
 
+        public static Launch launch { get; private set; }
+
+        private bool _initialized = false;
+
         protected override void OnSingletonAwake()
         {
-            ThreadQueue.Instance.Default();
-            Native.Instance.Default();
-            Timer.Instance.Default();
-            Download.Instance.Default();
+            _initialized = false;
 
+            var config = UConfig.Read<AppConfig>();
+            // FairyGUI
+            UIPackage.unloadBundleByFGUI = false;
+            GRoot.inst.SetContentScaleFactor(config.designResolutionX, config.designResolutionY, UIContentScaler.ScreenMatchMode.MatchWidthOrHeight);
+
+            // launch panel
+            launch = Launch.Create();
+
+            // 线程队列
+            ThreadQueue.Instance.Default();
+            // Native
+            Native.Instance.Default();
+            // 定时器
+            Timer.Instance.Default();
+            // 下载器
+            Download.Instance.Default();
+            // 版本控制
+            VersionController.Instance.Initialize(OnVersionCompleted);
+        }
+
+        private void OnVersionCompleted()
+        {
+            // 资源
             Asset.Instance.Initialize(OnAssetCompleted);
         }
 
         private void OnAssetCompleted(bool result)
         {
-
-        }
-
-        protected override void OnSingletonStart()
-        {
+            _initialized = true;
             App.Initialize();
         }
 
         protected override void OnSingletonUpdate(float deltaTime)
         {
-            App.Update(deltaTime);
+            if (_initialized)
+                App.Update(deltaTime);
         }
 
         protected override void OnSingletonLateUpdate()
         {
-            App.LateUpdate();
+            if (_initialized)
+                App.LateUpdate();
         }
 
         protected override void OnSingletonFixedUpdate()
         {
-            App.FixedUpdate();
+            if (_initialized)
+                App.FixedUpdate();
         }
 
         protected override void OnSingletonDestory()
         {
-            App.Destory();
+            if (_initialized)
+                App.Destory();
         }
     }
 }

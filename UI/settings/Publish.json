@@ -9,7 +9,7 @@
   "compressPNG": false,
   "codeGeneration": {
     "allowGenCode": true,
-    "codePath": "../UClient/Assets/Scripts/Automatic/Lua/FairyGUI",
+    "codePath": "../UClient/Assets/Scripts",
     "classNamePrefix": "",
     "memberNamePrefix": "",
     "packageName": null,

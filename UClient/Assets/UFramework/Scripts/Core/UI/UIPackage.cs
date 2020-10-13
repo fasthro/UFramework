@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using UFramework.Config;
 using UFramework.Messenger;
 using UFramework.Ref;
-using UFramework.UI.FairyGUI;
+using UnityEngine;
 
 namespace UFramework.UI
 {
@@ -17,7 +17,7 @@ namespace UFramework.UI
     public enum LoadState
     {
         Init,
-        Load,
+        Loading,
         Loaded,
         Unloaded,
     }
@@ -38,42 +38,67 @@ namespace UFramework.UI
         /// </summary>
         public LoadState loadState { get; protected set; }
 
-        protected event UCallback m_onCompleted;
-        protected bool m_remain;
+        protected HashSet<string> dependences = new HashSet<string>();
+        protected int dependenCount;
+        protected event UCallback onCompleted;
+        protected bool isStandby;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="packageName"></param>
         public Package(string packageName)
         {
             this.packageName = packageName;
             this.loadState = LoadState.Init;
-            this.m_remain = false;
+            this.isStandby = false;
         }
 
         /// <summary>
-        /// 加载包
+        /// 
         /// </summary>
         /// <param name="onCompleted"></param>
-        public virtual void Load(UCallback onCompleted)
+        public void Load(UCallback onCompleted)
         {
+            if (loadState == LoadState.Unloaded)
+                return;
+
             Retain();
-            loadState = LoadState.Load;
-            m_remain = false;
-            m_onCompleted += onCompleted;
+            isStandby = false;
+            this.onCompleted += onCompleted;
+
+            if (loadState == LoadState.Loaded) LoadCompleted();
+            else if (loadState != LoadState.Loading && loadState != LoadState.Loaded)
+            {
+                loadState = LoadState.Loading;
+                LoadMain();
+            }
         }
 
         /// <summary>
-        /// 资源加载完成
+        /// 加载主包
         /// </summary>
-        protected void OnLoadAsset()
+        protected virtual void LoadMain() { }
+
+        /// <summary>
+        /// 加载依赖包
+        /// </summary>
+        protected virtual void LoadDependen() { }
+
+
+        /// <summary>
+        /// 加载完成
+        /// </summary>
+        protected void LoadCompleted()
         {
-            if (m_remain)
+            if (isStandby)
             {
                 OnReferenceEmpty();
                 return;
             }
-
             loadState = LoadState.Loaded;
-            m_onCompleted.InvokeGracefully();
-            m_onCompleted = null;
+            onCompleted.InvokeGracefully();
+            onCompleted = null;
         }
 
         /// <summary>
@@ -90,15 +115,15 @@ namespace UFramework.UI
         protected override void OnReferenceEmpty()
         {
             loadState = LoadState.Unloaded;
-            m_onCompleted = null;
+            onCompleted = null;
         }
 
         /// <summary>
-        /// 标记稍后卸载
+        /// 待命-加载完成卸载资源
         /// </summary>
-        public void Remain()
+        public void Standby()
         {
-            m_remain = true;
+            isStandby = true;
         }
     }
 
@@ -122,25 +147,46 @@ namespace UFramework.UI
         /// <typeparam name="string"></typeparam>
         /// <typeparam name="Package"></typeparam>
         /// <returns></returns>
-        readonly static Dictionary<string, Package> remainDictonary = new Dictionary<string, Package>();
+        readonly static Dictionary<string, Package> standbyDictonary = new Dictionary<string, Package>();
+
+        /// <summary>
+        /// 加载 Fairy Resource 包
+        /// </summary>
+        /// <param name="packageName"></param>
+        /// <param name="onCompleted"></param>
+        public static void LoadFairyResource(string packageName, UCallback onCompleted)
+        {
+            _Load(packageName, onCompleted, true);
+        }
 
         /// <summary>
         /// 加载包
-        /// 在remain中查找包是否正在加载的包，是则移除remain标记继续执行加载
         /// </summary>
         /// <param name="packageName"></param>
         /// <param name="onCompleted"></param>
         public static void Load(string packageName, UCallback onCompleted)
         {
+            _Load(packageName, onCompleted, false);
+        }
+
+        /// <summary>
+        /// 加载包
+        /// 在Standby中查找包是否正在加载的包，是则移除Standby标记继续执行加载
+        /// </summary>
+        /// <param name="packageName"></param>
+        /// <param name="onCompleted"></param>
+        /// <param name="isResourcesPackage"></param>
+        private static void _Load(string packageName, UCallback onCompleted, bool isResourcesPackage)
+        {
             Package package;
-            if (remainDictonary.TryGetValue(packageName, out package))
+            if (standbyDictonary.TryGetValue(packageName, out package))
             {
-                if (package.loadState == LoadState.Load)
+                if (package.loadState == LoadState.Loading)
                 {
-                    remainDictonary.Remove(packageName);
+                    standbyDictonary.Remove(packageName);
                     packageDictonary.Add(packageName, package);
                 }
-                else remainDictonary.Remove(packageName);
+                else standbyDictonary.Remove(packageName);
             }
 
             if (package == null)
@@ -149,7 +195,8 @@ namespace UFramework.UI
                 {
                     if (UConfig.Read<AppConfig>().useFairyGUI)
                     {
-                        package = new FairyPackage(packageName);
+                        if (isResourcesPackage) package = new FairyResourcesPackage(packageName);
+                        else package = new FairyPackage(packageName);
                     }
 
                     packageDictonary.Add(packageName, package);
@@ -167,10 +214,10 @@ namespace UFramework.UI
             Package package;
             if (packageDictonary.TryGetValue(packageName, out package))
             {
-                if (package.loadState == LoadState.Load)
+                if (package.loadState == LoadState.Loading)
                 {
-                    package.Remain();
-                    remainDictonary.Add(packageName, package);
+                    package.Standby();
+                    standbyDictonary.Add(packageName, package);
                     packageDictonary.Remove(packageName);
                 }
                 else

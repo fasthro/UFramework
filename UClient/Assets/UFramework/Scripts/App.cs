@@ -208,21 +208,21 @@ namespace UFramework
             }
         }
 
-        public static string _editorBundleDirectory = null;
+        public static string _bundleStreamingDirectory = null;
 
         /// <summary>
-        /// Bundle Temp 目录
+        /// Bundle streamingAssetsPath 目录
         /// </summary>
         /// <value></value>
-        public static string BundleTempDirectory
+        public static string BundleStreamingDirectory
         {
             get
             {
-                if (string.IsNullOrEmpty(_editorBundleDirectory))
+                if (string.IsNullOrEmpty(_bundleStreamingDirectory))
                 {
-                    _editorBundleDirectory = IOPath.PathCombine(UTempDirectory, BundlePlatformName);
+                    _bundleStreamingDirectory = IOPath.PathCombine(Application.streamingAssetsPath, BundlePlatformName);
                 }
-                return _editorBundleDirectory;
+                return _bundleStreamingDirectory;
             }
         }
 
@@ -240,11 +240,13 @@ namespace UFramework
                 {
                     if (!Application.isPlaying)
                     {
-                        _bundleDirectory = IOPath.PathCombine(Application.streamingAssetsPath, BundlePlatformName);
+                        _bundleDirectory = IOPath.PathCombine(UTempDirectory, BundlePlatformName);
                     }
                     else
                     {
-                        _bundleDirectory = IOPath.PathCombine(DataDirectory, BundlePlatformName);
+                        if (UConfig.Read<AppConfig>().isDevelopmentVersion)
+                            _bundleDirectory = IOPath.PathCombine(UTempDirectory, BundlePlatformName);
+                        else _bundleDirectory = IOPath.PathCombine(DataDirectory, BundlePlatformName);
                     }
                 }
                 return _bundleDirectory;

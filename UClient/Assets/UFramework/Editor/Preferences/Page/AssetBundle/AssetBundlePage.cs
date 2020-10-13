@@ -134,6 +134,11 @@ namespace UFramework.Editor.Preferences.Assets
                 BuildAssetsBundle(true);
             }
 
+            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Zip Pack")))
+            {
+                ZipPack();
+            }
+
             if (SirenixEditorGUI.ToolbarButton(EditorIcons.Refresh))
             {
                 AnalysisAssets();
@@ -698,7 +703,7 @@ namespace UFramework.Editor.Preferences.Assets
         /// <returns></returns>
         private long GetBuildBundleSize(BundleItem bundle)
         {
-            var path = IOPath.PathCombine(App.BundleTempDirectory, GetBuildBundleName(bundle.bundleName));
+            var path = IOPath.PathCombine(App.BundleDirectory, GetBuildBundleName(bundle.bundleName));
             if (IOPath.FileExists(path))
                 return IOPath.FileSize(path);
             return 0;
@@ -710,22 +715,22 @@ namespace UFramework.Editor.Preferences.Assets
         /// <param name="clean"></param>
         private void BuildAssetsBundle(bool clean)
         {
-            IOPath.DirectoryClear(App.BundleDirectory);
+            IOPath.DirectoryDelete(App.BundleStreamingDirectory);
             if (clean)
             {
-                IOPath.DirectoryClear(App.BundleTempDirectory);
+                IOPath.DirectoryClear(App.BundleDirectory);
             }
             else
             {
-                if (!IOPath.DirectoryExists(App.BundleTempDirectory))
+                if (!IOPath.DirectoryExists(App.BundleDirectory))
                 {
-                    IOPath.DirectoryClear(App.BundleTempDirectory);
+                    IOPath.DirectoryClear(App.BundleDirectory);
                 }
             }
 
             BuildAssetBundleOptions options = BuildAssetBundleOptions.ChunkBasedCompression;
             AssetBundleBuild[] builds = GetAssetBundleBuilds();
-            var assetBundleManifest = BuildPipeline.BuildAssetBundles(App.BundleTempDirectory, builds, options, EditorUserBuildSettings.activeBuildTarget);
+            var assetBundleManifest = BuildPipeline.BuildAssetBundles(App.BundleDirectory, builds, options, EditorUserBuildSettings.activeBuildTarget);
             if (assetBundleManifest == null) return;
 
             // manifest
@@ -743,7 +748,7 @@ namespace UFramework.Editor.Preferences.Assets
             {
                 var bundle = assetBundles[i];
                 var dependencies = assetBundleManifest.GetAllDependencies(bundle);
-                var path = IOPath.PathCombine(App.BundleTempDirectory, bundle);
+                var path = IOPath.PathCombine(App.BundleDirectory, bundle);
                 if (File.Exists(path))
                 {
                     using (var stream = File.OpenRead(path))
@@ -813,29 +818,29 @@ namespace UFramework.Editor.Preferences.Assets
                 }
             };
 
-            BuildPipeline.BuildAssetBundles(App.BundleTempDirectory, builds, options, EditorUserBuildSettings.activeBuildTarget);
+            BuildPipeline.BuildAssetBundles(App.BundleDirectory, builds, options, EditorUserBuildSettings.activeBuildTarget);
             ArrayUtility.Add(ref assetBundles, manifestBundleName);
 
-            // zip
-            var zipfile = IOPath.PathCombine(App.DataDirectory, "res.zip");
-            IOPath.FileDelete(zipfile);
-            IOPath.DirectoryDelete(App.BundleDirectory);
-            if (app.isDevelopmentVersion)
-            {
-                IOPath.DirectoryCopy(App.BundleTempDirectory, App.BundleDirectory);
-            }
-            else
-            {
-                string[] files = new string[assetBundles.Length];
-                string[] parents = new string[assetBundles.Length];
-                for (int i = 0; i < assetBundles.Length; i++)
-                {
-                    files[i] = IOPath.PathCombine(App.BundleTempDirectory, assetBundles[i]);
-                    parents[i] = App.BundlePlatformName;
-                }
-                UZip.Zip(files, parents, zipfile);
-            }
+
             AssetDatabase.Refresh();
+        }
+
+        /// <summary>
+        /// Bundle 资源打包Zip
+        /// </summary>
+        private void ZipPack()
+        {
+            var zipfile = IOPath.PathCombine(Application.streamingAssetsPath, "res.zip");
+            IOPath.FileDelete(zipfile);
+            string[] files = IOPath.DirectoryGetFiles(App.BundleDirectory, "*" + App.AssetBundleExtension, SearchOption.AllDirectories);
+            string[] parents = new string[files.Length];
+            for (int i = 0; i < files.Length; i++)
+            {
+                parents[i] = App.BundlePlatformName;
+            }
+
+            if (files.Length > 0)
+                UZip.Zip(files, parents, zipfile);
         }
 
         /// <summary>

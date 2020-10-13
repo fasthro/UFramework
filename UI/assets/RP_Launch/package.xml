@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="9fwlj8d0">
+  <resources>
+    <component id="gmfc0" name="Launch.xml" path="/" exported="true"/>
+    <image id="s9qen" name="Dark-Skin-Background.png" path="/Images/"/>
+    <component id="s9qeo" name="Backgound.xml" path="/Components/"/>
+    <image id="s9qep" name="Gradient_7.png" path="/Images/ProgressBar/"/>
+    <image id="s9qeq" name="_Progress-Bar-Background.png" path="/Images/ProgressBar/" scale="9grid" scale9grid="150,3,300,6"/>
+    <component id="s9qer" name="ProgressBar.xml" path="/Components/Launch/"/>
+    <image id="s9qes" name="Progress-Bar-Corner-White.png" path="/Images/ProgressBar/"/>
+    <image id="c1ewv" name="Clean-Minimalistic_VideoPlayer.png" path="/Design/"/>
+    <component id="kivaw" name="Logo.xml" path="/Components/Launch/"/>
+    <image id="kivax" name="logo.png" path="/"/>
+  </resources>
+  <publish name=""/>
+</packageDescription>
