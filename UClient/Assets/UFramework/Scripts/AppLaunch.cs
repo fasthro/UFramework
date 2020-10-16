@@ -10,7 +10,7 @@ using UFramework.Natives;
 using UFramework.Panel.FairyGUI;
 using UFramework.Timers;
 using UFramework.Tools;
-using UFramework.Version;
+using UFramework.VersionControl;
 using UnityEngine;
 
 namespace UFramework
@@ -45,15 +45,12 @@ namespace UFramework
             Timer.Instance.Default();
             // 下载器
             Download.Instance.Default();
-            // 版本控制
-            VersionController.Instance.Initialize(OnVersionCompleted);
+            // 版本器
+            Updater.Instance.Default();
+            // 资源
+            // Asset.Instance.Initialize(OnAssetCompleted);
         }
 
-        private void OnVersionCompleted()
-        {
-            // 资源
-            Asset.Instance.Initialize(OnAssetCompleted);
-        }
 
         private void OnAssetCompleted(bool result)
         {

@@ -22,12 +22,12 @@ namespace UFramework.Tools
         /// <param name="_password"></param>
         /// <param name="_zipCallback"></param>
         /// <returns></returns>
-        public static bool Zip(string[] fileArray, string[] parentbArray, string _outputPathName, string _password = null, ZipHandler _zipCallback = null)
+        public static bool Zip(string[] fileArray, string[] parentbArray, string _outputPathName, string _password = null, IZip _zipCallback = null)
         {
             if ((null == fileArray) || null == parentbArray || fileArray.Length != fileArray.Length || string.IsNullOrEmpty(_outputPathName))
             {
                 if (null != _zipCallback)
-                    _zipCallback.OnFinished(false);
+                    _zipCallback.OnZipFinished(false);
 
                 return false;
             }
@@ -47,7 +47,7 @@ namespace UFramework.Tools
                 if (!result)
                 {
                     if (null != _zipCallback)
-                        _zipCallback.OnFinished(false);
+                        _zipCallback.OnZipFinished(false);
 
                     return false;
                 }
@@ -57,7 +57,7 @@ namespace UFramework.Tools
             zipOutputStream.Close();
 
             if (null != _zipCallback)
-                _zipCallback.OnFinished(true);
+                _zipCallback.OnZipFinished(true);
 
             return true;
         }
@@ -70,12 +70,12 @@ namespace UFramework.Tools
         /// <param name="_password">压缩密码</param>
         /// <param name="_zipCallback">ZipCallback对象，负责回调</param>
         /// <returns></returns>
-        public static bool Zip(string[] _fileOrDirectoryArray, string _outputPathName, string _password = null, ZipHandler _zipCallback = null)
+        public static bool Zip(string[] _fileOrDirectoryArray, string _outputPathName, string _password = null, IZip _zipCallback = null)
         {
             if ((null == _fileOrDirectoryArray) || string.IsNullOrEmpty(_outputPathName))
             {
                 if (null != _zipCallback)
-                    _zipCallback.OnFinished(false);
+                    _zipCallback.OnZipFinished(false);
 
                 return false;
             }
@@ -97,7 +97,7 @@ namespace UFramework.Tools
                 if (!result)
                 {
                     if (null != _zipCallback)
-                        _zipCallback.OnFinished(false);
+                        _zipCallback.OnZipFinished(false);
 
                     return false;
                 }
@@ -107,7 +107,7 @@ namespace UFramework.Tools
             zipOutputStream.Close();
 
             if (null != _zipCallback)
-                _zipCallback.OnFinished(true);
+                _zipCallback.OnZipFinished(true);
 
             return true;
         }
@@ -120,26 +120,26 @@ namespace UFramework.Tools
         /// <param name="_password">解压密码</param>
         /// <param name="_unzipCallback">UnzipCallback对象，负责回调</param>
         /// <returns></returns>
-        public static bool UnzipFile(string _filePathName, string _outputPath, string _password = null, UnzipHandler _unzipCallback = null)
+        public static bool Unzip(string _filePathName, string _outputPath, string _password = null, IUnzip _unzipCallback = null)
         {
             if (string.IsNullOrEmpty(_filePathName) || string.IsNullOrEmpty(_outputPath))
             {
                 if (null != _unzipCallback)
-                    _unzipCallback.OnFinished(false);
+                    _unzipCallback.OnUnzipFinished(false);
 
                 return false;
             }
 
             try
             {
-                return UnzipFile(File.OpenRead(_filePathName), _outputPath, _password, _unzipCallback);
+                return Unzip(File.OpenRead(_filePathName), _outputPath, _password, _unzipCallback);
             }
             catch (System.Exception _e)
             {
                 Debug.LogError("[ZipUtility.UnzipFile]: " + _e.ToString());
 
                 if (null != _unzipCallback)
-                    _unzipCallback.OnFinished(false);
+                    _unzipCallback.OnUnzipFinished(false);
 
                 return false;
             }
@@ -153,21 +153,21 @@ namespace UFramework.Tools
         /// <param name="_password">解压密码</param>
         /// <param name="_unzipCallback">UnzipCallback对象，负责回调</param>
         /// <returns></returns>
-        public static bool UnzipFile(byte[] _fileBytes, string _outputPath, string _password = null, UnzipHandler _unzipCallback = null)
+        public static bool Unzip(byte[] _fileBytes, string _outputPath, string _password = null, IUnzip _unzipCallback = null)
         {
             if ((null == _fileBytes) || string.IsNullOrEmpty(_outputPath))
             {
                 if (null != _unzipCallback)
-                    _unzipCallback.OnFinished(false);
+                    _unzipCallback.OnUnzipFinished(false);
 
                 return false;
             }
 
-            bool result = UnzipFile(new MemoryStream(_fileBytes), _outputPath, _password, _unzipCallback);
+            bool result = Unzip(new MemoryStream(_fileBytes), _outputPath, _password, _unzipCallback);
             if (!result)
             {
                 if (null != _unzipCallback)
-                    _unzipCallback.OnFinished(false);
+                    _unzipCallback.OnUnzipFinished(false);
             }
 
             return result;
@@ -181,12 +181,12 @@ namespace UFramework.Tools
         /// <param name="_password">解压密码</param>
         /// <param name="_unzipCallback">UnzipCallback对象，负责回调</param>
         /// <returns></returns>
-        public static bool UnzipFile(Stream _inputStream, string _outputPath, string _password = null, UnzipHandler _unzipCallback = null)
+        public static bool Unzip(Stream _inputStream, string _outputPath, string _password = null, IUnzip _unzipCallback = null)
         {
             if ((null == _inputStream) || string.IsNullOrEmpty(_outputPath))
             {
                 if (null != _unzipCallback)
-                    _unzipCallback.OnFinished(false);
+                    _unzipCallback.OnUnzipFinished(false);
 
                 return false;
             }
@@ -245,7 +245,7 @@ namespace UFramework.Tools
                         Debug.LogError("[ZipUtility.UnzipFile]: " + _e.ToString());
 
                         if (null != _unzipCallback)
-                            _unzipCallback.OnFinished(false);
+                            _unzipCallback.OnUnzipFinished(false);
 
                         return false;
                     }
@@ -253,7 +253,7 @@ namespace UFramework.Tools
             }
 
             if (null != _unzipCallback)
-                _unzipCallback.OnFinished(true);
+                _unzipCallback.OnUnzipFinished(true);
 
             return true;
         }
@@ -266,7 +266,7 @@ namespace UFramework.Tools
         /// <param name="_zipOutputStream">压缩输出流</param>
         /// <param name="_zipCallback">ZipCallback对象，负责回调</param>
         /// <returns></returns>
-        private static bool ZipFile(string _filePathName, string _parentRelPath, ZipOutputStream _zipOutputStream, ZipHandler _zipCallback = null)
+        private static bool ZipFile(string _filePathName, string _parentRelPath, ZipOutputStream _zipOutputStream, IZip _zipCallback = null)
         {
             //Crc32 crc32 = new Crc32();
             ZipEntry entry = null;
@@ -323,7 +323,7 @@ namespace UFramework.Tools
         /// <param name="_zipOutputStream">压缩输出流</param>
         /// <param name="_zipCallback">ZipCallback对象，负责回调</param>
         /// <returns></returns>
-        private static bool ZipDirectory(string _path, string _parentRelPath, ZipOutputStream _zipOutputStream, ZipHandler _zipCallback = null)
+        private static bool ZipDirectory(string _path, string _parentRelPath, ZipOutputStream _zipOutputStream, IZip _zipCallback = null)
         {
             ZipEntry entry = null;
             try

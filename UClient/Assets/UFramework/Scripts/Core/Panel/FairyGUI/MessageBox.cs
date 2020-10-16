@@ -15,7 +15,7 @@ namespace UFramework.Panel.FairyGUI
     public class MessageBox : IEnumerator, IPoolObject
     {
         #region IEnumerator
-        public bool isOK { get; private set; }
+        public bool isOk { get; private set; }
 
         public object Current { get { return null; } }
 
@@ -233,7 +233,7 @@ namespace UFramework.Panel.FairyGUI
         private void HandleEvent(bool et)
         {
             onCompleted.InvokeGracefully(et);
-            isOK = et;
+            isOk = et;
             Hide();
         }
     }

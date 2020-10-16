@@ -5,8 +5,6 @@
  */
 using System.Collections.Generic;
 using FairyGUI;
-using UFramework.Assets;
-using UFramework.Config;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif

@@ -31,6 +31,12 @@ namespace UFramework
         public FileAddress address { get { return FileAddress.Resources; } }
 
         #region version
+
+        /// <summary>
+        /// 当前版本
+        /// </summary>
+        public int version;
+
         /// <summary>
         /// 开发版本
         /// </summary>
@@ -40,6 +46,11 @@ namespace UFramework
         /// App 环境类型
         /// </summary>
         public AppEnvironmentType appEnvironmentType = AppEnvironmentType.Debug;
+
+        /// <summary>
+        /// 版本远程基础URL
+        /// </summary>
+        public string versionBaseURL;
 
         /// <summary>
         /// 日志

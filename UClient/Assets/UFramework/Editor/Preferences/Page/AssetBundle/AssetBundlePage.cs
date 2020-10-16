@@ -10,6 +10,7 @@ using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
 using UFramework.Assets;
 using UFramework.Config;
+using UFramework.Editor.VersionControl;
 using UFramework.Tools;
 using UnityEditor;
 using UnityEngine;
@@ -22,8 +23,6 @@ namespace UFramework.Editor.Preferences.Assets
         static AssetBundle_AssetConfig describeObject;
         static AppConfig app;
 
-        [BoxGroup("General Setting")]
-        public int version;
         [BoxGroup("General Setting")]
         public bool buildNameHash = true;
         [BoxGroup("General Setting")]
@@ -89,6 +88,11 @@ namespace UFramework.Editor.Preferences.Assets
         private SortRuler assetSortRuler;
         private SortRuler dependenciesAssetSortRuler;
         private SortRuler builtInAssetSortRuler;
+
+        private string BundleDirectory
+        {
+            get { return IOPath.PathCombine(App.UTempDirectory, App.BundlePlatformName); }
+        }
 
         public object GetInstance()
         {
@@ -703,7 +707,7 @@ namespace UFramework.Editor.Preferences.Assets
         /// <returns></returns>
         private long GetBuildBundleSize(BundleItem bundle)
         {
-            var path = IOPath.PathCombine(App.BundleDirectory, GetBuildBundleName(bundle.bundleName));
+            var path = IOPath.PathCombine(BundleDirectory, GetBuildBundleName(bundle.bundleName));
             if (IOPath.FileExists(path))
                 return IOPath.FileSize(path);
             return 0;
@@ -718,19 +722,19 @@ namespace UFramework.Editor.Preferences.Assets
             IOPath.DirectoryDelete(App.BundleStreamingDirectory);
             if (clean)
             {
-                IOPath.DirectoryClear(App.BundleDirectory);
+                IOPath.DirectoryClear(BundleDirectory);
             }
             else
             {
-                if (!IOPath.DirectoryExists(App.BundleDirectory))
+                if (!IOPath.DirectoryExists(BundleDirectory))
                 {
-                    IOPath.DirectoryClear(App.BundleDirectory);
+                    IOPath.DirectoryClear(BundleDirectory);
                 }
             }
 
             BuildAssetBundleOptions options = BuildAssetBundleOptions.ChunkBasedCompression;
             AssetBundleBuild[] builds = GetAssetBundleBuilds();
-            var assetBundleManifest = BuildPipeline.BuildAssetBundles(App.BundleDirectory, builds, options, EditorUserBuildSettings.activeBuildTarget);
+            var assetBundleManifest = BuildPipeline.BuildAssetBundles(BundleDirectory, builds, options, EditorUserBuildSettings.activeBuildTarget);
             if (assetBundleManifest == null) return;
 
             // manifest
@@ -748,7 +752,7 @@ namespace UFramework.Editor.Preferences.Assets
             {
                 var bundle = assetBundles[i];
                 var dependencies = assetBundleManifest.GetAllDependencies(bundle);
-                var path = IOPath.PathCombine(App.BundleDirectory, bundle);
+                var path = IOPath.PathCombine(BundleDirectory, bundle);
                 if (File.Exists(path))
                 {
                     using (var stream = File.OpenRead(path))
@@ -818,9 +822,13 @@ namespace UFramework.Editor.Preferences.Assets
                 }
             };
 
-            BuildPipeline.BuildAssetBundles(App.BundleDirectory, builds, options, EditorUserBuildSettings.activeBuildTarget);
+            BuildPipeline.BuildAssetBundles(BundleDirectory, builds, options, EditorUserBuildSettings.activeBuildTarget);
             ArrayUtility.Add(ref assetBundles, manifestBundleName);
 
+            // version res cont
+            var vc = UConfig.Read<VersionControl_VersionConfig>();
+            vc.baseResCount = assetBundles.Length;
+            vc.Save();
 
             AssetDatabase.Refresh();
         }
@@ -832,7 +840,7 @@ namespace UFramework.Editor.Preferences.Assets
         {
             var zipfile = IOPath.PathCombine(Application.streamingAssetsPath, "res.zip");
             IOPath.FileDelete(zipfile);
-            string[] files = IOPath.DirectoryGetFiles(App.BundleDirectory, "*" + App.AssetBundleExtension, SearchOption.AllDirectories);
+            string[] files = IOPath.DirectoryGetFiles(BundleDirectory, "*" + App.AssetBundleExtension, SearchOption.AllDirectories);
             string[] parents = new string[files.Length];
             for (int i = 0; i < files.Length; i++)
             {

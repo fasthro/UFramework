@@ -23,8 +23,8 @@ namespace UFramework.Editor.VersionControl
         protected override void OnInitialize()
         {
             AddPage(new AppPage());
+            AddPage(new VersionPage());
             AddPage(new BuilderPage());
-            AddPage(new PatchPage());
         }
     }
 }

@@ -3,10 +3,7 @@
  * @Date: 2020-08-26 15:02:02
  * @Description: lua config
  */
-using System.Collections.Generic;
-using Sirenix.OdinInspector;
 using UFramework.Config;
-using UnityEngine;
 
 namespace UFramework.Lua
 {

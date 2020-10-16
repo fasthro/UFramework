@@ -6,7 +6,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using UFramework.Config;
 using UnityEngine;
 
@@ -19,6 +18,11 @@ namespace UFramework
         /// Asset Bundle 文件扩展名
         /// </summary>
         readonly public static string AssetBundleExtension = ".unity3d";
+
+        /// <summary>
+        /// 版本文件名称
+        /// </summary>
+        readonly public static string VersionFileName = "version";
 
         #endregion
 
@@ -352,23 +356,13 @@ namespace UFramework
 
         #region data
 
-        private static string _dataDirectory = null;
-
         /// <summary>
         /// 数据根目录
         /// </summary>
         /// <returns></returns>
         public static string DataDirectory
         {
-            get
-            {
-#if UNITY_EDITOR
-                _dataDirectory = Application.streamingAssetsPath;
-#else
-                _dataDirectory = Application.persistentDataPath;
-#endif
-                return _dataDirectory;
-            }
+            get { return Application.persistentDataPath; }
         }
 
         /// <summary>
@@ -388,7 +382,6 @@ namespace UFramework
         }
 
         #endregion
-
 
         #region Native
 
@@ -410,6 +403,47 @@ namespace UFramework
             }
         }
 
+        #endregion
+
+        #region version
+
+        private static string _versionPath;
+
+        /// <summary>
+        /// 版本文件本地数据路径
+        /// </summary>
+        /// <value></value>
+        public static string versionPath
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_versionPath))
+                {
+                    if (UConfig.Read<AppConfig>().isDevelopmentVersion)
+                        _versionPath = IOPath.PathCombine(UTempDirectory, VersionFileName);
+                    else _versionPath = IOPath.PathCombine(DataDirectory, VersionFileName);
+                }
+                return _versionPath;
+            }
+        }
+
+        private static string _versionStreamingPath;
+
+        /// <summary>
+        /// 版本文件Streaming路径
+        /// </summary>
+        /// <value></value>
+        public static string versionStreamingPath
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_versionStreamingPath))
+                {
+                    _versionStreamingPath = IOPath.PathCombine(Application.streamingAssetsPath, VersionFileName);
+                }
+                return _versionStreamingPath;
+            }
+        }
         #endregion
 
         /// <summary>

@@ -5,9 +5,6 @@
     <component id="n0_elb2" name="n0" src="s9qeo" fileName="Components/Backgound.xml" xy="0,0" size="2048,1152">
       <relation target="" sidePair="width-width,height-height"/>
     </component>
-    <component id="n25_s9qe" name="n25" src="kivaw" fileName="Components/Launch/Logo.xml" xy="623,468">
-      <relation target="" sidePair="center-center,middle-middle"/>
-    </component>
     <component id="n19_s9qe" name="_bar" src="s9qer" fileName="Components/Launch/ProgressBar.xml" xy="383,1004" size="1280,12" group="n23_s9qe">
       <ProgressBar value="50" max="100"/>
     </component>
@@ -16,9 +13,19 @@
       <gearDisplay controller="_bar" pages="1"/>
       <relation target="" sidePair="center-center,bottom-bottom"/>
     </group>
+    <image id="n27_o7b2" name="n27" src="o7b2y" fileName="Images/Logo.png" xy="761,516" pivot="0.5,0.5" group="n30_o7b2">
+      <relation target="" sidePair="center-center,middle-middle"/>
+    </image>
+    <text id="n29_o7b2" name="n29" xy="943,640" pivot="0.5,0.5" size="162,52" group="n30_o7b2" font="ui://xrshr0wvnmjq2" fontSize="38" color="#ffffff" align="center" vAlign="middle" shadowColor="#000000" shadowOffset="1,1" text="FASTHRO">
+      <relation target="" sidePair="center-center,middle-middle"/>
+    </text>
+    <group id="n30_o7b2" name="logo" xy="761,516" size="525,176"/>
   </displayList>
   <transition name="_show" autoPlay="true">
-    <item time="0" type="Alpha" target="n25_s9qe" tween="true" startValue="0" endValue="0.6" duration="24"/>
-    <item time="24" type="Alpha" target="n25_s9qe" tween="true" startValue="0.6" endValue="1" duration="12" ease="Linear"/>
+    <item time="0" type="Alpha" target="n27_o7b2" tween="true" startValue="0" endValue="0.5" duration="22"/>
+    <item time="0" type="Alpha" target="n29_o7b2" tween="true" startValue="0" endValue="0.5" duration="22"/>
+    <item time="22" type="Alpha" target="n27_o7b2" tween="true" startValue="0.5" endValue="1" duration="14"/>
+    <item time="22" type="Alpha" target="n29_o7b2" tween="true" startValue="0.5" endValue="1" duration="14"/>
+    <item time="36" type="Alpha" target="n27_o7b2" value="1"/>
   </transition>
 </component>

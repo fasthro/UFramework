@@ -14,7 +14,6 @@ namespace UFramework.Editor
 {
     public abstract class OdinMenuWindow : OdinMenuEditorWindow
     {
-
         /// <summary>
         /// 是否画搜索Bar
         /// </summary>
@@ -23,6 +22,7 @@ namespace UFramework.Editor
         protected OdinMenuItem menuItem;
         protected IPage page;
         protected IPageUpdate pageUpdate;
+        protected bool isShowing;
 
         /// <summary>
         /// 自动保存描述时间
@@ -48,6 +48,7 @@ namespace UFramework.Editor
 
         protected override void Initialize()
         {
+            isShowing = true;
             m_autoSaveDescribeTime = Time.realtimeSinceStartup;
             OnInitialize();
         }
@@ -105,6 +106,7 @@ namespace UFramework.Editor
 
         private void Update()
         {
+            if (!isShowing) return;
             // aotu save describe
             if (Time.realtimeSinceStartup - m_autoSaveDescribeTime >= AUTO_SAVE_DESCREIBE_TIME)
             {
@@ -143,6 +145,7 @@ namespace UFramework.Editor
 
         protected override void OnDestroy()
         {
+            isShowing = false;
             if (page != null)
             {
                 page.OnSaveDescribe();

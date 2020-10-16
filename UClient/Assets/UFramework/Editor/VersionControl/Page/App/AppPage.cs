@@ -12,7 +12,7 @@ namespace UFramework.Editor.VersionControl
 {
     public class AppPage : IPage, IPageBar
     {
-        public string menuName { get { return "App"; } }
+        public string menuName { get { return "Application"; } }
         static AppConfig describeObject;
 
         /// <summary>
@@ -28,6 +28,13 @@ namespace UFramework.Editor.VersionControl
         [BoxGroup("General Settings")]
         [LabelText("    Environment")]
         public AppEnvironmentType appEnvironmentType;
+
+        /// <summary>
+        /// 版本远程URL
+        /// </summary>
+        [BoxGroup("URL Settings")]
+        [LabelText("    Version Base Remote URL")]
+        public string versionBaseURL;
 
         /// <summary>
         /// 日志
@@ -46,6 +53,7 @@ namespace UFramework.Editor.VersionControl
             describeObject = UConfig.Read<AppConfig>();
             isDevelopmentVersion = describeObject.isDevelopmentVersion;
             appEnvironmentType = describeObject.appEnvironmentType;
+            versionBaseURL = describeObject.versionBaseURL;
             isLogEnable = describeObject.isLogEnable;
         }
 
@@ -57,10 +65,11 @@ namespace UFramework.Editor.VersionControl
         public void OnSaveDescribe()
         {
             if (describeObject == null) return;
-            
+
             // General
             describeObject.isDevelopmentVersion = isDevelopmentVersion;
             describeObject.appEnvironmentType = appEnvironmentType;
+            describeObject.versionBaseURL = versionBaseURL;
 
             // Debug
             describeObject.isLogEnable = isLogEnable;

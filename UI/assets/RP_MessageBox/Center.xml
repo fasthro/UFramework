@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="819,489">
-  <controller name="_btn" pages="0,,1,,2," selected="2">
+  <controller name="_btn" pages="0,,1,,2," selected="0">
     <remark page="0" value="All"/>
     <remark page="1" value="Only OK"/>
     <remark page="2" value="Only Cancel"/>
   </controller>
   <displayList>
     <component id="n0_nx0v" name="n0" src="nmjqc" fileName="Components/Background-Center.xml" xy="0,0" size="819,489" group="n14_nmjq"/>
-    <image id="n11_nmjq" name="n11" src="nmjqb" fileName="Images/Dark-Popup-Top.png" xy="0,0" size="819,106" group="n14_nmjq"/>
+    <image id="n11_nmjq" name="n11" src="o7b2l" fileName="Images/Dark-Popup-Top.png" xy="0,0" size="819,106" group="n14_nmjq"/>
     <image id="n12_nmjq" name="n12" src="nmjqd" fileName="Images/Alert-Icon-Small.png" xy="29,27" size="45,45" group="n14_nmjq"/>
     <text id="n3_nx0v" name="_title" xy="94,25" size="96,49" group="n14_nmjq" font="ui://xrshr0wvs9qe1" fontSize="36" color="#ffffff" vAlign="middle" shadowColor="#000000" shadowOffset="1,1" autoClearText="true" text="ALERT"/>
     <richtext id="n4_nx0v" name="_content" xy="31,149" size="758,56" group="n14_nmjq" font="ui://xrshr0wvnx0v0" fontSize="42" color="#ffffff" align="center" autoSize="height" autoClearText="true" text="Do you really want to quit the game?"/>
@@ -16,7 +16,7 @@
       <gearXY controller="_btn" pages="1" values="269,350" default="82,350"/>
       <Button title="OK"/>
     </component>
-    <component id="n6_nx0v" name="_cancel" src="nmjqj" fileName="Components/Cancel.xml" xy="269,350" size="281,81" group="n14_nmjq">
+    <component id="n6_nx0v" name="_cancel" src="nmjqj" fileName="Components/Cancel.xml" xy="453,350" size="281,81" group="n14_nmjq">
       <gearDisplay controller="_btn" pages="0,2"/>
       <gearXY controller="_btn" pages="2" values="269,350" default="453,350"/>
       <Button title="Cancel"/>

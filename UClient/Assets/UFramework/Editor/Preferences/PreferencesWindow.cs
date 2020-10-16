@@ -30,8 +30,6 @@ namespace UFramework.Editor.Preferences
 
             AddPage(new ConfigPage());
 
-            AddPage(new FairyGUIPage());
-
             AddPage(new LanguagePage());
             AddPage(new LuaPage());
 

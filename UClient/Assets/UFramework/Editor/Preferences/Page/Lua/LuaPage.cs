@@ -33,11 +33,6 @@ namespace UFramework.Editor.Preferences
         [LabelText("Build Use Byte Encode")]
         public bool byteEncode = true;
 
-        [ShowInInspector]
-        [BoxGroup("General Setting")]
-        [LabelText("Use FairyGUI")]
-        public bool useFairyGUI = true;
-
         /// <summary>
         /// lua 搜索路径
         /// </summary>
@@ -111,7 +106,6 @@ namespace UFramework.Editor.Preferences
         private void InitGeneralSetting()
         {
             byteEncode = describeObject.byteEncode;
-            useFairyGUI = UConfig.Read<AppConfig>().useFairyGUI;
         }
 
         private void GeneralSettingSave()
@@ -255,7 +249,7 @@ namespace UFramework.Editor.Preferences
                 bindTypes.Add(wrapBindTypes[i].bindType);
             }
             // fairyGUI
-            if (useFairyGUI)
+            if (UConfig.Read<AppConfig>().useFairyGUI)
             {
                 bindTypes.Add(_GT(typeof(EventContext)));
                 bindTypes.Add(_GT(typeof(EventDispatcher)));
@@ -414,6 +408,7 @@ namespace UFramework.Editor.Preferences
             }
             AssetDatabase.Refresh();
 
+            // TODO App.DataDirectory
             var zipfile = IOPath.PathCombine(App.DataDirectory, "Scripts.zip");
             IOPath.FileDelete(zipfile);
             IOPath.DirectoryDelete(App.LuaDataDirectory);

@@ -9,8 +9,8 @@
     <component id="s9qer" name="ProgressBar.xml" path="/Components/Launch/"/>
     <image id="s9qes" name="Progress-Bar-Corner-White.png" path="/Images/ProgressBar/"/>
     <image id="c1ewv" name="Clean-Minimalistic_VideoPlayer.png" path="/Design/"/>
-    <component id="kivaw" name="Logo.xml" path="/Components/Launch/"/>
     <image id="kivax" name="logo.png" path="/"/>
+    <image id="o7b2y" name="Logo.png" path="/Images/"/>
   </resources>
   <publish name=""/>
 </packageDescription>

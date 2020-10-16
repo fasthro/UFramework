@@ -13,148 +13,127 @@ MonoBehaviour:
   m_Name: AssetManifest
   m_EditorClassIdentifier: 
   directorys:
-  - Assets/Arts/UI/Launch
-  - Assets/Arts/UI/MessageBox
   - Assets/Arts/UI/_Background
   - Assets/Arts/UI/_Button
   - Assets/Arts/UI/_Font
+  - Assets/Arts/UI/_Panel
   - Assets/Arts/UI/_Text
-  - Assets
   - Assets/UAssets/Config/Data
   - Assets/UAssets/Language/Data/ChineseSimplified
   - Assets/UAssets/Language/Data/English
   - Assets/UAssets/Table/Data
+  - Assets
   assets:
-  - name: Launch_atlas0.png
-    bundle: 10
-    directory: 0
-  - name: Launch_fui.bytes
-    bundle: 10
-    directory: 0
-  - name: MessageBox_fui.bytes
-    bundle: 7
-    directory: 1
-  - name: _Background_atlas0.png
-    bundle: 6
-    directory: 2
   - name: _Background_fui.bytes
     bundle: 6
-    directory: 2
-  - name: _Button_atlas0.png
-    bundle: 13
-    directory: 3
+    directory: 0
   - name: _Button_fui.bytes
-    bundle: 13
-    directory: 3
+    bundle: 11
+    directory: 1
   - name: _Font_fui.bytes
     bundle: 1
-    directory: 4
-  - name: _Text_atlas0.png
-    bundle: 9
-    directory: 5
+    directory: 2
+  - name: _Panel_fui.bytes
+    bundle: 12
+    directory: 3
   - name: _Text_fui.bytes
-    bundle: 9
-    directory: 5
-  - name: AssetManifest.asset
     bundle: 8
-    directory: 6
+    directory: 4
   - name: LuaConfig.json
     bundle: 0
-    directory: 7
+    directory: 5
   - name: ResLoaderConfig.json
     bundle: 2
-    directory: 7
+    directory: 5
   - name: TableConfig.json
     bundle: 4
-    directory: 7
+    directory: 5
   - name: 0.txt
     bundle: 5
-    directory: 8
+    directory: 6
   - name: 1.txt
-    bundle: 12
-    directory: 8
+    bundle: 10
+    directory: 6
   - name: 0.txt
-    bundle: 11
-    directory: 9
+    bundle: 9
+    directory: 7
   - name: 1.txt
-    bundle: 14
-    directory: 9
+    bundle: 13
+    directory: 7
   - name: Template.csv
     bundle: 3
-    directory: 10
+    directory: 8
+  - name: AssetManifest.asset
+    bundle: 7
+    directory: 9
   bundles:
   - name: 0398755cd73160a0e82adcdf20ac1f12.unity3d
     id: 0
     dependencies: 
     size: 1339
-    hash: a7bfbeb8ae55a079b4e7a1466acc37fa
+    hash: 5b7527ed750ef6950b38e974e54115fc
   - name: 0b4ac500f42128bab1da5d69c2f80c2e.unity3d
     id: 1
     dependencies: 
     size: 1234
-    hash: 923f543456d04bfce35cd809578f22a1
+    hash: 0c431d17840ff8a3a86bcd9d46c1e091
   - name: 10ab32e20e1c115b9cad5bc3dbf5da71.unity3d
     id: 2
     dependencies: 
     size: 2019
-    hash: c3f8ee3df1910ab2f749e66becfb809e
+    hash: 5b023ce47b9c998ef47366b08ff2cf62
   - name: 2038ca226310debdde227b05e104e969.unity3d
     id: 3
     dependencies: 
     size: 1462
-    hash: 19b6a8b6feb05b21dc405937ebec5865
+    hash: 0450079f71714c27a0a9a73c3bba84cd
   - name: 23e279975cfd550cd4e87899ec6ba807.unity3d
     id: 4
     dependencies: 
     size: 1286
-    hash: d1c2f596d50b53950733ab2247fb78ca
+    hash: 73b984711dc70b364b2c283f3bfabc6a
   - name: 2e8b0eb683f58e1884b970a3282272cf.unity3d
     id: 5
     dependencies: 
     size: 1204
-    hash: c691103f59defb973de84e6425fd2ec2
+    hash: 4508e9d94be496bb214caf28a3e829ef
   - name: 3f2ae1b0a8e1a492ec40ef6f16938581.unity3d
     id: 6
     dependencies: 
-    size: 115754
-    hash: de9115b445b9f1b6388189a04c2c3f0a
-  - name: 563c38553208141fe718f5c3708ea1e8.unity3d
+    size: 1250
+    hash: 1e195c2eef7e3671627113961f9b81b2
+  - name: 666833d8f837500e936121a5a2871e2a.unity3d
     id: 7
     dependencies: 
-    size: 1305
-    hash: 931542fe4ef5ecefc3609ded319dd398
-  - name: 666833d8f837500e936121a5a2871e2a.unity3d
+    size: 3458
+    hash: 86c163fde42423cfe66ed283a580b750
+  - name: 73e8edb200050e7039116ca5939d3ff0.unity3d
     id: 8
     dependencies: 
-    size: 3618
-    hash: e6e48e3b4afd5d9c3099fd5c9094cd13
-  - name: 73e8edb200050e7039116ca5939d3ff0.unity3d
+    size: 1242
+    hash: 2b28743eb106a40993208a15de757ce9
+  - name: 7fcfb0d6535a39ccd09f9870466a7ca6.unity3d
     id: 9
     dependencies: 
-    size: 10085
-    hash: 96e700f9d12267a75f0f69616a4e8c6e
-  - name: 7e754c88132db14c4f8d538d7f47d121.unity3d
+    size: 1191
+    hash: 3819e3e038e289848743c29fbf6cd4ab
+  - name: 97e43a8abac9eae00e8a5a7916f6948c.unity3d
     id: 10
     dependencies: 
-    size: 92390
-    hash: 9ef8a07ca59628c6db94fcf47f83a638
-  - name: 7fcfb0d6535a39ccd09f9870466a7ca6.unity3d
+    size: 1203
+    hash: 54dbb37725e6ef54fe53ceda3497709f
+  - name: 9df812fc51aac5f0499c0e999471512f.unity3d
     id: 11
     dependencies: 
-    size: 1191
-    hash: e4f1626706bdfc21172b2746d98af36a
-  - name: 97e43a8abac9eae00e8a5a7916f6948c.unity3d
+    size: 1231
+    hash: 9a83242bdf359ae318ea431afe088a93
+  - name: db38afd48a8fd6d4ad3536353382bbd0.unity3d
     id: 12
     dependencies: 
-    size: 1203
-    hash: 9409a7329b793d334e2b0267b1792090
-  - name: 9df812fc51aac5f0499c0e999471512f.unity3d
+    size: 1247
+    hash: 7e7baf0eae8c526e947a0a0d69ed79ca
+  - name: de57736ec43b776c6e6bdd832a9e9810.unity3d
     id: 13
     dependencies: 
-    size: 20861
-    hash: 8826625431c6e0b3bc57c79ab074020c
-  - name: de57736ec43b776c6e6bdd832a9e9810.unity3d
-    id: 14
-    dependencies: 
     size: 1191
-    hash: 0785a07267231feab95847241b9b7d63
+    hash: 5b15fbe9df581dd1a8ab7e5bdf0c443e
