@@ -18,6 +18,7 @@ MonoBehaviour:
   - Assets/Arts/UI/_Font
   - Assets/Arts/UI/_Panel
   - Assets/Arts/UI/_Text
+  - Assets/Arts/Cube
   - Assets/UAssets/Config/Data
   - Assets/UAssets/Language/Data/ChineseSimplified
   - Assets/UAssets/Language/Data/English
@@ -34,38 +35,41 @@ MonoBehaviour:
     bundle: 1
     directory: 2
   - name: _Panel_fui.bytes
-    bundle: 12
+    bundle: 13
     directory: 3
   - name: _Text_fui.bytes
     bundle: 8
     directory: 4
+  - name: Cube.prefab
+    bundle: 12
+    directory: 5
   - name: LuaConfig.json
     bundle: 0
-    directory: 5
+    directory: 6
   - name: ResLoaderConfig.json
     bundle: 2
-    directory: 5
+    directory: 6
   - name: TableConfig.json
     bundle: 4
-    directory: 5
+    directory: 6
   - name: 0.txt
     bundle: 5
-    directory: 6
+    directory: 7
   - name: 1.txt
     bundle: 10
-    directory: 6
+    directory: 7
   - name: 0.txt
     bundle: 9
-    directory: 7
+    directory: 8
   - name: 1.txt
-    bundle: 13
-    directory: 7
+    bundle: 14
+    directory: 8
   - name: Template.csv
     bundle: 3
-    directory: 8
+    directory: 9
   - name: AssetManifest.asset
     bundle: 7
-    directory: 9
+    directory: 10
   bundles:
   - name: 0398755cd73160a0e82adcdf20ac1f12.unity3d
     id: 0
@@ -105,8 +109,8 @@ MonoBehaviour:
   - name: 666833d8f837500e936121a5a2871e2a.unity3d
     id: 7
     dependencies: 
-    size: 3458
-    hash: 86c163fde42423cfe66ed283a580b750
+    size: 3559
+    hash: e1cc3460f2984e854e70533341ef704d
   - name: 73e8edb200050e7039116ca5939d3ff0.unity3d
     id: 8
     dependencies: 
@@ -127,13 +131,18 @@ MonoBehaviour:
     dependencies: 
     size: 1231
     hash: 9a83242bdf359ae318ea431afe088a93
-  - name: db38afd48a8fd6d4ad3536353382bbd0.unity3d
+  - name: 9ef81377aa433e2f119af18dd53accb9.unity3d
     id: 12
+    dependencies: 
+    size: 41168
+    hash: cea94889955764b368ed657235fd5fd3
+  - name: db38afd48a8fd6d4ad3536353382bbd0.unity3d
+    id: 13
     dependencies: 
     size: 1247
     hash: 7e7baf0eae8c526e947a0a0d69ed79ca
   - name: de57736ec43b776c6e6bdd832a9e9810.unity3d
-    id: 13
+    id: 14
     dependencies: 
     size: 1191
     hash: 5b15fbe9df581dd1a8ab7e5bdf0c443e

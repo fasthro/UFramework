@@ -32,10 +32,17 @@ namespace UFramework.Editor.VersionControl
         public int baseResCount = 0;
 
         /// <summary>
+        /// bundle files
+        /// </summary>
+        /// <typeparam name="FileInfo"></typeparam>
+        /// <returns></returns>
+        public List<VFile> bundleFiles = new List<VFile>();
+
+        /// <summary>
         /// 当前版本补丁列表
         /// </summary>
         /// <returns></returns>
-        public List<PatchInfo> patches = new List<PatchInfo>();
+        public List<VPatch> patches = new List<VPatch>();
 
         /// <summary>
         /// 支持的版本信息列表

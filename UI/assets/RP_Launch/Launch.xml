@@ -26,6 +26,7 @@
     <item time="0" type="Alpha" target="n29_o7b2" tween="true" startValue="0" endValue="0.5" duration="22"/>
     <item time="22" type="Alpha" target="n27_o7b2" tween="true" startValue="0.5" endValue="1" duration="14"/>
     <item time="22" type="Alpha" target="n29_o7b2" tween="true" startValue="0.5" endValue="1" duration="14"/>
-    <item time="36" type="Alpha" target="n27_o7b2" value="1"/>
+    <item time="36" type="Alpha" target="n27_o7b2" tween="true" startValue="1" endValue="0" duration="36"/>
+    <item time="36" type="Alpha" target="n29_o7b2" tween="true" startValue="1" endValue="0" duration="36"/>
   </transition>
 </component>

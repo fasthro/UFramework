@@ -427,6 +427,24 @@ namespace UFramework
             }
         }
 
+        private static string _versionOriginalPath;
+
+        /// <summary>
+        /// 版本文件版本原始数据路径
+        /// </summary>
+        /// <value></value>
+        public static string versionOriginalPath
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_versionOriginalPath))
+                {
+                    _versionOriginalPath = versionPath + ".original";
+                }
+                return _versionOriginalPath;
+            }
+        }
+
         private static string _versionStreamingPath;
 
         /// <summary>

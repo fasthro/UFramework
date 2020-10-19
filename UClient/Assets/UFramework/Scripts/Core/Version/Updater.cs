@@ -27,6 +27,15 @@ namespace UFramework.VersionControl
             CheckVersion,
             CheckDownload,
             Download,
+            Completed,
+        }
+
+        public float progress
+        {
+            get
+            {
+                return ((float)_value / (float)_maxValue);
+            }
         }
 
         private UCoroutine _stepChecking;
@@ -34,6 +43,9 @@ namespace UFramework.VersionControl
 
         private int _maxValue;
         private int _value;
+
+        private Version _newVersion;
+        private Version _appVersion;
 
         protected override void OnSingletonAwake()
         {
@@ -57,31 +69,29 @@ namespace UFramework.VersionControl
                     IOPath.DirectoryCreate(App.BundleDirectory);
 
                 _step = Step.CheckCopy;
-                yield return null;
             }
 
             if (_step == Step.CheckCopy)
-            {
                 yield return CheckCopy();
-            }
+
             if (_step == Step.Copy)
-            {
                 yield return UpdateCopy();
-            }
+
             if (_step == Step.RequestVersion)
             {
                 yield return RequestVersion();
                 _step = Step.CheckVersion;
             }
+
             if (_step == Step.CheckVersion)
             {
                 yield return CheckVersion();
                 _step = Step.CheckDownload;
             }
+
             if (_step == Step.CheckDownload)
-            {
-                Debug.Log("->>> Step.CheckDownload");
-            }
+                CheckDownload();
+
             if (_step == Step.Download)
             {
                 Debug.Log("->>> Step.Download");
@@ -90,10 +100,10 @@ namespace UFramework.VersionControl
 
         private IEnumerator CheckCopy()
         {
-            var dataVersion = Version.LoadVersion(App.versionPath);
-            if (dataVersion == null)
+            _newVersion = Version.LoadVersion(App.versionPath);
+            if (_newVersion == null)
             {
-                var request = UnityWebRequest.Get("file:///" + App.versionStreamingPath);
+                var request = UnityWebRequest.Get(App.versionStreamingPath);
                 request.downloadHandler = new DownloadHandlerFile(App.versionPath);
                 yield return request.SendWebRequest();
                 if (string.IsNullOrEmpty(request.error))
@@ -108,15 +118,14 @@ namespace UFramework.VersionControl
             else
             {
                 var request = UnityWebRequest.Get(App.versionStreamingPath);
-                var originalVersionPath = App.versionPath + ".original";
-                request.downloadHandler = new DownloadHandlerFile(originalVersionPath);
+                request.downloadHandler = new DownloadHandlerFile(App.versionOriginalPath);
                 yield return request.SendWebRequest();
                 if (string.IsNullOrEmpty(request.error))
                 {
-                    var originalVersion = Version.LoadVersion(originalVersionPath);
-                    if (originalVersion.version > dataVersion.version)
+                    _appVersion = Version.LoadVersion(App.versionOriginalPath);
+                    if (_appVersion.version > _newVersion.version)
                     {
-                        _maxValue = originalVersion.GetVersionInfo(originalVersion.version).baseResCount;
+                        _maxValue = _appVersion.GetVersionInfo(_appVersion.version).baseResCount;
                         _value = 0;
                         _step = Step.Copy;
                     }
@@ -166,8 +175,9 @@ namespace UFramework.VersionControl
                 yield break;
             }
 
+            var tp = App.versionPath + ".utemp";
             var request = UnityWebRequest.Get(UConfig.Read<AppConfig>().versionBaseURL + App.VersionFileName);
-            request.downloadHandler = new DownloadHandlerFile(App.versionPath);
+            request.downloadHandler = new DownloadHandlerFile(tp);
             yield return request.SendWebRequest();
             var error = request.error;
             request.Dispose();
@@ -185,26 +195,19 @@ namespace UFramework.VersionControl
                 }
                 yield break;
             }
-        }
-
-        private IEnumerator CheckVersion()
-        {
-            var dataVersion = Version.LoadVersion(App.versionPath);
-
-            var request = UnityWebRequest.Get(App.versionStreamingPath);
-            var originalVersionPath = App.versionPath + ".original";
-            request.downloadHandler = new DownloadHandlerFile(originalVersionPath);
-            yield return request.SendWebRequest();
-            if (string.IsNullOrEmpty(request.error))
+            else
             {
-                var originalVersion = Version.LoadVersion(originalVersionPath);
-                if (originalVersion.version < dataVersion.version)
+                if (_newVersion == null)
+                    _newVersion = Version.LoadVersion(App.versionPath);
+
+                var v2 = Version.LoadVersion(tp);
+                if (v2.timestamp < _newVersion.timestamp)
                 {
-                    var mb = MessageBox.Allocate().Show("提示", "有新版本发布，请更新到最新版本", "更新", "退出");
+                    var mb = MessageBox.Allocate().Show("提示", string.Format("获取服务器版本失败：联系开发人员更新远程版本文件", error), "重试", "退出");
                     yield return mb;
                     if (mb.isOk)
                     {
-                        // TODO 更新版本逻辑
+                        StartUpdate();
                     }
                     else
                     {
@@ -212,7 +215,54 @@ namespace UFramework.VersionControl
                     }
                     yield break;
                 }
+                else
+                {
+                    IOPath.FileRename(tp, App.VersionFileName);
+                    _newVersion = v2;
+                    yield break;
+                }
             }
+        }
+
+        private IEnumerator CheckVersion()
+        {
+            if (_appVersion == null)
+                _appVersion = Version.LoadVersion(App.versionPath);
+
+            if (_appVersion == null)
+            {
+                var request = UnityWebRequest.Get(App.versionStreamingPath);
+                request.downloadHandler = new DownloadHandlerFile(App.versionOriginalPath);
+                yield return request.SendWebRequest();
+                if (string.IsNullOrEmpty(request.error))
+                {
+                    _appVersion = Version.LoadVersion(App.versionOriginalPath);
+                }
+            }
+            if (_appVersion.version < _newVersion.minVersion)
+            {
+                var mb = MessageBox.Allocate().Show("提示", "有新版本发布，请更新到最新版本", "更新", "退出");
+                yield return mb;
+                if (mb.isOk)
+                {
+                    // TODO 更新版本逻辑
+                }
+                else
+                {
+                    Quit();
+                }
+                yield break;
+            }
+        }
+
+        private void CheckDownload()
+        {
+            if (_newVersion == null)
+                _newVersion = Version.LoadVersion(App.versionPath);
+
+            var patchs = Version.GetDownloadPatchs(_newVersion);
+            if (patchs.Count > 0) _step = Step.Download;
+            else _step = Step.Completed;
         }
 
         #region unzip
@@ -225,13 +275,11 @@ namespace UFramework.VersionControl
         public void OnPostUnzip(ZipEntry entry)
         {
             _value++;
-            Debug.Log("---------------> OnPostUnzip: " + ((float)_value / (float)_maxValue));
         }
 
         public void OnUnzipFinished(bool result)
         {
             if (_step == Step.Copy) _step = Step.RequestVersion;
-            // _stepChecking = UFactoryCoroutine.CreateRun(StepChecking());
         }
 
         #endregion

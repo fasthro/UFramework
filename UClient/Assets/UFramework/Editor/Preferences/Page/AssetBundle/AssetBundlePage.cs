@@ -12,6 +12,7 @@ using UFramework.Assets;
 using UFramework.Config;
 using UFramework.Editor.VersionControl;
 using UFramework.Tools;
+using UFramework.VersionControl;
 using UnityEditor;
 using UnityEngine;
 
@@ -828,6 +829,16 @@ namespace UFramework.Editor.Preferences.Assets
             // version res cont
             var vc = UConfig.Read<VersionControl_VersionConfig>();
             vc.baseResCount = assetBundles.Length;
+            vc.bundleFiles.Clear();
+            for (int i = 0; i < assetBundles.Length; i++)
+            {
+                var file = new VFile();
+                file.name = assetBundles[i];
+                file.length = IOPath.FileSize(IOPath.PathCombine(BundleDirectory, file.name));
+                file.hash = "";
+                vc.bundleFiles.Add(file);
+            }
+            Debug.Log("->>>>>>>>>> " + vc.bundleFiles.Count);
             vc.Save();
 
             AssetDatabase.Refresh();

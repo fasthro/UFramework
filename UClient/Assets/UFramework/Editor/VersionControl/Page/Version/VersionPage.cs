@@ -39,7 +39,7 @@ namespace UFramework.Editor.VersionControl
         [ShowInInspector, HideLabel]
         [TabGroup("Current Version Patch")]
         [TableList(AlwaysExpanded = true)]
-        public List<PatchInfo> patchs = new List<PatchInfo>();
+        public List<VPatch> patchs = new List<VPatch>();
 
         [ShowInInspector, HideLabel, ReadOnly]
         [TabGroup("Support Versions")]
@@ -217,6 +217,8 @@ namespace UFramework.Editor.VersionControl
             var ver = new Version();
             ver.version = describeObject.version;
             ver.minVersion = describeObject.minVersion;
+            ver.timestamp = TimeUtils.UTCTimeStamps();
+            ver.files.AddRange(describeObject.bundleFiles);
             ver.versions.Clear();
 
             var vInfo = new VersionInfo();
@@ -232,7 +234,6 @@ namespace UFramework.Editor.VersionControl
             }
 
             Version.VersionWrite(IOPath.PathCombine(App.UTempDirectory, App.VersionFileName), ver);
-            Version.VersionWrite(IOPath.PathCombine(Application.streamingAssetsPath, App.VersionFileName), ver);
         }
     }
 }

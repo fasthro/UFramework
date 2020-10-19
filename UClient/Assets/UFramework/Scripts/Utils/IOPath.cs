@@ -360,6 +360,19 @@ namespace UFramework
         }
 
         /// <summary>
+        /// 重命名文件
+        /// </summary>
+        /// <param name="source">目标文件路径</param>
+        /// <param name="newName">新文件名称</param>
+        public static void FileRename(string source, string newName)
+        {
+            FileInfo info = new FileInfo(source);
+            string np = IOPath.PathCombine(info.Directory.FullName, newName);
+            FileDelete(np);
+            File.Move(source, np);
+        }
+
+        /// <summary>
         /// 文件大小
         /// </summary>
         /// <param name="path"></param>
