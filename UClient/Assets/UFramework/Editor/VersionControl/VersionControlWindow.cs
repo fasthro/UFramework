@@ -25,6 +25,7 @@ namespace UFramework.Editor.VersionControl
             AddPage(new AppPage());
             AddPage(new VersionPage());
             AddPage(new BuilderPage());
+            AddPage(new BuildSettingPage());
         }
     }
 }

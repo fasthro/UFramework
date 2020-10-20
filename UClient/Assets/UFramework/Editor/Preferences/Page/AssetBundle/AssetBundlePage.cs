@@ -838,7 +838,6 @@ namespace UFramework.Editor.Preferences.Assets
                 file.hash = "";
                 vc.bundleFiles.Add(file);
             }
-            Debug.Log("->>>>>>>>>> " + vc.bundleFiles.Count);
             vc.Save();
 
             AssetDatabase.Refresh();

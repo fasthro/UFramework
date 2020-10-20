@@ -184,7 +184,6 @@ namespace UFramework.VersionControl
             {
                 var file = ver.files[i];
                 var fp = IOPath.PathCombine(App.BundleDirectory, file.name);
-                Debug.Log(">>> " + fp);
                 if (!IOPath.FileExists(fp))
                 {
                     downloadFils.Add(file);
@@ -227,7 +226,10 @@ namespace UFramework.VersionControl
             foreach (var item in map)
             {
                 if (!dpVersions.Contains(item.Value.version))
+                {
+                    Debug.Log("download patch: " + item.Value.version);
                     downloads.Add(item.Value);
+                }
             }
 
             return downloads;

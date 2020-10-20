@@ -43,6 +43,11 @@ namespace UFramework
         public bool isDevelopmentVersion = true;
 
         /// <summary>
+        /// use Obb
+        /// </summary>
+        public bool useAPKExpansionFiles = false;
+
+        /// <summary>
         /// App 环境类型
         /// </summary>
         public AppEnvironmentType appEnvironmentType = AppEnvironmentType.Debug;
