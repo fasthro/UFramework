@@ -4,11 +4,16 @@
  * @Description: 
  */
 using System;
+using System.Collections;
 using System.Linq;
 using Sirenix.OdinInspector;
 using UFramework.Config;
 using UnityEditor;
 using UnityEngine;
+using Unity.EditorCoroutines.Editor;
+using UFramework.Assets;
+using System.IO;
+using UFramework.Editor.Preferences.Assets;
 
 namespace UFramework.Editor.VersionControl
 {
@@ -74,8 +79,14 @@ namespace UFramework.Editor.VersionControl
     [System.Serializable]
     public class BuildPageBuildTable
     {
+        #region Serializable
+
+        /// <summary>
+        /// 包类型
+        /// </summary>
         [LabelText("Type")]
         [OnValueChanged("OnValueChanged_PackageType")]
+        [DisableIf("_isBuild")]
         public PACKAGE_TYPE packageType = PACKAGE_TYPE.BASIC;
 
         private void OnValueChanged_PackageType()
@@ -96,8 +107,12 @@ namespace UFramework.Editor.VersionControl
             AssetDatabase.Refresh();
         }
 
+        /// <summary>
+        /// IL2CPP
+        /// </summary>
         [LabelText("Scripting Backend")]
         [OnValueChanged("OnValueChanged_Scripting")]
+        [DisableIf("_isBuild")]
         public ScriptingImplementation scripting = ScriptingImplementation.Mono2x;
 
         private void OnValueChanged_Scripting()
@@ -114,8 +129,12 @@ namespace UFramework.Editor.VersionControl
             AssetDatabase.Refresh();
         }
 
+        /// <summary>
+        /// 是否支持ARM64
+        /// </summary>
         [OnValueChanged("OnValueChanged_SupportARM64")]
         [DisableIf("_supportARM64")]
+        [DisableIf("_isBuild")]
         public bool supportARM64;
 
 #if UNITY_ANDROID
@@ -135,41 +154,114 @@ namespace UFramework.Editor.VersionControl
             AssetDatabase.Refresh();
         }
 
+        #endregion
 
-        [ShowInInspector, Button, HorizontalGroup]
-        public void BuildApplication()
+        private bool _isBuild;
+        private bool _noBuild { get { return !_isBuild; } }
+        public bool isBuild { get { return _isBuild; } }
+
+        [HideIf("_noBuild")]
+        [ProgressBar(0, 100, DrawValueLabel = false, ColorMember = "_progressColor")]
+        public int progress;
+
+        [HideIf("_noBuild")]
+        [ProgressBar(0, 7, 0, 1, 0, Segmented = true, DrawValueLabel = false)]
+        [LabelText("Build Progress")]
+        public int totalProgress;
+
+        private Color _progressColor(float value)
         {
-            var outPath = IOPath.PathCombine(Environment.CurrentDirectory, "Build", GetBuildPlatformName(EditorUserBuildSettings.activeBuildTarget));
-            var targetName = GetBuildTargetName(EditorUserBuildSettings.activeBuildTarget);
-            if (targetName == null) return;
-
-            PrepareBuildApplication();
-
-            var scenes = EditorBuildSettings.scenes.Where(x => x.enabled).ToArray();
-            var opts = EditorUserBuildSettings.development ? BuildOptions.Development : BuildOptions.None;
-            var pathName = IOPath.PathCombine(outPath, targetName);
-
-            BuildPipeline.BuildPlayer(scenes, pathName, EditorUserBuildSettings.activeBuildTarget, opts);
+            return Color.Lerp(Color.red, Color.green, Mathf.Pow(value / 100f, 2));
         }
 
         [ShowInInspector, Button, HorizontalGroup]
-        public void BuildAssets()
+        [DisableIf("_isBuild")]
+        public void BuildAssetBundle()
         {
+            if (_isBuild) return;
+            _BuildAssetBundle();
+        }
 
+        private void _BuildAssetBundle()
+        {
+            var page = new AssetBundlePage();
+            page.OnRenderBefore();
+            page.AnalysisAssets();
+            page.BuildAssetsBundle(false);
         }
 
         [ShowInInspector, Button, HorizontalGroup]
+        [DisableIf("_isBuild")]
         public void BuildScripts()
         {
-
+            if (_isBuild) return;
         }
 
-        void PrepareBuildApplication()
+        [ShowInInspector, Button]
+        [DisableIf("_isBuild")]
+        public void BuildApplication()
         {
-            var build = UConfig.Read<VersionControl_BuildConfig>();
+            if (_isBuild) return;
 
-            // version code
+            if (UConfig.Read<AppConfig>().isDevelopmentVersion)
+            {
+                Debug.Log("Please switch the development environment. Application -> Editor Development: false");
+                return;
+            }
+
+            if (VersionPage.IsPublishVersion())
+            {
+                if (EditorUtility.DisplayDialog("Build", "The current version has been released. Do you want to rebuild it?", "Rebuild", "Cancel"))
+                {
+                    EditorCoroutineUtility.StartCoroutineOwnerless(BuildPlayer());
+                }
+            }
+            else EditorCoroutineUtility.StartCoroutineOwnerless(BuildPlayer());
+        }
+
+        IEnumerator BuildPlayer()
+        {
+            _isBuild = true;
+            totalProgress = 0;
+            progress = 0;
+
+            // bundle
+            var manifestPath = IOPath.PathCombine(App.UTempDirectory, App.BundlePlatformName, AssetManifest.AssetBundleName + App.AssetBundleExtension);
+            if (!IOPath.FileExists(manifestPath))
+                _BuildAssetBundle();
+            yield return new EditorWaitForSeconds(1);
+            totalProgress = 1;
+
+            // copy res
+            progress = 0;
+            IOPath.DirectoryClear(IOPath.PathCombine(Application.streamingAssetsPath, App.BundlePlatformName));
+            string[] files = IOPath.DirectoryGetFiles(IOPath.PathCombine(App.UTempDirectory, App.BundlePlatformName), "*" + App.AssetBundleExtension, SearchOption.AllDirectories);
+            for (int i = 0; i < files.Length; i++)
+            {
+                var fp = files[i];
+                var fn = IOPath.FileName(fp, true);
+                var dest = IOPath.PathCombine(Application.streamingAssetsPath, App.BundlePlatformName, fn);
+                IOPath.FileCopy(files[i], dest);
+                yield return null;
+                progress = (int)((float)(i + 1) / (float)files.Length * 100f);
+            }
+            yield return new EditorWaitForSeconds(1);
+            totalProgress = 2;
+
+            // version
+            progress = 0;
+            VersionPage.BuildVersion();
+            yield return null;
+            IOPath.FileCopy(IOPath.PathCombine(App.UTempDirectory, App.VersionFileName), IOPath.PathCombine(Application.streamingAssetsPath, App.VersionFileName));
+            yield return new EditorWaitForSeconds(1);
+            totalProgress = 3;
+
+            // setting
+            progress = 0;
+            var build = UConfig.Read<VersionControl_BuildConfig>();
             build.versionCode++;
+            build.Save();
+
             switch (EditorUserBuildSettings.activeBuildTarget)
             {
                 case BuildTarget.Android:
@@ -179,12 +271,46 @@ namespace UFramework.Editor.VersionControl
                     PlayerSettings.iOS.buildNumber = build.versionCode.ToString();
                     break;
             }
-
-            // app version
             PlayerSettings.bundleVersion = build.appVersion;
 
             AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
+            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+            yield return new EditorWaitForSeconds(1);
+            totalProgress = 4;
+
+            // build
+            progress = 0;
+            var outPath = IOPath.PathCombine(Environment.CurrentDirectory, "Build", GetBuildPlatformName(EditorUserBuildSettings.activeBuildTarget));
+            var targetName = GetBuildTargetName(EditorUserBuildSettings.activeBuildTarget);
+            if (targetName != null)
+            {
+                var scenes = EditorBuildSettings.scenes.Where(x => x.enabled).ToArray();
+                var options = EditorUserBuildSettings.development ? BuildOptions.Development : BuildOptions.None;
+                var locationPathName = IOPath.PathCombine(outPath, targetName);
+
+                BuildPipeline.BuildPlayer(scenes, locationPathName, EditorUserBuildSettings.activeBuildTarget, options);
+            }
+            totalProgress = 5;
+            yield return new EditorWaitForSeconds(1);
+
+            // save version
+            progress = 0;
+            VersionPage.BuildPublishFileRecords();
+            yield return new EditorWaitForSeconds(1);
+            totalProgress = 6;
+
+            // document
+            var ver = UConfig.Read<VersionControl_VersionConfig>();
+            var documentPath = IOPath.PathCombine(Environment.CurrentDirectory, "Build", GetBuildPlatformName(EditorUserBuildSettings.activeBuildTarget), "app-version-" + ver.version);
+            IOPath.DirectoryClear(documentPath);
+            IOPath.FileCopy(IOPath.PathCombine(App.UTempDirectory, App.VersionFileName), IOPath.PathCombine(documentPath, App.VersionFileName));
+            yield return new EditorWaitForSeconds(1);
+            totalProgress = 7;
+
+            yield return new EditorWaitForSeconds(1);
+            Debug.Log("build application finished! [" + targetName + "]");
+            _isBuild = false;
+            EditorUtility.RevealInFinder(outPath);
         }
 
         /// <summary>
@@ -195,7 +321,7 @@ namespace UFramework.Editor.VersionControl
         static string GetBuildTargetName(BuildTarget target)
         {
             var time = DateTime.Now.ToString("yyyyMMdd-HHmmss");
-            var name = PlayerSettings.productName + "-v" + PlayerSettings.bundleVersion + ".";
+            var name = "app-v" + PlayerSettings.bundleVersion + ".";
             var version = UConfig.Read<VersionControl_VersionConfig>().version;
             switch (target)
             {
@@ -214,7 +340,7 @@ namespace UFramework.Editor.VersionControl
                     return "";
                 // Add more build targets for your own.
                 default:
-                    Debug.Log("Target not implemented.");
+                    Debug.Log(target.ToString() + " not implemented.");
                     return null;
             }
         }

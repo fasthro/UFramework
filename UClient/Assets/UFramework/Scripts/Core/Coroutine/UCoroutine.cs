@@ -17,7 +17,7 @@ namespace UFramework.Coroutine
         public bool stopped { get; private set; }
 
         private UCallback<bool> m_completeCallback;
-        private IEnumerator m_coroutine;
+        private IEnumerator m_routine;
 
         static UCoroutineHelper helper;
 
@@ -25,12 +25,12 @@ namespace UFramework.Coroutine
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="coroutine"></param>
+        /// <param name="routine"></param>
         /// <param name="autoStart"></param>
         /// <param name="completeCallback"></param>
-        public UCoroutine(IEnumerator coroutine, bool autoStart, UCallback<bool> completeCallback = null)
+        public UCoroutine(IEnumerator routine, bool autoStart, UCallback<bool> completeCallback = null)
         {
-            this.m_coroutine = coroutine;
+            this.m_routine = routine;
             this.m_completeCallback = completeCallback;
             if (autoStart)
             {
@@ -61,7 +61,7 @@ namespace UFramework.Coroutine
         IEnumerator CallWrapper()
         {
             yield return null;
-            IEnumerator e = this.m_coroutine;
+            IEnumerator e = this.m_routine;
             while (running)
             {
                 if (paused)
