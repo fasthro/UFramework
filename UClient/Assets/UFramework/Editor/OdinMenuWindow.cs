@@ -3,10 +3,12 @@
  * @Date: 2020-07-23 01:06:06
  * @Description: Odin Menu Window Base
  */
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
+using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEngine;
 
@@ -151,6 +153,16 @@ namespace UFramework.Editor
                 page.OnSaveDescribe();
             }
             EditorApplication.update -= Update;
+        }
+
+        protected EditorCoroutine StartCoroutine(IEnumerator routine)
+        {
+            return EditorCoroutineUtility.StartCoroutine(routine, this);
+        }
+
+        protected void StopCoroutine(EditorCoroutine coroutine)
+        {
+            EditorCoroutineUtility.StopCoroutine(coroutine);
         }
     }
 }

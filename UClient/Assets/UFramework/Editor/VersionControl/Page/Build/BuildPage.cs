@@ -21,7 +21,15 @@ namespace UFramework.Editor.VersionControl
         /// <summary>
         /// 版本
         /// </summary>
+        [OnValueChanged("OnValueChanged_appVersion")]
+        [DisableIf("_isBuild")]
         public string appVersion;
+
+        private void OnValueChanged_appVersion()
+        {
+            describeObject.appVersion = appVersion;
+            describeObject.Save();
+        }
 
         [ShowInInspector, HideLabel]
         [TabGroup("Build")]
@@ -30,6 +38,8 @@ namespace UFramework.Editor.VersionControl
         [ShowInInspector, HideLabel]
         [TabGroup("Patch")]
         public BuildPagePatchTable patchTable = new BuildPagePatchTable();
+
+        private bool _isBuild { get { return buildTable.isBuild; } }
 
         public object GetInstance()
         {

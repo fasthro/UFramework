@@ -5,6 +5,7 @@
  */
 
 using System.Collections.Generic;
+using System.IO;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
 using UFramework.Config;
@@ -118,11 +119,6 @@ namespace UFramework.Editor.VersionControl
                     RemoveAllVersion();
                 }
             }
-
-            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Build Version")))
-            {
-                BuildVersion();
-            }
         }
 
         private void CreateNewVersion()
@@ -209,31 +205,87 @@ namespace UFramework.Editor.VersionControl
             }
         }
 
+        /// <summary>
+        /// 构建版本信息文件
+        /// </summary>
         public static void BuildVersion()
         {
             if (describeObject == null)
                 describeObject = UConfig.Read<VersionControl_VersionConfig>();
 
+            describeObject.files = GetVersionFiles();
+            describeObject.Save();
+
             var ver = new Version();
             ver.version = describeObject.version;
             ver.minVersion = describeObject.minVersion;
             ver.timestamp = TimeUtils.UTCTimeStamps();
-            ver.files.AddRange(describeObject.bundleFiles);
+            ver.files.AddRange(describeObject.files);
             ver.versions.Clear();
 
             var vInfo = new VersionInfo();
             vInfo.version = describeObject.version;
-            vInfo.baseResCount = describeObject.baseResCount;
             vInfo.patchs.Clear();
             vInfo.patchs.AddRange(describeObject.patches);
             ver.versions.Add(vInfo.version, vInfo);
 
             foreach (var item in describeObject.supports)
-            {
                 ver.versions.Add(item.version, item);
-            }
 
             Version.VersionWrite(IOPath.PathCombine(App.UTempDirectory, App.VersionFileName), ver);
+        }
+
+        /// <summary>
+        /// 构建版本发布记录
+        /// </summary>
+        public static void BuildPublishFileRecords()
+        {
+            describeObject = UConfig.Read<VersionControl_VersionConfig>();
+            if (describeObject.publishFileRecords.ContainsKey(describeObject.version))
+                describeObject.publishFileRecords.Remove(describeObject.version);
+            describeObject.publishFileRecords.Add(describeObject.version, describeObject.files);
+            describeObject.Save();
+        }
+
+        /// <summary>
+        /// 版本是否已经发布
+        /// </summary>
+        /// <param name="version"></param>
+        /// <returns></returns>
+        public static bool IsPublishVersion(int version)
+        {
+            return UConfig.Read<VersionControl_VersionConfig>().publishFileRecords.ContainsKey(version);
+        }
+
+        /// <summary>
+        /// 当前版本是否已经发布
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsPublishVersion()
+        {
+            var ver = UConfig.Read<VersionControl_VersionConfig>();
+            return ver.publishFileRecords.ContainsKey(ver.version);
+        }
+
+        private static List<VFile> GetVersionFiles()
+        {
+            List<VFile> vfiles = new List<VFile>();
+
+            // bundle
+            var dir = IOPath.PathCombine(App.UTempDirectory, App.BundlePlatformName);
+            string[] files = IOPath.DirectoryGetFiles(dir, "*" + App.AssetBundleExtension, SearchOption.AllDirectories);
+            for (int i = 0; i < files.Length; i++)
+            {
+                var path = files[i];
+
+                var vfile = new VFile();
+                vfile.name = IOPath.FileName(path);
+                vfile.length = IOPath.FileSize(path);
+                vfile.hash = IOPath.FileMD5(path);
+
+                vfiles.Add(vfile);
+            }
+            return vfiles;
         }
     }
 }

@@ -31,9 +31,6 @@ namespace UFramework.VersionControl
         [HideInInspector]
         public int version;
 
-        [HideInInspector]
-        public int baseResCount;
-
         public List<VPatch> patchs = new List<VPatch>();
     }
 
@@ -107,7 +104,6 @@ namespace UFramework.VersionControl
                 {
                     var info = new VersionInfo();
                     info.version = reader.ReadInt32();
-                    info.baseResCount = reader.ReadInt32();
                     var num = reader.ReadInt32();
                     info.patchs.Clear();
                     for (int k = 0; k < num; k++)
@@ -155,7 +151,6 @@ namespace UFramework.VersionControl
                 {
                     var info = item.Value;
                     writer.Write(info.version);
-                    writer.Write(info.baseResCount);
 
                     writer.Write(info.patchs.Count);
                     for (int i = 0; i < info.patchs.Count; i++)

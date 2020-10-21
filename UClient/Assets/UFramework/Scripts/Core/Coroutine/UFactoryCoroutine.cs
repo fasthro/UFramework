@@ -14,23 +14,23 @@ namespace UFramework.Coroutine
         /// <summary>
         /// 创建协同程序
         /// </summary>
-        /// <param name="coroutine"></param>
+        /// <param name="routine"></param>
         /// <param name="completeCallback"></param>
         /// <returns></returns>
-        public static UCoroutine Create(IEnumerator coroutine, UCallback<bool> completeCallback = null)
+        public static UCoroutine Create(IEnumerator routine, UCallback<bool> completeCallback = null)
         {
-            return new UCoroutine(coroutine, false, completeCallback);
+            return new UCoroutine(routine, false, completeCallback);
         }
 
         /// <summary>
         /// 创建协同程序并且自动执行
         /// </summary>
-        /// <param name="coroutine"></param>
+        /// <param name="routine"></param>
         /// <param name="completeCallback"></param>
         /// <returns></returns>
-        public static UCoroutine CreateRun(IEnumerator coroutine, UCallback<bool> completeCallback = null)
+        public static UCoroutine CreateRun(IEnumerator routine, UCallback<bool> completeCallback = null)
         {
-            return new UCoroutine(coroutine, true, completeCallback);
+            return new UCoroutine(routine, true, completeCallback);
         }
     }
 }

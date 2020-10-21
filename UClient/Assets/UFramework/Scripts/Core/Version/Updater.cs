@@ -16,7 +16,7 @@ using UnityEngine.Networking;
 namespace UFramework.VersionControl
 {
     [MonoSingletonPath("UFramework/Updater")]
-    public class Updater : MonoSingleton<Updater>, IUnzip
+    public class Updater : MonoSingleton<Updater>
     {
         enum Step
         {
@@ -75,7 +75,10 @@ namespace UFramework.VersionControl
                 yield return CheckCopy();
 
             if (_step == Step.Copy)
+            {
                 yield return UpdateCopy();
+                _step = Step.RequestVersion;
+            }
 
             if (_step == Step.RequestVersion)
             {
@@ -109,9 +112,12 @@ namespace UFramework.VersionControl
                 if (string.IsNullOrEmpty(request.error))
                 {
                     var version = Version.LoadVersion(App.versionPath);
-                    _maxValue = version.GetVersionInfo(version.version).baseResCount;
+                    _maxValue = version.files.Count;
                     _value = 0;
                     _step = Step.Copy;
+
+                    _newVersion = version;
+                    _appVersion = version;
                 }
                 request.Dispose();
             }
@@ -125,7 +131,7 @@ namespace UFramework.VersionControl
                     _appVersion = Version.LoadVersion(App.versionOriginalPath);
                     if (_appVersion.version > _newVersion.version)
                     {
-                        _maxValue = _appVersion.GetVersionInfo(_appVersion.version).baseResCount;
+                        _maxValue = _appVersion.files.Count;
                         _value = 0;
                         _step = Step.Copy;
                     }
@@ -144,18 +150,15 @@ namespace UFramework.VersionControl
 
         private IEnumerator UpdateCopy()
         {
-            var request = new UnityWebRequest(IOPath.PathCombine(App.DataRawDirectory(), "res.zip"));
-            request.downloadHandler = new DownloadHandlerBuffer();
-            yield return request.SendWebRequest();
-            if (string.IsNullOrEmpty(request.error))
+            for (var index = 0; index < _appVersion.files.Count; index++)
             {
-                UZip.Unzip(new MemoryStream(request.downloadHandler.data), App.DataDirectory, null, this);
+                var item = _appVersion.files[index];
+                var request = UnityWebRequest.Get(IOPath.PathCombine(App.BundleStreamingDirectory, item.name));
+                request.downloadHandler = new DownloadHandlerFile(IOPath.PathCombine(App.BundleDirectory, item.name));
+                yield return request.SendWebRequest();
+                request.Dispose();
+                _value = index + 1;
             }
-            else
-            {
-                _step = Step.RequestVersion;
-            }
-            request.Dispose();
         }
 
         private IEnumerator RequestVersion()
@@ -264,25 +267,6 @@ namespace UFramework.VersionControl
             if (patchs.Count > 0) _step = Step.Download;
             else _step = Step.Completed;
         }
-
-        #region unzip
-
-        public bool OnPreUnzip(ZipEntry entry)
-        {
-            return true;
-        }
-
-        public void OnPostUnzip(ZipEntry entry)
-        {
-            _value++;
-        }
-
-        public void OnUnzipFinished(bool result)
-        {
-            if (_step == Step.Copy) _step = Step.RequestVersion;
-        }
-
-        #endregion
 
         private void Quit()
         {

@@ -27,16 +27,11 @@ namespace UFramework.Editor.VersionControl
         public int minVersion = 0;
 
         /// <summary>
-        /// 基础资源数量
-        /// </summary>
-        public int baseResCount = 0;
-
-        /// <summary>
-        /// bundle files
+        /// files
         /// </summary>
         /// <typeparam name="FileInfo"></typeparam>
         /// <returns></returns>
-        public List<VFile> bundleFiles = new List<VFile>();
+        public List<VFile> files = new List<VFile>();
 
         /// <summary>
         /// 当前版本补丁列表
@@ -55,6 +50,12 @@ namespace UFramework.Editor.VersionControl
         /// </summary>
         /// <value></value>
         public List<VersionInfo> historys = new List<VersionInfo>();
+
+        /// <summary>
+        /// 发布版本文件记录
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<int, List<VFile>> publishFileRecords = new Dictionary<int, List<VFile>>();
 
         public void Save()
         {

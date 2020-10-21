@@ -24,8 +24,12 @@ namespace UFramework
         /// <param name="directory"></param>
         public static void DirectoryCreate(string directory)
         {
-            if (!Directory.Exists(directory))
-                Directory.CreateDirectory(directory);
+            try
+            {
+                if (!Directory.Exists(directory))
+                    Directory.CreateDirectory(directory);
+            }
+            catch { }
         }
 
         /// <summary>
@@ -35,8 +39,12 @@ namespace UFramework
         /// <param name="recursive"></param>
         public static void DirectoryDelete(string directory, bool recursive = true)
         {
-            if (Directory.Exists(directory))
-                Directory.Delete(directory, recursive);
+            try
+            {
+                if (Directory.Exists(directory))
+                    Directory.Delete(directory, recursive);
+            }
+            catch { }
         }
 
         /// <summary>
