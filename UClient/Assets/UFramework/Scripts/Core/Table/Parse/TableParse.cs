@@ -20,7 +20,7 @@ namespace UFramework.Table
         protected void LoadAsset()
         {
             if (!string.IsNullOrEmpty(m_content)) return;
-            var filePath = IOPath.PathCombine(App.TableDataDirectory, m_tableName + ".csv");
+            var filePath = IOPath.PathCombine(App.AssetsDirectory, "Table", "Data", m_tableName + ".csv");
 #if UNITY_EDITOR
             m_content = IOPath.FileReadText(filePath);
 #else

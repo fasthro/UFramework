@@ -23,7 +23,6 @@ namespace UFramework.Localization
         /// </summary>
         private string m_languageTypeString;
 
-
         /// <summary>
         /// 语言缓存
         /// </summary>
@@ -32,8 +31,12 @@ namespace UFramework.Localization
         /// <returns></returns>
         private Dictionary<int, string[]> m_modelDictonary = new Dictionary<int, string[]>();
 
+        static string dataPath;
+
         protected override void OnSingletonAwake()
         {
+            dataPath = IOPath.PathCombine(App.AssetsDirectory, "Language", "Data");
+
             var app = UConfig.Read<AppConfig>();
             if (app.useSystemLanguage)
             {
@@ -88,11 +91,11 @@ namespace UFramework.Localization
             if (m_modelDictonary.ContainsKey(model)) return;
 
             string text = "";
-            string dataPath = IOPath.PathCombine(App.LanguageDataDirectory, m_languageTypeString, model + ".txt");
+            string filePath = IOPath.PathCombine(dataPath, m_languageTypeString, model + ".txt");
 #if UNITY_EDITOR
-            text = IOPath.FileReadText(dataPath);
+            text = IOPath.FileReadText(filePath);
 #else
-            var asset = Asset.LoadAsset(dataPath, typeof(TextAsset));
+            var asset = Asset.LoadAsset(filePath, typeof(TextAsset));
             text = asset.GetAsset<TextAsset>().text;
             asset.Unload();
 #endif

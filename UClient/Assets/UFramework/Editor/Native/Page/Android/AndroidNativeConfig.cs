@@ -3,6 +3,7 @@
  * @Date: 2020-08-29 12:19:07
  * @Description: Android Native Config
  */
+using System;
 using Sirenix.OdinInspector;
 using UFramework.Config;
 using UnityEditor;
@@ -25,7 +26,7 @@ namespace UFramework.Editor.Native
         {
             if (string.IsNullOrEmpty(validateNameError))
             {
-                var source = IOPath.PathCombine(App.AndroidNativeDirectory, name, "build/outputs/aar/");
+                var source = IOPath.PathCombine(AndroidPage.ProjectPath, name, "build/outputs/aar/");
                 if (!IOPath.DirectoryExists(source))
                 {
                     EditorUtility.DisplayDialog("Error Notice", "Android Native Update AAR Failled. [" + name + "] Module AAR File Not Exist.", "OK");
@@ -47,7 +48,7 @@ namespace UFramework.Editor.Native
                 validateNameError = "error: module is empty.";
                 return false;
             }
-            var source = IOPath.PathCombine(App.AndroidNativeDirectory, value);
+            var source = IOPath.PathCombine(AndroidPage.ProjectPath, value);
             if (!IOPath.DirectoryExists(source))
             {
                 validateNameError = "error: module not exists.";
@@ -61,7 +62,6 @@ namespace UFramework.Editor.Native
 
     public class AndroidNativeConfig : IConfigObject
     {
-        public string name { get { return "AndroidNativeConfig"; } }
         public FileAddress address { get { return FileAddress.Editor; } }
 
         /// <summary>

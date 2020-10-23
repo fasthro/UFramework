@@ -36,6 +36,9 @@ namespace UFramework.VersionControl
 
     public class Version
     {
+        // 版本文件名称
+        readonly public static string FileName = "version";
+
         /// <summary>
         /// 当前版本
         /// </summary>
@@ -171,14 +174,14 @@ namespace UFramework.VersionControl
             }
         }
 
-        public static List<VPatch> GetDownloadPatchs(Version ver)
+        public static List<VPatch> GetDownloadPatchs(Version ver, string targetPath)
         {
             var versionInfo = ver.GetVersionInfo(UConfig.Read<AppConfig>().version);
             List<VFile> downloadFils = new List<VFile>();
             for (int i = 0; i < ver.files.Count; i++)
             {
                 var file = ver.files[i];
-                var fp = IOPath.PathCombine(App.BundleDirectory, file.name);
+                var fp = IOPath.PathCombine(targetPath, file.name);
                 if (!IOPath.FileExists(fp))
                 {
                     downloadFils.Add(file);

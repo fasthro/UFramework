@@ -90,10 +90,7 @@ namespace UFramework.Editor.Preferences.Assets
         private SortRuler dependenciesAssetSortRuler;
         private SortRuler builtInAssetSortRuler;
 
-        private string BundleDirectory
-        {
-            get { return IOPath.PathCombine(App.UTempDirectory, App.BundlePlatformName); }
-        }
+        static string assetBundlePath;
 
         public object GetInstance()
         {
@@ -101,6 +98,8 @@ namespace UFramework.Editor.Preferences.Assets
         }
         public void OnRenderBefore()
         {
+            assetBundlePath = IOPath.PathCombine(Environment.CurrentDirectory, "UTemp", Platform.BuildTargetCurrentName);
+
             if (!IOPath.FileExists(AssetManifest.AssetPath))
             {
                 EditorUtility.SetDirty(Editor.Utils.GetAsset<AssetManifest>(AssetManifest.AssetPath));
@@ -692,8 +691,8 @@ namespace UFramework.Editor.Preferences.Assets
         /// <returns></returns>
         private string GetBuildBundleName(string bundle)
         {
-            if (buildNameHash) return UHash.GetMD5Hash(bundle) + App.AssetBundleExtension;
-            return bundle.ToLower() + App.AssetBundleExtension;
+            if (buildNameHash) return UHash.GetMD5Hash(bundle) + Asset.Extension;
+            return bundle.ToLower() + Asset.Extension;
         }
 
         /// <summary>
@@ -703,7 +702,7 @@ namespace UFramework.Editor.Preferences.Assets
         /// <returns></returns>
         private long GetBuildBundleSize(BundleItem bundle)
         {
-            var path = IOPath.PathCombine(BundleDirectory, GetBuildBundleName(bundle.bundleName));
+            var path = IOPath.PathCombine(assetBundlePath, GetBuildBundleName(bundle.bundleName));
             if (IOPath.FileExists(path))
                 return IOPath.FileSize(path);
             return 0;
@@ -715,22 +714,22 @@ namespace UFramework.Editor.Preferences.Assets
         /// <param name="clean"></param>
         public void BuildAssetsBundle(bool clean)
         {
-            IOPath.DirectoryDelete(App.BundleStreamingDirectory);
+            IOPath.DirectoryDelete(IOPath.PathCombine(Application.streamingAssetsPath, Platform.BuildTargetCurrentName));
             if (clean)
             {
-                IOPath.DirectoryClear(BundleDirectory);
+                IOPath.DirectoryClear(assetBundlePath);
             }
             else
             {
-                if (!IOPath.DirectoryExists(BundleDirectory))
+                if (!IOPath.DirectoryExists(assetBundlePath))
                 {
-                    IOPath.DirectoryClear(BundleDirectory);
+                    IOPath.DirectoryClear(assetBundlePath);
                 }
             }
 
             BuildAssetBundleOptions options = BuildAssetBundleOptions.ChunkBasedCompression;
             AssetBundleBuild[] builds = GetAssetBundleBuilds();
-            var assetBundleManifest = BuildPipeline.BuildAssetBundles(BundleDirectory, builds, options, EditorUserBuildSettings.activeBuildTarget);
+            var assetBundleManifest = BuildPipeline.BuildAssetBundles(assetBundlePath, builds, options, EditorUserBuildSettings.activeBuildTarget);
             if (assetBundleManifest == null) return;
 
             // manifest
@@ -748,7 +747,7 @@ namespace UFramework.Editor.Preferences.Assets
             {
                 var bundle = assetBundles[i];
                 var dependencies = assetBundleManifest.GetAllDependencies(bundle);
-                var path = IOPath.PathCombine(BundleDirectory, bundle);
+                var path = IOPath.PathCombine(assetBundlePath, bundle);
                 if (File.Exists(path))
                 {
                     using (var stream = File.OpenRead(path))
@@ -810,16 +809,15 @@ namespace UFramework.Editor.Preferences.Assets
             AssetDatabase.Refresh();
 
             // build manifest
-            var manifestBundleName = AssetManifest.AssetBundleName + App.AssetBundleExtension;
             builds = new[] {
                 new AssetBundleBuild {
                     assetNames = new[] { AssetDatabase.GetAssetPath (manifest), },
-                    assetBundleName = manifestBundleName
+                    assetBundleName = AssetManifest.AssetBundleFileName
                 }
             };
 
-            BuildPipeline.BuildAssetBundles(BundleDirectory, builds, options, EditorUserBuildSettings.activeBuildTarget);
-            ArrayUtility.Add(ref assetBundles, manifestBundleName);
+            BuildPipeline.BuildAssetBundles(assetBundlePath, builds, options, EditorUserBuildSettings.activeBuildTarget);
+            ArrayUtility.Add(ref assetBundles, AssetManifest.AssetBundleFileName);
 
             AssetDatabase.Refresh();
         }

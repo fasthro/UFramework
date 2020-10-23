@@ -13,7 +13,7 @@ namespace UFramework.Editor.Preferences
 {
     public class PreferencesWindow : OdinMenuWindow
     {
-        [MenuItem("UFramework/Preferences", false, 1000)]
+        [MenuItem("UFramework/Preferences", false, 400)]
         private static void OpenWindow()
         {
             var window = GetWindow<PreferencesWindow>();

@@ -204,10 +204,11 @@ namespace UFramework.Editor.Preferences
         /// </summary>
         private void InitWrap()
         {
-            CustomSettings.saveDir = App.UserScriptAutomaticToLuaDirectory + Path.AltDirectorySeparatorChar;
-            if (!IOPath.DirectoryExists(App.UserScriptAutomaticToLuaDirectory))
+            var wrapPath = "Assets/Scripts/Automatic/WrapSource";
+            CustomSettings.saveDir = wrapPath + Path.AltDirectorySeparatorChar;
+            if (!IOPath.DirectoryExists(wrapPath))
             {
-                IOPath.DirectoryCreate(App.UserScriptAutomaticToLuaDirectory);
+                IOPath.DirectoryCreate(wrapPath);
             }
 
             if (baseBindTypes == null)
@@ -295,7 +296,7 @@ namespace UFramework.Editor.Preferences
                 bindTypes.Add(_GT(typeof(UFramework.UI.FiaryPanel)));
             }
             bindTypes.Add(_GT(typeof(UFramework.UI.Layer)));
-            
+
             CustomSettings.customTypeList = bindTypes.ToArray();
 
             ToLuaMenu.GenLuaAll();
@@ -409,7 +410,7 @@ namespace UFramework.Editor.Preferences
             AssetDatabase.Refresh();
 
             // TODO App.DataDirectory
-            var zipfile = IOPath.PathCombine(App.DataDirectory, "Scripts.zip");
+            var zipfile = IOPath.PathCombine(App.TempDirectory, "Scripts.zip");
             IOPath.FileDelete(zipfile);
             IOPath.DirectoryDelete(App.LuaDataDirectory);
             if (app.isDevelopmentVersion)

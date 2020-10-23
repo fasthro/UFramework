@@ -3,6 +3,7 @@
  * @Date: 2020-08-29 12:14:38
  * @Description: Android Page
  */
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Sirenix.OdinInspector;
@@ -16,6 +17,10 @@ namespace UFramework.Editor.Native
     {
         public string menuName { get { return "Android"; } }
         static AndroidNativeConfig describeObject;
+
+        // 工程路径
+        [HideInInspector]
+        public static string ProjectPath;
 
         /// <summary>
         /// module
@@ -32,6 +37,8 @@ namespace UFramework.Editor.Native
 
         public void OnRenderBefore()
         {
+            ProjectPath = IOPath.PathCombine(Environment.CurrentDirectory, "Native", "Android");
+
             describeObject = UConfig.Read<AndroidNativeConfig>();
             modules.Clear();
             for (int i = 0; i < describeObject.modules.Length; i++) { }
@@ -72,9 +79,9 @@ namespace UFramework.Editor.Native
         public static void UpdateAAR(bool isDebug, string moduleName)
         {
             var suffix = isDebug ? "-debug.aar" : "-release.aar";
-            var libsRoot = IOPath.PathCombine(App.AndroidNativeDirectory, moduleName, "libs");
+            var libsRoot = IOPath.PathCombine(ProjectPath, moduleName, "libs");
 
-            var sourceRoot = IOPath.PathCombine(App.AndroidNativeDirectory, moduleName, "build/outputs/aar/");
+            var sourceRoot = IOPath.PathCombine(ProjectPath, moduleName, "build/outputs/aar/");
             var sourceFile = IOPath.PathCombine(sourceRoot, moduleName + suffix);
 
             var destRoot = IOPath.PathCombine(Application.dataPath, "UFramework/Plugins/Android/libs");

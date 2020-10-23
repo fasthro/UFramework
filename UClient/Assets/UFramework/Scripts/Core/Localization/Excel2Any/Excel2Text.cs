@@ -9,7 +9,8 @@ namespace UFramework.Language
     {
         public Excel2Text(ExcelReader reader)
         {
-            IOPath.DirectoryClear(App.LanguageDataDirectory);
+            var dataPath = IOPath.PathCombine(App.AssetsDirectory, "Language", "Data");
+            IOPath.DirectoryClear(dataPath);
 
             for (int i = 0; i < reader.sheets.Count; i++)
             {
@@ -17,7 +18,7 @@ namespace UFramework.Language
                 for (int l = 0; l < reader.options.languages.Count; l++)
                 {
                     var language = reader.options.languages[l];
-                    IOPath.FileCreateText(IOPath.PathCombine(App.LanguageDataDirectory, language.ToString(), i.ToString() + ".txt"), sheet.ToValueString(l + 1));
+                    IOPath.FileCreateText(IOPath.PathCombine(dataPath, language.ToString(), i.ToString() + ".txt"), sheet.ToValueString(l + 1));
                 }
             }
         }

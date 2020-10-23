@@ -284,21 +284,21 @@ namespace UFramework.Editor.Preferences.Assets
 
             // config
             var config = new AssetSearchItem();
-            config.path = IOPath.PathRelativeAsset(App.ConfigDataDirectory);
+            config.path = IOPath.PathRelativeAsset(IOPath.PathCombine(App.AssetsDirectory, "Config", FileAddress.Data.ToString()));
             config.nameType = NameType.Path;
             config.pattern = "*.json";
             builtInAssetPathItems.Add(config);
 
             // language
             var languageItem = new AssetSearchItem();
-            languageItem.path = IOPath.PathRelativeAsset(App.LanguageDataDirectory);
+            languageItem.path = IOPath.PathRelativeAsset(IOPath.PathCombine(App.AssetsDirectory, "Language", "Data"));
             languageItem.nameType = NameType.Path;
             languageItem.pattern = "*.txt";
             builtInAssetPathItems.Add(languageItem);
 
             // table
             var tableItem = new AssetSearchItem();
-            tableItem.path = IOPath.PathRelativeAsset(App.TableDataDirectory);
+            tableItem.path = IOPath.PathRelativeAsset(IOPath.PathCombine(App.AssetsDirectory, "Table", "Data"));
             tableItem.nameType = NameType.Path;
             tableItem.pattern = "*.csv";
 

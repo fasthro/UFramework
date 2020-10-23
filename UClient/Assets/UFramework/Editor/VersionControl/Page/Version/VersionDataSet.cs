@@ -17,20 +17,12 @@ namespace UFramework.Editor.VersionControl
         public List<VFile> files = new List<VFile>();
     }
 
-    public class VersionControl_VersionConfig : IConfigObject
+    public class PlatformVersion
     {
-        public string name { get { return "VersionControl_VersionConfig"; } }
-        public FileAddress address { get { return FileAddress.Editor; } }
-
         /// <summary>
-        /// 当前版本
+        /// platform
         /// </summary>
-        public int version = 0;
-
-        /// <summary>
-        /// 最低支持版本
-        /// </summary>
-        public int minVersion = 0;
+        public int platform;
 
         /// <summary>
         /// files
@@ -62,6 +54,54 @@ namespace UFramework.Editor.VersionControl
         /// </summary>
         /// <returns></returns>
         public List<PublishRecord> publishRecords = new List<PublishRecord>();
+    }
+
+    public class VersionControl_VersionConfig : IConfigObject
+    {
+        public FileAddress address { get { return FileAddress.Editor; } }
+
+        /// <summary>
+        /// 当前版本
+        /// </summary>
+        public int version = 0;
+
+        /// <summary>
+        /// 最低支持版本
+        /// </summary>
+        public int minVersion = 0;
+
+        /// <summary>
+        /// 平台版本信息
+        /// </summary>
+        /// <typeparam name="int"></typeparam>
+        /// <typeparam name="PlatformVersion"></typeparam>
+        /// <returns></returns>
+        public List<PlatformVersion> platforms = new List<PlatformVersion>();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public PlatformVersion GetPV()
+        {
+            PlatformVersion pv = null;
+            int platform = Platform.BuildTargetCurrent;
+            for (int i = 0; i < platforms.Count; i++)
+            {
+                if (platforms[i].platform == platform)
+                {
+                    pv = platforms[i];
+                    break;
+                }
+            }
+            if (pv == null)
+            {
+                pv = new PlatformVersion();
+                pv.platform = platform;
+                platforms.Add(pv);
+            }
+            return pv;
+        }
 
         public void Save()
         {

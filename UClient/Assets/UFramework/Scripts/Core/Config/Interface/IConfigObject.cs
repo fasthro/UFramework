@@ -9,12 +9,6 @@ namespace UFramework.Config
     public interface IConfigObject
     {
         /// <summary>
-        /// 配置名称
-        /// </summary>
-        /// <value></value>
-        string name { get; }
-
-        /// <summary>
         /// 配置文件路径
         /// </summary>
         /// <value></value>

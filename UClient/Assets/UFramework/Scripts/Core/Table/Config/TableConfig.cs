@@ -13,7 +13,6 @@ namespace UFramework.Table
 {
     public class TableConfig : IConfigObject
     {
-        public string name { get { return "TableConfig"; } }
         public FileAddress address { get { return FileAddress.Data; } }
 
         public FormatOptions outFormatOptions = FormatOptions.CSV;

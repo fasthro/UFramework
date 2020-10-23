@@ -23,7 +23,7 @@ namespace UFramework.Language
         {
             sheets = new List<ExcelSheet>();
 
-            var files = Directory.GetFiles(App.LanguageExcelDirectory, "*.xlsx", SearchOption.AllDirectories);
+            var files = Directory.GetFiles(IOPath.PathCombine(App.AssetsDirectory, "Language", "Excel"), "*.xlsx", SearchOption.AllDirectories);
             for (int i = 0; i < files.Length; i++)
             {
                 ReadFile(files[i]);

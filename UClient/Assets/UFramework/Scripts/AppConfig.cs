@@ -27,7 +27,6 @@ namespace UFramework
 
     public class AppConfig : IConfigObject
     {
-        public string name { get { return "AppConfig"; } }
         public FileAddress address { get { return FileAddress.Resources; } }
 
         #region version

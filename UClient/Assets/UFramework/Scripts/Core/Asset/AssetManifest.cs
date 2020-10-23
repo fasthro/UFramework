@@ -30,7 +30,7 @@ namespace UFramework.Assets
     public class AssetManifest : ScriptableObject
     {
         public readonly static string AssetPath = "Assets/AssetManifest.asset";
-        public readonly static string AssetBundleName = "manifest";
+        public readonly static string AssetBundleFileName = "manifest" + Asset.Extension;
 
         /// <summary>
         /// 资源目录

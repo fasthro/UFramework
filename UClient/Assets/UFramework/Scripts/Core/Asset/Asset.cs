@@ -15,6 +15,8 @@ namespace UFramework.Assets
     [MonoSingletonPath("UFramework/Asset")]
     public class Asset : MonoSingleton<Asset>
     {
+        readonly public static string Extension = ".unity3d";
+
         readonly string[] _dependencies = new string[0];
 
         /// <summary>
@@ -54,12 +56,16 @@ namespace UFramework.Assets
         /// </summary>
         private Action<bool> onInitializeCompleted;
 
+        // assetBundlePath
+        static string assetBundlePath;
+
         /// <summary>
         /// 初始化
         /// </summary>
         /// <param name="onCompleted"></param>
         public void Initialize(Action<bool> onCompleted)
         {
+            assetBundlePath = IOPath.PathCombine(Application.persistentDataPath, Platform.RuntimePlatformCurrentName);
             onInitializeCompleted = onCompleted;
             ManifestRequest.Allocate().AddCallback(OnInitialize).Load();
         }
@@ -128,7 +134,7 @@ namespace UFramework.Assets
             {
                 if (async) bundle = BundleAsyncRequest.Allocate();
                 else bundle = BundleRequest.Allocate();
-                bundle.url = IOPath.PathCombine(App.BundleDirectory, bundleName);
+                bundle.url = IOPath.PathCombine(assetBundlePath, bundleName);
             }
 
             bundle.name = bundleName;

@@ -1,1 +1,1 @@
-﻿{"name":"LuaConfig","address":0,"byteEncode":true,"searchPaths":["Assets/UFramework/3rd/ToLua/ToLua/Lua","Assets/UFramework/Scripts/Lua","Assets/Scripts/Lua","Assets/Scripts/Automatic/Lua"],"wrapClassNames":[]}
+﻿{"address":0,"byteEncode":true,"searchPaths":["Assets/UFramework/3rd/ToLua/ToLua/Lua","Assets/UFramework/Scripts/Lua","Assets/Scripts/Lua","Assets/Scripts/Automatic/Lua"],"wrapClassNames":[]}

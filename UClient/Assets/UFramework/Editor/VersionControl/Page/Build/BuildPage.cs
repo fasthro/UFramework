@@ -51,6 +51,8 @@ namespace UFramework.Editor.VersionControl
         {
             describeObject = UConfig.Read<VersionControl_BuildConfig>();
             appVersion = describeObject.appVersion;
+            if (string.IsNullOrEmpty(appVersion))
+                appVersion = "1.0.0";
 
             ApplySetting();
         }
@@ -58,7 +60,6 @@ namespace UFramework.Editor.VersionControl
         public void OnSaveDescribe()
         {
             describeObject.appVersion = appVersion;
-
             describeObject.Save();
         }
 

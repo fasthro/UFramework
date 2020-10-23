@@ -9,7 +9,6 @@ namespace UFramework.Lua
 {
     public class LuaConfig : IConfigObject
     {
-        public string name { get { return "LuaConfig"; } }
         public FileAddress address { get { return FileAddress.Editor; } }
 
         /// <summary>

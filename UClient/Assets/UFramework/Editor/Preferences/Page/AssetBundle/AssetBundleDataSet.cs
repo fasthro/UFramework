@@ -457,7 +457,6 @@ namespace UFramework.Editor.Preferences.Assets
     /// </summary>
     public class AssetBundle_AssetSearchPathConfig : IConfigObject
     {
-        public string name { get { return "AssetBundle_AssetSearchPathConfig"; } }
         public FileAddress address { get { return FileAddress.Editor; } }
 
         public List<AssetSearchItem> assetPathItems = new List<AssetSearchItem>();
@@ -476,7 +475,6 @@ namespace UFramework.Editor.Preferences.Assets
     /// </summary>
     public class AssetBundle_AssetConfig : IConfigObject
     {
-        public string name { get { return "AssetBundle_AssetConfig"; } }
         public FileAddress address { get { return FileAddress.Editor; } }
 
         public List<BundleItem> bundles = new List<BundleItem>();

@@ -14,6 +14,7 @@ using Unity.EditorCoroutines.Editor;
 using UFramework.Assets;
 using System.IO;
 using UFramework.Editor.Preferences.Assets;
+using Version = UFramework.VersionControl.Version;
 
 namespace UFramework.Editor.VersionControl
 {
@@ -26,7 +27,6 @@ namespace UFramework.Editor.VersionControl
 
     public class VersionControl_BuildConfig : IConfigObject
     {
-        public string name { get { return "VersionControl_BuildConfig"; } }
         public FileAddress address { get { return FileAddress.Editor; } }
 
         /// <summary>
@@ -225,8 +225,12 @@ namespace UFramework.Editor.VersionControl
             totalProgress = 0;
             progress = 0;
 
+            var assetBundlePath = IOPath.PathCombine(Environment.CurrentDirectory, Platform.BuildTargetCurrentName);
+            var versionFilePath = IOPath.PathCombine(App.TempDirectory, Version.FileName);
+            var outPath = IOPath.PathCombine(Environment.CurrentDirectory, "Build", Platform.BuildTargetCurrentName);
+
             // bundle
-            var manifestPath = IOPath.PathCombine(App.UTempDirectory, App.BundlePlatformName, AssetManifest.AssetBundleName + App.AssetBundleExtension);
+            var manifestPath = IOPath.PathCombine(assetBundlePath, AssetManifest.AssetBundleFileName);
             if (!IOPath.FileExists(manifestPath))
                 _BuildAssetBundle();
             yield return new EditorWaitForSeconds(1);
@@ -234,13 +238,13 @@ namespace UFramework.Editor.VersionControl
 
             // copy res
             progress = 0;
-            IOPath.DirectoryClear(IOPath.PathCombine(Application.streamingAssetsPath, App.BundlePlatformName));
-            string[] files = IOPath.DirectoryGetFiles(IOPath.PathCombine(App.UTempDirectory, App.BundlePlatformName), "*" + App.AssetBundleExtension, SearchOption.AllDirectories);
+            IOPath.DirectoryClear(IOPath.PathCombine(Application.streamingAssetsPath, Platform.BuildTargetCurrentName));
+            string[] files = IOPath.DirectoryGetFiles(assetBundlePath, "*" + Asset.Extension, SearchOption.AllDirectories);
             for (int i = 0; i < files.Length; i++)
             {
                 var fp = files[i];
                 var fn = IOPath.FileName(fp, true);
-                var dest = IOPath.PathCombine(Application.streamingAssetsPath, App.BundlePlatformName, fn);
+                var dest = IOPath.PathCombine(Application.streamingAssetsPath, Platform.BuildTargetCurrentName, fn);
                 IOPath.FileCopy(files[i], dest);
                 yield return null;
                 progress = (int)((float)(i + 1) / (float)files.Length * 100f);
@@ -252,7 +256,7 @@ namespace UFramework.Editor.VersionControl
             progress = 0;
             VersionPage.BuildVersion();
             yield return null;
-            IOPath.FileCopy(IOPath.PathCombine(App.UTempDirectory, App.VersionFileName), IOPath.PathCombine(Application.streamingAssetsPath, App.VersionFileName));
+            IOPath.FileCopy(versionFilePath, IOPath.PathCombine(Application.streamingAssetsPath, Version.FileName));
             yield return new EditorWaitForSeconds(1);
             totalProgress = 3;
 
@@ -280,7 +284,6 @@ namespace UFramework.Editor.VersionControl
 
             // build
             progress = 0;
-            var outPath = IOPath.PathCombine(Environment.CurrentDirectory, "Build", GetBuildPlatformName(EditorUserBuildSettings.activeBuildTarget));
             var targetName = GetBuildTargetName(EditorUserBuildSettings.activeBuildTarget);
             if (targetName != null)
             {
@@ -300,10 +303,12 @@ namespace UFramework.Editor.VersionControl
             totalProgress = 6;
 
             // document
+            var bc = UConfig.Read<VersionControl_BuildConfig>();
             var ver = UConfig.Read<VersionControl_VersionConfig>();
-            var documentPath = IOPath.PathCombine(Environment.CurrentDirectory, "Build", GetBuildPlatformName(EditorUserBuildSettings.activeBuildTarget), "app-version-" + ver.version);
+            var dn = "data-" + bc.appVersion + "." + ver.version;
+            var documentPath = IOPath.PathCombine(outPath, dn);
             IOPath.DirectoryClear(documentPath);
-            IOPath.FileCopy(IOPath.PathCombine(App.UTempDirectory, App.VersionFileName), IOPath.PathCombine(documentPath, App.VersionFileName));
+            IOPath.FileCopy(versionFilePath, IOPath.PathCombine(documentPath, Version.FileName));
             yield return new EditorWaitForSeconds(1);
             totalProgress = 7;
 
@@ -341,31 +346,6 @@ namespace UFramework.Editor.VersionControl
                 // Add more build targets for your own.
                 default:
                     Debug.Log(target.ToString() + " not implemented.");
-                    return null;
-            }
-        }
-
-        /// <summary>
-        /// 构建平台名称
-        /// </summary>
-        /// <param name="target"></param>
-        /// <returns></returns>
-        static string GetBuildPlatformName(BuildTarget target)
-        {
-            switch (target)
-            {
-                case BuildTarget.Android:
-                    return "Android";
-                case BuildTarget.iOS:
-                    return "iOS";
-                case BuildTarget.WebGL:
-                    return "WebGL";
-                case BuildTarget.StandaloneWindows:
-                case BuildTarget.StandaloneWindows64:
-                    return "Windows";
-                case BuildTarget.StandaloneOSX:
-                    return "OSX";
-                default:
                     return null;
             }
         }

@@ -32,6 +32,10 @@ namespace UFramework.Editor.Preferences
 
         static TableConfig describeObject;
 
+        static string rootPath;
+        static string dataPath;
+        static string excelPath;
+
         [ShowInInspector]
         [TableList(IsReadOnly = true, AlwaysExpanded = true, HideToolbar = true)]
         public List<TableItem> tables = new List<TableItem>();
@@ -45,12 +49,16 @@ namespace UFramework.Editor.Preferences
 
         public void OnRenderBefore()
         {
+            rootPath = IOPath.PathCombine(App.AssetsDirectory, "Table");
+            dataPath = IOPath.PathCombine(rootPath, "Data");
+            excelPath = IOPath.PathCombine(rootPath, "Excel");
+
             describeObject = UConfig.Read<TableConfig>();
 
             bool hasNew = false;
-            if (Directory.Exists(App.TableExcelDirectory))
+            if (Directory.Exists(excelPath))
             {
-                var files = Directory.GetFiles(App.TableExcelDirectory, "*.xlsx", SearchOption.AllDirectories);
+                var files = Directory.GetFiles(excelPath, "*.xlsx", SearchOption.AllDirectories);
                 HashSet<string> fileHashSet = new HashSet<string>();
                 for (int i = 0; i < files.Length; i++)
                 {
@@ -103,8 +111,9 @@ namespace UFramework.Editor.Preferences
             {
                 TableConfig tableConfig = UConfig.Read<TableConfig>();
 
-                IOPath.DirectoryClear(App.UserScriptAutomaticTableDirectory);
-                IOPath.DirectoryClear(App.TableDataDirectory);
+                var modePath = "Assets/Scripts/Automatic/Table";
+                IOPath.DirectoryClear(modePath);
+                IOPath.DirectoryClear(dataPath);
 
                 tableConfig.tableDictionary.ForEach((System.Action<KeyValuePair<string, DataFormatOptions>>)((item) =>
                 {
@@ -113,9 +122,9 @@ namespace UFramework.Editor.Preferences
                     options.tableName = item.Key;
                     options.outFormatOptions = tableConfig.outFormatOptions;
                     options.dataFormatOptions = item.Value;
-                    options.dataOutDirectory = App.TableDataDirectory;
-                    options.tableModelOutDirectory = App.UserScriptAutomaticTableDirectory;
-                    var reader = new ExcelReader(string.Format("{0}/{1}.xlsx", App.TableExcelDirectory, item.Key), options);
+                    options.dataOutDirectory = dataPath;
+                    options.tableModelOutDirectory = modePath;
+                    var reader = new ExcelReader(string.Format("{0}/{1}.xlsx", excelPath, item.Key), options);
                     reader.Read();
                     switch (tableConfig.outFormatOptions)
                     {
@@ -140,7 +149,7 @@ namespace UFramework.Editor.Preferences
         public void OnSaveDescribe()
         {
             if (describeObject == null) return;
-            
+
             foreach (var item in tables)
             {
                 tableDictionary[item.name] = item.format;

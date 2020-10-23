@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
+using UFramework.Assets;
 using UFramework.Config;
 using UFramework.VersionControl;
 using UnityEditor;
@@ -63,33 +64,36 @@ namespace UFramework.Editor.VersionControl
         public void OnRenderBefore()
         {
             describeObject = UConfig.Read<VersionControl_VersionConfig>();
+            var pv = describeObject.GetPV();
 
             version = describeObject.version;
             minVersion = describeObject.minVersion;
-            patchs = describeObject.patches;
+            patchs = pv.patches;
 
             supportDictionary.Clear();
-            foreach (var item in describeObject.supports)
+            foreach (var item in pv.supports)
                 supportDictionary.Add(item.version, item);
 
             historyDictionary.Clear();
-            foreach (var item in describeObject.historys)
+            foreach (var item in pv.historys)
                 historyDictionary.Add(item.version, item);
         }
 
         public void OnSaveDescribe()
         {
+            var pv = describeObject.GetPV();
+
             describeObject.version = version;
             describeObject.minVersion = minVersion;
-            describeObject.patches = patchs;
+            pv.patches = patchs;
 
-            describeObject.supports.Clear();
+            pv.supports.Clear();
             foreach (var item in supportDictionary)
-                describeObject.supports.Add(item.Value);
+                pv.supports.Add(item.Value);
 
-            describeObject.historys.Clear();
+            pv.historys.Clear();
             foreach (var item in historyDictionary)
-                describeObject.historys.Add(item.Value);
+                pv.historys.Add(item.Value);
 
             describeObject.Save();
         }
@@ -213,26 +217,28 @@ namespace UFramework.Editor.VersionControl
             if (describeObject == null)
                 describeObject = UConfig.Read<VersionControl_VersionConfig>();
 
-            describeObject.files = GetVersionFiles();
+            var pv = describeObject.GetPV();
+
+            pv.files = GetVersionFiles();
             describeObject.Save();
 
             var ver = new Version();
             ver.version = describeObject.version;
             ver.minVersion = describeObject.minVersion;
             ver.timestamp = TimeUtils.UTCTimeStamps();
-            ver.files.AddRange(describeObject.files);
+            ver.files.AddRange(pv.files);
             ver.versions.Clear();
 
             var vInfo = new VersionInfo();
             vInfo.version = describeObject.version;
             vInfo.patchs.Clear();
-            vInfo.patchs.AddRange(describeObject.patches);
+            vInfo.patchs.AddRange(pv.patches);
             ver.versions.Add(vInfo.version, vInfo);
 
-            foreach (var item in describeObject.supports)
+            foreach (var item in pv.supports)
                 ver.versions.Add(item.version, item);
 
-            Version.VersionWrite(IOPath.PathCombine(App.UTempDirectory, App.VersionFileName), ver);
+            Version.VersionWrite(IOPath.PathCombine(App.TempDirectory, Version.FileName), ver);
         }
 
         /// <summary>
@@ -241,13 +247,15 @@ namespace UFramework.Editor.VersionControl
         public static void BuildPublishFileRecords()
         {
             describeObject = UConfig.Read<VersionControl_VersionConfig>();
+            var pv = describeObject.GetPV();
+
             bool _create = true;
-            foreach (var item in describeObject.publishRecords)
+            foreach (var item in pv.publishRecords)
             {
                 if (item.version == describeObject.version)
                 {
                     _create = false;
-                    item.files = describeObject.files;
+                    item.files = pv.files;
                     break;
                 }
             }
@@ -255,11 +263,11 @@ namespace UFramework.Editor.VersionControl
             {
                 var rec = new PublishRecord();
                 rec.version = describeObject.version;
-                rec.files = describeObject.files;
+                rec.files = pv.files;
 
-                describeObject.publishRecords.Add(rec);
+                pv.publishRecords.Add(rec);
             }
-            
+
             describeObject.Save();
         }
 
@@ -270,8 +278,11 @@ namespace UFramework.Editor.VersionControl
         /// <returns></returns>
         public static bool IsPublishVersion(int version)
         {
-            var ver = UConfig.Read<VersionControl_VersionConfig>();
-            foreach (var item in ver.publishRecords)
+            if (describeObject == null)
+                describeObject = UConfig.Read<VersionControl_VersionConfig>();
+
+            var pv = describeObject.GetPV();
+            foreach (var item in pv.publishRecords)
                 return item.version == version;
             return false;
         }
@@ -290,8 +301,8 @@ namespace UFramework.Editor.VersionControl
             List<VFile> vfiles = new List<VFile>();
 
             // bundle
-            var dir = IOPath.PathCombine(App.UTempDirectory, App.BundlePlatformName);
-            string[] files = IOPath.DirectoryGetFiles(dir, "*" + App.AssetBundleExtension, SearchOption.AllDirectories);
+            var assetBundlePath = IOPath.PathCombine(App.TempDirectory, Platform.BuildTargetCurrentName);
+            string[] files = IOPath.DirectoryGetFiles(assetBundlePath, "*" + Asset.Extension, SearchOption.AllDirectories);
             for (int i = 0; i < files.Length; i++)
             {
                 var path = files[i];

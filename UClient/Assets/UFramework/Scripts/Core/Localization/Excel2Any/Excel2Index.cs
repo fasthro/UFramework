@@ -55,7 +55,7 @@ namespace UFramework.Language
             builder.AppendLine("\t}");
             builder.AppendLine("}");
 
-            IOPath.FileCreateText(App.UserScriptAutomaticLocalizationDirectory + "/Language.cs", builder.ToString());
+            IOPath.FileCreateText("Assets/Scripts/Automatic/Localization/Language.cs", builder.ToString());
         }
     }
 }

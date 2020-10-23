@@ -243,8 +243,6 @@ namespace UFramework.Editor.Preferences.Assets
     /// </summary>
     public class AssetImporterConfig : IConfigObject
     {
-        public string name { get { return "AssetImporterConfig"; } }
-
         public FileAddress address { get { return FileAddress.Editor; } }
 
         public string texturePattern = "*.png,*.tga";

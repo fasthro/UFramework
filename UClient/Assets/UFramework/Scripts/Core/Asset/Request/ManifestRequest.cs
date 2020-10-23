@@ -50,7 +50,7 @@ namespace UFramework.Assets
         {
             base.Load();
             if (loadState != LoadState.Init) return;
-            bundle = Asset.Instance.GetBundle<BundleAsyncRequest>(AssetManifest.AssetBundleName + App.AssetBundleExtension, true);
+            bundle = Asset.Instance.GetBundle<BundleAsyncRequest>(AssetManifest.AssetBundleFileName, true);
             if (bundle.isDone)
                 StartCoroutine();
             else

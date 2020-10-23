@@ -47,8 +47,24 @@ namespace UFramework.VersionControl
         private Version _newVersion;
         private Version _appVersion;
 
+        #region path
+
+        static string streamingAssetsPath;
+        static string assetBundlePath;
+        static string versionPath;
+        static string versionOriginalPath;
+        static string versionStreamingPath;
+
+        #endregion
+
         protected override void OnSingletonAwake()
         {
+            streamingAssetsPath = GetStreamingAssetsPath();
+            assetBundlePath = IOPath.PathCombine(Application.persistentDataPath, Platform.RuntimePlatformCurrentName);
+            versionPath = IOPath.PathCombine(Application.persistentDataPath, Version.FileName);
+            versionOriginalPath = versionPath + "original";
+            versionStreamingPath = IOPath.PathCombine(streamingAssetsPath, Version.FileName);
+
             StartUpdate();
         }
 
@@ -65,8 +81,8 @@ namespace UFramework.VersionControl
         {
             if (_step == Step.Init)
             {
-                if (!IOPath.DirectoryExists(App.BundleDirectory))
-                    IOPath.DirectoryCreate(App.BundleDirectory);
+                if (!IOPath.DirectoryExists(assetBundlePath))
+                    IOPath.DirectoryCreate(assetBundlePath);
 
                 _step = Step.CheckCopy;
             }
@@ -103,15 +119,15 @@ namespace UFramework.VersionControl
 
         private IEnumerator CheckCopy()
         {
-            _newVersion = Version.LoadVersion(App.versionPath);
+            _newVersion = Version.LoadVersion(versionPath);
             if (_newVersion == null)
             {
-                var request = UnityWebRequest.Get(App.versionStreamingPath);
-                request.downloadHandler = new DownloadHandlerFile(App.versionPath);
+                var request = UnityWebRequest.Get(versionStreamingPath);
+                request.downloadHandler = new DownloadHandlerFile(versionPath);
                 yield return request.SendWebRequest();
                 if (string.IsNullOrEmpty(request.error))
                 {
-                    var version = Version.LoadVersion(App.versionPath);
+                    var version = Version.LoadVersion(versionPath);
                     _maxValue = version.files.Count;
                     _value = 0;
                     _step = Step.Copy;
@@ -123,12 +139,12 @@ namespace UFramework.VersionControl
             }
             else
             {
-                var request = UnityWebRequest.Get(App.versionStreamingPath);
-                request.downloadHandler = new DownloadHandlerFile(App.versionOriginalPath);
+                var request = UnityWebRequest.Get(versionStreamingPath);
+                request.downloadHandler = new DownloadHandlerFile(versionOriginalPath);
                 yield return request.SendWebRequest();
                 if (string.IsNullOrEmpty(request.error))
                 {
-                    _appVersion = Version.LoadVersion(App.versionOriginalPath);
+                    _appVersion = Version.LoadVersion(versionOriginalPath);
                     if (_appVersion.version > _newVersion.version)
                     {
                         _maxValue = _appVersion.files.Count;
@@ -153,8 +169,8 @@ namespace UFramework.VersionControl
             for (var index = 0; index < _appVersion.files.Count; index++)
             {
                 var item = _appVersion.files[index];
-                var request = UnityWebRequest.Get(IOPath.PathCombine(App.BundleStreamingDirectory, item.name));
-                request.downloadHandler = new DownloadHandlerFile(IOPath.PathCombine(App.BundleDirectory, item.name));
+                var request = UnityWebRequest.Get(IOPath.PathCombine(streamingAssetsPath, Platform.RuntimePlatformCurrentName, item.name));
+                request.downloadHandler = new DownloadHandlerFile(IOPath.PathCombine(assetBundlePath, item.name));
                 yield return request.SendWebRequest();
                 request.Dispose();
                 _value = index + 1;
@@ -178,8 +194,8 @@ namespace UFramework.VersionControl
                 yield break;
             }
 
-            var tp = App.versionPath + ".utemp";
-            var request = UnityWebRequest.Get(UConfig.Read<AppConfig>().versionBaseURL + App.VersionFileName);
+            var tp = versionPath + ".utemp";
+            var request = UnityWebRequest.Get(UConfig.Read<AppConfig>().versionBaseURL + Version.FileName);
             request.downloadHandler = new DownloadHandlerFile(tp);
             yield return request.SendWebRequest();
             var error = request.error;
@@ -201,7 +217,7 @@ namespace UFramework.VersionControl
             else
             {
                 if (_newVersion == null)
-                    _newVersion = Version.LoadVersion(App.versionPath);
+                    _newVersion = Version.LoadVersion(versionPath);
 
                 var v2 = Version.LoadVersion(tp);
                 if (v2.timestamp < _newVersion.timestamp)
@@ -220,7 +236,7 @@ namespace UFramework.VersionControl
                 }
                 else
                 {
-                    IOPath.FileRename(tp, App.VersionFileName);
+                    IOPath.FileRename(tp, Version.FileName);
                     _newVersion = v2;
                     yield break;
                 }
@@ -230,16 +246,16 @@ namespace UFramework.VersionControl
         private IEnumerator CheckVersion()
         {
             if (_appVersion == null)
-                _appVersion = Version.LoadVersion(App.versionPath);
+                _appVersion = Version.LoadVersion(versionPath);
 
             if (_appVersion == null)
             {
-                var request = UnityWebRequest.Get(App.versionStreamingPath);
-                request.downloadHandler = new DownloadHandlerFile(App.versionOriginalPath);
+                var request = UnityWebRequest.Get(versionStreamingPath);
+                request.downloadHandler = new DownloadHandlerFile(versionOriginalPath);
                 yield return request.SendWebRequest();
                 if (string.IsNullOrEmpty(request.error))
                 {
-                    _appVersion = Version.LoadVersion(App.versionOriginalPath);
+                    _appVersion = Version.LoadVersion(versionOriginalPath);
                 }
             }
             if (_appVersion.version < _newVersion.minVersion)
@@ -261,9 +277,9 @@ namespace UFramework.VersionControl
         private void CheckDownload()
         {
             if (_newVersion == null)
-                _newVersion = Version.LoadVersion(App.versionPath);
+                _newVersion = Version.LoadVersion(versionPath);
 
-            var patchs = Version.GetDownloadPatchs(_newVersion);
+            var patchs = Version.GetDownloadPatchs(_newVersion, assetBundlePath);
             if (patchs.Count > 0) _step = Step.Download;
             else _step = Step.Completed;
         }
@@ -275,6 +291,17 @@ namespace UFramework.VersionControl
 #else
             Application.Quit();
 #endif
+        }
+
+        private string GetStreamingAssetsPath()
+        {
+            if (Application.platform == RuntimePlatform.Android)
+                return Application.streamingAssetsPath;
+
+            if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
+                return "file:///" + Application.streamingAssetsPath;
+
+            return "file://" + Application.streamingAssetsPath;
         }
     }
 }

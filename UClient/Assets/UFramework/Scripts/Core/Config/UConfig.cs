@@ -35,6 +35,32 @@ namespace UFramework.Config
         // 配置缓存字字典
         static Dictionary<string, IConfigObject> configDictionart = new Dictionary<string, IConfigObject>();
 
+        static string _rootPath;
+
+        // 配置根目录
+        static string rootPath
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_rootPath))
+                    _rootPath = IOPath.PathRelativeAsset(IOPath.PathCombine(App.AssetsDirectory, "Config"));
+                return _rootPath;
+            }
+        }
+
+        static string _dataPath;
+
+        // Data目录
+        static string dataPath
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_dataPath))
+                    _dataPath = IOPath.PathRelativeAsset(IOPath.PathCombine(rootPath, FileAddress.Data.ToString()));
+                return _dataPath;
+            }
+        }
+
         /// <summary>
         /// 读取配置
         /// </summary>
@@ -57,17 +83,17 @@ namespace UFramework.Config
             string content = null;
             string fileName = configName + ".json";
 #if UNITY_EDITOR
-            content = IOPath.FileReadText(IOPath.PathCombine(App.ConfigDirectory, address.ToString(), fileName));
+            content = IOPath.FileReadText(IOPath.PathCombine(rootPath, address.ToString(), fileName));
 #else
             if (address == FileAddress.Resources)
             {
-                var asset = Asset.LoadResourceAsset(IOPath.PathCombine(App.ConfigResourceDirectory, address.ToString(), fileName), typeof(TextAsset));
+                var asset = Asset.LoadResourceAsset(IOPath.PathCombine("Config", address.ToString(), fileName), typeof(TextAsset));
                 content = asset.GetAsset<TextAsset>().text;
                 asset.Unload();
             }
             else
             {
-                var asset = Asset.LoadAsset(IOPath.PathCombine(App.ConfigDataDirectory, address.ToString(), fileName), typeof(TextAsset));
+                var asset = Asset.LoadAsset(IOPath.PathCombine(dataPath, address.ToString(), fileName), typeof(TextAsset));
                 content = asset.GetAsset<TextAsset>().text;
                 asset.Unload();
             }
@@ -100,7 +126,7 @@ namespace UFramework.Config
 
             string fileName = configName + ".json";
             string content = JsonMapper.ToJson(config);
-            string path = IOPath.PathCombine(App.ConfigDirectory, address.ToString(), fileName);
+            string path = IOPath.PathCombine(rootPath, address.ToString(), fileName);
             IOPath.FileCreateText(path, content);
 #endif
         }
