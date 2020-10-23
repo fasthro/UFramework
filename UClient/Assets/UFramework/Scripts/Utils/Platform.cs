@@ -94,8 +94,24 @@ namespace UFramework
                         return iOS;
                     case RuntimePlatform.WindowsPlayer:
                         return StandaloneWindows;
+                    case RuntimePlatform.WindowsEditor:
+#if UNITY_ANDROID
+                        return Android;
+#elif UNITY_IOS
+                        return iOS;
+#else
+                        return StandaloneOSX;
+#endif
                     case RuntimePlatform.OSXPlayer:
                         return StandaloneOSX;
+                    case RuntimePlatform.OSXEditor:
+#if UNITY_ANDROID
+                        return Android;
+#elif UNITY_IOS
+                        return iOS;
+#else
+                        return StandaloneOSX;
+#endif
                     default:
                         return Unknow;
                 }
@@ -114,8 +130,24 @@ namespace UFramework
                     return platform == iOS;
                 case RuntimePlatform.WindowsPlayer:
                     return platform == StandaloneWindows;
+                case RuntimePlatform.WindowsEditor:
+#if UNITY_ANDROID
+                    return platform == Android;
+#elif UNITY_IOS
+                    return platform == iOS;
+#else
+                    return platform == StandaloneWindows;
+#endif
                 case RuntimePlatform.OSXPlayer:
                     return platform == StandaloneOSX;
+                case RuntimePlatform.OSXEditor:
+#if UNITY_ANDROID
+                    return platform == Android;
+#elif UNITY_IOS
+                    return platform == iOS;
+#else
+                    return platform == StandaloneOSX;
+#endif
                 default:
                     return false;
             }
@@ -131,8 +163,24 @@ namespace UFramework
                     return STR_iOS;
                 case RuntimePlatform.WindowsPlayer:
                     return STR_StandaloneWindows;
+                case RuntimePlatform.WindowsEditor:
+#if UNITY_ANDROID
+                    return STR_Android;
+#elif UNITY_IOS
+                    return STR_iOS;
+#else
+                    return STR_StandaloneWindows;
+#endif
                 case RuntimePlatform.OSXPlayer:
                     return STR_StandaloneOSX;
+                case RuntimePlatform.OSXEditor:
+#if UNITY_ANDROID
+                    return STR_Android;
+#elif UNITY_IOS
+                    return STR_iOS;
+#else
+                    return STR_StandaloneOSX;
+#endif
                 default:
                     return STR_Unknow;
             }

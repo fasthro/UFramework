@@ -98,7 +98,7 @@ namespace UFramework.Editor.Preferences.Assets
         }
         public void OnRenderBefore()
         {
-            assetBundlePath = IOPath.PathCombine(Environment.CurrentDirectory, "UTemp", Platform.BuildTargetCurrentName);
+            assetBundlePath = IOPath.PathCombine(App.TempDirectory, Platform.BuildTargetCurrentName);
 
             if (!IOPath.FileExists(AssetManifest.AssetPath))
             {
@@ -691,7 +691,7 @@ namespace UFramework.Editor.Preferences.Assets
         /// <returns></returns>
         private string GetBuildBundleName(string bundle)
         {
-            if (buildNameHash) return UHash.GetMD5Hash(bundle) + Asset.Extension;
+            if (buildNameHash) return HashUtils.GetMD5Hash(bundle) + Asset.Extension;
             return bundle.ToLower() + Asset.Extension;
         }
 

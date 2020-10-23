@@ -192,6 +192,47 @@ namespace UFramework.Editor.VersionControl
 
         [ShowInInspector, Button, HorizontalGroup]
         [DisableIf("_isBuild")]
+        public void CopyAssetBundle()
+        {
+            if (_isBuild) return;
+            EditorCoroutineUtility.StartCoroutineOwnerless(_CopyAssetBundle());
+        }
+
+        private IEnumerator _CopyAssetBundle()
+        {
+            progress = 0;
+            var assetBundlePath = IOPath.PathCombine(App.TempDirectory, Platform.BuildTargetCurrentName);
+            IOPath.DirectoryClear(IOPath.PathCombine(Application.streamingAssetsPath, Platform.BuildTargetCurrentName));
+            string[] files = IOPath.DirectoryGetFiles(assetBundlePath, "*" + Asset.Extension, SearchOption.AllDirectories);
+            for (int i = 0; i < files.Length; i++)
+            {
+                var fp = files[i];
+                var fn = IOPath.FileName(fp, true);
+                var dest = IOPath.PathCombine(Application.streamingAssetsPath, Platform.BuildTargetCurrentName, fn);
+                IOPath.FileCopy(files[i], dest);
+                yield return null;
+                progress = (int)((float)(i + 1) / (float)files.Length * 100f);
+            }
+            AssetDatabase.Refresh();
+        }
+
+        [ShowInInspector, Button, HorizontalGroup]
+        [DisableIf("_isBuild")]
+        public void CopyVersion()
+        {
+            if (_isBuild) return;
+            _CopyVersion();
+        }
+
+        private void _CopyVersion()
+        {
+            var versionFilePath = IOPath.PathCombine(App.TempDirectory, Version.FileName);
+            IOPath.FileCopy(versionFilePath, IOPath.PathCombine(Application.streamingAssetsPath, Version.FileName));
+            AssetDatabase.Refresh();
+        }
+
+        [ShowInInspector, Button, HorizontalGroup]
+        [DisableIf("_isBuild")]
         public void BuildScripts()
         {
             if (_isBuild) return;
@@ -225,38 +266,28 @@ namespace UFramework.Editor.VersionControl
             totalProgress = 0;
             progress = 0;
 
-            var assetBundlePath = IOPath.PathCombine(Environment.CurrentDirectory, Platform.BuildTargetCurrentName);
+            var assetBundlePath = IOPath.PathCombine(App.TempDirectory, Platform.BuildTargetCurrentName);
             var versionFilePath = IOPath.PathCombine(App.TempDirectory, Version.FileName);
             var outPath = IOPath.PathCombine(Environment.CurrentDirectory, "Build", Platform.BuildTargetCurrentName);
 
             // bundle
+            totalProgress = 1;
+            yield return new EditorWaitForSeconds(1);
+
             var manifestPath = IOPath.PathCombine(assetBundlePath, AssetManifest.AssetBundleFileName);
             if (!IOPath.FileExists(manifestPath))
                 _BuildAssetBundle();
             yield return new EditorWaitForSeconds(1);
-            totalProgress = 1;
 
             // copy res
-            progress = 0;
-            IOPath.DirectoryClear(IOPath.PathCombine(Application.streamingAssetsPath, Platform.BuildTargetCurrentName));
-            string[] files = IOPath.DirectoryGetFiles(assetBundlePath, "*" + Asset.Extension, SearchOption.AllDirectories);
-            for (int i = 0; i < files.Length; i++)
-            {
-                var fp = files[i];
-                var fn = IOPath.FileName(fp, true);
-                var dest = IOPath.PathCombine(Application.streamingAssetsPath, Platform.BuildTargetCurrentName, fn);
-                IOPath.FileCopy(files[i], dest);
-                yield return null;
-                progress = (int)((float)(i + 1) / (float)files.Length * 100f);
-            }
+            yield return _CopyAssetBundle();
             yield return new EditorWaitForSeconds(1);
             totalProgress = 2;
 
             // version
             progress = 0;
             VersionPage.BuildVersion();
-            yield return null;
-            IOPath.FileCopy(versionFilePath, IOPath.PathCombine(Application.streamingAssetsPath, Version.FileName));
+            _CopyVersion();
             yield return new EditorWaitForSeconds(1);
             totalProgress = 3;
 

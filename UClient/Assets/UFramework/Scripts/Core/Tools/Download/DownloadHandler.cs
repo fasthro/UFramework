@@ -246,7 +246,7 @@ namespace UFramework.Tools
                         error = "下载文件长度异常:" + fs.Length;
                     }
                     const StringComparison compare = StringComparison.OrdinalIgnoreCase;
-                    if (!_verifyHash.Equals(UHash.GetCRC32Hash(fs), compare))
+                    if (!_verifyHash.Equals(HashUtils.GetCRC32Hash(fs), compare))
                     {
                         error = "下载文件哈希异常:" + _verifyHash;
                     }

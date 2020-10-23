@@ -309,9 +309,11 @@ namespace UFramework.Editor.VersionControl
 
                 var vfile = new VFile();
                 vfile.name = IOPath.FileName(path, true);
-                vfile.length = IOPath.FileSize(path);
-                vfile.hash = IOPath.FileMD5(path);
-
+                using (var stream = File.OpenRead(path))
+                {
+                    vfile.length = stream.Length;
+                    vfile.hash = HashUtils.GetCRC32Hash(stream);
+                }
                 vfiles.Add(vfile);
             }
             return vfiles;

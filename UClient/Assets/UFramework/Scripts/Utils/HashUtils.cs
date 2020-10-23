@@ -11,7 +11,7 @@ using System.IO;
 
 namespace UFramework
 {
-    public static class UHash
+    public static class HashUtils
     {
         private static readonly MD5 md5 = MD5.Create();
         private static readonly CRC32 crc32 = new CRC32();

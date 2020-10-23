@@ -3,6 +3,7 @@
  * @Date: 2020-10-13 17:35:43
  * @Description: version
  */
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UFramework.Config;
@@ -15,7 +16,7 @@ namespace UFramework.VersionControl
     {
         public string name;
         public long length;
-        public string hash = "";
+        public string hash;
     }
 
     [System.Serializable]
@@ -194,7 +195,12 @@ namespace UFramework.VersionControl
                         {
                             downloadFils.Add(file);
                         }
-                        // TODO Hash
+                        if (!HashUtils.GetCRC32Hash(stream).Equals(file.hash, StringComparison.OrdinalIgnoreCase))
+                        {
+                            downloadFils.Add(file);
+                        }
+                        // Debug.Log(HashUtils.GetCRC32Hash(stream) + " - > " + file.hash);
+                        // Debug.Log(HashUtils.GetCRC32Hash(stream).Equals(file.hash, StringComparison.OrdinalIgnoreCase));
                     }
                 }
             }
