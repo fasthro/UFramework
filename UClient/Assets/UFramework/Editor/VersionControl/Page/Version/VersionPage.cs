@@ -38,15 +38,34 @@ namespace UFramework.Editor.VersionControl
         [OnValueChanged("OnMinVersionChange")]
         public int minVersion;
 
-        [ShowInInspector, HideLabel]
+        [ShowInInspector]
         [TabGroup("Current Version Patch")]
-        [TableList(AlwaysExpanded = true)]
-        public List<VPatch> patchs = new List<VPatch>();
+        [LabelText("Patchs")]
+        [ListDrawerSettings(CustomAddFunction = "CustomAddFunction_Patchs", CustomRemoveIndexFunction = "CustomRemoveIndexFunction_Patchs")]
+        public List<VEditorPatch> patchs = new List<VEditorPatch>();
+
+        private void CustomAddFunction_Patchs()
+        {
+            foreach (var item in patchs)
+                if (!item.isRelease) return;
+
+            var patch = new VEditorPatch();
+            patch.version = patchs.Count;
+            patchs.Add(patch);
+            patchs.Sort((a, b) => b.version.CompareTo(a.version));
+        }
+
+        private void CustomRemoveIndexFunction_Patchs(int index)
+        {
+            if (patchs[index].isRelease) return;
+            patchs.RemoveAt(index);
+            patchs.Sort((a, b) => b.version.CompareTo(a.version));
+        }
 
         [ShowInInspector, HideLabel, ReadOnly]
         [TabGroup("Support Versions")]
         [DictionaryDrawerSettings(KeyLabel = "Version Code", ValueLabel = "Patch", DisplayMode = DictionaryDisplayOptions.OneLine)]
-        public Dictionary<int, VersionInfo> supportDictionary = new Dictionary<int, VersionInfo>();
+        public Dictionary<int, VEditorInfo> supportDictionary = new Dictionary<int, VEditorInfo>();
 
         /// <summary>
         /// 版本信息列表
@@ -54,7 +73,7 @@ namespace UFramework.Editor.VersionControl
         [ShowInInspector, HideLabel, ReadOnly]
         [TabGroup("History Versions")]
         [DictionaryDrawerSettings(KeyLabel = "Version Code", ValueLabel = "Patch", DisplayMode = DictionaryDisplayOptions.OneLine)]
-        public Dictionary<int, VersionInfo> historyDictionary = new Dictionary<int, VersionInfo>();
+        public Dictionary<int, VEditorInfo> historyDictionary = new Dictionary<int, VEditorInfo>();
 
         public object GetInstance()
         {
@@ -69,6 +88,7 @@ namespace UFramework.Editor.VersionControl
             version = describeObject.version;
             minVersion = describeObject.minVersion;
             patchs = pv.patches;
+            patchs.Sort((a, b) => b.version.CompareTo(a.version));
 
             supportDictionary.Clear();
             foreach (var item in pv.supports)
@@ -127,7 +147,7 @@ namespace UFramework.Editor.VersionControl
 
         private void CreateNewVersion()
         {
-            var info = new VersionInfo();
+            var info = new VEditorInfo();
             info.version = version;
             info.patchs.Clear();
             info.patchs.AddRange(patchs);
@@ -142,7 +162,7 @@ namespace UFramework.Editor.VersionControl
             var target = version - 1;
             if (target < 0) return;
 
-            VersionInfo info = null;
+            VEditorInfo info = null;
             if (supportDictionary.ContainsKey(target))
             {
                 info = supportDictionary[target];
@@ -183,7 +203,7 @@ namespace UFramework.Editor.VersionControl
             if (minVersion < 0) minVersion = 0;
 
             List<int> _removes = new List<int>();
-            foreach (KeyValuePair<int, VersionInfo> item in supportDictionary)
+            foreach (KeyValuePair<int, VEditorInfo> item in supportDictionary)
             {
                 if (item.Key < minVersion)
                     _removes.Add(item.Key);
@@ -212,7 +232,8 @@ namespace UFramework.Editor.VersionControl
         /// <summary>
         /// 构建版本信息文件
         /// </summary>
-        public static void BuildVersion()
+        /// <param name="path"></param>
+        public static void BuildVersion(string path)
         {
             if (describeObject == null)
                 describeObject = UConfig.Read<VersionControl_VersionConfig>();
@@ -229,28 +250,51 @@ namespace UFramework.Editor.VersionControl
             ver.files.AddRange(pv.files);
             ver.versions.Clear();
 
-            var vInfo = new VersionInfo();
+            var vInfo = new VInfo();
             vInfo.version = describeObject.version;
             vInfo.patchs.Clear();
-            vInfo.patchs.AddRange(pv.patches);
+            foreach (var item in pv.patches)
+            {
+                if (!item.isRelease)
+                    continue;
+                    
+                var patch = new VPatch();
+                patch.version = item.version;
+                patch.files = item.files;
+                vInfo.patchs.Add(patch);
+            }
             ver.versions.Add(vInfo.version, vInfo);
 
             foreach (var item in pv.supports)
-                ver.versions.Add(item.version, item);
+            {
+                var info = new VInfo();
+                info.version = item.version;
+                foreach (var itemPatch in pv.patches)
+                {
+                    if (!itemPatch.isRelease)
+                        continue;
 
-            Version.VersionWrite(IOPath.PathCombine(App.TempDirectory, Version.FileName), ver);
+                    var patch = new VPatch();
+                    patch.version = itemPatch.version;
+                    patch.files = itemPatch.files;
+                    info.patchs.Add(patch);
+                }
+                ver.versions.Add(item.version, info);
+            }
+
+            Version.VersionWrite(path, ver);
         }
 
         /// <summary>
         /// 构建版本发布记录
         /// </summary>
-        public static void BuildPublishFileRecords()
+        public static void BuildReleaseRecords()
         {
             describeObject = UConfig.Read<VersionControl_VersionConfig>();
             var pv = describeObject.GetPV();
 
             bool _create = true;
-            foreach (var item in pv.publishRecords)
+            foreach (var item in pv.releaseRecords)
             {
                 if (item.version == describeObject.version)
                 {
@@ -261,11 +305,11 @@ namespace UFramework.Editor.VersionControl
             }
             if (_create)
             {
-                var rec = new PublishRecord();
+                var rec = new ReleaseRecord();
                 rec.version = describeObject.version;
                 rec.files = pv.files;
 
-                pv.publishRecords.Add(rec);
+                pv.releaseRecords.Add(rec);
             }
 
             describeObject.Save();
@@ -282,7 +326,7 @@ namespace UFramework.Editor.VersionControl
                 describeObject = UConfig.Read<VersionControl_VersionConfig>();
 
             var pv = describeObject.GetPV();
-            foreach (var item in pv.publishRecords)
+            foreach (var item in pv.releaseRecords)
                 return item.version == version;
             return false;
         }
@@ -296,7 +340,7 @@ namespace UFramework.Editor.VersionControl
             return IsPublishVersion(UConfig.Read<VersionControl_VersionConfig>().version);
         }
 
-        private static List<VFile> GetVersionFiles()
+        public static List<VFile> GetVersionFiles()
         {
             List<VFile> vfiles = new List<VFile>();
 

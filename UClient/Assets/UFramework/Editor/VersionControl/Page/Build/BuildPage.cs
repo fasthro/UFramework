@@ -33,12 +33,7 @@ namespace UFramework.Editor.VersionControl
         }
 
         [ShowInInspector, HideLabel]
-        [TabGroup("Build")]
         public BuildPageBuildTable buildTable = new BuildPageBuildTable();
-
-        [ShowInInspector, HideLabel]
-        [TabGroup("Patch")]
-        public BuildPagePatchTable patchTable = new BuildPagePatchTable();
 
         private bool _isBuild { get { return buildTable.isBuild; } }
 

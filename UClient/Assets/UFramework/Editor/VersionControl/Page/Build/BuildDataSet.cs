@@ -15,6 +15,9 @@ using UFramework.Assets;
 using System.IO;
 using UFramework.Editor.Preferences.Assets;
 using Version = UFramework.VersionControl.Version;
+using System.Collections.Generic;
+using UFramework.VersionControl;
+using UFramework.Tools;
 
 namespace UFramework.Editor.VersionControl
 {
@@ -176,6 +179,21 @@ namespace UFramework.Editor.VersionControl
 
         [ShowInInspector, Button, HorizontalGroup]
         [DisableIf("_isBuild")]
+        public void AnalysisAssetBundle()
+        {
+            if (_isBuild) return;
+            _AnalysisAssetBundle();
+        }
+
+        private void _AnalysisAssetBundle()
+        {
+            var page = new AssetBundlePage();
+            page.OnRenderBefore();
+            page.AnalysisAssets();
+        }
+
+        [ShowInInspector, Button, HorizontalGroup]
+        [DisableIf("_isBuild")]
         public void BuildAssetBundle()
         {
             if (_isBuild) return;
@@ -186,7 +204,6 @@ namespace UFramework.Editor.VersionControl
         {
             var page = new AssetBundlePage();
             page.OnRenderBefore();
-            page.AnalysisAssets();
             page.BuildAssetsBundle(false);
         }
 
@@ -238,7 +255,9 @@ namespace UFramework.Editor.VersionControl
             if (_isBuild) return;
         }
 
-        [ShowInInspector, Button]
+        #region build application
+
+        [ShowInInspector, Button, HorizontalGroup("build")]
         [DisableIf("_isBuild")]
         public void BuildApplication()
         {
@@ -254,13 +273,13 @@ namespace UFramework.Editor.VersionControl
             {
                 if (EditorUtility.DisplayDialog("Build", "The current version has been released. Do you want to rebuild it?", "Rebuild", "Cancel"))
                 {
-                    EditorCoroutineUtility.StartCoroutineOwnerless(BuildPlayer());
+                    EditorCoroutineUtility.StartCoroutineOwnerless(_BuildApplication());
                 }
             }
-            else EditorCoroutineUtility.StartCoroutineOwnerless(BuildPlayer());
+            else EditorCoroutineUtility.StartCoroutineOwnerless(_BuildApplication());
         }
 
-        IEnumerator BuildPlayer()
+        IEnumerator _BuildApplication()
         {
             _isBuild = true;
             totalProgress = 0;
@@ -268,7 +287,7 @@ namespace UFramework.Editor.VersionControl
 
             var assetBundlePath = IOPath.PathCombine(App.TempDirectory, Platform.BuildTargetCurrentName);
             var versionFilePath = IOPath.PathCombine(App.TempDirectory, Version.FileName);
-            var outPath = IOPath.PathCombine(Environment.CurrentDirectory, "Build", Platform.BuildTargetCurrentName);
+            var outPath = IOPath.PathCombine(App.BuildDirectory, Platform.BuildTargetCurrentName);
 
             // bundle
             totalProgress = 1;
@@ -286,7 +305,7 @@ namespace UFramework.Editor.VersionControl
 
             // version
             progress = 0;
-            VersionPage.BuildVersion();
+            VersionPage.BuildVersion(IOPath.PathCombine(App.TempDirectory, Version.FileName));
             _CopyVersion();
             yield return new EditorWaitForSeconds(1);
             totalProgress = 3;
@@ -329,7 +348,7 @@ namespace UFramework.Editor.VersionControl
 
             // save version
             progress = 0;
-            VersionPage.BuildPublishFileRecords();
+            VersionPage.BuildReleaseRecords();
             yield return new EditorWaitForSeconds(1);
             totalProgress = 6;
 
@@ -350,7 +369,7 @@ namespace UFramework.Editor.VersionControl
         }
 
         /// <summary>
-        /// 构建目标包文件名称
+        /// 构建补丁文件
         /// </summary>
         /// <param name="target"></param>
         /// <returns></returns>
@@ -380,18 +399,131 @@ namespace UFramework.Editor.VersionControl
                     return null;
             }
         }
-    }
 
-    [System.Serializable]
-    public class BuildPagePatchTable
-    {
-        public int version;
+        #endregion
 
-        [ShowInInspector, Button, HorizontalGroup]
+        #region build patch
+
+        [ShowInInspector, Button, HorizontalGroup("build")]
+        [DisableIf("_isBuild")]
         public void BuildPatch()
         {
-
+            if (_isBuild) return;
+            _BuildPatch();
         }
+
+        void _BuildPatch()
+        {
+            _isBuild = true;
+            totalProgress = 0;
+            progress = 0;
+
+            var buildConfig = UConfig.Read<VersionControl_BuildConfig>();
+            var versionConfig = UConfig.Read<VersionControl_VersionConfig>();
+            var versionPv = versionConfig.GetPV();
+
+            if (!versionPv.HasNewPatchVersionWaitBuild())
+            {
+                _isBuild = false;
+                Debug.LogError("build patch version does not exist.please create new patch version.");
+                return;
+            }
+
+            var dirName = "data-" + buildConfig.appVersion + "." + versionConfig.version;
+
+            var patchVersion = versionPv.GetNextPatchVersion() - 1;
+            var newPatchVersion = versionPv.GetNextPatchVersion();
+
+            var versionDir = IOPath.PathCombine(App.BuildDirectory, Platform.BuildTargetCurrentName, dirName);
+
+            string versionPath = null;
+            if (patchVersion != -1)
+                versionPath = IOPath.PathCombine(versionDir, "patch-" + patchVersion, Version.FileName);
+            else versionPath = IOPath.PathCombine(versionDir, Version.FileName);
+
+            if (!IOPath.FileExists(versionPath))
+            {
+                _isBuild = false;
+                Debug.LogError("build patch failed. application version does not exist.");
+                return;
+            }
+
+            // compare files
+            var version = Version.LoadVersion(versionPath);
+            var fileMap = new Dictionary<string, VFile>();
+            for (int i = 0; i < version.files.Count; i++)
+                fileMap.Add(version.files[i].name, version.files[i]);
+
+            var patchFiles = new List<VFile>();
+
+            var newFiles = VersionPage.GetVersionFiles();
+            for (int i = 0; i < newFiles.Count; i++)
+            {
+                var file = newFiles[i];
+                if (!fileMap.ContainsKey(file.name))
+                {
+                    patchFiles.Add(file);
+                }
+                else
+                {
+                    var oldFile = fileMap[file.name];
+                    if (!file.hash.Equals(oldFile.hash))
+                    {
+                        patchFiles.Add(file);
+                    }
+                }
+            }
+
+            if (patchFiles.Count > 0)
+            {
+                foreach (var file in patchFiles)
+                    Debug.Log(">> patch file: " + file.name);
+            }
+            else
+            {
+                _isBuild = false;
+                Debug.Log("There are no changes to the resources and no patches are required.");
+                return;
+            }
+
+            // generated version
+            var newPatch = new VEditorPatch();
+
+            foreach (var item in patchFiles)
+                newPatch.files.Add(item.name, item);
+            newPatch.version = newPatchVersion;
+
+            // update patch
+            versionPv.UpdatePatch(newPatch);
+            versionConfig.Save();
+
+            // build patch
+            var newPathDirName = "patch-" + newPatchVersion;
+            var patchDir = IOPath.PathCombine(versionDir, newPathDirName);
+            IOPath.DirectoryClear(patchDir);
+
+            VersionPage.BuildVersion(IOPath.PathCombine(patchDir, Version.FileName));
+
+            string[] _files = new string[patchFiles.Count];
+            string[] _parents = new string[patchFiles.Count];
+            int _index = 0;
+            foreach (var item in patchFiles)
+            {
+                var source = IOPath.PathCombine(App.TempDirectory, Platform.BuildTargetCurrentName, item.name);
+                var dest = IOPath.PathCombine(patchDir, item.name);
+                IOPath.FileCopy(source, dest);
+                _files[_index] = dest;
+                _parents[_index] = "patch";
+                _index++;
+            }
+            UZip.Zip(_files, _parents, IOPath.PathCombine(patchDir, string.Format("patch-{0}-{1}.zip", versionConfig.version, newPatchVersion)), null, null);
+
+            _isBuild = false;
+            EditorUtility.RevealInFinder(patchDir);
+            Debug.Log("build patch finished! [" + newPathDirName + "]");
+        }
+
+        #endregion
     }
 
     [System.Serializable]

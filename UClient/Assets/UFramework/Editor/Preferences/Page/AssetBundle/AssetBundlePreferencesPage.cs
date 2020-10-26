@@ -303,17 +303,6 @@ namespace UFramework.Editor.Preferences.Assets
             tableItem.pattern = "*.csv";
 
             builtInAssetPathItems.Add(tableItem);
-
-            // files
-            builtInAssetFileItems.Clear();
-
-            // manifest
-            var manifestItem = new AssetSearchFileItem();
-            manifestItem.path = IOPath.PathRelativeAsset(AssetManifest.AssetPath);
-            manifestItem.nameType = NameType.Path;
-            manifestItem.pattern = "*.asset";
-
-            builtInAssetFileItems.Add(manifestItem);
         }
 
         /// <summary>

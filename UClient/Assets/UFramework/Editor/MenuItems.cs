@@ -34,7 +34,13 @@ namespace UFramework.Editor
             IOPath.DirectoryClear(Application.persistentDataPath);
         }
 
-        [MenuItem(Tools + "Open -> Persistent Data Path", false, 2003)]
+        [MenuItem(Tools + "Cleanup -> StreamingAssets Path", false, 2003)]
+        static void CleanupStreamingAssetsPath()
+        {
+            IOPath.DirectoryClear(Application.streamingAssetsPath);
+        }
+
+        [MenuItem(Tools + "Open -> Persistent Data Path", false, 2100)]
         static void OpenPersistentDataPath()
         {
             EditorUtility.RevealInFinder(Application.persistentDataPath);

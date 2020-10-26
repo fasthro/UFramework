@@ -27,7 +27,7 @@ namespace UFramework.VersionControl
     }
 
     [System.Serializable]
-    public class VersionInfo
+    public class VInfo
     {
         [HideInInspector]
         public int version;
@@ -66,16 +66,16 @@ namespace UFramework.VersionControl
         /// 版本信息列表
         /// </summary>
         /// <value></value>
-        public Dictionary<int, VersionInfo> versions = new Dictionary<int, VersionInfo>();
+        public Dictionary<int, VInfo> versions = new Dictionary<int, VInfo>();
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="_version"></param>
         /// <returns></returns>
-        public VersionInfo GetVersionInfo(int _version)
+        public VInfo GetVersionInfo(int _version)
         {
-            VersionInfo info = null;
+            VInfo info = null;
             versions.TryGetValue(_version, out info);
             return info;
         }
@@ -106,7 +106,7 @@ namespace UFramework.VersionControl
                 var count = reader.ReadInt32();
                 for (int i = 0; i < count; i++)
                 {
-                    var info = new VersionInfo();
+                    var info = new VInfo();
                     info.version = reader.ReadInt32();
                     var num = reader.ReadInt32();
                     info.patchs.Clear();
@@ -195,12 +195,10 @@ namespace UFramework.VersionControl
                         {
                             downloadFils.Add(file);
                         }
-                        if (!HashUtils.GetCRC32Hash(stream).Equals(file.hash, StringComparison.OrdinalIgnoreCase))
+                        else if (!HashUtils.GetCRC32Hash(stream).Equals(file.hash, StringComparison.OrdinalIgnoreCase))
                         {
                             downloadFils.Add(file);
                         }
-                        // Debug.Log(HashUtils.GetCRC32Hash(stream) + " - > " + file.hash);
-                        // Debug.Log(HashUtils.GetCRC32Hash(stream).Equals(file.hash, StringComparison.OrdinalIgnoreCase));
                     }
                 }
             }

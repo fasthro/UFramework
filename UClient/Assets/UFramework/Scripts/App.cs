@@ -16,10 +16,11 @@ namespace UFramework
         #region path
 
         private static string _assetsDirectory;
+        private static string _buildDirectory;
         private static string _tempDirectory;
 
         /// <summary>
-        /// UAssets 目录
+        /// UAssets
         /// </summary>
         /// <returns></returns>
         public static string AssetsDirectory
@@ -39,7 +40,22 @@ namespace UFramework
         }
 
         /// <summary>
-        /// 临时目录
+        /// Build
+        /// </summary>
+        /// <value></value>
+        public static string BuildDirectory
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_buildDirectory))
+                    _buildDirectory = IOPath.PathCombine(Environment.CurrentDirectory, "Build");
+                return _buildDirectory;
+            }
+        }
+
+
+        /// <summary>
+        /// Temp
         /// </summary>
         /// <value></value>
         public static string TempDirectory
