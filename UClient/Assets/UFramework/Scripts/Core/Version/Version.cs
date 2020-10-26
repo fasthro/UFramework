@@ -22,7 +22,9 @@ namespace UFramework.VersionControl
     [System.Serializable]
     public class VPatch
     {
-        public int version;
+        public int aVersion;
+        public int pVersion;
+        public long timestamp;
         public Dictionary<string, VFile> files = new Dictionary<string, VFile>();
     }
 
@@ -113,7 +115,8 @@ namespace UFramework.VersionControl
                     for (int k = 0; k < num; k++)
                     {
                         var patch = new VPatch();
-                        patch.version = reader.ReadInt32();
+                        patch.aVersion = reader.ReadInt32();
+                        patch.pVersion = reader.ReadInt32();
 
                         var pnum = reader.ReadInt32();
                         for (int p = 0; p < pnum; p++)
@@ -160,7 +163,8 @@ namespace UFramework.VersionControl
                     for (int i = 0; i < info.patchs.Count; i++)
                     {
                         var patch = info.patchs[i];
-                        writer.Write(patch.version);
+                        writer.Write(patch.aVersion);
+                        writer.Write(patch.pVersion);
                         writer.Write(patch.files.Count);
 
                         foreach (var p in patch.files)
@@ -215,7 +219,7 @@ namespace UFramework.VersionControl
                         VPatch npatch = null;
                         if (map.TryGetValue(file.name, out npatch))
                         {
-                            if (patch.version > npatch.version)
+                            if (patch.timestamp > npatch.timestamp)
                                 map[file.name] = patch;
                         }
                         else map.Add(file.name, patch);
@@ -227,9 +231,9 @@ namespace UFramework.VersionControl
             HashSet<int> dpVersions = new HashSet<int>();
             foreach (var item in map)
             {
-                if (!dpVersions.Contains(item.Value.version))
+                if (!dpVersions.Contains(item.Value.pVersion))
                 {
-                    Debug.Log("download patch: " + item.Value.version);
+                    Debug.Log(string.Format("download patch v{0}.{1}", item.Value.aVersion, item.Value.pVersion));
                     downloads.Add(item.Value);
                 }
             }

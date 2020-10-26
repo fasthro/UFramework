@@ -332,7 +332,7 @@ namespace UFramework.Editor.VersionControl
             yield return new EditorWaitForSeconds(1);
             totalProgress = 4;
 
-            // build
+            // build player
             progress = 0;
             var targetName = GetBuildTargetName(EditorUserBuildSettings.activeBuildTarget);
             if (targetName != null)
@@ -346,16 +346,16 @@ namespace UFramework.Editor.VersionControl
             totalProgress = 5;
             yield return new EditorWaitForSeconds(1);
 
-            // save version
+            // 保存发布版本记录
             progress = 0;
             VersionPage.BuildReleaseRecords();
             yield return new EditorWaitForSeconds(1);
             totalProgress = 6;
 
-            // document
+            // 构建版本目录
             var bc = UConfig.Read<VersionControl_BuildConfig>();
             var ver = UConfig.Read<VersionControl_VersionConfig>();
-            var dn = "data-" + bc.appVersion + "." + ver.version;
+            var dn = "data-v" + ver.version;
             var documentPath = IOPath.PathCombine(outPath, dn);
             IOPath.DirectoryClear(documentPath);
             IOPath.FileCopy(versionFilePath, IOPath.PathCombine(documentPath, Version.FileName));
@@ -376,7 +376,7 @@ namespace UFramework.Editor.VersionControl
         static string GetBuildTargetName(BuildTarget target)
         {
             var time = DateTime.Now.ToString("yyyyMMdd-HHmmss");
-            var name = "app-v" + PlayerSettings.bundleVersion + ".";
+            var name = "app-" + PlayerSettings.bundleVersion + "-v";
             var version = UConfig.Read<VersionControl_VersionConfig>().version;
             switch (target)
             {
@@ -418,109 +418,100 @@ namespace UFramework.Editor.VersionControl
             totalProgress = 0;
             progress = 0;
 
-            var buildConfig = UConfig.Read<VersionControl_BuildConfig>();
             var versionConfig = UConfig.Read<VersionControl_VersionConfig>();
-            var versionPv = versionConfig.GetPV();
+            var version = versionConfig.GetPV();
 
-            if (!versionPv.HasNewPatchVersionWaitBuild())
+            if (!version.HasNewPatchVersionWaitBuild())
             {
                 _isBuild = false;
                 Debug.LogError("build patch version does not exist.please create new patch version.");
                 return;
             }
 
-            var dirName = "data-" + buildConfig.appVersion + "." + versionConfig.version;
+            var dataPath = IOPath.PathCombine(App.BuildDirectory, Platform.BuildTargetCurrentName, "data-v" + versionConfig.version);
 
-            var patchVersion = versionPv.GetNextPatchVersion() - 1;
-            var newPatchVersion = versionPv.GetNextPatchVersion();
+            var nPatchVersionCode = version.GetNextPatchVersion();
+            var oPatchVersionCode = nPatchVersionCode - 1;
 
-            var versionDir = IOPath.PathCombine(App.BuildDirectory, Platform.BuildTargetCurrentName, dirName);
+            string oVersionPath = null;
+            if (oPatchVersionCode != -1)
+                oVersionPath = IOPath.PathCombine(dataPath, string.Format("{0}-v{1}.{2}", Version.FileName, versionConfig.version, oPatchVersionCode));
+            else oVersionPath = IOPath.PathCombine(dataPath, Version.FileName);
 
-            string versionPath = null;
-            if (patchVersion != -1)
-                versionPath = IOPath.PathCombine(versionDir, "patch-" + patchVersion, Version.FileName);
-            else versionPath = IOPath.PathCombine(versionDir, Version.FileName);
-
-            if (!IOPath.FileExists(versionPath))
+            if (!IOPath.FileExists(oVersionPath))
             {
-                _isBuild = false;
                 Debug.LogError("build patch failed. application version does not exist.");
+                _isBuild = false;
                 return;
             }
 
-            // compare files
-            var version = Version.LoadVersion(versionPath);
+            // 查询需要更新的文件
+            var oVer = Version.LoadVersion(oVersionPath);
             var fileMap = new Dictionary<string, VFile>();
-            for (int i = 0; i < version.files.Count; i++)
-                fileMap.Add(version.files[i].name, version.files[i]);
+            for (int i = 0; i < oVer.files.Count; i++)
+                fileMap.Add(oVer.files[i].name, oVer.files[i]);
 
-            var patchFiles = new List<VFile>();
-
+            var nPatchFiles = new List<VFile>();
             var newFiles = VersionPage.GetVersionFiles();
             for (int i = 0; i < newFiles.Count; i++)
             {
                 var file = newFiles[i];
                 if (!fileMap.ContainsKey(file.name))
-                {
-                    patchFiles.Add(file);
-                }
+                    nPatchFiles.Add(file);
                 else
                 {
-                    var oldFile = fileMap[file.name];
-                    if (!file.hash.Equals(oldFile.hash))
-                    {
-                        patchFiles.Add(file);
-                    }
+                    if (!file.hash.Equals(fileMap[file.name].hash))
+                        nPatchFiles.Add(file);
                 }
             }
 
-            if (patchFiles.Count > 0)
+            if (nPatchFiles.Count > 0)
             {
-                foreach (var file in patchFiles)
+                foreach (var file in nPatchFiles)
                     Debug.Log(">> patch file: " + file.name);
             }
             else
             {
-                _isBuild = false;
                 Debug.Log("There are no changes to the resources and no patches are required.");
+                _isBuild = false;
                 return;
             }
 
-            // generated version
+            // 更新版本内容
             var newPatch = new VEditorPatch();
-
-            foreach (var item in patchFiles)
+            foreach (var item in nPatchFiles)
                 newPatch.files.Add(item.name, item);
-            newPatch.version = newPatchVersion;
-
-            // update patch
-            versionPv.UpdatePatch(newPatch);
+            newPatch.aVersion = versionConfig.version;
+            newPatch.pVersion = nPatchVersionCode;
+            version.UpdatePatch(newPatch);
             versionConfig.Save();
 
-            // build patch
-            var newPathDirName = "patch-" + newPatchVersion;
-            var patchDir = IOPath.PathCombine(versionDir, newPathDirName);
-            IOPath.DirectoryClear(patchDir);
+            // 生成版本信息文件
+            VersionPage.BuildVersion(IOPath.PathCombine(dataPath, string.Format("{0}-v{1}.{2}", Version.FileName, versionConfig.version, nPatchVersionCode)));
 
-            VersionPage.BuildVersion(IOPath.PathCombine(patchDir, Version.FileName));
+            // 生成补丁文件
+            var nPatchName = string.Format("patch-v{0}.{1}", versionConfig.version, nPatchVersionCode);
+            var nPatchPath = IOPath.PathCombine(dataPath, nPatchName);
+            IOPath.DirectoryClear(nPatchPath);
 
-            string[] _files = new string[patchFiles.Count];
-            string[] _parents = new string[patchFiles.Count];
+            string[] _files = new string[nPatchFiles.Count];
+            string[] _parents = new string[nPatchFiles.Count];
             int _index = 0;
-            foreach (var item in patchFiles)
+            foreach (var item in nPatchFiles)
             {
                 var source = IOPath.PathCombine(App.TempDirectory, Platform.BuildTargetCurrentName, item.name);
-                var dest = IOPath.PathCombine(patchDir, item.name);
+                var dest = IOPath.PathCombine(nPatchPath, item.name);
                 IOPath.FileCopy(source, dest);
+
                 _files[_index] = dest;
                 _parents[_index] = "patch";
                 _index++;
             }
-            UZip.Zip(_files, _parents, IOPath.PathCombine(patchDir, string.Format("patch-{0}-{1}.zip", versionConfig.version, newPatchVersion)), null, null);
+            UZip.Zip(_files, _parents, IOPath.PathCombine(dataPath, string.Format("{0}.zip", nPatchName)), null, null);
 
             _isBuild = false;
-            EditorUtility.RevealInFinder(patchDir);
-            Debug.Log("build patch finished! [" + newPathDirName + "]");
+            EditorUtility.RevealInFinder(dataPath);
+            Debug.Log("build patch finished! [" + nPatchName + "]");
         }
 
         #endregion

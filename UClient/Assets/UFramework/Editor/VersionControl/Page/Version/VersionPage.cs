@@ -50,16 +50,30 @@ namespace UFramework.Editor.VersionControl
                 if (!item.isRelease) return;
 
             var patch = new VEditorPatch();
-            patch.version = patchs.Count;
+            patch.aVersion = describeObject.version;
+            patch.pVersion = patchs.Count;
+            patch.timestamp = TimeUtils.UTCTimeStamps();
             patchs.Add(patch);
-            patchs.Sort((a, b) => b.version.CompareTo(a.version));
+            patchs.Sort((a, b) => b.pVersion.CompareTo(a.pVersion));
+
+            var pv = describeObject.GetPV();
+            foreach (var item in pv.supports)
+            {
+                var _patch = new VEditorPatch();
+                _patch.aVersion = describeObject.version;
+                _patch.pVersion = item.patchs.Count;
+                _patch.timestamp = TimeUtils.UTCTimeStamps();
+
+                item.patchs.Add(_patch);
+                item.patchs.Sort((a, b) => b.pVersion.CompareTo(a.pVersion));
+            }
         }
 
         private void CustomRemoveIndexFunction_Patchs(int index)
         {
             if (patchs[index].isRelease) return;
             patchs.RemoveAt(index);
-            patchs.Sort((a, b) => b.version.CompareTo(a.version));
+            patchs.Sort((a, b) => b.pVersion.CompareTo(a.pVersion));
         }
 
         [ShowInInspector, HideLabel, ReadOnly]
@@ -87,8 +101,8 @@ namespace UFramework.Editor.VersionControl
 
             version = describeObject.version;
             minVersion = describeObject.minVersion;
-            patchs = pv.patches;
-            patchs.Sort((a, b) => b.version.CompareTo(a.version));
+            patchs = pv.patchs;
+            patchs.Sort((a, b) => b.pVersion.CompareTo(a.pVersion));
 
             supportDictionary.Clear();
             foreach (var item in pv.supports)
@@ -105,7 +119,7 @@ namespace UFramework.Editor.VersionControl
 
             describeObject.version = version;
             describeObject.minVersion = minVersion;
-            pv.patches = patchs;
+            pv.patchs = patchs;
 
             pv.supports.Clear();
             foreach (var item in supportDictionary)
@@ -147,6 +161,15 @@ namespace UFramework.Editor.VersionControl
 
         private void CreateNewVersion()
         {
+            foreach (var item in patchs)
+            {
+                if (!item.isRelease)
+                {
+                    Debug.LogError("Patch version unpublished status. You cannot create a new version");
+                    return;
+                }
+            }
+
             var info = new VEditorInfo();
             info.version = version;
             info.patchs.Clear();
@@ -253,13 +276,12 @@ namespace UFramework.Editor.VersionControl
             var vInfo = new VInfo();
             vInfo.version = describeObject.version;
             vInfo.patchs.Clear();
-            foreach (var item in pv.patches)
+            foreach (var item in pv.patchs)
             {
-                if (!item.isRelease)
-                    continue;
-                    
                 var patch = new VPatch();
-                patch.version = item.version;
+                patch.aVersion = item.aVersion;
+                patch.pVersion = item.pVersion;
+                patch.timestamp = item.timestamp;
                 patch.files = item.files;
                 vInfo.patchs.Add(patch);
             }
@@ -269,13 +291,12 @@ namespace UFramework.Editor.VersionControl
             {
                 var info = new VInfo();
                 info.version = item.version;
-                foreach (var itemPatch in pv.patches)
+                foreach (var itemPatch in pv.patchs)
                 {
-                    if (!itemPatch.isRelease)
-                        continue;
-
                     var patch = new VPatch();
-                    patch.version = itemPatch.version;
+                    patch.aVersion = itemPatch.aVersion;
+                    patch.pVersion = itemPatch.pVersion;
+                    patch.timestamp = itemPatch.timestamp;
                     patch.files = itemPatch.files;
                     info.patchs.Add(patch);
                 }

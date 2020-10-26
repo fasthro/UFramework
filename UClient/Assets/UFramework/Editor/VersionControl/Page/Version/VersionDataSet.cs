@@ -24,7 +24,15 @@ namespace UFramework.Editor.VersionControl
     {
         [ShowInInspector, ReadOnly, HideLabel]
         [HorizontalGroup]
-        public int version;
+        public int aVersion;
+
+        [ShowInInspector, ReadOnly, HideLabel]
+        [HorizontalGroup]
+        public int pVersion;
+
+        [ShowInInspector, ReadOnly, HideLabel]
+        [HorizontalGroup]
+        public long timestamp;
 
         [ShowInInspector, ReadOnly, HideLabel]
         [HorizontalGroup(150)]
@@ -41,6 +49,19 @@ namespace UFramework.Editor.VersionControl
             {
                 isRelease = true;
                 status = GetStatus();
+
+                var pv = UConfig.Read<VersionControl_VersionConfig>().GetPV();
+                foreach (var item in pv.supports)
+                {
+                    foreach (var pitem in item.patchs)
+                    {
+                        if (pitem.aVersion == aVersion && pitem.pVersion == pVersion)
+                        {
+                            pitem.isRelease = true;
+                            pitem.status = pitem.GetStatus();
+                        }
+                    }
+                }
             }
         }
 
@@ -95,7 +116,7 @@ namespace UFramework.Editor.VersionControl
         /// 当前版本补丁列表
         /// </summary>
         /// <returns></returns>
-        public List<VEditorPatch> patches = new List<VEditorPatch>();
+        public List<VEditorPatch> patchs = new List<VEditorPatch>();
 
         /// <summary>
         /// 支持的版本信息列表
@@ -122,8 +143,8 @@ namespace UFramework.Editor.VersionControl
         public int GetNextPatchVersion()
         {
             var nextVersion = 0;
-            foreach (var item in patches)
-                if (item.version > nextVersion) nextVersion = item.version;
+            foreach (var item in patchs)
+                if (item.pVersion > nextVersion) nextVersion = item.pVersion;
             return nextVersion;
         }
 
@@ -134,7 +155,7 @@ namespace UFramework.Editor.VersionControl
         public bool HasNewPatchVersionWaitBuild()
         {
             bool isNew = false;
-            foreach (var item in patches)
+            foreach (var item in patchs)
             {
                 if (!item.isRelease)
                 {
@@ -151,12 +172,24 @@ namespace UFramework.Editor.VersionControl
         /// <param name="patch"></param>
         public void UpdatePatch(VEditorPatch patch)
         {
-            for (int i = 0; i < patches.Count; i++)
+            for (int i = 0; i < patchs.Count; i++)
             {
-                if (patches[i].version == patch.version)
+                if (patchs[i].pVersion == patch.pVersion)
                 {
-                    patches[i] = patch;
+                    patchs[i] = patch;
                     break;
+                }
+            }
+
+            foreach (var item in supports)
+            {
+                for (int i = 0; i < item.patchs.Count; i++)
+                {
+                    if (item.patchs[i].pVersion == patch.pVersion)
+                    {
+                        item.patchs[i] = patch;
+                        break;
+                    }
                 }
             }
         }
