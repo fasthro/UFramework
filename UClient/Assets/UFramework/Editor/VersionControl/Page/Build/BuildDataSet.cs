@@ -18,6 +18,8 @@ using Version = UFramework.VersionControl.Version;
 using System.Collections.Generic;
 using UFramework.VersionControl;
 using UFramework.Tools;
+using UFramework.Editor.Preferences;
+using UFramework.Lua;
 
 namespace UFramework.Editor.VersionControl
 {
@@ -168,7 +170,7 @@ namespace UFramework.Editor.VersionControl
         public int progress;
 
         [HideIf("_noBuild")]
-        [ProgressBar(0, 7, 0, 1, 0, Segmented = true, DrawValueLabel = false)]
+        [ProgressBar(0, 9, 0, 1, 0, Segmented = true, DrawValueLabel = false)]
         [LabelText("Build Progress")]
         public int totalProgress;
 
@@ -219,13 +221,14 @@ namespace UFramework.Editor.VersionControl
         {
             progress = 0;
             var assetBundlePath = IOPath.PathCombine(App.TempDirectory, Platform.BuildTargetCurrentName);
-            IOPath.DirectoryClear(IOPath.PathCombine(Application.streamingAssetsPath, Platform.BuildTargetCurrentName));
+            var assetBundleDataPath = IOPath.PathCombine(Application.streamingAssetsPath, Platform.BuildTargetCurrentName);
+            IOPath.DirectoryClear(assetBundleDataPath);
             string[] files = IOPath.DirectoryGetFiles(assetBundlePath, "*" + Asset.Extension, SearchOption.AllDirectories);
             for (int i = 0; i < files.Length; i++)
             {
                 var fp = files[i];
                 var fn = IOPath.FileName(fp, true);
-                var dest = IOPath.PathCombine(Application.streamingAssetsPath, Platform.BuildTargetCurrentName, fn);
+                var dest = IOPath.PathCombine(assetBundleDataPath, fn);
                 IOPath.FileCopy(files[i], dest);
                 yield return null;
                 progress = (int)((float)(i + 1) / (float)files.Length * 100f);
@@ -253,6 +256,42 @@ namespace UFramework.Editor.VersionControl
         public void BuildScripts()
         {
             if (_isBuild) return;
+            _BuildScripts();
+        }
+
+        private void _BuildScripts()
+        {
+            var page = new LuaPage();
+            page.OnRenderBefore();
+            page.BuildScripts(UConfig.Read<LuaConfig>().byteEncode);
+        }
+
+        [ShowInInspector, Button, HorizontalGroup]
+        [DisableIf("_isBuild")]
+        public void CopyScripts()
+        {
+            if (_isBuild) return;
+            EditorCoroutineUtility.StartCoroutineOwnerless(_CopyScripts());
+        }
+
+        IEnumerator _CopyScripts()
+        {
+            progress = 0;
+            var luaPath = IOPath.PathCombine(App.TempDirectory, "Lua");
+            var luaDataPath = IOPath.PathCombine(Application.streamingAssetsPath, "Lua");
+            IOPath.DirectoryClear(luaDataPath);
+            string[] files = IOPath.DirectoryGetFiles(luaPath, "*.lua", SearchOption.AllDirectories);
+            for (int i = 0; i < files.Length; i++)
+            {
+                var fp = files[i];
+                var fn = IOPath.FileName(fp, true);
+                var dn = IOPath.PathUnitySeparator(Path.GetDirectoryName(fp)).Replace(luaPath, "").TrimStart('/').TrimStart('\\').TrimEnd('/').TrimEnd('\\');
+                var dest = IOPath.PathCombine(luaDataPath, dn, fn);
+                IOPath.FileCopy(files[i], dest);
+                yield return null;
+                progress = (int)((float)(i + 1) / (float)files.Length * 100f);
+            }
+            AssetDatabase.Refresh();
         }
 
         #region build application
@@ -290,7 +329,7 @@ namespace UFramework.Editor.VersionControl
             var outPath = IOPath.PathCombine(App.BuildDirectory, Platform.BuildTargetCurrentName);
 
             // bundle
-            totalProgress = 1;
+            totalProgress++;
             yield return new EditorWaitForSeconds(1);
 
             var manifestPath = IOPath.PathCombine(assetBundlePath, AssetManifest.AssetBundleFileName);
@@ -298,17 +337,29 @@ namespace UFramework.Editor.VersionControl
                 _BuildAssetBundle();
             yield return new EditorWaitForSeconds(1);
 
-            // copy res
+            // copy bundle
             yield return _CopyAssetBundle();
             yield return new EditorWaitForSeconds(1);
-            totalProgress = 2;
+            totalProgress++;
+
+            // lua script
+            var luaPath = IOPath.PathCombine(App.TempDirectory, "Lua");
+            if (!IOPath.DirectoryExists(luaPath) || IOPath.DirectoryGetFiles(luaPath, "*.lua", SearchOption.AllDirectories).Length == 0)
+                _BuildScripts();
+            yield return new EditorWaitForSeconds(1);
+            totalProgress++;
+
+            // copy lua script
+            yield return _CopyScripts();
+            yield return new EditorWaitForSeconds(1);
+            totalProgress++;
 
             // version
             progress = 0;
             VersionPage.BuildVersion(IOPath.PathCombine(App.TempDirectory, Version.FileName));
             _CopyVersion();
             yield return new EditorWaitForSeconds(1);
-            totalProgress = 3;
+            totalProgress++;
 
             // setting
             progress = 0;
@@ -330,7 +381,7 @@ namespace UFramework.Editor.VersionControl
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
             yield return new EditorWaitForSeconds(1);
-            totalProgress = 4;
+            totalProgress++;
 
             // build player
             progress = 0;
@@ -343,14 +394,14 @@ namespace UFramework.Editor.VersionControl
 
                 BuildPipeline.BuildPlayer(scenes, locationPathName, EditorUserBuildSettings.activeBuildTarget, options);
             }
-            totalProgress = 5;
+            totalProgress++;
             yield return new EditorWaitForSeconds(1);
 
             // 保存发布版本记录
             progress = 0;
             VersionPage.BuildReleaseRecords();
             yield return new EditorWaitForSeconds(1);
-            totalProgress = 6;
+            totalProgress++;
 
             // 构建版本目录
             var bc = UConfig.Read<VersionControl_BuildConfig>();
@@ -360,7 +411,7 @@ namespace UFramework.Editor.VersionControl
             IOPath.DirectoryClear(documentPath);
             IOPath.FileCopy(versionFilePath, IOPath.PathCombine(documentPath, Version.FileName));
             yield return new EditorWaitForSeconds(1);
-            totalProgress = 7;
+            totalProgress++;
 
             yield return new EditorWaitForSeconds(1);
             Debug.Log("build application finished! [" + targetName + "]");
@@ -424,7 +475,7 @@ namespace UFramework.Editor.VersionControl
             if (!version.HasNewPatchVersionWaitBuild())
             {
                 _isBuild = false;
-                Debug.LogError("build patch version does not exist.please create new patch version.");
+                EditorUtility.DisplayDialog("Patch", "Please create a new patch version.", "OK");
                 return;
             }
 
@@ -440,20 +491,22 @@ namespace UFramework.Editor.VersionControl
 
             if (!IOPath.FileExists(oVersionPath))
             {
-                Debug.LogError("build patch failed. application version does not exist.");
+                EditorUtility.DisplayDialog("Patch", "Please create a new application.", "OK");
                 _isBuild = false;
                 return;
             }
 
             // 查询需要更新的文件
+            // files
             var oVer = Version.LoadVersion(oVersionPath);
             var fileMap = new Dictionary<string, VFile>();
-            for (int i = 0; i < oVer.files.Count; i++)
+            for (int i = 0; i < oVer.files.Length; i++)
                 fileMap.Add(oVer.files[i].name, oVer.files[i]);
 
             var nPatchFiles = new List<VFile>();
-            var newFiles = VersionPage.GetVersionFiles();
-            for (int i = 0; i < newFiles.Count; i++)
+            VFile[] newFiles;
+            VersionPage.CheckVersionFiles(out newFiles);
+            for (int i = 0; i < newFiles.Length; i++)
             {
                 var file = newFiles[i];
                 if (!fileMap.ContainsKey(file.name))
@@ -465,37 +518,64 @@ namespace UFramework.Editor.VersionControl
                 }
             }
 
-            if (nPatchFiles.Count > 0)
+            // sfiles
+            var sFileMap = new Dictionary<string, VFile>();
+            for (int i = 0; i < oVer.sFiles.Length; i++)
+            {
+                var index = string.Format("{0}-{1}", oVer.sFiles[i].dirIndex, oVer.sFiles[i].name);
+                sFileMap.Add(index, oVer.sFiles[i]);
+            }
+
+            var nPatchSFiles = new List<VScriptFile>();
+            string[] newSDirs;
+            VScriptFile[] newSFiles;
+            VersionPage.CheckVersionScripts(out newSDirs, out newSFiles);
+            for (int i = 0; i < newSFiles.Length; i++)
+            {
+                var file = newSFiles[i];
+                var index = string.Format("{0}-{1}", file.dirIndex, file.name);
+                if (!sFileMap.ContainsKey(index))
+                    nPatchSFiles.Add(file);
+                else
+                {
+                    if (!file.hash.Equals(sFileMap[index].hash))
+                        nPatchFiles.Add(file);
+                }
+            }
+
+            if (nPatchFiles.Count > 0 || nPatchSFiles.Count > 0)
             {
                 foreach (var file in nPatchFiles)
                     Debug.Log(">> patch file: " + file.name);
+
+                foreach (var file in nPatchSFiles)
+                    Debug.Log(">> patch script file: " + file.name);
             }
             else
             {
-                Debug.Log("There are no changes to the resources and no patches are required.");
+                EditorUtility.DisplayDialog("Patch", "No new patch file available. Try to build the assetbundle.", "OK");
                 _isBuild = false;
                 return;
             }
 
             // 更新版本内容
             var newPatch = new VEditorPatch();
-            foreach (var item in nPatchFiles)
-                newPatch.files.Add(item.name, item);
+            newPatch.files.AddRange(nPatchFiles);
             newPatch.aVersion = versionConfig.version;
             newPatch.pVersion = nPatchVersionCode;
-            version.UpdatePatch(newPatch);
+            newPatch = version.UpdatePatch(newPatch);
             versionConfig.Save();
 
             // 生成版本信息文件
             VersionPage.BuildVersion(IOPath.PathCombine(dataPath, string.Format("{0}-v{1}.{2}", Version.FileName, versionConfig.version, nPatchVersionCode)));
 
             // 生成补丁文件
-            var nPatchName = string.Format("patch-v{0}.{1}", versionConfig.version, nPatchVersionCode);
-            var nPatchPath = IOPath.PathCombine(dataPath, nPatchName);
+            var nPatchPath = IOPath.PathCombine(dataPath, "patch");
             IOPath.DirectoryClear(nPatchPath);
 
-            string[] _files = new string[nPatchFiles.Count];
-            string[] _parents = new string[nPatchFiles.Count];
+            var fc = nPatchFiles.Count + nPatchSFiles.Count;
+            string[] _files = new string[fc];
+            string[] _parents = new string[fc];
             int _index = 0;
             foreach (var item in nPatchFiles)
             {
@@ -504,14 +584,26 @@ namespace UFramework.Editor.VersionControl
                 IOPath.FileCopy(source, dest);
 
                 _files[_index] = dest;
-                _parents[_index] = "patch";
+                _parents[_index] = Platform.BuildTargetCurrentName;
                 _index++;
             }
-            UZip.Zip(_files, _parents, IOPath.PathCombine(dataPath, string.Format("{0}.zip", nPatchName)), null, null);
+
+            foreach (var item in nPatchSFiles)
+            {
+                var tp = IOPath.PathCombine(newSDirs[item.dirIndex], item.name);
+                var source = IOPath.PathCombine(App.TempDirectory, "Lua", tp);
+                var dest = IOPath.PathCombine(nPatchPath, "Lua", tp);
+                IOPath.FileCopy(source, dest);
+
+                _files[_index] = dest;
+                _parents[_index] = "Lua";
+                _index++;
+            }
+            UZip.Zip(_files, _parents, IOPath.PathCombine(dataPath, string.Format("{0}.zip", newPatch.displayName)), null, null);
 
             _isBuild = false;
-            EditorUtility.RevealInFinder(dataPath);
-            Debug.Log("build patch finished! [" + nPatchName + "]");
+            EditorUtility.RevealInFinder(nPatchPath);
+            Debug.Log("build patch finished! [" + newPatch.displayName + "]");
         }
 
         #endregion

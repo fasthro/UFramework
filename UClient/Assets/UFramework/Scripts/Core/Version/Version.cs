@@ -25,16 +25,25 @@ namespace UFramework.VersionControl
         public int aVersion;
         public int pVersion;
         public long timestamp;
-        public Dictionary<string, VFile> files = new Dictionary<string, VFile>();
+        public VFile[] files = new VFile[0];
+        public VScriptFile[] sFiles = new VScriptFile[0];
+
+        public string name { get { return string.Format("p{0}.{1}.{2}", aVersion, pVersion, timestamp); } }
+        public string fileName { get { return string.Format("{0}.zip", name); } }
+    }
+
+    [System.Serializable]
+    public class VScriptFile : VFile
+    {
+        public int dirIndex;
     }
 
     [System.Serializable]
     public class VInfo
     {
-        [HideInInspector]
         public int version;
 
-        public List<VPatch> patchs = new List<VPatch>();
+        public VPatch[] patchs = new VPatch[0];
     }
 
     public class Version
@@ -62,7 +71,19 @@ namespace UFramework.VersionControl
         /// </summary>
         /// <typeparam name="FileInfo"></typeparam>
         /// <returns></returns>
-        public List<VFile> files = new List<VFile>();
+        public VFile[] files = new VFile[0];
+
+        /// <summary>
+        /// 版本脚本目录
+        /// </summary>
+        public string[] sDirs = new string[0];
+
+        /// <summary>
+        /// 版本脚本文件
+        /// </summary>
+        /// <typeparam name="VScriptFile"></typeparam>
+        /// <returns></returns>
+        public VScriptFile[] sFiles = new VScriptFile[0];
 
         /// <summary>
         /// 版本信息列表
@@ -90,44 +111,82 @@ namespace UFramework.VersionControl
             using (var stream = File.OpenRead(path))
             {
                 var reader = new BinaryReader(stream);
-
+                // base
                 ver.version = reader.ReadInt32();
                 ver.minVersion = reader.ReadInt32();
                 ver.timestamp = reader.ReadInt64();
 
+                // files
                 var fnum = reader.ReadInt32();
+                ver.files = new VFile[fnum];
                 for (int i = 0; i < fnum; i++)
                 {
                     var file = new VFile();
                     file.name = reader.ReadString();
                     file.length = reader.ReadInt64();
                     file.hash = reader.ReadString();
-                    ver.files.Add(file);
+                    ver.files[i] = file;
                 }
 
+                // sdir
+                var dnum = reader.ReadInt32();
+                ver.sDirs = new string[dnum];
+                for (int i = 0; i < dnum; i++)
+                    ver.sDirs[i] = reader.ReadString();
+
+                // sfile
+                var snum = reader.ReadInt32();
+                ver.sFiles = new VScriptFile[snum];
+                for (int i = 0; i < snum; i++)
+                {
+                    VScriptFile file = new VScriptFile();
+                    file.name = reader.ReadString();
+                    file.length = reader.ReadInt64();
+                    file.hash = reader.ReadString();
+                    file.dirIndex = reader.ReadInt32();
+                    ver.sFiles[i] = file;
+                }
+
+                // versions
                 var count = reader.ReadInt32();
                 for (int i = 0; i < count; i++)
                 {
                     var info = new VInfo();
                     info.version = reader.ReadInt32();
-                    var num = reader.ReadInt32();
-                    info.patchs.Clear();
-                    for (int k = 0; k < num; k++)
+                    var pnum = reader.ReadInt32();
+                    info.patchs = new VPatch[pnum];
+                    for (int k = 0; k < pnum; k++)
                     {
                         var patch = new VPatch();
                         patch.aVersion = reader.ReadInt32();
                         patch.pVersion = reader.ReadInt32();
+                        patch.timestamp = reader.ReadInt64();
 
-                        var pnum = reader.ReadInt32();
-                        for (int p = 0; p < pnum; p++)
+                        // files
+                        var pfnum = reader.ReadInt32();
+                        patch.files = new VFile[pfnum];
+                        for (int p = 0; p < pfnum; p++)
                         {
-                            VFile fi = new VFile();
-                            fi.name = reader.ReadString();
-                            fi.length = reader.ReadInt64();
-                            fi.hash = reader.ReadString();
-                            patch.files.Add(fi.name, fi);
+                            VFile file = new VFile();
+                            file.name = reader.ReadString();
+                            file.length = reader.ReadInt64();
+                            file.hash = reader.ReadString();
+                            patch.files[p] = file;
                         }
-                        info.patchs.Add(patch);
+
+                        // sfiles
+                        var psfnum = reader.ReadInt32();
+                        patch.sFiles = new VScriptFile[psfnum];
+                        for (int p = 0; p < psfnum; p++)
+                        {
+                            VScriptFile file = new VScriptFile();
+                            file.name = reader.ReadString();
+                            file.length = reader.ReadInt64();
+                            file.hash = reader.ReadString();
+                            file.dirIndex = reader.ReadInt32();
+                            patch.sFiles[p] = file;
+                        }
+                        info.patchs[k] = patch;
                     }
                     ver.versions.Add(info.version, info);
                 }
@@ -140,12 +199,14 @@ namespace UFramework.VersionControl
             using (var stream = File.OpenWrite(path))
             {
                 var writer = new BinaryWriter(stream);
+                // base
                 writer.Write(ver.version);
                 writer.Write(ver.minVersion);
                 writer.Write(ver.timestamp);
 
-                writer.Write(ver.files.Count);
-                for (int i = 0; i < ver.files.Count; i++)
+                // files
+                writer.Write(ver.files.Length);
+                for (int i = 0; i < ver.files.Length; i++)
                 {
                     var file = ver.files[i];
                     writer.Write(file.name);
@@ -153,26 +214,55 @@ namespace UFramework.VersionControl
                     writer.Write(file.hash);
                 }
 
+                // sdir
+                writer.Write(ver.sDirs.Length);
+                for (int i = 0; i < ver.sDirs.Length; i++)
+                    writer.Write(ver.sDirs[i]);
+
+                // sfile
+                writer.Write(ver.sFiles.Length);
+                foreach (var item in ver.sFiles)
+                {
+                    writer.Write(item.name);
+                    writer.Write(item.length);
+                    writer.Write(item.hash);
+                    writer.Write(item.dirIndex);
+                }
+
+                // versions
                 writer.Write(ver.versions.Count);
                 foreach (var item in ver.versions)
                 {
                     var info = item.Value;
                     writer.Write(info.version);
 
-                    writer.Write(info.patchs.Count);
-                    for (int i = 0; i < info.patchs.Count; i++)
+                    writer.Write(info.patchs.Length);
+                    for (int i = 0; i < info.patchs.Length; i++)
                     {
                         var patch = info.patchs[i];
                         writer.Write(patch.aVersion);
                         writer.Write(patch.pVersion);
-                        writer.Write(patch.files.Count);
+                        writer.Write(patch.timestamp);
 
-                        foreach (var p in patch.files)
+                        // files
+                        writer.Write(patch.files.Length);
+                        for (int k = 0; k < patch.files.Length; k++)
                         {
-                            var file = p.Value;
+                            var file = patch.files[k];
                             writer.Write(file.name);
                             writer.Write(file.length);
                             writer.Write(file.hash);
+                        }
+
+                        // sfiles
+                        writer.Write(patch.sFiles.Length);
+                        for (int k = 0; k < patch.sFiles.Length; k++)
+                        {
+                            var file = patch.sFiles[k];
+                            writer.Write(file.name);
+                            writer.Write(file.length);
+                            writer.Write(file.hash);
+                            writer.Write(file.dirIndex);
                         }
                     }
                 }
@@ -183,7 +273,7 @@ namespace UFramework.VersionControl
         {
             var versionInfo = ver.GetVersionInfo(UConfig.Read<AppConfig>().version);
             List<VFile> downloadFils = new List<VFile>();
-            for (int i = 0; i < ver.files.Count; i++)
+            for (int i = 0; i < ver.files.Length; i++)
             {
                 var file = ver.files[i];
                 var fp = IOPath.PathCombine(targetPath, file.name);
@@ -210,19 +300,27 @@ namespace UFramework.VersionControl
             Dictionary<string, VPatch> map = new Dictionary<string, VPatch>();
             for (int i = 0; i < downloadFils.Count; i++)
             {
-                var file = downloadFils[i];
-                for (int k = 0; k < versionInfo.patchs.Count; k++)
+                var dfile = downloadFils[i];
+                for (int k = 0; k < versionInfo.patchs.Length; k++)
                 {
                     var patch = versionInfo.patchs[k];
-                    if (patch.files.ContainsKey(file.name))
+                    var isChecked = false;
+                    for (int n = 0; n < patch.files.Length; n++)
                     {
-                        VPatch npatch = null;
-                        if (map.TryGetValue(file.name, out npatch))
+                        var pfile = patch.files[n];
+                        if (dfile.name.Equals(pfile.name))
                         {
-                            if (patch.timestamp > npatch.timestamp)
-                                map[file.name] = patch;
+                            VPatch npatch = null;
+                            if (map.TryGetValue(dfile.name, out npatch))
+                            {
+                                if (patch.timestamp > npatch.timestamp)
+                                    map[dfile.name] = patch;
+                            }
+                            else map.Add(dfile.name, patch);
+                            isChecked = true;
+                            break;
                         }
-                        else map.Add(file.name, patch);
+                        if (isChecked) break;
                     }
                 }
             }

@@ -79,7 +79,7 @@ namespace UFramework.Assets
             }
 
             AssetManifest manifest = request.GetRequest<ManifestRequest>().manifest;
-            var directorys = manifest.directorys;
+            var directorys = manifest.dirs;
             var assets = manifest.assets;
             var bundles = manifest.bundles;
 
@@ -92,7 +92,7 @@ namespace UFramework.Assets
             for (int i = 0; i < assets.Length; i++)
             {
                 var asset = assets[i];
-                var path = string.Format("{0}/{1}", directorys[asset.directory], asset.name);
+                var path = string.Format("{0}/{1}", directorys[asset.dirIndex], asset.name);
                 if (asset.bundle >= 0 && asset.bundle < bundles.Length)
                 {
                     asset2BundleDictionary[path] = bundles[asset.bundle].name;

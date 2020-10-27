@@ -14,23 +14,26 @@ using UFramework.VersionControl;
 using UnityEditor;
 using UnityEngine;
 
-namespace UFramework.Editor.VersionControl
+namespace UFramework.Editor.Tools
 {
-    public class VersionSerializablePage : IPage, IPageBar
+    public class SerializablePage : IPage, IPageBar
     {
-        public string menuName { get { return "Version/Serializable"; } }
+        public string menuName { get { return "Serializable"; } }
 
-        [FilePath]
+        [ShowInInspector, FilePath, HorizontalGroup]
+        [HideLabel]
         public string versionFilePath;
 
-        [Button]
+        [ShowInInspector, FilePath, HorizontalGroup(150)]
         public void Serializable()
         {
             version = Version.LoadVersion(versionFilePath);
         }
 
         [ShowInInspector]
+        [HideIf("_hideVersion")]
         public Version version;
+        private bool _hideVersion { get { return version == null; } }
 
         public object GetInstance()
         {

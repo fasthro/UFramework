@@ -14,7 +14,7 @@ namespace UFramework.Assets
     {
         public string name;
         public int bundle;
-        public int directory;
+        public int dirIndex;
     }
 
     [Serializable]
@@ -35,7 +35,7 @@ namespace UFramework.Assets
         /// <summary>
         /// 资源目录
         /// </summary>
-        public string[] directorys = new string[0];
+        public string[] dirs = new string[0];
 
         /// <summary>
         /// assets

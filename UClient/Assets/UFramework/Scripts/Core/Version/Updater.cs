@@ -128,7 +128,7 @@ namespace UFramework.VersionControl
                 if (string.IsNullOrEmpty(request.error))
                 {
                     var version = Version.LoadVersion(versionPath);
-                    _maxValue = version.files.Count;
+                    _maxValue = version.files.Length;
                     _value = 0;
                     _step = Step.Copy;
 
@@ -147,7 +147,7 @@ namespace UFramework.VersionControl
                     _appVersion = Version.LoadVersion(versionOriginalPath);
                     if (_appVersion.version > _newVersion.version)
                     {
-                        _maxValue = _appVersion.files.Count;
+                        _maxValue = _appVersion.files.Length;
                         _value = 0;
                         _step = Step.Copy;
                     }
@@ -166,7 +166,7 @@ namespace UFramework.VersionControl
 
         private IEnumerator UpdateCopy()
         {
-            for (var index = 0; index < _appVersion.files.Count; index++)
+            for (var index = 0; index < _appVersion.files.Length; index++)
             {
                 var item = _appVersion.files[index];
                 var request = UnityWebRequest.Get(IOPath.PathCombine(streamingAssetsPath, Platform.RuntimePlatformCurrentName, item.name));

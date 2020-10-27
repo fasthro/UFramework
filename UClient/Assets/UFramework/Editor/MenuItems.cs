@@ -11,9 +11,9 @@ namespace UFramework.Editor
 {
     public static class MenuItems
     {
-        const string Tools = "UFramework/Tools/";
+        const string Root = "UFramework/";
 
-        [MenuItem(Tools + "Cleanup -> Project", false, 2000)]
+        [MenuItem(Root + "Cleanup -> Project", false, 2000)]
         static void Cleanup()
         {
             // Config
@@ -22,25 +22,25 @@ namespace UFramework.Editor
             IOPath.DirectoryClear(IOPath.PathCombine(App.AssetsDirectory, "Config", FileAddress.Data.ToString()));
         }
 
-        [MenuItem(Tools + "Cleanup -> UTemp Path", false, 2001)]
+        [MenuItem(Root + "Cleanup -> UTemp Path", false, 2001)]
         static void CleanupUTempPath()
         {
             IOPath.DirectoryClear(App.TempDirectory);
         }
 
-        [MenuItem(Tools + "Cleanup -> Persistent Data Path", false, 2002)]
+        [MenuItem(Root + "Cleanup -> Persistent Data Path", false, 2002)]
         static void CleanupPersistentDataPath()
         {
             IOPath.DirectoryClear(Application.persistentDataPath);
         }
 
-        [MenuItem(Tools + "Cleanup -> StreamingAssets Path", false, 2003)]
+        [MenuItem(Root + "Cleanup -> StreamingAssets Path", false, 2003)]
         static void CleanupStreamingAssetsPath()
         {
             IOPath.DirectoryClear(Application.streamingAssetsPath);
         }
 
-        [MenuItem(Tools + "Open -> Persistent Data Path", false, 2100)]
+        [MenuItem(Root + "Open -> Persistent Data Path", false, 2100)]
         static void OpenPersistentDataPath()
         {
             EditorUtility.RevealInFinder(Application.persistentDataPath);

@@ -39,8 +39,15 @@ namespace UFramework.Editor.Preferences
         /// <typeparam name="string"></typeparam>
         /// <returns></returns>
         [ShowInInspector]
-        [ListDrawerSettings(Expanded = true, CustomRemoveElementFunction = "OnSearchPathItemCustomRemoveElementFunction")]
+        [ListDrawerSettings(Expanded = true, CustomRemoveElementFunction = "CustomRemoveElementFunction_searchPaths")]
         public List<LuaSearchPathItem> searchPaths = new List<LuaSearchPathItem>();
+
+        private void CustomRemoveElementFunction_searchPaths(LuaSearchPathItem item)
+        {
+            searchPaths.Remove(item);
+            CheckBuiltInSearchPathItem();
+            SearchPathItemDescribeSave();
+        }
 
         /// <summary>
         /// lua bind type items
@@ -81,9 +88,9 @@ namespace UFramework.Editor.Preferences
                 ClearWrap();
             }
 
-            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Build Scripts")))
+            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Build Lua Scripts")))
             {
-                BuildCode(byteEncode);
+                BuildScripts(byteEncode);
             }
         }
 
@@ -169,17 +176,6 @@ namespace UFramework.Editor.Preferences
             {
                 return right.order.CompareTo(left.order);
             });
-        }
-
-        /// <summary>
-        /// Custom Remove Search Path Item Function
-        /// </summary>
-        /// <param name="item"></param>
-        private void OnSearchPathItemCustomRemoveElementFunction(LuaSearchPathItem item)
-        {
-            searchPaths.Remove(item);
-            CheckBuiltInSearchPathItem();
-            SearchPathItemDescribeSave();
         }
 
         /// <summary>
@@ -375,10 +371,10 @@ namespace UFramework.Editor.Preferences
         /// <summary>
         /// 构建lua代码
         /// </summary>
-        private void BuildCode(bool encode)
+        public void BuildScripts(bool encode)
         {
-            IOPath.DirectoryClear(App.LuaTempDataDirectory);
-            IOPath.DirectoryClear(App.LuaDataDirectory);
+            var outPath = IOPath.PathCombine(App.TempDirectory, "Lua");
+            IOPath.DirectoryClear(outPath);
 
             int n = 0;
             for (int i = 0; i < searchPaths.Count; i++)
@@ -389,19 +385,16 @@ namespace UFramework.Editor.Preferences
                 foreach (string file in files)
                 {
                     if (file.EndsWith(".meta")) continue;
-                    var newFile = IOPath.PathCombine(App.LuaTempDataDirectory, searchItem.pathMD5) + IOPath.PathReplace(file, searchItem.path);
+                    var newFile = IOPath.PathCombine(outPath, searchItem.pathMD5) + IOPath.PathReplace(file, searchItem.path);
                     var root = Path.GetDirectoryName(newFile);
+
                     if (!IOPath.DirectoryExists(root)) IOPath.DirectoryCreate(root);
-                    if (encode)
-                    {
-                        EncodeLuaFile(file, newFile);
-                    }
-                    else
-                    {
-                        IOPath.FileCopy(file, newFile);
-                    }
+
+                    if (encode) EncodeLuaFile(file, newFile);
+                    else IOPath.FileCopy(file, newFile);
 
                     n++;
+
                     string title = "Processing...[" + n + " - " + files.Length + "]";
                     Utils.UpdateProgress(title, newFile, n, files.Length);
                 }
@@ -409,19 +402,18 @@ namespace UFramework.Editor.Preferences
             }
             AssetDatabase.Refresh();
 
-            // TODO App.DataDirectory
-            var zipfile = IOPath.PathCombine(App.TempDirectory, "Scripts.zip");
-            IOPath.FileDelete(zipfile);
-            IOPath.DirectoryDelete(App.LuaDataDirectory);
-            if (app.isDevelopmentVersion)
-            {
-                IOPath.DirectoryCopy(App.LuaTempDataDirectory, App.LuaDataDirectory);
-            }
-            else
-            {
-                UZip.Zip(new string[] { App.LuaTempDataDirectory }, zipfile);
-            }
-            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+            // var zipfile = IOPath.PathCombine(App.TempDirectory, "Lua.zip");
+            // IOPath.FileDelete(zipfile);
+            // IOPath.DirectoryDelete(App.LuaDataDirectory);
+            // if (app.isDevelopmentVersion)
+            // {
+            //     IOPath.DirectoryCopy(App.LuaTempDataDirectory, App.LuaDataDirectory);
+            // }
+            // else
+            // {
+            //     UZip.Zip(new string[] { App.LuaTempDataDirectory }, zipfile);
+            // }
+            // AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
         }
 
         /// <summary>

@@ -68,46 +68,6 @@ namespace UFramework
             }
         }
 
-        #region lua
-
-        private static string _luaTempDataDirectory = null;
-
-        /// <summary>
-        /// lua temp script 所在数据目录(非开发模式读取此目录)
-        /// </summary>
-        /// <value></value>
-        public static string LuaTempDataDirectory
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(_luaTempDataDirectory))
-                {
-                    _luaTempDataDirectory = IOPath.PathCombine(TempDirectory, "Scripts");
-                }
-                return _luaTempDataDirectory;
-            }
-        }
-
-
-        private static string _luaDataDirectory = null;
-
-        /// <summary>
-        /// lua script 所在数据目录(非开发模式读取此目录)
-        /// </summary>
-        /// <value></value>
-        public static string LuaDataDirectory
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(_luaDataDirectory))
-                {
-                    _luaDataDirectory = IOPath.PathCombine(Application.persistentDataPath, "Scripts");
-                }
-                return _luaDataDirectory;
-            }
-        }
-        #endregion
-
         #endregion
 
         #region manager
