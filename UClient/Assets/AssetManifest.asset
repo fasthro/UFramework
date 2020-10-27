@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4efd3d0189a600447ad360358041a551, type: 3}
   m_Name: AssetManifest
   m_EditorClassIdentifier: 
-  directorys:
+  dirs:
   - Assets/Arts/UI/_Background
   - Assets/Arts/UI/_Button
   - Assets/Arts/UI/_Font
@@ -26,65 +26,50 @@ MonoBehaviour:
   - Assets/UAssets/Table/Data
   assets:
   - name: _Background_fui.bytes
-    bundle: 7
-    directory: 0
+    bundle: 5
+    dirIndex: 0
   - name: _Button_fui.bytes
-    bundle: 12
-    directory: 1
+    bundle: 9
+    dirIndex: 1
   - name: _Font_fui.bytes
     bundle: 1
-    directory: 2
+    dirIndex: 2
   - name: _Panel_fui.bytes
-    bundle: 18
-    directory: 3
-  - name: _Text_fui.bytes
-    bundle: 9
-    directory: 4
-  - name: Cube 1.prefab
-    bundle: 14
-    directory: 5
-  - name: Cube 2.prefab
-    bundle: 8
-    directory: 5
-  - name: Cube 3.prefab
-    bundle: 6
-    directory: 5
-  - name: Cube 4.prefab
-    bundle: 2
-    directory: 5
-  - name: Cube 5.prefab
-    bundle: 17
-    directory: 5
-  - name: Cube 6.prefab
-    bundle: 16
-    directory: 5
-  - name: Cube.prefab
     bundle: 13
-    directory: 5
+    dirIndex: 3
+  - name: _Text_fui.bytes
+    bundle: 6
+    dirIndex: 4
+  - name: Cube 1.prefab
+    bundle: 11
+    dirIndex: 5
+  - name: Cube.prefab
+    bundle: 10
+    dirIndex: 5
   - name: Sphere.prefab
-    bundle: 15
-    directory: 6
+    bundle: 12
+    dirIndex: 6
   - name: LuaConfig.json
     bundle: 0
-    directory: 7
+    dirIndex: 7
   - name: TableConfig.json
-    bundle: 4
-    directory: 7
-  - name: 0.txt
-    bundle: 5
-    directory: 8
-  - name: 1.txt
-    bundle: 11
-    directory: 8
-  - name: 0.txt
-    bundle: 10
-    directory: 9
-  - name: 1.txt
-    bundle: 19
-    directory: 9
-  - name: Template.csv
     bundle: 3
-    directory: 10
+    dirIndex: 7
+  - name: 0.txt
+    bundle: 4
+    dirIndex: 8
+  - name: 1.txt
+    bundle: 8
+    dirIndex: 8
+  - name: 0.txt
+    bundle: 7
+    dirIndex: 9
+  - name: 1.txt
+    bundle: 14
+    dirIndex: 9
+  - name: Template.csv
+    bundle: 2
+    dirIndex: 10
   bundles:
   - name: 0398755cd73160a0e82adcdf20ac1f12.unity3d
     id: 0
@@ -96,93 +81,68 @@ MonoBehaviour:
     dependencies: 
     size: 1234
     hash: 7b5bc03fd83bbf790cdd97fe4fa2140a
-  - name: 1d01e600d2e319392965efb156921535.unity3d
-    id: 2
-    dependencies: 
-    size: 90972
-    hash: 626df40697cefb81de530997a79e24be
   - name: 2038ca226310debdde227b05e104e969.unity3d
-    id: 3
+    id: 2
     dependencies: 
     size: 1462
     hash: 19b6a8b6feb05b21dc405937ebec5865
   - name: 23e279975cfd550cd4e87899ec6ba807.unity3d
-    id: 4
+    id: 3
     dependencies: 
-    size: 1269
-    hash: 4b63df13cfa97fa3368fc31ecf5791f4
+    size: 1256
+    hash: e82b04d8c9d293cbe6560411d702c71d
   - name: 2e8b0eb683f58e1884b970a3282272cf.unity3d
-    id: 5
+    id: 4
     dependencies: 
     size: 1204
     hash: c691103f59defb973de84e6425fd2ec2
-  - name: 374c87fb8f7a84ba24923e48e173cd13.unity3d
-    id: 6
-    dependencies: 
-    size: 90975
-    hash: e854764956d52f12871901230418a243
   - name: 3f2ae1b0a8e1a492ec40ef6f16938581.unity3d
-    id: 7
+    id: 5
     dependencies: 
     size: 1250
     hash: 33df4f2e71971412fc379e89c9ad8af4
-  - name: 5b92a903e1fccd8251a02eb4a1c5dbb3.unity3d
-    id: 8
-    dependencies: 
-    size: 90973
-    hash: 8f2f7852cd92915cf8be0e98eef10264
   - name: 73e8edb200050e7039116ca5939d3ff0.unity3d
-    id: 9
+    id: 6
     dependencies: 
     size: 1242
     hash: 9ebb41a4e2a9a2288e88b1b60d5eaca0
   - name: 7fcfb0d6535a39ccd09f9870466a7ca6.unity3d
-    id: 10
+    id: 7
     dependencies: 
     size: 1191
     hash: e4f1626706bdfc21172b2746d98af36a
   - name: 97e43a8abac9eae00e8a5a7916f6948c.unity3d
-    id: 11
+    id: 8
     dependencies: 
     size: 1203
     hash: 9409a7329b793d334e2b0267b1792090
   - name: 9df812fc51aac5f0499c0e999471512f.unity3d
-    id: 12
+    id: 9
     dependencies: 
     size: 1231
     hash: b587835d78a5ced532b5b2e536659912
   - name: 9ef81377aa433e2f119af18dd53accb9.unity3d
-    id: 13
+    id: 10
     dependencies: 
     size: 90979
     hash: 0a7e7d75721f84099bd63dd5f97495d3
   - name: aaf09c4108d56e2aeff66771f453f3d0.unity3d
-    id: 14
+    id: 11
     dependencies: 
-    size: 90962
-    hash: 1a27a6952b8566304067074b668b7d30
+    size: 90968
+    hash: 0e5370b3052bb44b917bbcc1667dab04
   - name: b43675aef0c254b305690e1d8cf5d55a.unity3d
-    id: 15
+    id: 12
     dependencies: 
     size: 90986
     hash: a8aa815585dcda73144e3fd0ddb7f16a
-  - name: ba9e6f0d3af3b2f0536d4ffc6cb7f3c7.unity3d
-    id: 16
-    dependencies: 
-    size: 90977
-    hash: 08b0a448115aa2720acd8496f8a9fb2a
-  - name: cf54afac2fe6eeda8f6917c1d38e7ae6.unity3d
-    id: 17
-    dependencies: 
-    size: 90990
-    hash: 875f609709130386591b88a5727e264b
   - name: db38afd48a8fd6d4ad3536353382bbd0.unity3d
-    id: 18
+    id: 13
     dependencies: 
     size: 1247
     hash: 78f83659ca6ad9bd7906748457189214
   - name: de57736ec43b776c6e6bdd832a9e9810.unity3d
-    id: 19
+    id: 14
     dependencies: 
     size: 1191
     hash: 0785a07267231feab95847241b9b7d63

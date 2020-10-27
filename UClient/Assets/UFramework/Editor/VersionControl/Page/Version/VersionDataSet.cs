@@ -12,27 +12,23 @@ using UnityEngine;
 
 namespace UFramework.Editor.VersionControl
 {
-    [System.Serializable]
-    public class ReleaseRecord
-    {
-        public int version;
-        public List<VFile> files = new List<VFile>();
-    }
 
     [System.Serializable]
     public class VEditorPatch
     {
-        [ShowInInspector, ReadOnly, HideLabel]
-        [HorizontalGroup]
+        [HideInInspector]
         public int aVersion;
 
-        [ShowInInspector, ReadOnly, HideLabel]
-        [HorizontalGroup]
+        [HideInInspector]
         public int pVersion;
 
-        [ShowInInspector, ReadOnly, HideLabel]
-        [HorizontalGroup]
+        [HideInInspector]
         public long timestamp;
+
+        [ShowInInspector, ReadOnly, HideLabel, HorizontalGroup]
+        public string displayName;
+        [ShowInInspector, ReadOnly, HideLabel, HorizontalGroup]
+        public string displayTime;
 
         [ShowInInspector, ReadOnly, HideLabel]
         [HorizontalGroup(150)]
@@ -69,11 +65,20 @@ namespace UFramework.Editor.VersionControl
         public bool isRelease;
 
         [HideInInspector]
-        public Dictionary<string, VFile> files = new Dictionary<string, VFile>();
+        public List<VFile> files = new List<VFile>();
+
+        [HideInInspector]
+        public List<VScriptFile> sFiles = new List<VScriptFile>();
 
         public VEditorPatch()
         {
             status = GetStatus();
+        }
+
+        public void UpdateDisplay()
+        {
+            displayName = string.Format("p{0}.{1}.{2}", aVersion, pVersion, timestamp);
+            displayTime = TimeUtils.UTCTimeStampsFormat(timestamp, "yyyy-MM-dd HH:mm:ss");
         }
 
         public string GetStatus()
@@ -106,13 +111,6 @@ namespace UFramework.Editor.VersionControl
         public int platform;
 
         /// <summary>
-        /// files
-        /// </summary>
-        /// <typeparam name="FileInfo"></typeparam>
-        /// <returns></returns>
-        public List<VFile> files = new List<VFile>();
-
-        /// <summary>
         /// 当前版本补丁列表
         /// </summary>
         /// <returns></returns>
@@ -131,10 +129,10 @@ namespace UFramework.Editor.VersionControl
         public List<VEditorInfo> historys = new List<VEditorInfo>();
 
         /// <summary>
-        /// 发布版本文件记录
+        /// 发布版本号记录
         /// </summary>
         /// <returns></returns>
-        public List<ReleaseRecord> releaseRecords = new List<ReleaseRecord>();
+        public List<int> releaseVersionCodes = new List<int>();
 
         /// <summary>
         /// 获取下一个补丁版本
@@ -170,13 +168,20 @@ namespace UFramework.Editor.VersionControl
         /// 更新补丁数据
         /// </summary>
         /// <param name="patch"></param>
-        public void UpdatePatch(VEditorPatch patch)
+        public VEditorPatch UpdatePatch(VEditorPatch patch)
         {
+            VEditorPatch newPatch = null;
             for (int i = 0; i < patchs.Count; i++)
             {
                 if (patchs[i].pVersion == patch.pVersion)
                 {
-                    patchs[i] = patch;
+                    var data = patchs[i];
+                    data.aVersion = patch.aVersion;
+                    data.pVersion = patch.pVersion;
+                    data.files = patch.files;
+                    data.UpdateDisplay();
+
+                    newPatch = data;
                     break;
                 }
             }
@@ -187,11 +192,16 @@ namespace UFramework.Editor.VersionControl
                 {
                     if (item.patchs[i].pVersion == patch.pVersion)
                     {
-                        item.patchs[i] = patch;
+                        var data = item.patchs[i];
+                        data.aVersion = patch.aVersion;
+                        data.pVersion = patch.pVersion;
+                        data.files = patch.files;
+                        data.UpdateDisplay();
                         break;
                     }
                 }
             }
+            return newPatch == null ? patch : newPatch;
         }
     }
 

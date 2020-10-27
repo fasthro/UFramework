@@ -782,7 +782,7 @@ namespace UFramework.Editor.Preferences.Assets
                     dirs.Add(dir);
                 }
                 Debug.Log(">> bundle: " + item.bundleName + "-> " + GetBuildBundleName(item.bundleName));
-                var asset = new AssetRef { bundle = bundle2Ids[GetBuildBundleName(item.bundleName)], directory = index, name = Path.GetFileName(path) };
+                var asset = new AssetRef { bundle = bundle2Ids[GetBuildBundleName(item.bundleName)], dirIndex = index, name = Path.GetFileName(path) };
                 assetRefs.Add(asset);
             }
 
@@ -797,11 +797,11 @@ namespace UFramework.Editor.Preferences.Assets
                     index = dirs.Count;
                     dirs.Add(dir);
                 }
-                var asset = new AssetRef { bundle = bundle2Ids[GetBuildBundleName(item.bundleName)], directory = index, name = Path.GetFileName(path) };
+                var asset = new AssetRef { bundle = bundle2Ids[GetBuildBundleName(item.bundleName)], dirIndex = index, name = Path.GetFileName(path) };
                 assetRefs.Add(asset);
             }
 
-            manifest.directorys = dirs.ToArray();
+            manifest.dirs = dirs.ToArray();
             manifest.assets = assetRefs.ToArray();
             manifest.bundles = bundleRefs.ToArray();
 

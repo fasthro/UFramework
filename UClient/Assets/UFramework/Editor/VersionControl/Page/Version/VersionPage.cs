@@ -53,6 +53,7 @@ namespace UFramework.Editor.VersionControl
             patch.aVersion = describeObject.version;
             patch.pVersion = patchs.Count;
             patch.timestamp = TimeUtils.UTCTimeStamps();
+            patch.UpdateDisplay();
             patchs.Add(patch);
             patchs.Sort((a, b) => b.pVersion.CompareTo(a.pVersion));
 
@@ -63,6 +64,7 @@ namespace UFramework.Editor.VersionControl
                 _patch.aVersion = describeObject.version;
                 _patch.pVersion = item.patchs.Count;
                 _patch.timestamp = TimeUtils.UTCTimeStamps();
+                _patch.UpdateDisplay();
 
                 item.patchs.Add(_patch);
                 item.patchs.Sort((a, b) => b.pVersion.CompareTo(a.pVersion));
@@ -136,6 +138,15 @@ namespace UFramework.Editor.VersionControl
         {
             if (SirenixEditorGUI.ToolbarButton(new GUIContent("New Version")))
             {
+                foreach (var item in patchs)
+                {
+                    if (!item.isRelease)
+                    {
+                        EditorUtility.DisplayDialog("New Version", "No patch has been released for the current version", "OK");
+                        return;
+                    }
+                }
+
                 if (EditorUtility.DisplayDialog("New Version", "Are you sure to create a new version?", "Confirm", "No"))
                 {
                     CreateNewVersion();
@@ -161,15 +172,6 @@ namespace UFramework.Editor.VersionControl
 
         private void CreateNewVersion()
         {
-            foreach (var item in patchs)
-            {
-                if (!item.isRelease)
-                {
-                    Debug.LogError("Patch version unpublished status. You cannot create a new version");
-                    return;
-                }
-            }
-
             var info = new VEditorInfo();
             info.version = version;
             info.patchs.Clear();
@@ -182,6 +184,8 @@ namespace UFramework.Editor.VersionControl
 
         private void RemoveCurrentVersion()
         {
+            patchs.Clear();
+
             var target = version - 1;
             if (target < 0) return;
 
@@ -200,7 +204,6 @@ namespace UFramework.Editor.VersionControl
             if (info != null)
             {
                 version = info.version;
-                patchs.Clear();
                 patchs.AddRange(info.patchs);
             }
 
@@ -218,6 +221,9 @@ namespace UFramework.Editor.VersionControl
 
             supportDictionary.Clear();
             historyDictionary.Clear();
+
+            describeObject.GetPV().releaseVersionCodes.Clear();
+            describeObject.Save();
         }
 
         private void OnMinVersionChange()
@@ -263,27 +269,28 @@ namespace UFramework.Editor.VersionControl
 
             var pv = describeObject.GetPV();
 
-            pv.files = GetVersionFiles();
             describeObject.Save();
 
             var ver = new Version();
             ver.version = describeObject.version;
             ver.minVersion = describeObject.minVersion;
             ver.timestamp = TimeUtils.UTCTimeStamps();
-            ver.files.AddRange(pv.files);
+            CheckVersionFiles(out ver.files);
+            CheckVersionScripts(out ver.sDirs, out ver.sFiles);
             ver.versions.Clear();
 
             var vInfo = new VInfo();
             vInfo.version = describeObject.version;
-            vInfo.patchs.Clear();
-            foreach (var item in pv.patchs)
+            vInfo.patchs = new VPatch[pv.patchs.Count];
+            for (int i = 0; i < pv.patchs.Count; i++)
             {
+                var item = pv.patchs[i];
                 var patch = new VPatch();
                 patch.aVersion = item.aVersion;
                 patch.pVersion = item.pVersion;
                 patch.timestamp = item.timestamp;
-                patch.files = item.files;
-                vInfo.patchs.Add(patch);
+                patch.files = item.files.ToArray();
+                vInfo.patchs[i] = patch;
             }
             ver.versions.Add(vInfo.version, vInfo);
 
@@ -291,14 +298,16 @@ namespace UFramework.Editor.VersionControl
             {
                 var info = new VInfo();
                 info.version = item.version;
-                foreach (var itemPatch in pv.patchs)
+                info.patchs = new VPatch[pv.patchs.Count];
+                for (int i = 0; i < pv.patchs.Count; i++)
                 {
+                    var itemPatch = pv.patchs[i];
                     var patch = new VPatch();
                     patch.aVersion = itemPatch.aVersion;
                     patch.pVersion = itemPatch.pVersion;
                     patch.timestamp = itemPatch.timestamp;
-                    patch.files = itemPatch.files;
-                    info.patchs.Add(patch);
+                    patch.files = itemPatch.files.ToArray();
+                    info.patchs[i] = patch;
                 }
                 ver.versions.Add(item.version, info);
             }
@@ -315,23 +324,16 @@ namespace UFramework.Editor.VersionControl
             var pv = describeObject.GetPV();
 
             bool _create = true;
-            foreach (var item in pv.releaseRecords)
+            foreach (var item in pv.releaseVersionCodes)
             {
-                if (item.version == describeObject.version)
+                if (item == describeObject.version)
                 {
                     _create = false;
-                    item.files = pv.files;
                     break;
                 }
             }
             if (_create)
-            {
-                var rec = new ReleaseRecord();
-                rec.version = describeObject.version;
-                rec.files = pv.files;
-
-                pv.releaseRecords.Add(rec);
-            }
+                pv.releaseVersionCodes.Add(describeObject.version);
 
             describeObject.Save();
         }
@@ -347,8 +349,8 @@ namespace UFramework.Editor.VersionControl
                 describeObject = UConfig.Read<VersionControl_VersionConfig>();
 
             var pv = describeObject.GetPV();
-            foreach (var item in pv.releaseRecords)
-                return item.version == version;
+            foreach (var item in pv.releaseVersionCodes)
+                return item == version;
             return false;
         }
 
@@ -361,11 +363,14 @@ namespace UFramework.Editor.VersionControl
             return IsPublishVersion(UConfig.Read<VersionControl_VersionConfig>().version);
         }
 
-        public static List<VFile> GetVersionFiles()
+        /// <summary>
+        /// 检查版本文件
+        /// </summary>
+        /// <param name="tFiles"></param>
+        public static void CheckVersionFiles(out VFile[] tFiles)
         {
             List<VFile> vfiles = new List<VFile>();
 
-            // bundle
             var assetBundlePath = IOPath.PathCombine(App.TempDirectory, Platform.BuildTargetCurrentName);
             string[] files = IOPath.DirectoryGetFiles(assetBundlePath, "*" + Asset.Extension, SearchOption.AllDirectories);
             for (int i = 0; i < files.Length; i++)
@@ -376,12 +381,51 @@ namespace UFramework.Editor.VersionControl
                 vfile.name = IOPath.FileName(path, true);
                 using (var stream = File.OpenRead(path))
                 {
-                    vfile.length = stream.Length;
+                    vfile.len = stream.Length;
                     vfile.hash = HashUtils.GetCRC32Hash(stream);
                 }
                 vfiles.Add(vfile);
             }
-            return vfiles;
+            tFiles = vfiles.ToArray();
+        }
+
+        /// <summary>
+        /// 检查版本脚本文件
+        /// </summary>
+        /// <param name="tDirs"></param>
+        /// <param name="tFiles"></param>
+        public static void CheckVersionScripts(out string[] tDirs, out VScriptFile[] tFiles)
+        {
+            List<string> dirs = new List<string>();
+            List<VScriptFile> sFiles = new List<VScriptFile>();
+
+            var tp = IOPath.PathCombine(App.TempDirectory, "Lua");
+            string[] files = IOPath.DirectoryGetFiles(tp, "*.lua", SearchOption.AllDirectories);
+            for (int i = 0; i < files.Length; i++)
+            {
+                var fp = files[i];
+                var dir = IOPath.PathUnitySeparator(Path.GetDirectoryName(fp));
+                var index = dirs.FindIndex(o => o.Equals(dir));
+                if (index == -1)
+                {
+                    index = dirs.Count;
+                    dirs.Add(dir);
+                }
+
+                var file = new VScriptFile() { name = Path.GetFileName(fp), dirIndex = index };
+                using (var stream = File.OpenRead(fp))
+                {
+                    file.len = stream.Length;
+                    file.hash = HashUtils.GetCRC32Hash(stream);
+                }
+                sFiles.Add(file);
+            }
+
+            for (int i = 0; i < dirs.Count; i++)
+                dirs[i] = dirs[i].Replace(tp, "").TrimStart('/').TrimStart('\\');
+
+            tDirs = dirs.ToArray();
+            tFiles = sFiles.ToArray();
         }
     }
 }

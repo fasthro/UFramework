@@ -4,8 +4,10 @@
  * @Description: lua config
  */
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Sirenix.OdinInspector;
+using UFramework.Config;
 using UnityEngine;
 using static ToLuaMenu;
 using utils = UFramework.Utils;
@@ -13,7 +15,7 @@ using utils = UFramework.Utils;
 namespace UFramework.Editor.Preferences
 {
     /// <summary>
-    /// lua search path item
+    /// Lua搜索路径
     /// </summary>
     [System.Serializable]
     public class LuaSearchPathItem
@@ -66,13 +68,13 @@ namespace UFramework.Editor.Preferences
     }
 
     /// <summary>
-    /// Lua Wrap Bind Type Item
+    /// Wrap 类型
     /// </summary>
     [System.Serializable]
     public class LuaWrapBindTypeItem
     {
         /// <summary>
-        /// Class Name
+        /// 类名
         /// </summary>
         [ShowInInspector]
         [HideLabel]
@@ -124,6 +126,50 @@ namespace UFramework.Editor.Preferences
                 return targetType;
             }
             return null;
+        }
+    }
+
+    /// <summary>
+    /// 构建文件
+    /// </summary>
+    [System.Serializable]
+    public class LuaBuildFile
+    {
+        /// <summary>
+        /// 原始路径
+        /// </summary>
+        public string sourcePath;
+
+        /// <summary>
+        /// 输出路径
+        /// </summary>
+        public string destPath;
+
+        /// <summary>
+        /// 文件长度
+        /// </summary>
+        public long len;
+
+        /// <summary>
+        /// hash
+        /// </summary>
+        public string hash;
+    }
+
+    public class LuaBuildConfig : IConfigObject
+    {
+        public FileAddress address { get { return FileAddress.Editor; } }
+
+        /// <summary>
+        /// 文件列表
+        /// </summary>
+        /// <typeparam name="LuaBuildFile"></typeparam>
+        /// <returns></returns>
+        public List<LuaBuildFile> files = new List<LuaBuildFile>();
+
+        public void Save()
+        {
+            UConfig.Write<LuaBuildConfig>(this);
         }
     }
 }

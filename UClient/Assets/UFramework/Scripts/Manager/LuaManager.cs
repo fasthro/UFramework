@@ -50,7 +50,7 @@ namespace UFramework
 
         private void OpenLibs()
         {
-            lua.OpenLibs(LuaDLL.luaopen_socket_core); 
+            lua.OpenLibs(LuaDLL.luaopen_socket_core);
             lua.OpenLibs(LuaDLL.luaopen_pb);
             lua.OpenLibs(LuaDLL.luaopen_struct);
             lua.OpenLibs(LuaDLL.luaopen_lpeg);
@@ -111,7 +111,7 @@ namespace UFramework
             }
             else
             {
-                var dirs = Directory.GetDirectories(App.LuaDataDirectory);
+                var dirs = Directory.GetDirectories(IOPath.PathCombine(Application.persistentDataPath, "Lua"));
                 for (int i = 0; i < dirs.Length; i++)
                 {
                     lua.AddSearchPath(dirs[i]);

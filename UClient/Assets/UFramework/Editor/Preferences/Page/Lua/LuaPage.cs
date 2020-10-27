@@ -39,8 +39,15 @@ namespace UFramework.Editor.Preferences
         /// <typeparam name="string"></typeparam>
         /// <returns></returns>
         [ShowInInspector]
-        [ListDrawerSettings(Expanded = true, CustomRemoveElementFunction = "OnSearchPathItemCustomRemoveElementFunction")]
+        [ListDrawerSettings(Expanded = true, CustomRemoveElementFunction = "CustomRemoveElementFunction_searchPaths")]
         public List<LuaSearchPathItem> searchPaths = new List<LuaSearchPathItem>();
+
+        private void CustomRemoveElementFunction_searchPaths(LuaSearchPathItem item)
+        {
+            searchPaths.Remove(item);
+            CheckBuiltInSearchPathItem();
+            SearchPathItemDescribeSave();
+        }
 
         /// <summary>
         /// lua bind type items
@@ -81,9 +88,14 @@ namespace UFramework.Editor.Preferences
                 ClearWrap();
             }
 
-            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Build Scripts")))
+            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Build")))
             {
-                BuildCode(byteEncode);
+                BuildScripts(byteEncode, false);
+            }
+
+            if (SirenixEditorGUI.ToolbarButton(new GUIContent("Clean Build")))
+            {
+                BuildScripts(byteEncode, true);
             }
         }
 
@@ -169,17 +181,6 @@ namespace UFramework.Editor.Preferences
             {
                 return right.order.CompareTo(left.order);
             });
-        }
-
-        /// <summary>
-        /// Custom Remove Search Path Item Function
-        /// </summary>
-        /// <param name="item"></param>
-        private void OnSearchPathItemCustomRemoveElementFunction(LuaSearchPathItem item)
-        {
-            searchPaths.Remove(item);
-            CheckBuiltInSearchPathItem();
-            SearchPathItemDescribeSave();
         }
 
         /// <summary>
@@ -375,53 +376,93 @@ namespace UFramework.Editor.Preferences
         /// <summary>
         /// 构建lua代码
         /// </summary>
-        private void BuildCode(bool encode)
+        public void BuildScripts(bool encode, bool clean)
         {
-            IOPath.DirectoryClear(App.LuaTempDataDirectory);
-            IOPath.DirectoryClear(App.LuaDataDirectory);
+            var outPath = IOPath.PathCombine(App.TempDirectory, "Lua");
+            var bc = UConfig.Read<LuaBuildConfig>();
+            if (clean)
+            {
+                IOPath.DirectoryClear(outPath);
+                bc.files.Clear();
+            }
 
-            int n = 0;
+            Dictionary<string, LuaBuildFile> fileMap = new Dictionary<string, LuaBuildFile>();
+            foreach (var item in bc.files)
+            {
+                if (!fileMap.ContainsKey(item.sourcePath))
+                    fileMap.Add(item.sourcePath, item);
+            }
+
+            HashSet<string> nFileMap = new HashSet<string>();
+            List<LuaBuildFile> nFiles = new List<LuaBuildFile>();
             for (int i = 0; i < searchPaths.Count; i++)
             {
                 var searchItem = searchPaths[i];
-                var files = IOPath.DirectoryGetFiles(searchItem.path);
-                n = 0;
-                foreach (string file in files)
+                var files = IOPath.DirectoryGetFiles(searchItem.path, "*.lua", SearchOption.AllDirectories);
+                for (int k = 0; k < files.Length; k++)
                 {
-                    if (file.EndsWith(".meta")) continue;
-                    var newFile = IOPath.PathCombine(App.LuaTempDataDirectory, searchItem.pathMD5) + IOPath.PathReplace(file, searchItem.path);
-                    var root = Path.GetDirectoryName(newFile);
-                    if (!IOPath.DirectoryExists(root)) IOPath.DirectoryCreate(root);
-                    if (encode)
+                    var file = IOPath.PathUnitySeparator(files[k]);
+
+                    var newFile = searchItem.pathMD5 + IOPath.PathReplace(file, searchItem.path);
+                    var newFullFile = IOPath.PathCombine(outPath, newFile);
+
+                    var bFile = new LuaBuildFile() { sourcePath = file, destPath = newFile };
+                    using (var stream = File.OpenRead(file))
                     {
-                        EncodeLuaFile(file, newFile);
+                        bFile.len = stream.Length;
+                        bFile.hash = HashUtils.GetCRC32Hash(stream);
                     }
+
+                    if (!IOPath.FileExists(newFullFile))
+                        nFiles.Add(bFile);
+                    else if (!fileMap.ContainsKey(file))
+                        nFiles.Add(bFile);
                     else
                     {
-                        IOPath.FileCopy(file, newFile);
+                        var sourceFile = fileMap[file];
+                        if (bFile.len != sourceFile.len || !bFile.hash.Equals(sourceFile.hash))
+                            nFiles.Add(bFile);
                     }
-
-                    n++;
-                    string title = "Processing...[" + n + " - " + files.Length + "]";
-                    Utils.UpdateProgress(title, newFile, n, files.Length);
+                    nFileMap.Add(file);
                 }
-                Utils.HideProgress();
             }
-            AssetDatabase.Refresh();
 
-            // TODO App.DataDirectory
-            var zipfile = IOPath.PathCombine(App.TempDirectory, "Scripts.zip");
-            IOPath.FileDelete(zipfile);
-            IOPath.DirectoryDelete(App.LuaDataDirectory);
-            if (app.isDevelopmentVersion)
+            for (int i = 0; i < nFiles.Count; i++)
             {
-                IOPath.DirectoryCopy(App.LuaTempDataDirectory, App.LuaDataDirectory);
+                var file = nFiles[i];
+                var fullFile = IOPath.PathCombine(outPath, file.destPath);
+                var dir = Path.GetDirectoryName(fullFile);
+                if (!IOPath.DirectoryExists(dir))
+                    IOPath.DirectoryCreate(dir);
+
+                if (encode) EncodeLuaFile(file.sourcePath, fullFile);
+                else IOPath.FileCopy(file.sourcePath, fullFile);
+
+                string title = "Processing...[" + i + " - " + nFiles.Count + "]";
+                Utils.UpdateProgress(title, file.destPath, i, nFiles.Count);
+
+                if (fileMap.ContainsKey(file.sourcePath))
+                    fileMap[file.sourcePath] = file;
+                else fileMap.Add(file.sourcePath, file);
             }
-            else
+
+            bc.files.Clear();
+            foreach (var item in fileMap)
             {
-                UZip.Zip(new string[] { App.LuaTempDataDirectory }, zipfile);
+                var file = item.Value;
+                if (nFileMap.Contains(file.sourcePath))
+                    bc.files.Add(file);
+                else
+                    IOPath.FileDelete(IOPath.PathCombine(outPath, file.destPath));
             }
-            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+            bc.Save();
+
+            fileMap.Clear();
+            nFileMap.Clear();
+
+            Utils.HideProgress();
+
+            Debug.Log("build luascript finished. buildFileCount: " + nFiles.Count);
         }
 
         /// <summary>
@@ -447,14 +488,14 @@ namespace UFramework.Editor.Preferences
                 isWin = true;
                 luaexe = "luajit.exe";
                 args = "-b -g " + srcFile + " " + outFile;
-                exedir = IOPath.PathCombine(IOPath.PathParent(Application.dataPath), "LuaEncoder", "luajit");
+                exedir = IOPath.PathCombine(Environment.CurrentDirectory, "LuaEncoder", "luajit");
             }
             else if (Application.platform == RuntimePlatform.OSXEditor)
             {
                 isWin = false;
                 luaexe = "./luajit";
                 args = "-b -g " + srcFile + " " + outFile;
-                exedir = IOPath.PathCombine(IOPath.PathParent(Application.dataPath), "LuaEncoder", "luajit_mac");
+                exedir = IOPath.PathCombine(Environment.CurrentDirectory, "LuaEncoder", "luajit_mac");
             }
             Directory.SetCurrentDirectory(exedir);
             ProcessStartInfo info = new ProcessStartInfo();
@@ -463,7 +504,6 @@ namespace UFramework.Editor.Preferences
             info.WindowStyle = ProcessWindowStyle.Hidden;
             info.UseShellExecute = isWin;
             info.ErrorDialog = true;
-            Debug.Log(info.FileName + " " + info.Arguments);
 
             Process pro = Process.Start(info);
             pro.WaitForExit();
