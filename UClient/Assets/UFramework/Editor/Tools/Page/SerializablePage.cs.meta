@@ -1,5 +1,13 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
+<<<<<<< HEAD:UClient/Assets/UFramework/Editor/Tools/Page/SerializablePage.cs.meta
 guid: 0a037a5b4c5328f43aef241d2a283319
+=======
+guid: 4d46a28b1acac424da0addd68735ee57
+>>>>>>> bef50e7a8758a48c0f529504868e9c57b5996408:UClient/Assets/UFramework/Editor/Preferences/Page/Lua/LuaDataSet.cs.meta
+=======
+guid: 0a037a5b4c5328f43aef241d2a283319
+>>>>>>> bef50e7a8758a48c0f529504868e9c57b5996408
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
