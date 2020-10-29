@@ -49,6 +49,11 @@ namespace UFramework.VersionControl
         public long timestamp;
 
         /// <summary>
+        /// 补丁文件大小
+        /// </summary>
+        public long len;
+
+        /// <summary>
         /// 资源文件列表
         /// </summary>
         public VFile[] files = new VFile[0];
@@ -60,6 +65,8 @@ namespace UFramework.VersionControl
 
         // 补丁文件名称
         public string fileName { get { return string.Format("p{0}.{1}.{2}.zip", aVersion, pVersion, timestamp); } }
+
+        public string key { get { return string.Format("{0}.{1}", aVersion, pVersion); } }
     }
 
     [System.Serializable]
@@ -203,6 +210,7 @@ namespace UFramework.VersionControl
                         patch.aVersion = reader.ReadInt32();
                         patch.pVersion = reader.ReadInt32();
                         patch.timestamp = reader.ReadInt64();
+                        patch.len = reader.ReadInt64();
 
                         // files
                         var pfnum = reader.ReadInt32();
@@ -285,6 +293,7 @@ namespace UFramework.VersionControl
                         writer.Write(patch.aVersion);
                         writer.Write(patch.pVersion);
                         writer.Write(patch.timestamp);
+                        writer.Write(patch.len);
 
                         // files
                         writer.Write(patch.files.Length);
@@ -309,76 +318,6 @@ namespace UFramework.VersionControl
                     }
                 }
             }
-        }
-
-        public static List<VPatch> GetDownloadPatchs(Version ver, string targetPath)
-        {
-            var versionInfo = ver.GetVersionInfo(UConfig.Read<AppConfig>().version);
-            List<VFile> downloadFils = new List<VFile>();
-            for (int i = 0; i < ver.files.Length; i++)
-            {
-                var file = ver.files[i];
-                var fp = IOPath.PathCombine(targetPath, file.name);
-                if (!IOPath.FileExists(fp))
-                {
-                    downloadFils.Add(file);
-                }
-                else
-                {
-                    using (var stream = File.OpenRead(fp))
-                    {
-                        if (stream.Length != file.len)
-                        {
-                            downloadFils.Add(file);
-                        }
-                        else if (!HashUtils.GetCRC32Hash(stream).Equals(file.hash, StringComparison.OrdinalIgnoreCase))
-                        {
-                            downloadFils.Add(file);
-                        }
-                    }
-                }
-            }
-            Debug.Log("download file count: " + downloadFils.Count);
-            Dictionary<string, VPatch> map = new Dictionary<string, VPatch>();
-            for (int i = 0; i < downloadFils.Count; i++)
-            {
-                var dfile = downloadFils[i];
-                for (int k = 0; k < versionInfo.patchs.Length; k++)
-                {
-                    var patch = versionInfo.patchs[k];
-                    var isChecked = false;
-                    for (int n = 0; n < patch.files.Length; n++)
-                    {
-                        var pfile = patch.files[n];
-                        if (dfile.name.Equals(pfile.name))
-                        {
-                            VPatch npatch = null;
-                            if (map.TryGetValue(dfile.name, out npatch))
-                            {
-                                if (patch.timestamp > npatch.timestamp)
-                                    map[dfile.name] = patch;
-                            }
-                            else map.Add(dfile.name, patch);
-                            isChecked = true;
-                            break;
-                        }
-                        if (isChecked) break;
-                    }
-                }
-            }
-
-            List<VPatch> downloads = new List<VPatch>();
-            HashSet<int> dpVersions = new HashSet<int>();
-            foreach (var item in map)
-            {
-                if (!dpVersions.Contains(item.Value.pVersion))
-                {
-                    Debug.Log(string.Format("download patch v{0}.{1}", item.Value.aVersion, item.Value.pVersion));
-                    downloads.Add(item.Value);
-                }
-            }
-
-            return downloads;
         }
     }
 }

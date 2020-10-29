@@ -23,11 +23,13 @@ namespace UFramework.VersionControl
         enum Step
         {
             Init,
-            CheckCopy,
+            CheckVersionCopy,
+            CheckFileCopy,
             Copy,
             RequestVersion,
             CheckVersion,
             CheckDownload,
+            OptionDownload,
             Download,
             Completed,
         }
@@ -49,9 +51,10 @@ namespace UFramework.VersionControl
         private Version _newVersion;
         private Version _appVersion;
 
-        private Tools.DownloadHandler _download;
-        private List<Tools.DownloadHandler> _downloads = new List<Tools.DownloadHandler>();
-        private List<VPatch> _downloadPatchs = new List<VPatch>();
+        private List<VFile> _repairFiles = new List<VFile>();
+        private List<VScriptFile> _repairSFiles = new List<VScriptFile>();
+
+        private PatchDownloader _downloader;
 
         #region path
 
@@ -73,13 +76,21 @@ namespace UFramework.VersionControl
             streamingAssetsPath = GetStreamingAssetsPath();
             assetBundlePath = IOPath.PathCombine(Application.persistentDataPath, Platform.RuntimePlatformCurrentName);
             versionPath = IOPath.PathCombine(Application.persistentDataPath, Version.FileName);
-            versionOriginalPath = versionPath + "original";
+            versionOriginalPath = versionPath + ".original";
             versionStreamingPath = IOPath.PathCombine(streamingAssetsPath, Version.FileName);
             luaPath = IOPath.PathCombine(Application.persistentDataPath, LUA_DIR_NAME);
 
             baseURL = UConfig.Read<AppConfig>().versionBaseURL;
 
+            _downloader = new PatchDownloader(baseURL, Application.persistentDataPath, OnPatchDownloadCompleted, OnPatchDownloadFailed);
+
             StartUpdate();
+        }
+
+        protected override void OnSingletonUpdate(float deltaTime)
+        {
+            if (_step == Step.CheckFileCopy || _step == Step.Copy || _step == Step.Download)
+                Debug.Log("_step: " + _step.ToString() + " progress: " + progress);
         }
 
         public void StartUpdate()
@@ -98,11 +109,14 @@ namespace UFramework.VersionControl
                 if (!IOPath.DirectoryExists(assetBundlePath))
                     IOPath.DirectoryCreate(assetBundlePath);
 
-                _step = Step.CheckCopy;
+                _step = Step.CheckVersionCopy;
             }
 
-            if (_step == Step.CheckCopy)
-                yield return CheckCopy();
+            if (_step == Step.CheckVersionCopy)
+                yield return CheckVersionCopy();
+
+            if (_step == Step.CheckFileCopy)
+                yield return CheckFileCopy();
 
             if (_step == Step.Copy)
             {
@@ -125,11 +139,11 @@ namespace UFramework.VersionControl
             if (_step == Step.CheckDownload)
                 yield return CheckDownloads();
 
-            if (_step == Step.Download)
-                _download.Download();
+            if (_step == Step.OptionDownload)
+                yield return OptionDownloadPatch();
         }
 
-        private IEnumerator CheckCopy()
+        private IEnumerator CheckVersionCopy()
         {
             _newVersion = Version.LoadVersion(versionPath);
             if (_newVersion == null)
@@ -158,29 +172,63 @@ namespace UFramework.VersionControl
                 {
                     _appVersion = Version.LoadVersion(versionOriginalPath);
                     if (_appVersion.version > _newVersion.version)
-                    {
-                        _maxValue = _appVersion.files.Length + _appVersion.sFiles.Length;
-                        _value = 0;
                         _step = Step.Copy;
-                    }
                     else
-                    {
-                        _step = Step.RequestVersion;
-                    }
+                        _step = Step.CheckFileCopy;
                 }
-                else
-                {
-                    _step = Step.RequestVersion;
-                }
+                else _step = Step.CheckFileCopy;
+
+                _maxValue = _appVersion.files.Length + _appVersion.sFiles.Length;
+                _value = 0;
+
                 request.Dispose();
             }
         }
 
-        private IEnumerator UpdateCopy()
+        private IEnumerator CheckFileCopy()
         {
             for (var index = 0; index < _appVersion.files.Length; index++)
             {
                 var item = _appVersion.files[index];
+                var file = IOPath.PathCombine(IOPath.PathCombine(assetBundlePath, item.name));
+                if (!IOPath.FileExists(file))
+                    _repairFiles.Add(item);
+                yield return null;
+                _value++;
+            }
+
+            for (var index = 0; index < _appVersion.sFiles.Length; index++)
+            {
+                var item = _appVersion.sFiles[index];
+                var file = IOPath.PathCombine(luaPath, _appVersion.sDirs[item.dirIndex], item.name);
+                if (!IOPath.FileExists(file))
+                    _repairSFiles.Add(item);
+                yield return null;
+                _value++;
+            }
+
+            if (_repairFiles.Count > 0 || _repairSFiles.Count > 0)
+                _step = Step.Copy;
+            else _step = Step.RequestVersion;
+
+            yield break;
+        }
+
+        /// <summary>
+        /// 解压文件到持久化目录
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerator UpdateCopy()
+        {
+            if (_repairFiles.Count == 0) _repairFiles.AddRange(_appVersion.files);
+            if (_repairSFiles.Count == 0) _repairSFiles.AddRange(_appVersion.sFiles);
+
+            _value = 0;
+            _maxValue = _repairFiles.Count + _repairSFiles.Count;
+
+            for (var index = 0; index < _repairFiles.Count; index++)
+            {
+                var item = _repairFiles[index];
                 var request = UnityWebRequest.Get(IOPath.PathCombine(streamingAssetsPath, Platform.RuntimePlatformCurrentName, item.name));
                 request.downloadHandler = new DownloadHandlerFile(IOPath.PathCombine(assetBundlePath, item.name));
                 yield return request.SendWebRequest();
@@ -188,9 +236,9 @@ namespace UFramework.VersionControl
                 _value++;
             }
 
-            for (var index = 0; index < _appVersion.sFiles.Length; index++)
+            for (var index = 0; index < _repairSFiles.Count; index++)
             {
-                var item = _appVersion.sFiles[index];
+                var item = _repairSFiles[index];
                 var filePath = IOPath.PathCombine(_appVersion.sDirs[item.dirIndex], item.name);
                 var request = UnityWebRequest.Get(IOPath.PathCombine(streamingAssetsPath, LUA_DIR_NAME, filePath));
                 request.downloadHandler = new DownloadHandlerFile(IOPath.PathCombine(luaPath, filePath));
@@ -200,6 +248,10 @@ namespace UFramework.VersionControl
             }
         }
 
+        /// <summary>
+        /// 请求远程版本信息
+        /// </summary>
+        /// <returns></returns>
         private IEnumerator RequestVersion()
         {
             if (Application.internetReachability == NetworkReachability.NotReachable)
@@ -266,6 +318,10 @@ namespace UFramework.VersionControl
             }
         }
 
+        /// <summary>
+        /// 检查应用版本
+        /// </summary>
+        /// <returns></returns>
         private IEnumerator CheckVersion()
         {
             if (_appVersion == null)
@@ -297,6 +353,10 @@ namespace UFramework.VersionControl
             }
         }
 
+        /// <summary>
+        /// 检查本地资源是否需要更新
+        /// </summary>
+        /// <returns></returns>
         private IEnumerator CheckDownloads()
         {
             if (_newVersion == null)
@@ -421,23 +481,59 @@ namespace UFramework.VersionControl
                 }
             }
 
-            _downloads.Clear();
-            _downloadPatchs.Clear();
-            HashSet<int> dpVersions = new HashSet<int>();
+            HashSet<string> dpVersions = new HashSet<string>();
             foreach (var item in map)
             {
-                if (!dpVersions.Contains(item.Value.pVersion))
+                if (!dpVersions.Contains(item.Value.key))
                 {
-                    _downloadPatchs.Add(item.Value);
+                    dpVersions.Add(item.Value.key);
+                    _downloader.AddPatch(item.Value);
 
-                    var url = baseURL + item.Value.fileName;
-                    var localPath = IOPath.PathCombine(Application.persistentDataPath, item.Value.fileName);
-                    // _downloads.Add(Download.AddDownload(url, localPath, OnDownloadCompleted, OnDownloadProgress, null, OnDownloadFailed));
+                    Debug.Log("download patch: " + item.Value.fileName);
                 }
             }
 
-            if (_downloads.Count > 0) _download = _downloads[0];
-            _step = _download == null ? Step.Completed : Step.Download;
+            dpVersions.Clear();
+            map.Clear();
+            downloadFiles.Clear();
+            downloadSFiles.Clear();
+
+            _step = _downloader.count > 0 ? Step.OptionDownload : Step.Completed;
+        }
+
+        /// <summary>
+        /// 确认是否下载补丁
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerator OptionDownloadPatch()
+        {
+            var mb = MessageBox.Allocate().Show("提示", string.Format("有新资源更新，是否下载新资源\n资源大小：{0}", _downloader.GetFormatDownloadSize()), "更新", "退出");
+            yield return mb;
+            if (mb.isOk)
+            {
+                _step = Step.Download;
+                _downloader.StartDownload();
+            }
+            else Quit();
+            yield break;
+        }
+
+        /// <summary>
+        /// 补丁下载完成
+        /// </summary>
+        private void OnPatchDownloadCompleted()
+        {
+            _step = Step.Completed;
+            Debug.Log("updater finished.");
+        }
+
+        /// <summary>
+        /// 补丁下载失败
+        /// </summary>
+        private void OnPatchDownloadFailed()
+        {
+            _step = Step.Completed;
+            Debug.Log("updater failed.");
         }
 
         private void Quit()

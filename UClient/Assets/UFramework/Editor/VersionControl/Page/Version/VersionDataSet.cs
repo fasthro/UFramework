@@ -25,8 +25,13 @@ namespace UFramework.Editor.VersionControl
         [HideInInspector]
         public long timestamp;
 
+        [HideInInspector]
+        public long len;
+
         [ShowInInspector, ReadOnly, HideLabel, HorizontalGroup]
         public string displayName;
+        [ShowInInspector, ReadOnly, HideLabel, HorizontalGroup]
+        public string displayLen;
         [ShowInInspector, ReadOnly, HideLabel, HorizontalGroup]
         public string displayTime;
 
@@ -78,6 +83,7 @@ namespace UFramework.Editor.VersionControl
         public void UpdateDisplay()
         {
             displayName = string.Format("p{0}.{1}.{2}", aVersion, pVersion, timestamp);
+            displayLen = EditorUtility.FormatBytes(len);
             displayTime = TimeUtils.UTCTimeStampsFormat(timestamp, "yyyy-MM-dd HH:mm:ss");
         }
 
@@ -147,6 +153,17 @@ namespace UFramework.Editor.VersionControl
         }
 
         /// <summary>
+        /// 获取补丁版本
+        /// </summary>
+        /// <returns></returns>
+        public VEditorPatch GetPatchVersion(int version)
+        {
+            foreach (var item in patchs)
+                if (item.pVersion == version) return item;
+            return null;
+        }
+
+        /// <summary>
         /// 有新的补丁版本需要构建
         /// </summary>
         /// <returns></returns>
@@ -173,12 +190,14 @@ namespace UFramework.Editor.VersionControl
             VEditorPatch newPatch = null;
             for (int i = 0; i < patchs.Count; i++)
             {
-                if (patchs[i].pVersion == patch.pVersion)
+                if (patchs[i].aVersion == patch.aVersion && patchs[i].pVersion == patch.pVersion)
                 {
                     var data = patchs[i];
                     data.aVersion = patch.aVersion;
                     data.pVersion = patch.pVersion;
                     data.files = patch.files;
+                    data.sFiles = patch.sFiles;
+                    data.len = patch.len;
                     data.UpdateDisplay();
 
                     newPatch = data;
@@ -190,12 +209,14 @@ namespace UFramework.Editor.VersionControl
             {
                 for (int i = 0; i < item.patchs.Count; i++)
                 {
-                    if (item.patchs[i].pVersion == patch.pVersion)
+                    if (item.patchs[i].aVersion == patch.aVersion && item.patchs[i].pVersion == patch.pVersion)
                     {
                         var data = item.patchs[i];
                         data.aVersion = patch.aVersion;
                         data.pVersion = patch.pVersion;
                         data.files = patch.files;
+                        data.sFiles = patch.sFiles;
+                        data.len = patch.len;
                         data.UpdateDisplay();
                         break;
                     }

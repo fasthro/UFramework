@@ -35,13 +35,13 @@ namespace UFramework.Tools
         /// 文件总长度
         /// </summary>
         /// <value></value>
-        public long totalLength { get; protected set; }
+        public long totalLen { get; protected set; }
 
         /// <summary>
         /// 已下载长度
         /// </summary>
         /// <value></value>
-        public long receiveLength { get; protected set; }
+        public long receiveLen { get; protected set; }
 
         /// <summary>
         /// 下载进度
@@ -51,8 +51,8 @@ namespace UFramework.Tools
         {
             get
             {
-                if (totalLength > 0)
-                    return (float)receiveLength / (float)totalLength;
+                if (totalLen > 0)
+                    return (float)receiveLen / (float)totalLen;
                 else if (downloadState == DownloadState.Donwloaded) return 1f;
                 else return 0f;
             }
@@ -62,7 +62,7 @@ namespace UFramework.Tools
         /// 文件总长度
         /// 如果有值就需要进行文件长度验证
         /// </summary>
-        protected long _verifyTotalLength;
+        protected long _verifyLen;
 
         /// <summary>
         /// 文件哈希
@@ -147,7 +147,7 @@ namespace UFramework.Tools
             this._onProgress = onProgress;
             this._onCancelled = onCancelled;
             this._onFailed = onFailed;
-            this._verifyTotalLength = length;
+            this._verifyLen = length;
             this._verifyHash = hash;
             this._isContinue = isContinue;
 
@@ -157,8 +157,8 @@ namespace UFramework.Tools
             if (!isContinue)
                 IOPath.FileDelete(_tempLocalPath);
             this._stream = new FileStream(_tempLocalPath, FileMode.Append, FileAccess.Write);
-            this.receiveLength = _stream.Length;
-            this.totalLength = this.receiveLength;
+            this.receiveLen = _stream.Length;
+            this.totalLen = this.receiveLen;
 
             return this;
         }
@@ -175,7 +175,7 @@ namespace UFramework.Tools
 
                 _request = UnityWebRequest.Get(url);
                 _request.disposeDownloadHandlerOnDispose = true;
-                _request.SetRequestHeader("Range", string.Format("bytes={0}-", receiveLength));
+                _request.SetRequestHeader("Range", string.Format("bytes={0}-", receiveLen));
                 _request.downloadHandler = this;
                 _request.SendWebRequest();
             }
@@ -202,7 +202,7 @@ namespace UFramework.Tools
         protected override void ReceiveContentLengthHeader(ulong contentLength)
         {
             _contentLength = (long)contentLength;
-            totalLength = receiveLength + _contentLength;
+            totalLen = receiveLen + _contentLength;
         }
 
         /// <summary>
@@ -216,7 +216,7 @@ namespace UFramework.Tools
             if (data == null || data.Length == 0)
                 return false;
 
-            receiveLength += dataLength;
+            receiveLen += dataLength;
             _contentLength -= dataLength;
             _stream.Write(data, 0, dataLength);
 
@@ -239,23 +239,22 @@ namespace UFramework.Tools
                     IOPath.FileDelete(localPath);
                 File.Move(_tempLocalPath, localPath);
 
-                using (var fs = File.OpenRead(localPath))
+                var isVerifyLen = _verifyLen != 0;
+                var isVerifyHash = !string.IsNullOrEmpty(_verifyHash);
+
+                if (isVerifyLen || isVerifyHash)
                 {
-                    if (fs.Length != _verifyTotalLength)
+                    using (var stream = File.OpenRead(localPath))
                     {
-                        error = "下载文件长度异常:" + fs.Length;
-                    }
-                    const StringComparison compare = StringComparison.OrdinalIgnoreCase;
-                    if (!_verifyHash.Equals(HashUtils.GetCRC32Hash(fs), compare))
-                    {
-                        error = "下载文件哈希异常:" + _verifyHash;
+                        if (isVerifyLen && stream.Length != _verifyLen)
+                            error = "下载文件长度异常:" + stream.Length;
+
+                        if (isVerifyHash && !_verifyHash.Equals(HashUtils.GetCRC32Hash(stream), StringComparison.OrdinalIgnoreCase))
+                            error = "下载文件哈希异常:" + _verifyHash;
                     }
                 }
             }
-            else
-            {
-                error = "文件不存在";
-            }
+            else error = "文件不存在";
 
             if (string.IsNullOrEmpty(error))
                 _onCompleted.InvokeGracefully();
