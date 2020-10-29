@@ -304,13 +304,13 @@ namespace UFramework.Editor.VersionControl
 
             if (UConfig.Read<AppConfig>().isDevelopmentVersion)
             {
-                Debug.Log("Please switch the development environment. Application -> Editor Development: false");
+                EditorUtility.DisplayDialog("Build", "当前为开发环境, 无法构建应用. 请切换到 Version Contorl -> Application 页进行环境切换.", "确定");
                 return;
             }
 
             if (VersionPage.IsPublishVersion())
             {
-                if (EditorUtility.DisplayDialog("Build", "The current version has been released. Do you want to rebuild it?", "Rebuild", "Cancel"))
+                if (EditorUtility.DisplayDialog("Build", "当前版本已经存在，是否重新构建版本?", "重新构建", "取消"))
                 {
                     EditorCoroutineUtility.StartCoroutineOwnerless(_BuildApplication());
                 }
@@ -332,9 +332,7 @@ namespace UFramework.Editor.VersionControl
             totalProgress++;
             yield return new EditorWaitForSeconds(1);
 
-            var manifestPath = IOPath.PathCombine(assetBundlePath, AssetManifest.AssetBundleFileName);
-            if (!IOPath.FileExists(manifestPath))
-                _BuildAssetBundle();
+            _BuildAssetBundle();
             yield return new EditorWaitForSeconds(1);
 
             // copy bundle
@@ -343,9 +341,7 @@ namespace UFramework.Editor.VersionControl
             totalProgress++;
 
             // lua script
-            var luaPath = IOPath.PathCombine(App.TempDirectory, "Lua");
-            if (!IOPath.DirectoryExists(luaPath) || IOPath.DirectoryGetFiles(luaPath, "*.lua", SearchOption.AllDirectories).Length == 0)
-                _BuildScripts();
+            _BuildScripts();
             yield return new EditorWaitForSeconds(1);
             totalProgress++;
 
@@ -475,7 +471,7 @@ namespace UFramework.Editor.VersionControl
             if (!version.HasNewPatchVersionWaitBuild())
             {
                 _isBuild = false;
-                EditorUtility.DisplayDialog("Patch", "Please create a new patch version.", "OK");
+                EditorUtility.DisplayDialog("Patch", "请前往 Version Contorl -> Version 页创建补丁版本.", "确定");
                 return;
             }
 
@@ -492,7 +488,7 @@ namespace UFramework.Editor.VersionControl
 
             if (!IOPath.FileExists(oVersionPath))
             {
-                EditorUtility.DisplayDialog("Patch", "Please create a new application.", "OK");
+                EditorUtility.DisplayDialog("Patch", "当前版本应用不存在, 无法构建版本补丁.", "确定");
                 _isBuild = false;
                 return;
             }
@@ -554,7 +550,7 @@ namespace UFramework.Editor.VersionControl
             }
             else
             {
-                EditorUtility.DisplayDialog("Patch", "No new patch file available. Try to build the assetbundle.", "OK");
+                EditorUtility.DisplayDialog("Patch", "资源和脚本已经是最新版本, 无需构建补. 请尝试 Version Contorl -> Build AssetBundle & Build Script 之后在尝试构建.", "确定");
                 _isBuild = false;
                 return;
             }

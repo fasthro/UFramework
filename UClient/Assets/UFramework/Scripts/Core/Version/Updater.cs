@@ -44,7 +44,6 @@ namespace UFramework.VersionControl
 
         private Action _onCompleted;
 
-        private UCoroutine _stepChecking;
         private Step _step;
 
         private int _maxValue;
@@ -79,7 +78,7 @@ namespace UFramework.VersionControl
             assetBundlePath = IOPath.PathCombine(Application.persistentDataPath, Platform.RuntimePlatformCurrentName);
             versionPath = IOPath.PathCombine(Application.persistentDataPath, Version.FileName);
             versionOriginalPath = versionPath + ".original";
-            versionStreamingPath = IOPath.PathCombine(streamingAssetsPath, Version.FileName);
+            versionStreamingPath = IOPath.PathCombine(streamingAssetsPath, Version.FileName, false);
             luaPath = IOPath.PathCombine(Application.persistentDataPath, LUA_DIR_NAME);
 
             baseURL = UConfig.Read<AppConfig>().versionBaseURL;
@@ -100,93 +99,79 @@ namespace UFramework.VersionControl
         public void StartUpdate(Action onCompleted)
         {
             _onCompleted = onCompleted;
-            _step = Step.Init;
-            if (_stepChecking != null)
-                _stepChecking.Stop();
-
-            _stepChecking = UFactoryCoroutine.CreateRun(StepChecking());
+            StepChecking(Step.Init);
+            StepChecking(Step.CheckVersionCopy);
         }
 
-        private IEnumerator StepChecking()
+        private void StepChecking(Step step)
         {
-            if (_step == Step.Init)
+            Debug.Log(">>>>>> step: " + step.ToString());
+            _step = step;
+            switch (_step)
             {
-                if (!IOPath.DirectoryExists(assetBundlePath))
-                    IOPath.DirectoryCreate(assetBundlePath);
-
-                _step = Step.CheckVersionCopy;
+                case Step.Init:
+                    if (!IOPath.DirectoryExists(assetBundlePath))
+                        IOPath.DirectoryCreate(assetBundlePath);
+                    break;
+                case Step.CheckVersionCopy:
+                    UFactoryCoroutine.CreateRun(CheckVersionCopy());
+                    break;
+                case Step.CheckFileCopy:
+                    UFactoryCoroutine.CreateRun(CheckFileCopy());
+                    break;
+                case Step.Copy:
+                    UFactoryCoroutine.CreateRun(UpdateCopy());
+                    break;
+                case Step.RequestVersion:
+                    UFactoryCoroutine.CreateRun(RequestVersion());
+                    break;
+                case Step.CheckVersion:
+                    UFactoryCoroutine.CreateRun(CheckVersion());
+                    break;
+                case Step.CheckDownload:
+                    UFactoryCoroutine.CreateRun(CheckDownloads());
+                    break;
+                case Step.OptionDownload:
+                    UFactoryCoroutine.CreateRun(OptionDownloadPatch());
+                    break;
             }
-
-            if (_step == Step.CheckVersionCopy)
-                yield return CheckVersionCopy();
-
-            if (_step == Step.CheckFileCopy)
-                yield return CheckFileCopy();
-
-            if (_step == Step.Copy)
-            {
-                yield return UpdateCopy();
-                _step = Step.RequestVersion;
-            }
-
-            if (_step == Step.RequestVersion)
-            {
-                yield return RequestVersion();
-                _step = Step.CheckVersion;
-            }
-
-            if (_step == Step.CheckVersion)
-            {
-                yield return CheckVersion();
-                _step = Step.CheckDownload;
-            }
-
-            if (_step == Step.CheckDownload)
-                yield return CheckDownloads();
-
-            if (_step == Step.OptionDownload)
-                yield return OptionDownloadPatch();
         }
 
         private IEnumerator CheckVersionCopy()
         {
             _newVersion = Version.LoadVersion(versionPath);
-            if (_newVersion == null)
-            {
-                var request = UnityWebRequest.Get(versionStreamingPath);
-                request.downloadHandler = new DownloadHandlerFile(versionPath);
-                yield return request.SendWebRequest();
-                if (string.IsNullOrEmpty(request.error))
-                {
-                    var version = Version.LoadVersion(versionPath);
-                    _maxValue = version.files.Length;
-                    _value = 0;
-                    _step = Step.Copy;
 
-                    _newVersion = version;
-                    _appVersion = version;
-                }
+            var request = UnityWebRequest.Get(versionStreamingPath);
+            request.downloadHandler = new DownloadHandlerFile(versionOriginalPath);
+            yield return request.SendWebRequest();
+            if (request.isDone && string.IsNullOrEmpty(request.error))
+            {
+                var version = Version.LoadVersion(versionOriginalPath);
+                _maxValue = version.files.Length + version.sFiles.Length;
+                _value = 0;
+                _step = Step.Copy;
+
+                _newVersion = _newVersion == null ? version : _newVersion;
+                _appVersion = version;
                 request.Dispose();
+
+                if (_appVersion.version > _newVersion.version) StepChecking(Step.Copy);
+                else StepChecking(Step.CheckFileCopy);
             }
             else
             {
-                var request = UnityWebRequest.Get(versionStreamingPath);
-                request.downloadHandler = new DownloadHandlerFile(versionOriginalPath);
-                yield return request.SendWebRequest();
-                if (string.IsNullOrEmpty(request.error))
+                var mb = MessageBox.Allocate().Show("提示", string.Format("内部版本信息读取错误， 联系开发人员\n{0}", request.error), "重试", "退出");
+                yield return mb;
+                if (mb.isOk)
                 {
-                    _appVersion = Version.LoadVersion(versionOriginalPath);
-                    if (_appVersion.version > _newVersion.version)
-                        _step = Step.Copy;
-                    else
-                        _step = Step.CheckFileCopy;
+                    StartUpdate(_onCompleted);
                 }
-                else _step = Step.CheckFileCopy;
-
-                _maxValue = _appVersion.files.Length + _appVersion.sFiles.Length;
-                _value = 0;
-
+                else
+                {
+                    Quit();
+                }
                 request.Dispose();
+                yield break;
             }
         }
 
@@ -216,7 +201,7 @@ namespace UFramework.VersionControl
                 _step = Step.Copy;
             else _step = Step.RequestVersion;
 
-            yield break;
+            StepChecking(_step);
         }
 
         /// <summary>
@@ -234,7 +219,7 @@ namespace UFramework.VersionControl
             for (var index = 0; index < _repairFiles.Count; index++)
             {
                 var item = _repairFiles[index];
-                var request = UnityWebRequest.Get(IOPath.PathCombine(streamingAssetsPath, Platform.RuntimePlatformCurrentName, item.name));
+                var request = UnityWebRequest.Get(IOPath.PathCombine(streamingAssetsPath, Platform.RuntimePlatformCurrentName, item.name, false));
                 request.downloadHandler = new DownloadHandlerFile(IOPath.PathCombine(assetBundlePath, item.name));
                 yield return request.SendWebRequest();
                 request.Dispose();
@@ -245,12 +230,14 @@ namespace UFramework.VersionControl
             {
                 var item = _repairSFiles[index];
                 var filePath = IOPath.PathCombine(_appVersion.sDirs[item.dirIndex], item.name);
-                var request = UnityWebRequest.Get(IOPath.PathCombine(streamingAssetsPath, LUA_DIR_NAME, filePath));
+                var request = UnityWebRequest.Get(IOPath.PathCombine(streamingAssetsPath, LUA_DIR_NAME, filePath, false));
                 request.downloadHandler = new DownloadHandlerFile(IOPath.PathCombine(luaPath, filePath));
                 yield return request.SendWebRequest();
                 request.Dispose();
                 _value++;
             }
+
+            StepChecking(Step.RequestVersion);
         }
 
         /// <summary>
@@ -318,7 +305,8 @@ namespace UFramework.VersionControl
                 {
                     IOPath.FileRename(tp, Version.FileName);
                     _newVersion = v2;
-                    yield break;
+
+                    StepChecking(Step.CheckVersion);
                 }
             }
         }
@@ -356,6 +344,7 @@ namespace UFramework.VersionControl
                 }
                 yield break;
             }
+            else StepChecking(Step.CheckDownload);
         }
 
         /// <summary>
@@ -503,7 +492,7 @@ namespace UFramework.VersionControl
             downloadFiles.Clear();
             downloadSFiles.Clear();
 
-            if (_downloader.count > 0) _step = Step.OptionDownload;
+            if (_downloader.count > 0) StepChecking(Step.OptionDownload);
             else OnCompleted();
         }
 

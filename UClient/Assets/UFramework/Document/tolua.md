@@ -1,3 +1,4 @@
+
 ### 升级指南
 
 ##### 1.  覆盖以下所有目录
@@ -53,4 +54,37 @@ require("typesys.TypeSystemHeader")
 "MeshRenderer.scaleInLightmap",
 "MeshRenderer.receiveGI",
 "MeshRenderer.stitchLightmapSeams",
+```
+
+#### 7.在 LuaState.cs 中的 InitLuaPath 的函数中进行修改，注释掉路径添加
+```csharp
+void InitLuaPath()
+{
+    InitPackagePath();
+    
+    // lua 路径添加已经在UFramework中实现，不需要在此处进行添加
+    //             if (!LuaFileUtils.Instance.beZip)
+    //             {
+    // #if UNITY_EDITOR
+    //                 if (!Directory.Exists(LuaConst.luaDir))
+    //                 {
+    //                     string msg = string.Format("luaDir path not exists: {0}, configer it in LuaConst.cs", LuaConst.luaDir);
+    //                     throw new LuaException(msg);
+    //                 }
+
+    //                 if (!Directory.Exists(LuaConst.toluaDir))
+    //                 {
+    //                     string msg = string.Format("toluaDir path not exists: {0}, configer it in LuaConst.cs", LuaConst.toluaDir);
+    //                     throw new LuaException(msg);
+    //                 }
+
+    //                 AddSearchPath(LuaConst.toluaDir);
+    //                 AddSearchPath(LuaConst.luaDir);
+    // #endif
+    //                 if (LuaFileUtils.Instance.GetType() == typeof(LuaFileUtils))
+    //                 {
+    //                     AddSearchPath(LuaConst.luaResDir);
+    //                 }
+    //             }
+}
 ```

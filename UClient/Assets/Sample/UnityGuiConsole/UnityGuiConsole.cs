@@ -38,10 +38,7 @@ public class UnityGuiConsole : MonoBehaviour
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
-    }
-
-    void Start()
-    {
+      
         enabled = true;
         Instance = this;
         Application.logMessageReceived += LogCallback;
@@ -176,7 +173,7 @@ public class UnityGuiConsole : MonoBehaviour
                 Enqueue(queue, condition, stackTrace);
                 break;
             default:
-                Enqueue(queue, condition, null);
+                Enqueue(queue, condition, stackTrace);
                 break;
         }
         this.scrollPos_[index] = new Vector2(0, 100000f);

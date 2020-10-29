@@ -142,12 +142,12 @@ namespace UFramework.Editor.VersionControl
                 {
                     if (!item.isRelease)
                     {
-                        EditorUtility.DisplayDialog("New Version", "No patch has been released for the current version", "OK");
+                        EditorUtility.DisplayDialog("Version", "当前版本中补丁尚未发布, 无法创建新版本.", "确定");
                         return;
                     }
                 }
 
-                if (EditorUtility.DisplayDialog("New Version", "Are you sure to create a new version?", "Confirm", "No"))
+                if (EditorUtility.DisplayDialog("Version", "确定创建新版本?", "确定", "取消"))
                 {
                     CreateNewVersion();
                 }
@@ -155,7 +155,7 @@ namespace UFramework.Editor.VersionControl
 
             if (SirenixEditorGUI.ToolbarButton(new GUIContent("Remove Current Version")))
             {
-                if (EditorUtility.DisplayDialog("Remove Version", "Are you sure to remove the current version?", "Confirm", "No"))
+                if (EditorUtility.DisplayDialog("Version", "确定移除当前版本?", "确定", "取消"))
                 {
                     RemoveCurrentVersion();
                 }
@@ -163,7 +163,7 @@ namespace UFramework.Editor.VersionControl
 
             if (SirenixEditorGUI.ToolbarButton(new GUIContent("Remove All Version")))
             {
-                if (EditorUtility.DisplayDialog("Remove All Version", "Are you sure to remove the all version?", "Confirm", "No"))
+                if (EditorUtility.DisplayDialog("Version", "确定移除所有版本?", "确定", "取消"))
                 {
                     RemoveAllVersion();
                 }

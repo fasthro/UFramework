@@ -20,6 +20,7 @@ namespace UFramework.Editor.VersionControl
         /// </summary>
         [BoxGroup("General Settings")]
         [LabelText("    Editor Development")]
+        [OnValueChanged("OnSaveDescribe")]
         public bool isDevelopmentVersion;
 
         /// <summary>
@@ -27,6 +28,7 @@ namespace UFramework.Editor.VersionControl
         /// </summary>
         [BoxGroup("General Settings")]
         [LabelText("    Environment")]
+        [OnValueChanged("OnSaveDescribe")]
         public AppEnvironmentType appEnvironmentType;
 
         /// <summary>
@@ -34,6 +36,7 @@ namespace UFramework.Editor.VersionControl
         /// </summary>
         [BoxGroup("URL Settings")]
         [LabelText("    Version Base Remote URL")]
+        [OnValueChanged("OnSaveDescribe")]
         public string versionBaseURL;
 
         /// <summary>
@@ -41,6 +44,7 @@ namespace UFramework.Editor.VersionControl
         /// </summary>
         [BoxGroup("Debug Settings")]
         [LabelText("    LogEnable")]
+        [OnValueChanged("OnSaveDescribe")]
         public bool isLogEnable;
 
         public object GetInstance()

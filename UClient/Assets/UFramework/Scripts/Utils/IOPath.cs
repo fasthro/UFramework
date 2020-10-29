@@ -114,10 +114,11 @@ namespace UFramework
         /// </summary>
         /// <param name="path1"></param>
         /// <param name="path2"></param>
+        /// <param name="isUnified"></param>
         /// <returns></returns>
-        public static string PathCombine(string path1, string path2)
+        public static string PathCombine(string path1, string path2, bool isUnified = true)
         {
-            return PathUnitySeparator(Path.Combine(path1, path2));
+            return isUnified ? PathUnitySeparator(Path.Combine(path1, path2)) : Path.Combine(path1, path2);
         }
 
         /// <summary>
@@ -126,10 +127,11 @@ namespace UFramework
         /// <param name="path1"></param>
         /// <param name="path2"></param>
         /// <param name="path3"></param>
+        /// <param name="isUnified"></param>
         /// <returns></returns>
-        public static string PathCombine(string path1, string path2, string path3)
+        public static string PathCombine(string path1, string path2, string path3, bool isUnified = true)
         {
-            return Path.Combine(path1, path2, path3);
+            return isUnified ? PathUnitySeparator(Path.Combine(path1, path2, path3)) : Path.Combine(path1, path2, path3);
         }
 
         /// <summary>
@@ -139,10 +141,11 @@ namespace UFramework
         /// <param name="path2"></param>
         /// <param name="path3"></param>
         /// <param name="path4"></param>
+        /// <param name="isUnified"></param>
         /// <returns></returns>
-        public static string PathCombine(string path1, string path2, string path3, string path4)
+        public static string PathCombine(string path1, string path2, string path3, string path4, bool isUnified = true)
         {
-            return Path.Combine(path1, path2, path3, path4);
+            return isUnified ? PathUnitySeparator(Path.Combine(path1, path2, path3, path4)) : Path.Combine(path1, path2, path3, path4);
         }
 
         /// <summary>

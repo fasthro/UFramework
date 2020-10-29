@@ -46,7 +46,7 @@ namespace UFramework.Editor.VersionControl
         [DisableIf("isRelease")]
         public void Operation()
         {
-            if (EditorUtility.DisplayDialog("Patch", "Do you want to release a patch?", "Push Release", "Cancel"))
+            if (EditorUtility.DisplayDialog("Patch", "确定发布补丁?", "发布", "取消"))
             {
                 var versionConfig = UConfig.Read<VersionControl_VersionConfig>();
                 var pv = versionConfig.GetPV();
@@ -56,7 +56,7 @@ namespace UFramework.Editor.VersionControl
                 var versionFilePath = IOPath.PathCombine(dataPath, displayName, Version.FileName);
                 if (!IOPath.FileExists(patchFilePath) || !IOPath.FileExists(versionFilePath) || len == 0)
                 {
-                    EditorUtility.DisplayDialog("Patch", "The patch is incomplete and cannot be released", "OK");
+                    EditorUtility.DisplayDialog("Patch", "补丁文件不存在, 请构建补丁后尝试发布.", "确定");
                     return;
                 }
                 isRelease = true;

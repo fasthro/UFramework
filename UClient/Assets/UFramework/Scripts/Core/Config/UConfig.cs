@@ -87,7 +87,7 @@ namespace UFramework.Config
 #else
             if (address == FileAddress.Resources)
             {
-                var asset = Asset.LoadResourceAsset(IOPath.PathCombine("Config", address.ToString(), fileName), typeof(TextAsset));
+                var asset = Asset.LoadResourceAsset(configName, typeof(TextAsset));
                 content = asset.GetAsset<TextAsset>().text;
                 asset.Unload();
             }

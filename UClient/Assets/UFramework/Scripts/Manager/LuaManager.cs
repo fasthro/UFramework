@@ -105,7 +105,7 @@ namespace UFramework
                 {
                     for (int i = 0; i < luaConfig.searchPaths.Length; i++)
                     {
-                        lua.AddSearchPath(IOPath.PathCombine(IOPath.PathParent(Application.dataPath), luaConfig.searchPaths[i]));
+                        lua.AddSearchPath(IOPath.PathCombine(Environment.CurrentDirectory, luaConfig.searchPaths[i]));
                     }
                 }
             }

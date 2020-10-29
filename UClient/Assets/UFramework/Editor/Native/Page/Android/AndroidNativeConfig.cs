@@ -29,7 +29,7 @@ namespace UFramework.Editor.Native
                 var source = IOPath.PathCombine(AndroidPage.ProjectPath, name, "build/outputs/aar/");
                 if (!IOPath.DirectoryExists(source))
                 {
-                    EditorUtility.DisplayDialog("Error Notice", "Android Native Update AAR Failled. [" + name + "] Module AAR File Not Exist.", "OK");
+                    EditorUtility.DisplayDialog("Android Native", "Android Native 更新 AAR 失败. [" + name + "] Module AAR 文件不存在！", "确定");
                 }
                 else
                 {
