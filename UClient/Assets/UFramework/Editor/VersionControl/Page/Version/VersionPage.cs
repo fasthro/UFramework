@@ -290,6 +290,8 @@ namespace UFramework.Editor.VersionControl
                 patch.pVersion = item.pVersion;
                 patch.timestamp = item.timestamp;
                 patch.files = item.files.ToArray();
+                patch.sFiles = item.sFiles.ToArray();
+                patch.len = item.len;
                 vInfo.patchs[i] = patch;
             }
             ver.versions.Add(vInfo.version, vInfo);
@@ -307,6 +309,8 @@ namespace UFramework.Editor.VersionControl
                     patch.pVersion = itemPatch.pVersion;
                     patch.timestamp = itemPatch.timestamp;
                     patch.files = itemPatch.files.ToArray();
+                    patch.sFiles = itemPatch.sFiles.ToArray();
+                    patch.len = itemPatch.len;
                     info.patchs[i] = patch;
                 }
                 ver.versions.Add(item.version, info);

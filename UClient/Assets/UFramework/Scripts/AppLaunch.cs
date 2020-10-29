@@ -46,11 +46,15 @@ namespace UFramework
             // 下载器
             Download.Instance.Default();
             // 版本器
-            Updater.Instance.Default();
-            // 资源
-            // Asset.Instance.Initialize(OnAssetCompleted);
+            Updater.Instance.StartUpdate(OnUpdaterCompleted);
+
         }
 
+        private void OnUpdaterCompleted()
+        {
+            // 资源
+            Asset.Instance.Initialize(OnAssetCompleted);
+        }
 
         private void OnAssetCompleted(bool result)
         {

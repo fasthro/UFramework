@@ -170,7 +170,7 @@ PlayerSettings:
   applicationIdentifier:
     Android: com.futureruler.game
   buildNumber: {}
-  AndroidBundleVersionCode: 68
+  AndroidBundleVersionCode: 72
   AndroidMinSdkVersion: 19
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1

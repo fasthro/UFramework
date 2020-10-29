@@ -483,10 +483,11 @@ namespace UFramework.Editor.VersionControl
 
             var nPatchVersionCode = version.GetNextPatchVersion();
             var oPatchVersionCode = nPatchVersionCode - 1;
+            var currentPatch = version.GetPatchVersion(oPatchVersionCode);
 
             string oVersionPath = null;
-            if (oPatchVersionCode != -1)
-                oVersionPath = IOPath.PathCombine(dataPath, string.Format("{0}-v{1}.{2}", Version.FileName, versionConfig.version, oPatchVersionCode));
+            if (currentPatch != null)
+                oVersionPath = IOPath.PathCombine(dataPath, currentPatch.displayName, Version.FileName);
             else oVersionPath = IOPath.PathCombine(dataPath, Version.FileName);
 
             if (!IOPath.FileExists(oVersionPath))
@@ -539,7 +540,7 @@ namespace UFramework.Editor.VersionControl
                 else
                 {
                     if (!file.hash.Equals(sFileMap[index].hash))
-                        nPatchFiles.Add(file);
+                        nPatchSFiles.Add(file);
                 }
             }
 
@@ -561,17 +562,16 @@ namespace UFramework.Editor.VersionControl
             // 更新版本内容
             var newPatch = new VEditorPatch();
             newPatch.files.AddRange(nPatchFiles);
+            newPatch.sFiles.AddRange(nPatchSFiles);
             newPatch.aVersion = versionConfig.version;
             newPatch.pVersion = nPatchVersionCode;
             newPatch = version.UpdatePatch(newPatch);
-            versionConfig.Save();
 
-            // 生成版本信息文件
-            var nPathDir = IOPath.PathCombine(dataPath, newPatch.displayName);
-            IOPath.DirectoryClear(nPathDir);
-            VersionPage.BuildVersion(IOPath.PathCombine(nPathDir, Version.FileName));
 
             // 生成补丁文件
+            var nPathDir = IOPath.PathCombine(dataPath, newPatch.displayName);
+            IOPath.DirectoryClear(nPathDir);
+
             var nPatchPath = IOPath.PathCombine(dataPath, "patch");
             IOPath.DirectoryClear(nPatchPath);
 
@@ -592,16 +592,23 @@ namespace UFramework.Editor.VersionControl
 
             foreach (var item in nPatchSFiles)
             {
-                var tp = IOPath.PathCombine(newSDirs[item.dirIndex], item.name);
-                var source = IOPath.PathCombine(App.TempDirectory, "Lua", tp);
-                var dest = IOPath.PathCombine(nPatchPath, "Lua", tp);
+                var tp = IOPath.PathCombine("Lua", newSDirs[item.dirIndex], item.name);
+                var source = IOPath.PathCombine(App.TempDirectory, tp);
+                var dest = IOPath.PathCombine(nPatchPath, tp);
                 IOPath.FileCopy(source, dest);
 
                 _files[_index] = dest;
-                _parents[_index] = "Lua";
+                _parents[_index] = IOPath.PathCombine("Lua", newSDirs[item.dirIndex]);
                 _index++;
             }
-            UZip.Zip(_files, _parents, IOPath.PathCombine(nPathDir, string.Format("{0}.zip", newPatch.displayName)), null, null);
+            var zipPath = IOPath.PathCombine(nPathDir, string.Format("{0}.zip", newPatch.displayName));
+            UZip.Zip(_files, _parents, zipPath, null, null);
+
+            // 生成版本信息文件
+            newPatch.len = IOPath.FileSize(zipPath);
+            newPatch = version.UpdatePatch(newPatch);
+            versionConfig.Save();
+            VersionPage.BuildVersion(IOPath.PathCombine(nPathDir, Version.FileName));
 
             _isBuild = false;
             EditorUtility.RevealInFinder(nPatchPath);
