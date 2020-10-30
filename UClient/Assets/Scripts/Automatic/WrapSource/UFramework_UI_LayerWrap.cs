@@ -7,15 +7,15 @@ public class UFramework_UI_LayerWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginEnum(typeof(UFramework.UI.Layer));
-		L.RegVar("SCNEN", get_SCNEN, null);
-		L.RegVar("PANEL", get_PANEL, null);
-		L.RegVar("MESSAGE_BOX", get_MESSAGE_BOX, null);
-		L.RegVar("GUIDE", get_GUIDE, null);
-		L.RegVar("NOTIFICATION", get_NOTIFICATION, null);
-		L.RegVar("NETWORK", get_NETWORK, null);
-		L.RegVar("LOADER", get_LOADER, null);
-		L.RegVar("TOP", get_TOP, null);
-		L.RegFunction("IntToEnum", IntToEnum);
+		L.RegVar("SCNEN", new LuaCSFunction(get_SCNEN), null);
+		L.RegVar("PANEL", new LuaCSFunction(get_PANEL), null);
+		L.RegVar("MESSAGE_BOX", new LuaCSFunction(get_MESSAGE_BOX), null);
+		L.RegVar("GUIDE", new LuaCSFunction(get_GUIDE), null);
+		L.RegVar("NOTIFICATION", new LuaCSFunction(get_NOTIFICATION), null);
+		L.RegVar("NETWORK", new LuaCSFunction(get_NETWORK), null);
+		L.RegVar("LOADER", new LuaCSFunction(get_LOADER), null);
+		L.RegVar("TOP", new LuaCSFunction(get_TOP), null);
+		L.RegFunction("IntToEnum", new LuaCSFunction(IntToEnum));
 		L.EndEnum();
 		TypeTraits<UFramework.UI.Layer>.Check = CheckType;
 		StackTraits<UFramework.UI.Layer>.Push = Push;
@@ -26,9 +26,11 @@ public class UFramework_UI_LayerWrap
 		ToLua.Push(L, arg);
 	}
 
+	static Type TypeOf_UFramework_UI_Layer = typeof(UFramework.UI.Layer);
+
 	static bool CheckType(IntPtr L, int pos)
 	{
-		return TypeChecker.CheckEnumType(typeof(UFramework.UI.Layer), L, pos);
+		return TypeChecker.CheckEnumType(TypeOf_UFramework_UI_Layer, L, pos);
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -90,7 +92,7 @@ public class UFramework_UI_LayerWrap
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int IntToEnum(IntPtr L)
 	{
-		int arg0 = (int)LuaDLL.lua_tonumber(L, 1);
+		int arg0 = (int)LuaDLL.lua_tointeger(L, 1);
 		UFramework.UI.Layer o = (UFramework.UI.Layer)arg0;
 		ToLua.Push(L, o);
 		return 1;

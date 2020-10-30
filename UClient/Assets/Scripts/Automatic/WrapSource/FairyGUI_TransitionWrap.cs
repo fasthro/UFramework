@@ -7,30 +7,30 @@ public class FairyGUI_TransitionWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.Transition), typeof(System.Object));
-		L.RegFunction("Play", Play);
-		L.RegFunction("PlayReverse", PlayReverse);
-		L.RegFunction("ChangePlayTimes", ChangePlayTimes);
-		L.RegFunction("SetAutoPlay", SetAutoPlay);
-		L.RegFunction("Stop", Stop);
-		L.RegFunction("SetPaused", SetPaused);
-		L.RegFunction("Dispose", Dispose);
-		L.RegFunction("SetValue", SetValue);
-		L.RegFunction("SetHook", SetHook);
-		L.RegFunction("ClearHooks", ClearHooks);
-		L.RegFunction("SetTarget", SetTarget);
-		L.RegFunction("SetDuration", SetDuration);
-		L.RegFunction("GetLabelTime", GetLabelTime);
-		L.RegFunction("OnTweenStart", OnTweenStart);
-		L.RegFunction("OnTweenUpdate", OnTweenUpdate);
-		L.RegFunction("OnTweenComplete", OnTweenComplete);
-		L.RegFunction("Setup", Setup);
-		L.RegFunction("New", _CreateFairyGUI_Transition);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("invalidateBatchingEveryFrame", get_invalidateBatchingEveryFrame, set_invalidateBatchingEveryFrame);
-		L.RegVar("name", get_name, null);
-		L.RegVar("playing", get_playing, null);
-		L.RegVar("timeScale", get_timeScale, set_timeScale);
-		L.RegVar("ignoreEngineTimeScale", get_ignoreEngineTimeScale, set_ignoreEngineTimeScale);
+		L.RegFunction("Play", new LuaCSFunction(Play));
+		L.RegFunction("PlayReverse", new LuaCSFunction(PlayReverse));
+		L.RegFunction("ChangePlayTimes", new LuaCSFunction(ChangePlayTimes));
+		L.RegFunction("SetAutoPlay", new LuaCSFunction(SetAutoPlay));
+		L.RegFunction("Stop", new LuaCSFunction(Stop));
+		L.RegFunction("SetPaused", new LuaCSFunction(SetPaused));
+		L.RegFunction("Dispose", new LuaCSFunction(Dispose));
+		L.RegFunction("SetValue", new LuaCSFunction(SetValue));
+		L.RegFunction("SetHook", new LuaCSFunction(SetHook));
+		L.RegFunction("ClearHooks", new LuaCSFunction(ClearHooks));
+		L.RegFunction("SetTarget", new LuaCSFunction(SetTarget));
+		L.RegFunction("SetDuration", new LuaCSFunction(SetDuration));
+		L.RegFunction("GetLabelTime", new LuaCSFunction(GetLabelTime));
+		L.RegFunction("OnTweenStart", new LuaCSFunction(OnTweenStart));
+		L.RegFunction("OnTweenUpdate", new LuaCSFunction(OnTweenUpdate));
+		L.RegFunction("OnTweenComplete", new LuaCSFunction(OnTweenComplete));
+		L.RegFunction("Setup", new LuaCSFunction(Setup));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_Transition));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("invalidateBatchingEveryFrame", new LuaCSFunction(get_invalidateBatchingEveryFrame), new LuaCSFunction(set_invalidateBatchingEveryFrame));
+		L.RegVar("name", new LuaCSFunction(get_name), null);
+		L.RegVar("playing", new LuaCSFunction(get_playing), null);
+		L.RegVar("timeScale", new LuaCSFunction(get_timeScale), new LuaCSFunction(set_timeScale));
+		L.RegVar("ignoreEngineTimeScale", new LuaCSFunction(get_ignoreEngineTimeScale), new LuaCSFunction(set_ignoreEngineTimeScale));
 		L.EndClass();
 	}
 
@@ -82,7 +82,7 @@ public class FairyGUI_TransitionWrap
 			else if (count == 4)
 			{
 				FairyGUI.Transition obj = (FairyGUI.Transition)ToLua.CheckObject<FairyGUI.Transition>(L, 1);
-				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+				int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 				float arg1 = (float)LuaDLL.luaL_checknumber(L, 3);
 				FairyGUI.PlayCompleteCallback arg2 = (FairyGUI.PlayCompleteCallback)ToLua.CheckDelegate<FairyGUI.PlayCompleteCallback>(L, 4);
 				obj.Play(arg0, arg1, arg2);
@@ -91,7 +91,7 @@ public class FairyGUI_TransitionWrap
 			else if (count == 6)
 			{
 				FairyGUI.Transition obj = (FairyGUI.Transition)ToLua.CheckObject<FairyGUI.Transition>(L, 1);
-				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+				int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 				float arg1 = (float)LuaDLL.luaL_checknumber(L, 3);
 				float arg2 = (float)LuaDLL.luaL_checknumber(L, 4);
 				float arg3 = (float)LuaDLL.luaL_checknumber(L, 5);
@@ -133,7 +133,7 @@ public class FairyGUI_TransitionWrap
 			else if (count == 4)
 			{
 				FairyGUI.Transition obj = (FairyGUI.Transition)ToLua.CheckObject<FairyGUI.Transition>(L, 1);
-				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+				int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 				float arg1 = (float)LuaDLL.luaL_checknumber(L, 3);
 				FairyGUI.PlayCompleteCallback arg2 = (FairyGUI.PlayCompleteCallback)ToLua.CheckDelegate<FairyGUI.PlayCompleteCallback>(L, 4);
 				obj.PlayReverse(arg0, arg1, arg2);
@@ -157,7 +157,7 @@ public class FairyGUI_TransitionWrap
 		{
 			ToLua.CheckArgsCount(L, 2);
 			FairyGUI.Transition obj = (FairyGUI.Transition)ToLua.CheckObject<FairyGUI.Transition>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.ChangePlayTimes(arg0);
 			return 0;
 		}
@@ -175,7 +175,7 @@ public class FairyGUI_TransitionWrap
 			ToLua.CheckArgsCount(L, 4);
 			FairyGUI.Transition obj = (FairyGUI.Transition)ToLua.CheckObject<FairyGUI.Transition>(L, 1);
 			bool arg0 = LuaDLL.luaL_checkboolean(L, 2);
-			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			float arg2 = (float)LuaDLL.luaL_checknumber(L, 4);
 			obj.SetAutoPlay(arg0, arg1, arg2);
 			return 0;

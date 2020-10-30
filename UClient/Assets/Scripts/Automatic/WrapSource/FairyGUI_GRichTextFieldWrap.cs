@@ -7,10 +7,10 @@ public class FairyGUI_GRichTextFieldWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.GRichTextField), typeof(FairyGUI.GTextField));
-		L.RegFunction("New", _CreateFairyGUI_GRichTextField);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("richTextField", get_richTextField, null);
-		L.RegVar("emojies", get_emojies, set_emojies);
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_GRichTextField));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("richTextField", new LuaCSFunction(get_richTextField), null);
+		L.RegVar("emojies", new LuaCSFunction(get_emojies), new LuaCSFunction(set_emojies));
 		L.EndClass();
 	}
 
@@ -85,7 +85,7 @@ public class FairyGUI_GRichTextFieldWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GRichTextField obj = (FairyGUI.GRichTextField)o;
-			System.Collections.Generic.Dictionary<uint,FairyGUI.Emoji> arg0 = (System.Collections.Generic.Dictionary<uint,FairyGUI.Emoji>)ToLua.CheckObject(L, 2, typeof(System.Collections.Generic.Dictionary<uint,FairyGUI.Emoji>));
+			System.Collections.Generic.Dictionary<uint,FairyGUI.Emoji> arg0 = (System.Collections.Generic.Dictionary<uint,FairyGUI.Emoji>)ToLua.CheckObject(L, 2, TypeTraits<System.Collections.Generic.Dictionary<uint,FairyGUI.Emoji>>.type);
 			obj.emojies = arg0;
 			return 0;
 		}

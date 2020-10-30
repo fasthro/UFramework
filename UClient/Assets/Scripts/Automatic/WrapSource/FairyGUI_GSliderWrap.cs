@@ -7,18 +7,18 @@ public class FairyGUI_GSliderWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.GSlider), typeof(FairyGUI.GComponent));
-		L.RegFunction("Setup_AfterAdd", Setup_AfterAdd);
-		L.RegFunction("New", _CreateFairyGUI_GSlider);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("changeOnClick", get_changeOnClick, set_changeOnClick);
-		L.RegVar("canDrag", get_canDrag, set_canDrag);
-		L.RegVar("onChanged", get_onChanged, null);
-		L.RegVar("onGripTouchEnd", get_onGripTouchEnd, null);
-		L.RegVar("titleType", get_titleType, set_titleType);
-		L.RegVar("min", get_min, set_min);
-		L.RegVar("max", get_max, set_max);
-		L.RegVar("value", get_value, set_value);
-		L.RegVar("wholeNumbers", get_wholeNumbers, set_wholeNumbers);
+		L.RegFunction("Setup_AfterAdd", new LuaCSFunction(Setup_AfterAdd));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_GSlider));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("changeOnClick", new LuaCSFunction(get_changeOnClick), new LuaCSFunction(set_changeOnClick));
+		L.RegVar("canDrag", new LuaCSFunction(get_canDrag), new LuaCSFunction(set_canDrag));
+		L.RegVar("onChanged", new LuaCSFunction(get_onChanged), null);
+		L.RegVar("onGripTouchEnd", new LuaCSFunction(get_onGripTouchEnd), null);
+		L.RegVar("titleType", new LuaCSFunction(get_titleType), new LuaCSFunction(set_titleType));
+		L.RegVar("min", new LuaCSFunction(get_min), new LuaCSFunction(set_min));
+		L.RegVar("max", new LuaCSFunction(get_max), new LuaCSFunction(set_max));
+		L.RegVar("value", new LuaCSFunction(get_value), new LuaCSFunction(set_value));
+		L.RegVar("wholeNumbers", new LuaCSFunction(get_wholeNumbers), new LuaCSFunction(set_wholeNumbers));
 		L.EndClass();
 	}
 
@@ -54,7 +54,7 @@ public class FairyGUI_GSliderWrap
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.GSlider obj = (FairyGUI.GSlider)ToLua.CheckObject<FairyGUI.GSlider>(L, 1);
 			FairyGUI.Utils.ByteBuffer arg0 = (FairyGUI.Utils.ByteBuffer)ToLua.CheckObject<FairyGUI.Utils.ByteBuffer>(L, 2);
-			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			obj.Setup_AfterAdd(arg0, arg1);
 			return 0;
 		}
@@ -282,7 +282,7 @@ public class FairyGUI_GSliderWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GSlider obj = (FairyGUI.GSlider)o;
-			FairyGUI.ProgressTitleType arg0 = (FairyGUI.ProgressTitleType)ToLua.CheckObject(L, 2, typeof(FairyGUI.ProgressTitleType));
+			FairyGUI.ProgressTitleType arg0 = (FairyGUI.ProgressTitleType)ToLua.CheckObject(L, 2, TypeTraits<FairyGUI.ProgressTitleType>.type);
 			obj.titleType = arg0;
 			return 0;
 		}

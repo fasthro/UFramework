@@ -7,66 +7,66 @@ public class FairyGUI_ScrollPaneWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.ScrollPane), typeof(FairyGUI.EventDispatcher));
-		L.RegFunction("Setup", Setup);
-		L.RegFunction("Dispose", Dispose);
-		L.RegFunction("SetPercX", SetPercX);
-		L.RegFunction("SetPercY", SetPercY);
-		L.RegFunction("SetPosX", SetPosX);
-		L.RegFunction("SetPosY", SetPosY);
-		L.RegFunction("SetCurrentPageX", SetCurrentPageX);
-		L.RegFunction("SetCurrentPageY", SetCurrentPageY);
-		L.RegFunction("ScrollTop", ScrollTop);
-		L.RegFunction("ScrollBottom", ScrollBottom);
-		L.RegFunction("ScrollUp", ScrollUp);
-		L.RegFunction("ScrollDown", ScrollDown);
-		L.RegFunction("ScrollLeft", ScrollLeft);
-		L.RegFunction("ScrollRight", ScrollRight);
-		L.RegFunction("ScrollToView", ScrollToView);
-		L.RegFunction("IsChildInView", IsChildInView);
-		L.RegFunction("CancelDragging", CancelDragging);
-		L.RegFunction("LockHeader", LockHeader);
-		L.RegFunction("LockFooter", LockFooter);
-		L.RegFunction("UpdateScrollBarVisible", UpdateScrollBarVisible);
-		L.RegFunction("New", _CreateFairyGUI_ScrollPane);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("TWEEN_TIME_GO", get_TWEEN_TIME_GO, set_TWEEN_TIME_GO);
-		L.RegVar("TWEEN_TIME_DEFAULT", get_TWEEN_TIME_DEFAULT, set_TWEEN_TIME_DEFAULT);
-		L.RegVar("PULL_RATIO", get_PULL_RATIO, set_PULL_RATIO);
-		L.RegVar("draggingPane", get_draggingPane, null);
-		L.RegVar("onScroll", get_onScroll, null);
-		L.RegVar("onScrollEnd", get_onScrollEnd, null);
-		L.RegVar("onPullDownRelease", get_onPullDownRelease, null);
-		L.RegVar("onPullUpRelease", get_onPullUpRelease, null);
-		L.RegVar("owner", get_owner, null);
-		L.RegVar("hzScrollBar", get_hzScrollBar, null);
-		L.RegVar("vtScrollBar", get_vtScrollBar, null);
-		L.RegVar("header", get_header, null);
-		L.RegVar("footer", get_footer, null);
-		L.RegVar("bouncebackEffect", get_bouncebackEffect, set_bouncebackEffect);
-		L.RegVar("touchEffect", get_touchEffect, set_touchEffect);
-		L.RegVar("inertiaDisabled", get_inertiaDisabled, set_inertiaDisabled);
-		L.RegVar("softnessOnTopOrLeftSide", get_softnessOnTopOrLeftSide, set_softnessOnTopOrLeftSide);
-		L.RegVar("scrollStep", get_scrollStep, set_scrollStep);
-		L.RegVar("snapToItem", get_snapToItem, set_snapToItem);
-		L.RegVar("pageMode", get_pageMode, set_pageMode);
-		L.RegVar("pageController", get_pageController, set_pageController);
-		L.RegVar("mouseWheelEnabled", get_mouseWheelEnabled, set_mouseWheelEnabled);
-		L.RegVar("decelerationRate", get_decelerationRate, set_decelerationRate);
-		L.RegVar("isDragged", get_isDragged, null);
-		L.RegVar("percX", get_percX, set_percX);
-		L.RegVar("percY", get_percY, set_percY);
-		L.RegVar("posX", get_posX, set_posX);
-		L.RegVar("posY", get_posY, set_posY);
-		L.RegVar("isBottomMost", get_isBottomMost, null);
-		L.RegVar("isRightMost", get_isRightMost, null);
-		L.RegVar("currentPageX", get_currentPageX, set_currentPageX);
-		L.RegVar("currentPageY", get_currentPageY, set_currentPageY);
-		L.RegVar("scrollingPosX", get_scrollingPosX, null);
-		L.RegVar("scrollingPosY", get_scrollingPosY, null);
-		L.RegVar("contentWidth", get_contentWidth, null);
-		L.RegVar("contentHeight", get_contentHeight, null);
-		L.RegVar("viewWidth", get_viewWidth, set_viewWidth);
-		L.RegVar("viewHeight", get_viewHeight, set_viewHeight);
+		L.RegFunction("Setup", new LuaCSFunction(Setup));
+		L.RegFunction("Dispose", new LuaCSFunction(Dispose));
+		L.RegFunction("SetPercX", new LuaCSFunction(SetPercX));
+		L.RegFunction("SetPercY", new LuaCSFunction(SetPercY));
+		L.RegFunction("SetPosX", new LuaCSFunction(SetPosX));
+		L.RegFunction("SetPosY", new LuaCSFunction(SetPosY));
+		L.RegFunction("SetCurrentPageX", new LuaCSFunction(SetCurrentPageX));
+		L.RegFunction("SetCurrentPageY", new LuaCSFunction(SetCurrentPageY));
+		L.RegFunction("ScrollTop", new LuaCSFunction(ScrollTop));
+		L.RegFunction("ScrollBottom", new LuaCSFunction(ScrollBottom));
+		L.RegFunction("ScrollUp", new LuaCSFunction(ScrollUp));
+		L.RegFunction("ScrollDown", new LuaCSFunction(ScrollDown));
+		L.RegFunction("ScrollLeft", new LuaCSFunction(ScrollLeft));
+		L.RegFunction("ScrollRight", new LuaCSFunction(ScrollRight));
+		L.RegFunction("ScrollToView", new LuaCSFunction(ScrollToView));
+		L.RegFunction("IsChildInView", new LuaCSFunction(IsChildInView));
+		L.RegFunction("CancelDragging", new LuaCSFunction(CancelDragging));
+		L.RegFunction("LockHeader", new LuaCSFunction(LockHeader));
+		L.RegFunction("LockFooter", new LuaCSFunction(LockFooter));
+		L.RegFunction("UpdateScrollBarVisible", new LuaCSFunction(UpdateScrollBarVisible));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_ScrollPane));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("TWEEN_TIME_GO", new LuaCSFunction(get_TWEEN_TIME_GO), new LuaCSFunction(set_TWEEN_TIME_GO));
+		L.RegVar("TWEEN_TIME_DEFAULT", new LuaCSFunction(get_TWEEN_TIME_DEFAULT), new LuaCSFunction(set_TWEEN_TIME_DEFAULT));
+		L.RegVar("PULL_RATIO", new LuaCSFunction(get_PULL_RATIO), new LuaCSFunction(set_PULL_RATIO));
+		L.RegVar("draggingPane", new LuaCSFunction(get_draggingPane), null);
+		L.RegVar("onScroll", new LuaCSFunction(get_onScroll), null);
+		L.RegVar("onScrollEnd", new LuaCSFunction(get_onScrollEnd), null);
+		L.RegVar("onPullDownRelease", new LuaCSFunction(get_onPullDownRelease), null);
+		L.RegVar("onPullUpRelease", new LuaCSFunction(get_onPullUpRelease), null);
+		L.RegVar("owner", new LuaCSFunction(get_owner), null);
+		L.RegVar("hzScrollBar", new LuaCSFunction(get_hzScrollBar), null);
+		L.RegVar("vtScrollBar", new LuaCSFunction(get_vtScrollBar), null);
+		L.RegVar("header", new LuaCSFunction(get_header), null);
+		L.RegVar("footer", new LuaCSFunction(get_footer), null);
+		L.RegVar("bouncebackEffect", new LuaCSFunction(get_bouncebackEffect), new LuaCSFunction(set_bouncebackEffect));
+		L.RegVar("touchEffect", new LuaCSFunction(get_touchEffect), new LuaCSFunction(set_touchEffect));
+		L.RegVar("inertiaDisabled", new LuaCSFunction(get_inertiaDisabled), new LuaCSFunction(set_inertiaDisabled));
+		L.RegVar("softnessOnTopOrLeftSide", new LuaCSFunction(get_softnessOnTopOrLeftSide), new LuaCSFunction(set_softnessOnTopOrLeftSide));
+		L.RegVar("scrollStep", new LuaCSFunction(get_scrollStep), new LuaCSFunction(set_scrollStep));
+		L.RegVar("snapToItem", new LuaCSFunction(get_snapToItem), new LuaCSFunction(set_snapToItem));
+		L.RegVar("pageMode", new LuaCSFunction(get_pageMode), new LuaCSFunction(set_pageMode));
+		L.RegVar("pageController", new LuaCSFunction(get_pageController), new LuaCSFunction(set_pageController));
+		L.RegVar("mouseWheelEnabled", new LuaCSFunction(get_mouseWheelEnabled), new LuaCSFunction(set_mouseWheelEnabled));
+		L.RegVar("decelerationRate", new LuaCSFunction(get_decelerationRate), new LuaCSFunction(set_decelerationRate));
+		L.RegVar("isDragged", new LuaCSFunction(get_isDragged), null);
+		L.RegVar("percX", new LuaCSFunction(get_percX), new LuaCSFunction(set_percX));
+		L.RegVar("percY", new LuaCSFunction(get_percY), new LuaCSFunction(set_percY));
+		L.RegVar("posX", new LuaCSFunction(get_posX), new LuaCSFunction(set_posX));
+		L.RegVar("posY", new LuaCSFunction(get_posY), new LuaCSFunction(set_posY));
+		L.RegVar("isBottomMost", new LuaCSFunction(get_isBottomMost), null);
+		L.RegVar("isRightMost", new LuaCSFunction(get_isRightMost), null);
+		L.RegVar("currentPageX", new LuaCSFunction(get_currentPageX), new LuaCSFunction(set_currentPageX));
+		L.RegVar("currentPageY", new LuaCSFunction(get_currentPageY), new LuaCSFunction(set_currentPageY));
+		L.RegVar("scrollingPosX", new LuaCSFunction(get_scrollingPosX), null);
+		L.RegVar("scrollingPosY", new LuaCSFunction(get_scrollingPosY), null);
+		L.RegVar("contentWidth", new LuaCSFunction(get_contentWidth), null);
+		L.RegVar("contentHeight", new LuaCSFunction(get_contentHeight), null);
+		L.RegVar("viewWidth", new LuaCSFunction(get_viewWidth), new LuaCSFunction(set_viewWidth));
+		L.RegVar("viewHeight", new LuaCSFunction(get_viewHeight), new LuaCSFunction(set_viewHeight));
 		L.EndClass();
 	}
 
@@ -207,7 +207,7 @@ public class FairyGUI_ScrollPaneWrap
 		{
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.ScrollPane obj = (FairyGUI.ScrollPane)ToLua.CheckObject<FairyGUI.ScrollPane>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			bool arg1 = LuaDLL.luaL_checkboolean(L, 3);
 			obj.SetCurrentPageX(arg0, arg1);
 			return 0;
@@ -225,7 +225,7 @@ public class FairyGUI_ScrollPaneWrap
 		{
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.ScrollPane obj = (FairyGUI.ScrollPane)ToLua.CheckObject<FairyGUI.ScrollPane>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			bool arg1 = LuaDLL.luaL_checkboolean(L, 3);
 			obj.SetCurrentPageY(arg0, arg1);
 			return 0;
@@ -518,7 +518,7 @@ public class FairyGUI_ScrollPaneWrap
 		{
 			ToLua.CheckArgsCount(L, 2);
 			FairyGUI.ScrollPane obj = (FairyGUI.ScrollPane)ToLua.CheckObject<FairyGUI.ScrollPane>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.LockHeader(arg0);
 			return 0;
 		}
@@ -535,7 +535,7 @@ public class FairyGUI_ScrollPaneWrap
 		{
 			ToLua.CheckArgsCount(L, 2);
 			FairyGUI.ScrollPane obj = (FairyGUI.ScrollPane)ToLua.CheckObject<FairyGUI.ScrollPane>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.LockFooter(arg0);
 			return 0;
 		}
@@ -1270,6 +1270,7 @@ public class FairyGUI_ScrollPaneWrap
 		{
 			float arg0 = (float)LuaDLL.luaL_checknumber(L, 2);
 			FairyGUI.ScrollPane.TWEEN_TIME_GO = arg0;
+			FairyGUI.ScrollPane.TWEEN_TIME_GO = arg0;
 			return 0;
 		}
 		catch (Exception e)
@@ -1285,6 +1286,7 @@ public class FairyGUI_ScrollPaneWrap
 		{
 			float arg0 = (float)LuaDLL.luaL_checknumber(L, 2);
 			FairyGUI.ScrollPane.TWEEN_TIME_DEFAULT = arg0;
+			FairyGUI.ScrollPane.TWEEN_TIME_DEFAULT = arg0;
 			return 0;
 		}
 		catch (Exception e)
@@ -1299,6 +1301,7 @@ public class FairyGUI_ScrollPaneWrap
 		try
 		{
 			float arg0 = (float)LuaDLL.luaL_checknumber(L, 2);
+			FairyGUI.ScrollPane.PULL_RATIO = arg0;
 			FairyGUI.ScrollPane.PULL_RATIO = arg0;
 			return 0;
 		}
@@ -1583,7 +1586,7 @@ public class FairyGUI_ScrollPaneWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.ScrollPane obj = (FairyGUI.ScrollPane)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.currentPageX = arg0;
 			return 0;
 		}
@@ -1602,7 +1605,7 @@ public class FairyGUI_ScrollPaneWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.ScrollPane obj = (FairyGUI.ScrollPane)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.currentPageY = arg0;
 			return 0;
 		}

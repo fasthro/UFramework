@@ -7,19 +7,19 @@ public class FairyGUI_GImageWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.GImage), typeof(FairyGUI.GObject));
-		L.RegFunction("ConstructFromResource", ConstructFromResource);
-		L.RegFunction("Setup_BeforeAdd", Setup_BeforeAdd);
-		L.RegFunction("New", _CreateFairyGUI_GImage);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("color", get_color, set_color);
-		L.RegVar("flip", get_flip, set_flip);
-		L.RegVar("fillMethod", get_fillMethod, set_fillMethod);
-		L.RegVar("fillOrigin", get_fillOrigin, set_fillOrigin);
-		L.RegVar("fillClockwise", get_fillClockwise, set_fillClockwise);
-		L.RegVar("fillAmount", get_fillAmount, set_fillAmount);
-		L.RegVar("texture", get_texture, set_texture);
-		L.RegVar("material", get_material, set_material);
-		L.RegVar("shader", get_shader, set_shader);
+		L.RegFunction("ConstructFromResource", new LuaCSFunction(ConstructFromResource));
+		L.RegFunction("Setup_BeforeAdd", new LuaCSFunction(Setup_BeforeAdd));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_GImage));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("color", new LuaCSFunction(get_color), new LuaCSFunction(set_color));
+		L.RegVar("flip", new LuaCSFunction(get_flip), new LuaCSFunction(set_flip));
+		L.RegVar("fillMethod", new LuaCSFunction(get_fillMethod), new LuaCSFunction(set_fillMethod));
+		L.RegVar("fillOrigin", new LuaCSFunction(get_fillOrigin), new LuaCSFunction(set_fillOrigin));
+		L.RegVar("fillClockwise", new LuaCSFunction(get_fillClockwise), new LuaCSFunction(set_fillClockwise));
+		L.RegVar("fillAmount", new LuaCSFunction(get_fillAmount), new LuaCSFunction(set_fillAmount));
+		L.RegVar("texture", new LuaCSFunction(get_texture), new LuaCSFunction(set_texture));
+		L.RegVar("material", new LuaCSFunction(get_material), new LuaCSFunction(set_material));
+		L.RegVar("shader", new LuaCSFunction(get_shader), new LuaCSFunction(set_shader));
 		L.EndClass();
 	}
 
@@ -71,7 +71,7 @@ public class FairyGUI_GImageWrap
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.GImage obj = (FairyGUI.GImage)ToLua.CheckObject<FairyGUI.GImage>(L, 1);
 			FairyGUI.Utils.ByteBuffer arg0 = (FairyGUI.Utils.ByteBuffer)ToLua.CheckObject<FairyGUI.Utils.ByteBuffer>(L, 2);
-			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			obj.Setup_BeforeAdd(arg0, arg1);
 			return 0;
 		}
@@ -280,7 +280,7 @@ public class FairyGUI_GImageWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GImage obj = (FairyGUI.GImage)o;
-			FairyGUI.FlipType arg0 = (FairyGUI.FlipType)ToLua.CheckObject(L, 2, typeof(FairyGUI.FlipType));
+			FairyGUI.FlipType arg0 = (FairyGUI.FlipType)ToLua.CheckObject(L, 2, TypeTraits<FairyGUI.FlipType>.type);
 			obj.flip = arg0;
 			return 0;
 		}
@@ -299,7 +299,7 @@ public class FairyGUI_GImageWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GImage obj = (FairyGUI.GImage)o;
-			FairyGUI.FillMethod arg0 = (FairyGUI.FillMethod)ToLua.CheckObject(L, 2, typeof(FairyGUI.FillMethod));
+			FairyGUI.FillMethod arg0 = (FairyGUI.FillMethod)ToLua.CheckObject(L, 2, TypeTraits<FairyGUI.FillMethod>.type);
 			obj.fillMethod = arg0;
 			return 0;
 		}
@@ -318,7 +318,7 @@ public class FairyGUI_GImageWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GImage obj = (FairyGUI.GImage)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.fillOrigin = arg0;
 			return 0;
 		}

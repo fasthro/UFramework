@@ -7,149 +7,149 @@ public class FairyGUI_GObjectWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.GObject), typeof(FairyGUI.EventDispatcher));
-		L.RegFunction("SetXY", SetXY);
-		L.RegFunction("SetPosition", SetPosition);
-		L.RegFunction("Center", Center);
-		L.RegFunction("MakeFullScreen", MakeFullScreen);
-		L.RegFunction("SetSize", SetSize);
-		L.RegFunction("SetScale", SetScale);
-		L.RegFunction("SetPivot", SetPivot);
-		L.RegFunction("RequestFocus", RequestFocus);
-		L.RegFunction("SetHome", SetHome);
-		L.RegFunction("GetGear", GetGear);
-		L.RegFunction("InvalidateBatchingState", InvalidateBatchingState);
-		L.RegFunction("HandleControllerChanged", HandleControllerChanged);
-		L.RegFunction("AddRelation", AddRelation);
-		L.RegFunction("RemoveRelation", RemoveRelation);
-		L.RegFunction("RemoveFromParent", RemoveFromParent);
-		L.RegFunction("StartDrag", StartDrag);
-		L.RegFunction("StopDrag", StopDrag);
-		L.RegFunction("LocalToGlobal", LocalToGlobal);
-		L.RegFunction("GlobalToLocal", GlobalToLocal);
-		L.RegFunction("LocalToRoot", LocalToRoot);
-		L.RegFunction("RootToLocal", RootToLocal);
-		L.RegFunction("WorldToLocal", WorldToLocal);
-		L.RegFunction("TransformPoint", TransformPoint);
-		L.RegFunction("TransformRect", TransformRect);
-		L.RegFunction("Dispose", Dispose);
-		L.RegFunction("ConstructFromResource", ConstructFromResource);
-		L.RegFunction("Setup_BeforeAdd", Setup_BeforeAdd);
-		L.RegFunction("Setup_AfterAdd", Setup_AfterAdd);
-		L.RegFunction("TweenMove", TweenMove);
-		L.RegFunction("TweenMoveX", TweenMoveX);
-		L.RegFunction("TweenMoveY", TweenMoveY);
-		L.RegFunction("TweenScale", TweenScale);
-		L.RegFunction("TweenScaleX", TweenScaleX);
-		L.RegFunction("TweenScaleY", TweenScaleY);
-		L.RegFunction("TweenResize", TweenResize);
-		L.RegFunction("TweenFade", TweenFade);
-		L.RegFunction("TweenRotate", TweenRotate);
-		L.RegFunction("New", _CreateFairyGUI_GObject);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("name", get_name, set_name);
-		L.RegVar("data", get_data, set_data);
-		L.RegVar("sourceWidth", get_sourceWidth, set_sourceWidth);
-		L.RegVar("sourceHeight", get_sourceHeight, set_sourceHeight);
-		L.RegVar("initWidth", get_initWidth, set_initWidth);
-		L.RegVar("initHeight", get_initHeight, set_initHeight);
-		L.RegVar("minWidth", get_minWidth, set_minWidth);
-		L.RegVar("maxWidth", get_maxWidth, set_maxWidth);
-		L.RegVar("minHeight", get_minHeight, set_minHeight);
-		L.RegVar("maxHeight", get_maxHeight, set_maxHeight);
-		L.RegVar("dragBounds", get_dragBounds, set_dragBounds);
-		L.RegVar("packageItem", get_packageItem, set_packageItem);
-		L.RegVar("id", get_id, null);
-		L.RegVar("relations", get_relations, null);
-		L.RegVar("parent", get_parent, null);
-		L.RegVar("displayObject", get_displayObject, null);
-		L.RegVar("draggingObject", get_draggingObject, null);
-		L.RegVar("onClick", get_onClick, null);
-		L.RegVar("onRightClick", get_onRightClick, null);
-		L.RegVar("onTouchBegin", get_onTouchBegin, null);
-		L.RegVar("onTouchMove", get_onTouchMove, null);
-		L.RegVar("onTouchEnd", get_onTouchEnd, null);
-		L.RegVar("onRollOver", get_onRollOver, null);
-		L.RegVar("onRollOut", get_onRollOut, null);
-		L.RegVar("onAddedToStage", get_onAddedToStage, null);
-		L.RegVar("onRemovedFromStage", get_onRemovedFromStage, null);
-		L.RegVar("onKeyDown", get_onKeyDown, null);
-		L.RegVar("onClickLink", get_onClickLink, null);
-		L.RegVar("onPositionChanged", get_onPositionChanged, null);
-		L.RegVar("onSizeChanged", get_onSizeChanged, null);
-		L.RegVar("onDragStart", get_onDragStart, null);
-		L.RegVar("onDragMove", get_onDragMove, null);
-		L.RegVar("onDragEnd", get_onDragEnd, null);
-		L.RegVar("onGearStop", get_onGearStop, null);
-		L.RegVar("onFocusIn", get_onFocusIn, null);
-		L.RegVar("onFocusOut", get_onFocusOut, null);
-		L.RegVar("x", get_x, set_x);
-		L.RegVar("y", get_y, set_y);
-		L.RegVar("z", get_z, set_z);
-		L.RegVar("xy", get_xy, set_xy);
-		L.RegVar("position", get_position, set_position);
-		L.RegVar("width", get_width, set_width);
-		L.RegVar("height", get_height, set_height);
-		L.RegVar("size", get_size, set_size);
-		L.RegVar("actualWidth", get_actualWidth, null);
-		L.RegVar("actualHeight", get_actualHeight, null);
-		L.RegVar("xMin", get_xMin, set_xMin);
-		L.RegVar("yMin", get_yMin, set_yMin);
-		L.RegVar("scaleX", get_scaleX, set_scaleX);
-		L.RegVar("scaleY", get_scaleY, set_scaleY);
-		L.RegVar("scale", get_scale, set_scale);
-		L.RegVar("skew", get_skew, set_skew);
-		L.RegVar("pivotX", get_pivotX, set_pivotX);
-		L.RegVar("pivotY", get_pivotY, set_pivotY);
-		L.RegVar("pivot", get_pivot, set_pivot);
-		L.RegVar("pivotAsAnchor", get_pivotAsAnchor, set_pivotAsAnchor);
-		L.RegVar("touchable", get_touchable, set_touchable);
-		L.RegVar("grayed", get_grayed, set_grayed);
-		L.RegVar("enabled", get_enabled, set_enabled);
-		L.RegVar("rotation", get_rotation, set_rotation);
-		L.RegVar("rotationX", get_rotationX, set_rotationX);
-		L.RegVar("rotationY", get_rotationY, set_rotationY);
-		L.RegVar("alpha", get_alpha, set_alpha);
-		L.RegVar("visible", get_visible, set_visible);
-		L.RegVar("sortingOrder", get_sortingOrder, set_sortingOrder);
-		L.RegVar("focusable", get_focusable, set_focusable);
-		L.RegVar("tabStop", get_tabStop, set_tabStop);
-		L.RegVar("focused", get_focused, null);
-		L.RegVar("tooltips", get_tooltips, set_tooltips);
-		L.RegVar("cursor", get_cursor, set_cursor);
-		L.RegVar("filter", get_filter, set_filter);
-		L.RegVar("blendMode", get_blendMode, set_blendMode);
-		L.RegVar("gameObjectName", get_gameObjectName, set_gameObjectName);
-		L.RegVar("inContainer", get_inContainer, null);
-		L.RegVar("onStage", get_onStage, null);
-		L.RegVar("resourceURL", get_resourceURL, null);
-		L.RegVar("gearXY", get_gearXY, null);
-		L.RegVar("gearSize", get_gearSize, null);
-		L.RegVar("gearLook", get_gearLook, null);
-		L.RegVar("group", get_group, set_group);
-		L.RegVar("root", get_root, null);
-		L.RegVar("text", get_text, set_text);
-		L.RegVar("icon", get_icon, set_icon);
-		L.RegVar("draggable", get_draggable, set_draggable);
-		L.RegVar("dragging", get_dragging, null);
-		L.RegVar("isDisposed", get_isDisposed, null);
-		L.RegVar("asImage", get_asImage, null);
-		L.RegVar("asCom", get_asCom, null);
-		L.RegVar("asButton", get_asButton, null);
-		L.RegVar("asLabel", get_asLabel, null);
-		L.RegVar("asProgress", get_asProgress, null);
-		L.RegVar("asSlider", get_asSlider, null);
-		L.RegVar("asComboBox", get_asComboBox, null);
-		L.RegVar("asTextField", get_asTextField, null);
-		L.RegVar("asRichTextField", get_asRichTextField, null);
-		L.RegVar("asTextInput", get_asTextInput, null);
-		L.RegVar("asLoader", get_asLoader, null);
-		L.RegVar("asLoader3D", get_asLoader3D, null);
-		L.RegVar("asList", get_asList, null);
-		L.RegVar("asGraph", get_asGraph, null);
-		L.RegVar("asGroup", get_asGroup, null);
-		L.RegVar("asMovieClip", get_asMovieClip, null);
-		L.RegVar("asTree", get_asTree, null);
-		L.RegVar("treeNode", get_treeNode, null);
+		L.RegFunction("SetXY", new LuaCSFunction(SetXY));
+		L.RegFunction("SetPosition", new LuaCSFunction(SetPosition));
+		L.RegFunction("Center", new LuaCSFunction(Center));
+		L.RegFunction("MakeFullScreen", new LuaCSFunction(MakeFullScreen));
+		L.RegFunction("SetSize", new LuaCSFunction(SetSize));
+		L.RegFunction("SetScale", new LuaCSFunction(SetScale));
+		L.RegFunction("SetPivot", new LuaCSFunction(SetPivot));
+		L.RegFunction("RequestFocus", new LuaCSFunction(RequestFocus));
+		L.RegFunction("SetHome", new LuaCSFunction(SetHome));
+		L.RegFunction("GetGear", new LuaCSFunction(GetGear));
+		L.RegFunction("InvalidateBatchingState", new LuaCSFunction(InvalidateBatchingState));
+		L.RegFunction("HandleControllerChanged", new LuaCSFunction(HandleControllerChanged));
+		L.RegFunction("AddRelation", new LuaCSFunction(AddRelation));
+		L.RegFunction("RemoveRelation", new LuaCSFunction(RemoveRelation));
+		L.RegFunction("RemoveFromParent", new LuaCSFunction(RemoveFromParent));
+		L.RegFunction("StartDrag", new LuaCSFunction(StartDrag));
+		L.RegFunction("StopDrag", new LuaCSFunction(StopDrag));
+		L.RegFunction("LocalToGlobal", new LuaCSFunction(LocalToGlobal));
+		L.RegFunction("GlobalToLocal", new LuaCSFunction(GlobalToLocal));
+		L.RegFunction("LocalToRoot", new LuaCSFunction(LocalToRoot));
+		L.RegFunction("RootToLocal", new LuaCSFunction(RootToLocal));
+		L.RegFunction("WorldToLocal", new LuaCSFunction(WorldToLocal));
+		L.RegFunction("TransformPoint", new LuaCSFunction(TransformPoint));
+		L.RegFunction("TransformRect", new LuaCSFunction(TransformRect));
+		L.RegFunction("Dispose", new LuaCSFunction(Dispose));
+		L.RegFunction("ConstructFromResource", new LuaCSFunction(ConstructFromResource));
+		L.RegFunction("Setup_BeforeAdd", new LuaCSFunction(Setup_BeforeAdd));
+		L.RegFunction("Setup_AfterAdd", new LuaCSFunction(Setup_AfterAdd));
+		L.RegFunction("TweenMove", new LuaCSFunction(TweenMove));
+		L.RegFunction("TweenMoveX", new LuaCSFunction(TweenMoveX));
+		L.RegFunction("TweenMoveY", new LuaCSFunction(TweenMoveY));
+		L.RegFunction("TweenScale", new LuaCSFunction(TweenScale));
+		L.RegFunction("TweenScaleX", new LuaCSFunction(TweenScaleX));
+		L.RegFunction("TweenScaleY", new LuaCSFunction(TweenScaleY));
+		L.RegFunction("TweenResize", new LuaCSFunction(TweenResize));
+		L.RegFunction("TweenFade", new LuaCSFunction(TweenFade));
+		L.RegFunction("TweenRotate", new LuaCSFunction(TweenRotate));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_GObject));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("name", new LuaCSFunction(get_name), new LuaCSFunction(set_name));
+		L.RegVar("data", new LuaCSFunction(get_data), new LuaCSFunction(set_data));
+		L.RegVar("sourceWidth", new LuaCSFunction(get_sourceWidth), new LuaCSFunction(set_sourceWidth));
+		L.RegVar("sourceHeight", new LuaCSFunction(get_sourceHeight), new LuaCSFunction(set_sourceHeight));
+		L.RegVar("initWidth", new LuaCSFunction(get_initWidth), new LuaCSFunction(set_initWidth));
+		L.RegVar("initHeight", new LuaCSFunction(get_initHeight), new LuaCSFunction(set_initHeight));
+		L.RegVar("minWidth", new LuaCSFunction(get_minWidth), new LuaCSFunction(set_minWidth));
+		L.RegVar("maxWidth", new LuaCSFunction(get_maxWidth), new LuaCSFunction(set_maxWidth));
+		L.RegVar("minHeight", new LuaCSFunction(get_minHeight), new LuaCSFunction(set_minHeight));
+		L.RegVar("maxHeight", new LuaCSFunction(get_maxHeight), new LuaCSFunction(set_maxHeight));
+		L.RegVar("dragBounds", new LuaCSFunction(get_dragBounds), new LuaCSFunction(set_dragBounds));
+		L.RegVar("packageItem", new LuaCSFunction(get_packageItem), new LuaCSFunction(set_packageItem));
+		L.RegVar("id", new LuaCSFunction(get_id), null);
+		L.RegVar("relations", new LuaCSFunction(get_relations), null);
+		L.RegVar("parent", new LuaCSFunction(get_parent), null);
+		L.RegVar("displayObject", new LuaCSFunction(get_displayObject), null);
+		L.RegVar("draggingObject", new LuaCSFunction(get_draggingObject), null);
+		L.RegVar("onClick", new LuaCSFunction(get_onClick), null);
+		L.RegVar("onRightClick", new LuaCSFunction(get_onRightClick), null);
+		L.RegVar("onTouchBegin", new LuaCSFunction(get_onTouchBegin), null);
+		L.RegVar("onTouchMove", new LuaCSFunction(get_onTouchMove), null);
+		L.RegVar("onTouchEnd", new LuaCSFunction(get_onTouchEnd), null);
+		L.RegVar("onRollOver", new LuaCSFunction(get_onRollOver), null);
+		L.RegVar("onRollOut", new LuaCSFunction(get_onRollOut), null);
+		L.RegVar("onAddedToStage", new LuaCSFunction(get_onAddedToStage), null);
+		L.RegVar("onRemovedFromStage", new LuaCSFunction(get_onRemovedFromStage), null);
+		L.RegVar("onKeyDown", new LuaCSFunction(get_onKeyDown), null);
+		L.RegVar("onClickLink", new LuaCSFunction(get_onClickLink), null);
+		L.RegVar("onPositionChanged", new LuaCSFunction(get_onPositionChanged), null);
+		L.RegVar("onSizeChanged", new LuaCSFunction(get_onSizeChanged), null);
+		L.RegVar("onDragStart", new LuaCSFunction(get_onDragStart), null);
+		L.RegVar("onDragMove", new LuaCSFunction(get_onDragMove), null);
+		L.RegVar("onDragEnd", new LuaCSFunction(get_onDragEnd), null);
+		L.RegVar("onGearStop", new LuaCSFunction(get_onGearStop), null);
+		L.RegVar("onFocusIn", new LuaCSFunction(get_onFocusIn), null);
+		L.RegVar("onFocusOut", new LuaCSFunction(get_onFocusOut), null);
+		L.RegVar("x", new LuaCSFunction(get_x), new LuaCSFunction(set_x));
+		L.RegVar("y", new LuaCSFunction(get_y), new LuaCSFunction(set_y));
+		L.RegVar("z", new LuaCSFunction(get_z), new LuaCSFunction(set_z));
+		L.RegVar("xy", new LuaCSFunction(get_xy), new LuaCSFunction(set_xy));
+		L.RegVar("position", new LuaCSFunction(get_position), new LuaCSFunction(set_position));
+		L.RegVar("width", new LuaCSFunction(get_width), new LuaCSFunction(set_width));
+		L.RegVar("height", new LuaCSFunction(get_height), new LuaCSFunction(set_height));
+		L.RegVar("size", new LuaCSFunction(get_size), new LuaCSFunction(set_size));
+		L.RegVar("actualWidth", new LuaCSFunction(get_actualWidth), null);
+		L.RegVar("actualHeight", new LuaCSFunction(get_actualHeight), null);
+		L.RegVar("xMin", new LuaCSFunction(get_xMin), new LuaCSFunction(set_xMin));
+		L.RegVar("yMin", new LuaCSFunction(get_yMin), new LuaCSFunction(set_yMin));
+		L.RegVar("scaleX", new LuaCSFunction(get_scaleX), new LuaCSFunction(set_scaleX));
+		L.RegVar("scaleY", new LuaCSFunction(get_scaleY), new LuaCSFunction(set_scaleY));
+		L.RegVar("scale", new LuaCSFunction(get_scale), new LuaCSFunction(set_scale));
+		L.RegVar("skew", new LuaCSFunction(get_skew), new LuaCSFunction(set_skew));
+		L.RegVar("pivotX", new LuaCSFunction(get_pivotX), new LuaCSFunction(set_pivotX));
+		L.RegVar("pivotY", new LuaCSFunction(get_pivotY), new LuaCSFunction(set_pivotY));
+		L.RegVar("pivot", new LuaCSFunction(get_pivot), new LuaCSFunction(set_pivot));
+		L.RegVar("pivotAsAnchor", new LuaCSFunction(get_pivotAsAnchor), new LuaCSFunction(set_pivotAsAnchor));
+		L.RegVar("touchable", new LuaCSFunction(get_touchable), new LuaCSFunction(set_touchable));
+		L.RegVar("grayed", new LuaCSFunction(get_grayed), new LuaCSFunction(set_grayed));
+		L.RegVar("enabled", new LuaCSFunction(get_enabled), new LuaCSFunction(set_enabled));
+		L.RegVar("rotation", new LuaCSFunction(get_rotation), new LuaCSFunction(set_rotation));
+		L.RegVar("rotationX", new LuaCSFunction(get_rotationX), new LuaCSFunction(set_rotationX));
+		L.RegVar("rotationY", new LuaCSFunction(get_rotationY), new LuaCSFunction(set_rotationY));
+		L.RegVar("alpha", new LuaCSFunction(get_alpha), new LuaCSFunction(set_alpha));
+		L.RegVar("visible", new LuaCSFunction(get_visible), new LuaCSFunction(set_visible));
+		L.RegVar("sortingOrder", new LuaCSFunction(get_sortingOrder), new LuaCSFunction(set_sortingOrder));
+		L.RegVar("focusable", new LuaCSFunction(get_focusable), new LuaCSFunction(set_focusable));
+		L.RegVar("tabStop", new LuaCSFunction(get_tabStop), new LuaCSFunction(set_tabStop));
+		L.RegVar("focused", new LuaCSFunction(get_focused), null);
+		L.RegVar("tooltips", new LuaCSFunction(get_tooltips), new LuaCSFunction(set_tooltips));
+		L.RegVar("cursor", new LuaCSFunction(get_cursor), new LuaCSFunction(set_cursor));
+		L.RegVar("filter", new LuaCSFunction(get_filter), new LuaCSFunction(set_filter));
+		L.RegVar("blendMode", new LuaCSFunction(get_blendMode), new LuaCSFunction(set_blendMode));
+		L.RegVar("gameObjectName", new LuaCSFunction(get_gameObjectName), new LuaCSFunction(set_gameObjectName));
+		L.RegVar("inContainer", new LuaCSFunction(get_inContainer), null);
+		L.RegVar("onStage", new LuaCSFunction(get_onStage), null);
+		L.RegVar("resourceURL", new LuaCSFunction(get_resourceURL), null);
+		L.RegVar("gearXY", new LuaCSFunction(get_gearXY), null);
+		L.RegVar("gearSize", new LuaCSFunction(get_gearSize), null);
+		L.RegVar("gearLook", new LuaCSFunction(get_gearLook), null);
+		L.RegVar("group", new LuaCSFunction(get_group), new LuaCSFunction(set_group));
+		L.RegVar("root", new LuaCSFunction(get_root), null);
+		L.RegVar("text", new LuaCSFunction(get_text), new LuaCSFunction(set_text));
+		L.RegVar("icon", new LuaCSFunction(get_icon), new LuaCSFunction(set_icon));
+		L.RegVar("draggable", new LuaCSFunction(get_draggable), new LuaCSFunction(set_draggable));
+		L.RegVar("dragging", new LuaCSFunction(get_dragging), null);
+		L.RegVar("isDisposed", new LuaCSFunction(get_isDisposed), null);
+		L.RegVar("asImage", new LuaCSFunction(get_asImage), null);
+		L.RegVar("asCom", new LuaCSFunction(get_asCom), null);
+		L.RegVar("asButton", new LuaCSFunction(get_asButton), null);
+		L.RegVar("asLabel", new LuaCSFunction(get_asLabel), null);
+		L.RegVar("asProgress", new LuaCSFunction(get_asProgress), null);
+		L.RegVar("asSlider", new LuaCSFunction(get_asSlider), null);
+		L.RegVar("asComboBox", new LuaCSFunction(get_asComboBox), null);
+		L.RegVar("asTextField", new LuaCSFunction(get_asTextField), null);
+		L.RegVar("asRichTextField", new LuaCSFunction(get_asRichTextField), null);
+		L.RegVar("asTextInput", new LuaCSFunction(get_asTextInput), null);
+		L.RegVar("asLoader", new LuaCSFunction(get_asLoader), null);
+		L.RegVar("asLoader3D", new LuaCSFunction(get_asLoader3D), null);
+		L.RegVar("asList", new LuaCSFunction(get_asList), null);
+		L.RegVar("asGraph", new LuaCSFunction(get_asGraph), null);
+		L.RegVar("asGroup", new LuaCSFunction(get_asGroup), null);
+		L.RegVar("asMovieClip", new LuaCSFunction(get_asMovieClip), null);
+		L.RegVar("asTree", new LuaCSFunction(get_asTree), null);
+		L.RegVar("treeNode", new LuaCSFunction(get_treeNode), null);
 		L.EndClass();
 	}
 
@@ -421,7 +421,7 @@ public class FairyGUI_GObjectWrap
 		{
 			ToLua.CheckArgsCount(L, 2);
 			FairyGUI.GObject obj = (FairyGUI.GObject)ToLua.CheckObject<FairyGUI.GObject>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			FairyGUI.GearBase o = obj.GetGear(arg0);
 			ToLua.PushObject(L, o);
 			return 1;
@@ -476,7 +476,7 @@ public class FairyGUI_GObjectWrap
 			{
 				FairyGUI.GObject obj = (FairyGUI.GObject)ToLua.CheckObject<FairyGUI.GObject>(L, 1);
 				FairyGUI.GObject arg0 = (FairyGUI.GObject)ToLua.CheckObject<FairyGUI.GObject>(L, 2);
-				FairyGUI.RelationType arg1 = (FairyGUI.RelationType)ToLua.CheckObject(L, 3, typeof(FairyGUI.RelationType));
+				FairyGUI.RelationType arg1 = (FairyGUI.RelationType)ToLua.CheckObject(L, 3, TypeTraits<FairyGUI.RelationType>.type);
 				obj.AddRelation(arg0, arg1);
 				return 0;
 			}
@@ -484,7 +484,7 @@ public class FairyGUI_GObjectWrap
 			{
 				FairyGUI.GObject obj = (FairyGUI.GObject)ToLua.CheckObject<FairyGUI.GObject>(L, 1);
 				FairyGUI.GObject arg0 = (FairyGUI.GObject)ToLua.CheckObject<FairyGUI.GObject>(L, 2);
-				FairyGUI.RelationType arg1 = (FairyGUI.RelationType)ToLua.CheckObject(L, 3, typeof(FairyGUI.RelationType));
+				FairyGUI.RelationType arg1 = (FairyGUI.RelationType)ToLua.CheckObject(L, 3, TypeTraits<FairyGUI.RelationType>.type);
 				bool arg2 = LuaDLL.luaL_checkboolean(L, 4);
 				obj.AddRelation(arg0, arg1, arg2);
 				return 0;
@@ -508,7 +508,7 @@ public class FairyGUI_GObjectWrap
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.GObject obj = (FairyGUI.GObject)ToLua.CheckObject<FairyGUI.GObject>(L, 1);
 			FairyGUI.GObject arg0 = (FairyGUI.GObject)ToLua.CheckObject<FairyGUI.GObject>(L, 2);
-			FairyGUI.RelationType arg1 = (FairyGUI.RelationType)ToLua.CheckObject(L, 3, typeof(FairyGUI.RelationType));
+			FairyGUI.RelationType arg1 = (FairyGUI.RelationType)ToLua.CheckObject(L, 3, TypeTraits<FairyGUI.RelationType>.type);
 			obj.RemoveRelation(arg0, arg1);
 			return 0;
 		}
@@ -550,7 +550,7 @@ public class FairyGUI_GObjectWrap
 			else if (count == 2)
 			{
 				FairyGUI.GObject obj = (FairyGUI.GObject)ToLua.CheckObject<FairyGUI.GObject>(L, 1);
-				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+				int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 				obj.StartDrag(arg0);
 				return 0;
 			}
@@ -706,7 +706,7 @@ public class FairyGUI_GObjectWrap
 			{
 				FairyGUI.GObject obj = (FairyGUI.GObject)ToLua.CheckObject<FairyGUI.GObject>(L, 1);
 				UnityEngine.Vector3 arg0 = ToLua.ToVector3(L, 2);
-				UnityEngine.Camera arg1 = (UnityEngine.Camera)ToLua.CheckObject(L, 3, typeof(UnityEngine.Camera));
+				UnityEngine.Camera arg1 = (UnityEngine.Camera)ToLua.CheckObject<UnityEngine.Camera>(L, 3);
 				UnityEngine.Vector2 o = obj.WorldToLocal(arg0, arg1);
 				ToLua.Push(L, o);
 				return 1;
@@ -800,7 +800,7 @@ public class FairyGUI_GObjectWrap
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.GObject obj = (FairyGUI.GObject)ToLua.CheckObject<FairyGUI.GObject>(L, 1);
 			FairyGUI.Utils.ByteBuffer arg0 = (FairyGUI.Utils.ByteBuffer)ToLua.CheckObject<FairyGUI.Utils.ByteBuffer>(L, 2);
-			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			obj.Setup_BeforeAdd(arg0, arg1);
 			return 0;
 		}
@@ -818,7 +818,7 @@ public class FairyGUI_GObjectWrap
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.GObject obj = (FairyGUI.GObject)ToLua.CheckObject<FairyGUI.GObject>(L, 1);
 			FairyGUI.Utils.ByteBuffer arg0 = (FairyGUI.Utils.ByteBuffer)ToLua.CheckObject<FairyGUI.Utils.ByteBuffer>(L, 2);
-			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			obj.Setup_AfterAdd(arg0, arg1);
 			return 0;
 		}
@@ -3017,7 +3017,7 @@ public class FairyGUI_GObjectWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GObject obj = (FairyGUI.GObject)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.sourceWidth = arg0;
 			return 0;
 		}
@@ -3036,7 +3036,7 @@ public class FairyGUI_GObjectWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GObject obj = (FairyGUI.GObject)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.sourceHeight = arg0;
 			return 0;
 		}
@@ -3055,7 +3055,7 @@ public class FairyGUI_GObjectWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GObject obj = (FairyGUI.GObject)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.initWidth = arg0;
 			return 0;
 		}
@@ -3074,7 +3074,7 @@ public class FairyGUI_GObjectWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GObject obj = (FairyGUI.GObject)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.initHeight = arg0;
 			return 0;
 		}
@@ -3093,7 +3093,7 @@ public class FairyGUI_GObjectWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GObject obj = (FairyGUI.GObject)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.minWidth = arg0;
 			return 0;
 		}
@@ -3112,7 +3112,7 @@ public class FairyGUI_GObjectWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GObject obj = (FairyGUI.GObject)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.maxWidth = arg0;
 			return 0;
 		}
@@ -3131,7 +3131,7 @@ public class FairyGUI_GObjectWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GObject obj = (FairyGUI.GObject)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.minHeight = arg0;
 			return 0;
 		}
@@ -3150,7 +3150,7 @@ public class FairyGUI_GObjectWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GObject obj = (FairyGUI.GObject)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.maxHeight = arg0;
 			return 0;
 		}
@@ -3701,7 +3701,7 @@ public class FairyGUI_GObjectWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GObject obj = (FairyGUI.GObject)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.sortingOrder = arg0;
 			return 0;
 		}
@@ -3815,7 +3815,7 @@ public class FairyGUI_GObjectWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GObject obj = (FairyGUI.GObject)o;
-			FairyGUI.BlendMode arg0 = (FairyGUI.BlendMode)ToLua.CheckObject(L, 2, typeof(FairyGUI.BlendMode));
+			FairyGUI.BlendMode arg0 = (FairyGUI.BlendMode)ToLua.CheckObject(L, 2, TypeTraits<FairyGUI.BlendMode>.type);
 			obj.blendMode = arg0;
 			return 0;
 		}

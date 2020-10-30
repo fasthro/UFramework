@@ -7,18 +7,18 @@ public class FairyGUI_EventDispatcherWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.EventDispatcher), typeof(System.Object));
-		L.RegFunction("AddEventListener", AddEventListener);
-		L.RegFunction("RemoveEventListener", RemoveEventListener);
-		L.RegFunction("AddCapture", AddCapture);
-		L.RegFunction("RemoveCapture", RemoveCapture);
-		L.RegFunction("RemoveEventListeners", RemoveEventListeners);
-		L.RegFunction("hasEventListeners", hasEventListeners);
-		L.RegFunction("isDispatching", isDispatching);
-		L.RegFunction("DispatchEvent", DispatchEvent);
-		L.RegFunction("BubbleEvent", BubbleEvent);
-		L.RegFunction("BroadcastEvent", BroadcastEvent);
-		L.RegFunction("New", _CreateFairyGUI_EventDispatcher);
-		L.RegFunction("__tostring", ToLua.op_ToString);
+		L.RegFunction("AddEventListener", new LuaCSFunction(AddEventListener));
+		L.RegFunction("RemoveEventListener", new LuaCSFunction(RemoveEventListener));
+		L.RegFunction("AddCapture", new LuaCSFunction(AddCapture));
+		L.RegFunction("RemoveCapture", new LuaCSFunction(RemoveCapture));
+		L.RegFunction("RemoveEventListeners", new LuaCSFunction(RemoveEventListeners));
+		L.RegFunction("hasEventListeners", new LuaCSFunction(hasEventListeners));
+		L.RegFunction("isDispatching", new LuaCSFunction(isDispatching));
+		L.RegFunction("DispatchEvent", new LuaCSFunction(DispatchEvent));
+		L.RegFunction("BubbleEvent", new LuaCSFunction(BubbleEvent));
+		L.RegFunction("BroadcastEvent", new LuaCSFunction(BroadcastEvent));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_EventDispatcher));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
 		L.EndClass();
 	}
 

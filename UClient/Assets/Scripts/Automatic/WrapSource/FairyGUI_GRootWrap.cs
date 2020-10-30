@@ -7,41 +7,41 @@ public class FairyGUI_GRootWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.GRoot), typeof(FairyGUI.GComponent));
-		L.RegFunction("Dispose", Dispose);
-		L.RegFunction("SetContentScaleFactor", SetContentScaleFactor);
-		L.RegFunction("ApplyContentScaleFactor", ApplyContentScaleFactor);
-		L.RegFunction("ShowWindow", ShowWindow);
-		L.RegFunction("HideWindow", HideWindow);
-		L.RegFunction("HideWindowImmediately", HideWindowImmediately);
-		L.RegFunction("BringToFront", BringToFront);
-		L.RegFunction("ShowModalWait", ShowModalWait);
-		L.RegFunction("CloseModalWait", CloseModalWait);
-		L.RegFunction("CloseAllExceptModals", CloseAllExceptModals);
-		L.RegFunction("CloseAllWindows", CloseAllWindows);
-		L.RegFunction("GetTopWindow", GetTopWindow);
-		L.RegFunction("DisplayObjectToGObject", DisplayObjectToGObject);
-		L.RegFunction("ShowPopup", ShowPopup);
-		L.RegFunction("GetPoupPosition", GetPoupPosition);
-		L.RegFunction("TogglePopup", TogglePopup);
-		L.RegFunction("HidePopup", HidePopup);
-		L.RegFunction("ShowTooltips", ShowTooltips);
-		L.RegFunction("ShowTooltipsWin", ShowTooltipsWin);
-		L.RegFunction("HideTooltips", HideTooltips);
-		L.RegFunction("EnableSound", EnableSound);
-		L.RegFunction("DisableSound", DisableSound);
-		L.RegFunction("PlayOneShotSound", PlayOneShotSound);
-		L.RegFunction("New", _CreateFairyGUI_GRoot);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("contentScaleFactor", get_contentScaleFactor, null);
-		L.RegVar("contentScaleLevel", get_contentScaleLevel, null);
-		L.RegVar("inst", get_inst, null);
-		L.RegVar("modalLayer", get_modalLayer, null);
-		L.RegVar("hasModalWindow", get_hasModalWindow, null);
-		L.RegVar("modalWaiting", get_modalWaiting, null);
-		L.RegVar("touchTarget", get_touchTarget, null);
-		L.RegVar("hasAnyPopup", get_hasAnyPopup, null);
-		L.RegVar("focus", get_focus, set_focus);
-		L.RegVar("soundVolume", get_soundVolume, set_soundVolume);
+		L.RegFunction("Dispose", new LuaCSFunction(Dispose));
+		L.RegFunction("SetContentScaleFactor", new LuaCSFunction(SetContentScaleFactor));
+		L.RegFunction("ApplyContentScaleFactor", new LuaCSFunction(ApplyContentScaleFactor));
+		L.RegFunction("ShowWindow", new LuaCSFunction(ShowWindow));
+		L.RegFunction("HideWindow", new LuaCSFunction(HideWindow));
+		L.RegFunction("HideWindowImmediately", new LuaCSFunction(HideWindowImmediately));
+		L.RegFunction("BringToFront", new LuaCSFunction(BringToFront));
+		L.RegFunction("ShowModalWait", new LuaCSFunction(ShowModalWait));
+		L.RegFunction("CloseModalWait", new LuaCSFunction(CloseModalWait));
+		L.RegFunction("CloseAllExceptModals", new LuaCSFunction(CloseAllExceptModals));
+		L.RegFunction("CloseAllWindows", new LuaCSFunction(CloseAllWindows));
+		L.RegFunction("GetTopWindow", new LuaCSFunction(GetTopWindow));
+		L.RegFunction("DisplayObjectToGObject", new LuaCSFunction(DisplayObjectToGObject));
+		L.RegFunction("ShowPopup", new LuaCSFunction(ShowPopup));
+		L.RegFunction("GetPoupPosition", new LuaCSFunction(GetPoupPosition));
+		L.RegFunction("TogglePopup", new LuaCSFunction(TogglePopup));
+		L.RegFunction("HidePopup", new LuaCSFunction(HidePopup));
+		L.RegFunction("ShowTooltips", new LuaCSFunction(ShowTooltips));
+		L.RegFunction("ShowTooltipsWin", new LuaCSFunction(ShowTooltipsWin));
+		L.RegFunction("HideTooltips", new LuaCSFunction(HideTooltips));
+		L.RegFunction("EnableSound", new LuaCSFunction(EnableSound));
+		L.RegFunction("DisableSound", new LuaCSFunction(DisableSound));
+		L.RegFunction("PlayOneShotSound", new LuaCSFunction(PlayOneShotSound));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_GRoot));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("contentScaleFactor", new LuaCSFunction(get_contentScaleFactor), null);
+		L.RegVar("contentScaleLevel", new LuaCSFunction(get_contentScaleLevel), null);
+		L.RegVar("inst", new LuaCSFunction(get_inst), null);
+		L.RegVar("modalLayer", new LuaCSFunction(get_modalLayer), null);
+		L.RegVar("hasModalWindow", new LuaCSFunction(get_hasModalWindow), null);
+		L.RegVar("modalWaiting", new LuaCSFunction(get_modalWaiting), null);
+		L.RegVar("touchTarget", new LuaCSFunction(get_touchTarget), null);
+		L.RegVar("hasAnyPopup", new LuaCSFunction(get_hasAnyPopup), null);
+		L.RegVar("focus", new LuaCSFunction(get_focus), new LuaCSFunction(set_focus));
+		L.RegVar("soundVolume", new LuaCSFunction(get_soundVolume), new LuaCSFunction(set_soundVolume));
 		L.EndClass();
 	}
 
@@ -102,17 +102,17 @@ public class FairyGUI_GRootWrap
 			else if (count == 3)
 			{
 				FairyGUI.GRoot obj = (FairyGUI.GRoot)ToLua.CheckObject<FairyGUI.GRoot>(L, 1);
-				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
-				int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+				int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
+				int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 				obj.SetContentScaleFactor(arg0, arg1);
 				return 0;
 			}
 			else if (count == 4)
 			{
 				FairyGUI.GRoot obj = (FairyGUI.GRoot)ToLua.CheckObject<FairyGUI.GRoot>(L, 1);
-				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
-				int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
-				FairyGUI.UIContentScaler.ScreenMatchMode arg2 = (FairyGUI.UIContentScaler.ScreenMatchMode)ToLua.CheckObject(L, 4, typeof(FairyGUI.UIContentScaler.ScreenMatchMode));
+				int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
+				int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
+				FairyGUI.UIContentScaler.ScreenMatchMode arg2 = (FairyGUI.UIContentScaler.ScreenMatchMode)ToLua.CheckObject(L, 4, TypeTraits<FairyGUI.UIContentScaler.ScreenMatchMode>.type);
 				obj.SetContentScaleFactor(arg0, arg1, arg2);
 				return 0;
 			}
@@ -353,7 +353,7 @@ public class FairyGUI_GRootWrap
 				FairyGUI.GRoot obj = (FairyGUI.GRoot)ToLua.CheckObject<FairyGUI.GRoot>(L, 1);
 				FairyGUI.GObject arg0 = (FairyGUI.GObject)ToLua.CheckObject<FairyGUI.GObject>(L, 2);
 				FairyGUI.GObject arg1 = (FairyGUI.GObject)ToLua.CheckObject<FairyGUI.GObject>(L, 3);
-				FairyGUI.PopupDirection arg2 = (FairyGUI.PopupDirection)ToLua.CheckObject(L, 4, typeof(FairyGUI.PopupDirection));
+				FairyGUI.PopupDirection arg2 = (FairyGUI.PopupDirection)ToLua.CheckObject(L, 4, TypeTraits<FairyGUI.PopupDirection>.type);
 				obj.ShowPopup(arg0, arg1, arg2);
 				return 0;
 			}
@@ -362,7 +362,7 @@ public class FairyGUI_GRootWrap
 				FairyGUI.GRoot obj = (FairyGUI.GRoot)ToLua.CheckObject<FairyGUI.GRoot>(L, 1);
 				FairyGUI.GObject arg0 = (FairyGUI.GObject)ToLua.CheckObject<FairyGUI.GObject>(L, 2);
 				FairyGUI.GObject arg1 = (FairyGUI.GObject)ToLua.CheckObject<FairyGUI.GObject>(L, 3);
-				FairyGUI.PopupDirection arg2 = (FairyGUI.PopupDirection)ToLua.CheckObject(L, 4, typeof(FairyGUI.PopupDirection));
+				FairyGUI.PopupDirection arg2 = (FairyGUI.PopupDirection)ToLua.CheckObject(L, 4, TypeTraits<FairyGUI.PopupDirection>.type);
 				bool arg3 = LuaDLL.luaL_checkboolean(L, 5);
 				obj.ShowPopup(arg0, arg1, arg2, arg3);
 				return 0;
@@ -387,7 +387,7 @@ public class FairyGUI_GRootWrap
 			FairyGUI.GRoot obj = (FairyGUI.GRoot)ToLua.CheckObject<FairyGUI.GRoot>(L, 1);
 			FairyGUI.GObject arg0 = (FairyGUI.GObject)ToLua.CheckObject<FairyGUI.GObject>(L, 2);
 			FairyGUI.GObject arg1 = (FairyGUI.GObject)ToLua.CheckObject<FairyGUI.GObject>(L, 3);
-			FairyGUI.PopupDirection arg2 = (FairyGUI.PopupDirection)ToLua.CheckObject(L, 4, typeof(FairyGUI.PopupDirection));
+			FairyGUI.PopupDirection arg2 = (FairyGUI.PopupDirection)ToLua.CheckObject(L, 4, TypeTraits<FairyGUI.PopupDirection>.type);
 			UnityEngine.Vector2 o = obj.GetPoupPosition(arg0, arg1, arg2);
 			ToLua.Push(L, o);
 			return 1;
@@ -425,7 +425,7 @@ public class FairyGUI_GRootWrap
 				FairyGUI.GRoot obj = (FairyGUI.GRoot)ToLua.CheckObject<FairyGUI.GRoot>(L, 1);
 				FairyGUI.GObject arg0 = (FairyGUI.GObject)ToLua.CheckObject<FairyGUI.GObject>(L, 2);
 				FairyGUI.GObject arg1 = (FairyGUI.GObject)ToLua.CheckObject<FairyGUI.GObject>(L, 3);
-				FairyGUI.PopupDirection arg2 = (FairyGUI.PopupDirection)ToLua.CheckObject(L, 4, typeof(FairyGUI.PopupDirection));
+				FairyGUI.PopupDirection arg2 = (FairyGUI.PopupDirection)ToLua.CheckObject(L, 4, TypeTraits<FairyGUI.PopupDirection>.type);
 				obj.TogglePopup(arg0, arg1, arg2);
 				return 0;
 			}
@@ -434,7 +434,7 @@ public class FairyGUI_GRootWrap
 				FairyGUI.GRoot obj = (FairyGUI.GRoot)ToLua.CheckObject<FairyGUI.GRoot>(L, 1);
 				FairyGUI.GObject arg0 = (FairyGUI.GObject)ToLua.CheckObject<FairyGUI.GObject>(L, 2);
 				FairyGUI.GObject arg1 = (FairyGUI.GObject)ToLua.CheckObject<FairyGUI.GObject>(L, 3);
-				FairyGUI.PopupDirection arg2 = (FairyGUI.PopupDirection)ToLua.CheckObject(L, 4, typeof(FairyGUI.PopupDirection));
+				FairyGUI.PopupDirection arg2 = (FairyGUI.PopupDirection)ToLua.CheckObject(L, 4, TypeTraits<FairyGUI.PopupDirection>.type);
 				bool arg3 = LuaDLL.luaL_checkboolean(L, 5);
 				obj.TogglePopup(arg0, arg1, arg2, arg3);
 				return 0;
@@ -605,14 +605,14 @@ public class FairyGUI_GRootWrap
 			if (count == 2)
 			{
 				FairyGUI.GRoot obj = (FairyGUI.GRoot)ToLua.CheckObject<FairyGUI.GRoot>(L, 1);
-				UnityEngine.AudioClip arg0 = (UnityEngine.AudioClip)ToLua.CheckObject(L, 2, typeof(UnityEngine.AudioClip));
+				UnityEngine.AudioClip arg0 = (UnityEngine.AudioClip)ToLua.CheckObject<UnityEngine.AudioClip>(L, 2);
 				obj.PlayOneShotSound(arg0);
 				return 0;
 			}
 			else if (count == 3)
 			{
 				FairyGUI.GRoot obj = (FairyGUI.GRoot)ToLua.CheckObject<FairyGUI.GRoot>(L, 1);
-				UnityEngine.AudioClip arg0 = (UnityEngine.AudioClip)ToLua.CheckObject(L, 2, typeof(UnityEngine.AudioClip));
+				UnityEngine.AudioClip arg0 = (UnityEngine.AudioClip)ToLua.CheckObject<UnityEngine.AudioClip>(L, 2);
 				float arg1 = (float)LuaDLL.luaL_checknumber(L, 3);
 				obj.PlayOneShotSound(arg0, arg1);
 				return 0;

@@ -20,14 +20,21 @@ namespace UFramework.Config
         /// 编辑器目录
         /// </summary>
         Editor,
+
         /// <summary>
         /// 持久化数据目录
         /// </summary>
         Data,
+        
         /// <summary>
         /// Resources 目录
         /// </summary>
         Resources,
+
+        /// <summary>
+        /// 个人
+        /// </summary>
+        User,
     }
 
     public class UConfig
@@ -72,9 +79,7 @@ namespace UFramework.Config
 
             IConfigObject config;
             if (configDictionart.TryGetValue(configName, out config))
-            {
                 return (T)config;
-            }
 
             config = new T();
             var type = config.GetType();
@@ -99,9 +104,8 @@ namespace UFramework.Config
             }
 #endif
             if (!string.IsNullOrEmpty(content))
-            {
                 config = JsonMapper.ToObject<T>(content);
-            }
+
             configDictionart.Add(configName, config);
             return (T)config;
         }
@@ -120,9 +124,7 @@ namespace UFramework.Config
             string configName = typeof(T).Name;
 
             if (configDictionart.ContainsKey(configName))
-            {
                 configDictionart[configName] = (T)config;
-            }
 
             string fileName = configName + ".json";
             string content = JsonMapper.ToJson(config);

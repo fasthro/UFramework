@@ -7,25 +7,25 @@ public class FairyGUI_InputEventWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.InputEvent), typeof(System.Object));
-		L.RegFunction("New", _CreateFairyGUI_InputEvent);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("x", get_x, null);
-		L.RegVar("y", get_y, null);
-		L.RegVar("keyCode", get_keyCode, null);
-		L.RegVar("character", get_character, null);
-		L.RegVar("modifiers", get_modifiers, null);
-		L.RegVar("mouseWheelDelta", get_mouseWheelDelta, null);
-		L.RegVar("touchId", get_touchId, null);
-		L.RegVar("button", get_button, null);
-		L.RegVar("clickCount", get_clickCount, null);
-		L.RegVar("holdTime", get_holdTime, null);
-		L.RegVar("position", get_position, null);
-		L.RegVar("isDoubleClick", get_isDoubleClick, null);
-		L.RegVar("ctrlOrCmd", get_ctrlOrCmd, null);
-		L.RegVar("ctrl", get_ctrl, null);
-		L.RegVar("shift", get_shift, null);
-		L.RegVar("alt", get_alt, null);
-		L.RegVar("command", get_command, null);
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_InputEvent));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("x", new LuaCSFunction(get_x), null);
+		L.RegVar("y", new LuaCSFunction(get_y), null);
+		L.RegVar("keyCode", new LuaCSFunction(get_keyCode), null);
+		L.RegVar("character", new LuaCSFunction(get_character), null);
+		L.RegVar("modifiers", new LuaCSFunction(get_modifiers), null);
+		L.RegVar("mouseWheelDelta", new LuaCSFunction(get_mouseWheelDelta), null);
+		L.RegVar("touchId", new LuaCSFunction(get_touchId), null);
+		L.RegVar("button", new LuaCSFunction(get_button), null);
+		L.RegVar("clickCount", new LuaCSFunction(get_clickCount), null);
+		L.RegVar("holdTime", new LuaCSFunction(get_holdTime), null);
+		L.RegVar("position", new LuaCSFunction(get_position), null);
+		L.RegVar("isDoubleClick", new LuaCSFunction(get_isDoubleClick), null);
+		L.RegVar("ctrlOrCmd", new LuaCSFunction(get_ctrlOrCmd), null);
+		L.RegVar("ctrl", new LuaCSFunction(get_ctrl), null);
+		L.RegVar("shift", new LuaCSFunction(get_shift), null);
+		L.RegVar("alt", new LuaCSFunction(get_alt), null);
+		L.RegVar("command", new LuaCSFunction(get_command), null);
 		L.EndClass();
 	}
 
@@ -120,7 +120,7 @@ public class FairyGUI_InputEventWrap
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.InputEvent obj = (FairyGUI.InputEvent)o;
 			char ret = obj.character;
-			LuaDLL.lua_pushnumber(L, ret);
+			LuaDLL.lua_pushinteger(L, ret);
 			return 1;
 		}
 		catch(Exception e)

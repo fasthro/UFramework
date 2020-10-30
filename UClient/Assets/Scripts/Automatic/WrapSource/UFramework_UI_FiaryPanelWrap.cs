@@ -7,10 +7,10 @@ public class UFramework_UI_FiaryPanelWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(UFramework.UI.FiaryPanel), typeof(UFramework.UI.UIPanel));
-		L.RegFunction("UpdateSortOrder", UpdateSortOrder);
-		L.RegFunction("New", _CreateUFramework_UI_FiaryPanel);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("window", get_window, null);
+		L.RegFunction("UpdateSortOrder", new LuaCSFunction(UpdateSortOrder));
+		L.RegFunction("New", new LuaCSFunction(_CreateUFramework_UI_FiaryPanel));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("window", new LuaCSFunction(get_window), null);
 		L.EndClass();
 	}
 
@@ -25,7 +25,7 @@ public class UFramework_UI_FiaryPanelWrap
 			{
 				string arg0 = ToLua.CheckString(L, 1);
 				string arg1 = ToLua.CheckString(L, 2);
-				UFramework.UI.Layer arg2 = (UFramework.UI.Layer)ToLua.CheckObject(L, 3, typeof(UFramework.UI.Layer));
+				UFramework.UI.Layer arg2 = (UFramework.UI.Layer)ToLua.CheckObject(L, 3, TypeTraits<UFramework.UI.Layer>.type);
 				UFramework.UI.FiaryPanel obj = new UFramework.UI.FiaryPanel(arg0, arg1, arg2);
 				ToLua.PushObject(L, obj);
 				return 1;
@@ -48,7 +48,7 @@ public class UFramework_UI_FiaryPanelWrap
 		{
 			ToLua.CheckArgsCount(L, 2);
 			UFramework.UI.FiaryPanel obj = (UFramework.UI.FiaryPanel)ToLua.CheckObject<UFramework.UI.FiaryPanel>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.UpdateSortOrder(arg0);
 			return 0;
 		}

@@ -46,6 +46,8 @@ namespace UFramework.VersionControl
 
         private Step _step;
 
+        private AppConfig _app;
+
         private int _maxValue;
         private int _value;
 
@@ -74,14 +76,19 @@ namespace UFramework.VersionControl
 
         protected override void OnSingletonAwake()
         {
+            _app = UConfig.Read<AppConfig>();
+
+            if (_app.isDevelopmentVersion)
+                return;
+
+            baseURL = _app.versionBaseURL;
+
             streamingAssetsPath = GetStreamingAssetsPath();
             assetBundlePath = IOPath.PathCombine(Application.persistentDataPath, Platform.RuntimePlatformCurrentName);
             versionPath = IOPath.PathCombine(Application.persistentDataPath, Version.FileName);
             versionOriginalPath = versionPath + ".original";
             versionStreamingPath = IOPath.PathCombine(streamingAssetsPath, Version.FileName, false);
             luaPath = IOPath.PathCombine(Application.persistentDataPath, LUA_DIR_NAME);
-
-            baseURL = UConfig.Read<AppConfig>().versionBaseURL;
 
             _downloader = new PatchDownloader(baseURL, Application.persistentDataPath, OnCompleted, OnPatchDownloadFailed);
         }
@@ -98,6 +105,12 @@ namespace UFramework.VersionControl
         /// <param name="onCompleted"></param>
         public void StartUpdate(Action onCompleted)
         {
+            if (_app.isDevelopmentVersion)
+            {
+                onCompleted.InvokeGracefully();
+                return;
+            }
+
             _onCompleted = onCompleted;
             StepChecking(Step.Init);
             StepChecking(Step.CheckVersionCopy);

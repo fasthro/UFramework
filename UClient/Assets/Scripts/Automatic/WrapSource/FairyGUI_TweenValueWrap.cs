@@ -7,23 +7,23 @@ public class FairyGUI_TweenValueWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.TweenValue), typeof(System.Object));
-		L.RegFunction(".geti", get_Item);
-		L.RegFunction("get_Item", get_Item);
-		L.RegFunction(".seti", set_Item);
-		L.RegFunction("set_Item", set_Item);
-		L.RegFunction("SetZero", SetZero);
-		L.RegFunction("New", _CreateFairyGUI_TweenValue);
+		L.RegFunction(".geti", new LuaCSFunction(get_Item));
+		L.RegFunction("get_Item", new LuaCSFunction(get_Item));
+		L.RegFunction(".seti", new LuaCSFunction(set_Item));
+		L.RegFunction("set_Item", new LuaCSFunction(set_Item));
+		L.RegFunction("SetZero", new LuaCSFunction(SetZero));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_TweenValue));
 		L.RegVar("this", _this, null);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("x", get_x, set_x);
-		L.RegVar("y", get_y, set_y);
-		L.RegVar("z", get_z, set_z);
-		L.RegVar("w", get_w, set_w);
-		L.RegVar("d", get_d, set_d);
-		L.RegVar("vec2", get_vec2, set_vec2);
-		L.RegVar("vec3", get_vec3, set_vec3);
-		L.RegVar("vec4", get_vec4, set_vec4);
-		L.RegVar("color", get_color, set_color);
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("x", new LuaCSFunction(get_x), new LuaCSFunction(set_x));
+		L.RegVar("y", new LuaCSFunction(get_y), new LuaCSFunction(set_y));
+		L.RegVar("z", new LuaCSFunction(get_z), new LuaCSFunction(set_z));
+		L.RegVar("w", new LuaCSFunction(get_w), new LuaCSFunction(set_w));
+		L.RegVar("d", new LuaCSFunction(get_d), new LuaCSFunction(set_d));
+		L.RegVar("vec2", new LuaCSFunction(get_vec2), new LuaCSFunction(set_vec2));
+		L.RegVar("vec3", new LuaCSFunction(get_vec3), new LuaCSFunction(set_vec3));
+		L.RegVar("vec4", new LuaCSFunction(get_vec4), new LuaCSFunction(set_vec4));
+		L.RegVar("color", new LuaCSFunction(get_color), new LuaCSFunction(set_color));
 		L.EndClass();
 	}
 
@@ -58,7 +58,7 @@ public class FairyGUI_TweenValueWrap
 		{
 			ToLua.CheckArgsCount(L, 2);
 			FairyGUI.TweenValue obj = (FairyGUI.TweenValue)ToLua.CheckObject<FairyGUI.TweenValue>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			float o = obj[arg0];
 			LuaDLL.lua_pushnumber(L, o);
 			return 1;
@@ -77,7 +77,7 @@ public class FairyGUI_TweenValueWrap
 		{
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.TweenValue obj = (FairyGUI.TweenValue)ToLua.CheckObject<FairyGUI.TweenValue>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			float arg1 = (float)LuaDLL.luaL_checknumber(L, 3);
 			obj[arg0] = arg1;
 			return 0;
@@ -111,7 +111,7 @@ public class FairyGUI_TweenValueWrap
 		{
 			ToLua.CheckArgsCount(L, 2);
 			FairyGUI.TweenValue obj = (FairyGUI.TweenValue)ToLua.CheckObject<FairyGUI.TweenValue>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			float o = obj[arg0];
 			LuaDLL.lua_pushnumber(L, o);
 			return 1;
@@ -129,7 +129,7 @@ public class FairyGUI_TweenValueWrap
 		{
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.TweenValue obj = (FairyGUI.TweenValue)ToLua.CheckObject<FairyGUI.TweenValue>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			float arg1 = (float)LuaDLL.luaL_checknumber(L, 3);
 			obj[arg0] = arg1;
 			return 0;

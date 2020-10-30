@@ -7,17 +7,17 @@ public class FairyGUI_EventContextWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.EventContext), typeof(System.Object));
-		L.RegFunction("StopPropagation", StopPropagation);
-		L.RegFunction("PreventDefault", PreventDefault);
-		L.RegFunction("CaptureTouch", CaptureTouch);
-		L.RegFunction("New", _CreateFairyGUI_EventContext);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("type", get_type, set_type);
-		L.RegVar("data", get_data, set_data);
-		L.RegVar("sender", get_sender, null);
-		L.RegVar("initiator", get_initiator, null);
-		L.RegVar("inputEvent", get_inputEvent, null);
-		L.RegVar("isDefaultPrevented", get_isDefaultPrevented, null);
+		L.RegFunction("StopPropagation", new LuaCSFunction(StopPropagation));
+		L.RegFunction("PreventDefault", new LuaCSFunction(PreventDefault));
+		L.RegFunction("CaptureTouch", new LuaCSFunction(CaptureTouch));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_EventContext));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("type", new LuaCSFunction(get_type), new LuaCSFunction(set_type));
+		L.RegVar("data", new LuaCSFunction(get_data), new LuaCSFunction(set_data));
+		L.RegVar("sender", new LuaCSFunction(get_sender), null);
+		L.RegVar("initiator", new LuaCSFunction(get_initiator), null);
+		L.RegVar("inputEvent", new LuaCSFunction(get_inputEvent), null);
+		L.RegVar("isDefaultPrevented", new LuaCSFunction(get_isDefaultPrevented), null);
 		L.EndClass();
 	}
 

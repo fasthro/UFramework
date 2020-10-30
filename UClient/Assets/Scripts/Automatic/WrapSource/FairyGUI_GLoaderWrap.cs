@@ -7,36 +7,36 @@ public class FairyGUI_GLoaderWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.GLoader), typeof(FairyGUI.GObject));
-		L.RegFunction("Dispose", Dispose);
-		L.RegFunction("Advance", Advance);
-		L.RegFunction("Setup_BeforeAdd", Setup_BeforeAdd);
-		L.RegFunction("New", _CreateFairyGUI_GLoader);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("showErrorSign", get_showErrorSign, set_showErrorSign);
-		L.RegVar("url", get_url, set_url);
-		L.RegVar("icon", get_icon, set_icon);
-		L.RegVar("align", get_align, set_align);
-		L.RegVar("verticalAlign", get_verticalAlign, set_verticalAlign);
-		L.RegVar("fill", get_fill, set_fill);
-		L.RegVar("shrinkOnly", get_shrinkOnly, set_shrinkOnly);
-		L.RegVar("autoSize", get_autoSize, set_autoSize);
-		L.RegVar("playing", get_playing, set_playing);
-		L.RegVar("frame", get_frame, set_frame);
-		L.RegVar("timeScale", get_timeScale, set_timeScale);
-		L.RegVar("ignoreEngineTimeScale", get_ignoreEngineTimeScale, set_ignoreEngineTimeScale);
-		L.RegVar("material", get_material, set_material);
-		L.RegVar("shader", get_shader, set_shader);
-		L.RegVar("color", get_color, set_color);
-		L.RegVar("fillMethod", get_fillMethod, set_fillMethod);
-		L.RegVar("fillOrigin", get_fillOrigin, set_fillOrigin);
-		L.RegVar("fillClockwise", get_fillClockwise, set_fillClockwise);
-		L.RegVar("fillAmount", get_fillAmount, set_fillAmount);
-		L.RegVar("image", get_image, null);
-		L.RegVar("movieClip", get_movieClip, null);
-		L.RegVar("component", get_component, null);
-		L.RegVar("texture", get_texture, set_texture);
-		L.RegVar("filter", get_filter, set_filter);
-		L.RegVar("blendMode", get_blendMode, set_blendMode);
+		L.RegFunction("Dispose", new LuaCSFunction(Dispose));
+		L.RegFunction("Advance", new LuaCSFunction(Advance));
+		L.RegFunction("Setup_BeforeAdd", new LuaCSFunction(Setup_BeforeAdd));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_GLoader));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("showErrorSign", new LuaCSFunction(get_showErrorSign), new LuaCSFunction(set_showErrorSign));
+		L.RegVar("url", new LuaCSFunction(get_url), new LuaCSFunction(set_url));
+		L.RegVar("icon", new LuaCSFunction(get_icon), new LuaCSFunction(set_icon));
+		L.RegVar("align", new LuaCSFunction(get_align), new LuaCSFunction(set_align));
+		L.RegVar("verticalAlign", new LuaCSFunction(get_verticalAlign), new LuaCSFunction(set_verticalAlign));
+		L.RegVar("fill", new LuaCSFunction(get_fill), new LuaCSFunction(set_fill));
+		L.RegVar("shrinkOnly", new LuaCSFunction(get_shrinkOnly), new LuaCSFunction(set_shrinkOnly));
+		L.RegVar("autoSize", new LuaCSFunction(get_autoSize), new LuaCSFunction(set_autoSize));
+		L.RegVar("playing", new LuaCSFunction(get_playing), new LuaCSFunction(set_playing));
+		L.RegVar("frame", new LuaCSFunction(get_frame), new LuaCSFunction(set_frame));
+		L.RegVar("timeScale", new LuaCSFunction(get_timeScale), new LuaCSFunction(set_timeScale));
+		L.RegVar("ignoreEngineTimeScale", new LuaCSFunction(get_ignoreEngineTimeScale), new LuaCSFunction(set_ignoreEngineTimeScale));
+		L.RegVar("material", new LuaCSFunction(get_material), new LuaCSFunction(set_material));
+		L.RegVar("shader", new LuaCSFunction(get_shader), new LuaCSFunction(set_shader));
+		L.RegVar("color", new LuaCSFunction(get_color), new LuaCSFunction(set_color));
+		L.RegVar("fillMethod", new LuaCSFunction(get_fillMethod), new LuaCSFunction(set_fillMethod));
+		L.RegVar("fillOrigin", new LuaCSFunction(get_fillOrigin), new LuaCSFunction(set_fillOrigin));
+		L.RegVar("fillClockwise", new LuaCSFunction(get_fillClockwise), new LuaCSFunction(set_fillClockwise));
+		L.RegVar("fillAmount", new LuaCSFunction(get_fillAmount), new LuaCSFunction(set_fillAmount));
+		L.RegVar("image", new LuaCSFunction(get_image), null);
+		L.RegVar("movieClip", new LuaCSFunction(get_movieClip), null);
+		L.RegVar("component", new LuaCSFunction(get_component), null);
+		L.RegVar("texture", new LuaCSFunction(get_texture), new LuaCSFunction(set_texture));
+		L.RegVar("filter", new LuaCSFunction(get_filter), new LuaCSFunction(set_filter));
+		L.RegVar("blendMode", new LuaCSFunction(get_blendMode), new LuaCSFunction(set_blendMode));
 		L.EndClass();
 	}
 
@@ -105,7 +105,7 @@ public class FairyGUI_GLoaderWrap
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.GLoader obj = (FairyGUI.GLoader)ToLua.CheckObject<FairyGUI.GLoader>(L, 1);
 			FairyGUI.Utils.ByteBuffer arg0 = (FairyGUI.Utils.ByteBuffer)ToLua.CheckObject<FairyGUI.Utils.ByteBuffer>(L, 2);
-			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			obj.Setup_BeforeAdd(arg0, arg1);
 			return 0;
 		}
@@ -656,7 +656,7 @@ public class FairyGUI_GLoaderWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GLoader obj = (FairyGUI.GLoader)o;
-			FairyGUI.AlignType arg0 = (FairyGUI.AlignType)ToLua.CheckObject(L, 2, typeof(FairyGUI.AlignType));
+			FairyGUI.AlignType arg0 = (FairyGUI.AlignType)ToLua.CheckObject(L, 2, TypeTraits<FairyGUI.AlignType>.type);
 			obj.align = arg0;
 			return 0;
 		}
@@ -675,7 +675,7 @@ public class FairyGUI_GLoaderWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GLoader obj = (FairyGUI.GLoader)o;
-			FairyGUI.VertAlignType arg0 = (FairyGUI.VertAlignType)ToLua.CheckObject(L, 2, typeof(FairyGUI.VertAlignType));
+			FairyGUI.VertAlignType arg0 = (FairyGUI.VertAlignType)ToLua.CheckObject(L, 2, TypeTraits<FairyGUI.VertAlignType>.type);
 			obj.verticalAlign = arg0;
 			return 0;
 		}
@@ -694,7 +694,7 @@ public class FairyGUI_GLoaderWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GLoader obj = (FairyGUI.GLoader)o;
-			FairyGUI.FillType arg0 = (FairyGUI.FillType)ToLua.CheckObject(L, 2, typeof(FairyGUI.FillType));
+			FairyGUI.FillType arg0 = (FairyGUI.FillType)ToLua.CheckObject(L, 2, TypeTraits<FairyGUI.FillType>.type);
 			obj.fill = arg0;
 			return 0;
 		}
@@ -770,7 +770,7 @@ public class FairyGUI_GLoaderWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GLoader obj = (FairyGUI.GLoader)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.frame = arg0;
 			return 0;
 		}
@@ -884,7 +884,7 @@ public class FairyGUI_GLoaderWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GLoader obj = (FairyGUI.GLoader)o;
-			FairyGUI.FillMethod arg0 = (FairyGUI.FillMethod)ToLua.CheckObject(L, 2, typeof(FairyGUI.FillMethod));
+			FairyGUI.FillMethod arg0 = (FairyGUI.FillMethod)ToLua.CheckObject(L, 2, TypeTraits<FairyGUI.FillMethod>.type);
 			obj.fillMethod = arg0;
 			return 0;
 		}
@@ -903,7 +903,7 @@ public class FairyGUI_GLoaderWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GLoader obj = (FairyGUI.GLoader)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.fillOrigin = arg0;
 			return 0;
 		}
@@ -998,7 +998,7 @@ public class FairyGUI_GLoaderWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GLoader obj = (FairyGUI.GLoader)o;
-			FairyGUI.BlendMode arg0 = (FairyGUI.BlendMode)ToLua.CheckObject(L, 2, typeof(FairyGUI.BlendMode));
+			FairyGUI.BlendMode arg0 = (FairyGUI.BlendMode)ToLua.CheckObject(L, 2, TypeTraits<FairyGUI.BlendMode>.type);
 			obj.blendMode = arg0;
 			return 0;
 		}

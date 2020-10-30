@@ -7,32 +7,32 @@ public class FairyGUI_GComboBoxWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.GComboBox), typeof(FairyGUI.GComponent));
-		L.RegFunction("ApplyListChange", ApplyListChange);
-		L.RegFunction("GetTextField", GetTextField);
-		L.RegFunction("HandleControllerChanged", HandleControllerChanged);
-		L.RegFunction("Dispose", Dispose);
-		L.RegFunction("Setup_AfterAdd", Setup_AfterAdd);
-		L.RegFunction("UpdateDropdownList", UpdateDropdownList);
-		L.RegFunction("New", _CreateFairyGUI_GComboBox);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("visibleItemCount", get_visibleItemCount, set_visibleItemCount);
-		L.RegVar("dropdown", get_dropdown, set_dropdown);
-		L.RegVar("onChanged", get_onChanged, null);
-		L.RegVar("icon", get_icon, set_icon);
-		L.RegVar("title", get_title, set_title);
-		L.RegVar("text", get_text, set_text);
-		L.RegVar("titleColor", get_titleColor, set_titleColor);
-		L.RegVar("titleFontSize", get_titleFontSize, set_titleFontSize);
-		L.RegVar("items", get_items, set_items);
-		L.RegVar("icons", get_icons, set_icons);
-		L.RegVar("values", get_values, set_values);
-		L.RegVar("itemList", get_itemList, null);
-		L.RegVar("valueList", get_valueList, null);
-		L.RegVar("iconList", get_iconList, null);
-		L.RegVar("selectedIndex", get_selectedIndex, set_selectedIndex);
-		L.RegVar("selectionController", get_selectionController, set_selectionController);
-		L.RegVar("value", get_value, set_value);
-		L.RegVar("popupDirection", get_popupDirection, set_popupDirection);
+		L.RegFunction("ApplyListChange", new LuaCSFunction(ApplyListChange));
+		L.RegFunction("GetTextField", new LuaCSFunction(GetTextField));
+		L.RegFunction("HandleControllerChanged", new LuaCSFunction(HandleControllerChanged));
+		L.RegFunction("Dispose", new LuaCSFunction(Dispose));
+		L.RegFunction("Setup_AfterAdd", new LuaCSFunction(Setup_AfterAdd));
+		L.RegFunction("UpdateDropdownList", new LuaCSFunction(UpdateDropdownList));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_GComboBox));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("visibleItemCount", new LuaCSFunction(get_visibleItemCount), new LuaCSFunction(set_visibleItemCount));
+		L.RegVar("dropdown", new LuaCSFunction(get_dropdown), new LuaCSFunction(set_dropdown));
+		L.RegVar("onChanged", new LuaCSFunction(get_onChanged), null);
+		L.RegVar("icon", new LuaCSFunction(get_icon), new LuaCSFunction(set_icon));
+		L.RegVar("title", new LuaCSFunction(get_title), new LuaCSFunction(set_title));
+		L.RegVar("text", new LuaCSFunction(get_text), new LuaCSFunction(set_text));
+		L.RegVar("titleColor", new LuaCSFunction(get_titleColor), new LuaCSFunction(set_titleColor));
+		L.RegVar("titleFontSize", new LuaCSFunction(get_titleFontSize), new LuaCSFunction(set_titleFontSize));
+		L.RegVar("items", new LuaCSFunction(get_items), new LuaCSFunction(set_items));
+		L.RegVar("icons", new LuaCSFunction(get_icons), new LuaCSFunction(set_icons));
+		L.RegVar("values", new LuaCSFunction(get_values), new LuaCSFunction(set_values));
+		L.RegVar("itemList", new LuaCSFunction(get_itemList), null);
+		L.RegVar("valueList", new LuaCSFunction(get_valueList), null);
+		L.RegVar("iconList", new LuaCSFunction(get_iconList), null);
+		L.RegVar("selectedIndex", new LuaCSFunction(get_selectedIndex), new LuaCSFunction(set_selectedIndex));
+		L.RegVar("selectionController", new LuaCSFunction(get_selectionController), new LuaCSFunction(set_selectionController));
+		L.RegVar("value", new LuaCSFunction(get_value), new LuaCSFunction(set_value));
+		L.RegVar("popupDirection", new LuaCSFunction(get_popupDirection), new LuaCSFunction(set_popupDirection));
 		L.EndClass();
 	}
 
@@ -134,7 +134,7 @@ public class FairyGUI_GComboBoxWrap
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.GComboBox obj = (FairyGUI.GComboBox)ToLua.CheckObject<FairyGUI.GComboBox>(L, 1);
 			FairyGUI.Utils.ByteBuffer arg0 = (FairyGUI.Utils.ByteBuffer)ToLua.CheckObject<FairyGUI.Utils.ByteBuffer>(L, 2);
-			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			obj.Setup_AfterAdd(arg0, arg1);
 			return 0;
 		}
@@ -511,7 +511,7 @@ public class FairyGUI_GComboBoxWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GComboBox obj = (FairyGUI.GComboBox)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.visibleItemCount = arg0;
 			return 0;
 		}
@@ -625,7 +625,7 @@ public class FairyGUI_GComboBoxWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GComboBox obj = (FairyGUI.GComboBox)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.titleFontSize = arg0;
 			return 0;
 		}
@@ -701,7 +701,7 @@ public class FairyGUI_GComboBoxWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GComboBox obj = (FairyGUI.GComboBox)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.selectedIndex = arg0;
 			return 0;
 		}
@@ -758,7 +758,7 @@ public class FairyGUI_GComboBoxWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GComboBox obj = (FairyGUI.GComboBox)o;
-			FairyGUI.PopupDirection arg0 = (FairyGUI.PopupDirection)ToLua.CheckObject(L, 2, typeof(FairyGUI.PopupDirection));
+			FairyGUI.PopupDirection arg0 = (FairyGUI.PopupDirection)ToLua.CheckObject(L, 2, TypeTraits<FairyGUI.PopupDirection>.type);
 			obj.popupDirection = arg0;
 			return 0;
 		}

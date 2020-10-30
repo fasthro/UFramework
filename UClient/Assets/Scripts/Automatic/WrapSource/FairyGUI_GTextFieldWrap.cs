@@ -7,27 +7,27 @@ public class FairyGUI_GTextFieldWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.GTextField), typeof(FairyGUI.GObject));
-		L.RegFunction("SetVar", SetVar);
-		L.RegFunction("FlushVars", FlushVars);
-		L.RegFunction("HasCharacter", HasCharacter);
-		L.RegFunction("Setup_BeforeAdd", Setup_BeforeAdd);
-		L.RegFunction("Setup_AfterAdd", Setup_AfterAdd);
-		L.RegFunction("New", _CreateFairyGUI_GTextField);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("text", get_text, set_text);
-		L.RegVar("templateVars", get_templateVars, set_templateVars);
-		L.RegVar("textFormat", get_textFormat, set_textFormat);
-		L.RegVar("color", get_color, set_color);
-		L.RegVar("align", get_align, set_align);
-		L.RegVar("verticalAlign", get_verticalAlign, set_verticalAlign);
-		L.RegVar("singleLine", get_singleLine, set_singleLine);
-		L.RegVar("stroke", get_stroke, set_stroke);
-		L.RegVar("strokeColor", get_strokeColor, set_strokeColor);
-		L.RegVar("shadowOffset", get_shadowOffset, set_shadowOffset);
-		L.RegVar("UBBEnabled", get_UBBEnabled, set_UBBEnabled);
-		L.RegVar("autoSize", get_autoSize, set_autoSize);
-		L.RegVar("textWidth", get_textWidth, null);
-		L.RegVar("textHeight", get_textHeight, null);
+		L.RegFunction("SetVar", new LuaCSFunction(SetVar));
+		L.RegFunction("FlushVars", new LuaCSFunction(FlushVars));
+		L.RegFunction("HasCharacter", new LuaCSFunction(HasCharacter));
+		L.RegFunction("Setup_BeforeAdd", new LuaCSFunction(Setup_BeforeAdd));
+		L.RegFunction("Setup_AfterAdd", new LuaCSFunction(Setup_AfterAdd));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_GTextField));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("text", new LuaCSFunction(get_text), new LuaCSFunction(set_text));
+		L.RegVar("templateVars", new LuaCSFunction(get_templateVars), new LuaCSFunction(set_templateVars));
+		L.RegVar("textFormat", new LuaCSFunction(get_textFormat), new LuaCSFunction(set_textFormat));
+		L.RegVar("color", new LuaCSFunction(get_color), new LuaCSFunction(set_color));
+		L.RegVar("align", new LuaCSFunction(get_align), new LuaCSFunction(set_align));
+		L.RegVar("verticalAlign", new LuaCSFunction(get_verticalAlign), new LuaCSFunction(set_verticalAlign));
+		L.RegVar("singleLine", new LuaCSFunction(get_singleLine), new LuaCSFunction(set_singleLine));
+		L.RegVar("stroke", new LuaCSFunction(get_stroke), new LuaCSFunction(set_stroke));
+		L.RegVar("strokeColor", new LuaCSFunction(get_strokeColor), new LuaCSFunction(set_strokeColor));
+		L.RegVar("shadowOffset", new LuaCSFunction(get_shadowOffset), new LuaCSFunction(set_shadowOffset));
+		L.RegVar("UBBEnabled", new LuaCSFunction(get_UBBEnabled), new LuaCSFunction(set_UBBEnabled));
+		L.RegVar("autoSize", new LuaCSFunction(get_autoSize), new LuaCSFunction(set_autoSize));
+		L.RegVar("textWidth", new LuaCSFunction(get_textWidth), null);
+		L.RegVar("textHeight", new LuaCSFunction(get_textHeight), null);
 		L.EndClass();
 	}
 
@@ -97,7 +97,7 @@ public class FairyGUI_GTextFieldWrap
 		{
 			ToLua.CheckArgsCount(L, 2);
 			FairyGUI.GTextField obj = (FairyGUI.GTextField)ToLua.CheckObject<FairyGUI.GTextField>(L, 1);
-			char arg0 = (char)LuaDLL.luaL_checknumber(L, 2);
+			char arg0 = (char)LuaDLL.luaL_checkinteger(L, 2);
 			bool o = obj.HasCharacter(arg0);
 			LuaDLL.lua_pushboolean(L, o);
 			return 1;
@@ -116,7 +116,7 @@ public class FairyGUI_GTextFieldWrap
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.GTextField obj = (FairyGUI.GTextField)ToLua.CheckObject<FairyGUI.GTextField>(L, 1);
 			FairyGUI.Utils.ByteBuffer arg0 = (FairyGUI.Utils.ByteBuffer)ToLua.CheckObject<FairyGUI.Utils.ByteBuffer>(L, 2);
-			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			obj.Setup_BeforeAdd(arg0, arg1);
 			return 0;
 		}
@@ -134,7 +134,7 @@ public class FairyGUI_GTextFieldWrap
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.GTextField obj = (FairyGUI.GTextField)ToLua.CheckObject<FairyGUI.GTextField>(L, 1);
 			FairyGUI.Utils.ByteBuffer arg0 = (FairyGUI.Utils.ByteBuffer)ToLua.CheckObject<FairyGUI.Utils.ByteBuffer>(L, 2);
-			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			obj.Setup_AfterAdd(arg0, arg1);
 			return 0;
 		}
@@ -438,7 +438,7 @@ public class FairyGUI_GTextFieldWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GTextField obj = (FairyGUI.GTextField)o;
-			System.Collections.Generic.Dictionary<string,string> arg0 = (System.Collections.Generic.Dictionary<string,string>)ToLua.CheckObject(L, 2, typeof(System.Collections.Generic.Dictionary<string,string>));
+			System.Collections.Generic.Dictionary<string,string> arg0 = (System.Collections.Generic.Dictionary<string,string>)ToLua.CheckObject(L, 2, TypeTraits<System.Collections.Generic.Dictionary<string,string>>.type);
 			obj.templateVars = arg0;
 			return 0;
 		}
@@ -495,7 +495,7 @@ public class FairyGUI_GTextFieldWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GTextField obj = (FairyGUI.GTextField)o;
-			FairyGUI.AlignType arg0 = (FairyGUI.AlignType)ToLua.CheckObject(L, 2, typeof(FairyGUI.AlignType));
+			FairyGUI.AlignType arg0 = (FairyGUI.AlignType)ToLua.CheckObject(L, 2, TypeTraits<FairyGUI.AlignType>.type);
 			obj.align = arg0;
 			return 0;
 		}
@@ -514,7 +514,7 @@ public class FairyGUI_GTextFieldWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GTextField obj = (FairyGUI.GTextField)o;
-			FairyGUI.VertAlignType arg0 = (FairyGUI.VertAlignType)ToLua.CheckObject(L, 2, typeof(FairyGUI.VertAlignType));
+			FairyGUI.VertAlignType arg0 = (FairyGUI.VertAlignType)ToLua.CheckObject(L, 2, TypeTraits<FairyGUI.VertAlignType>.type);
 			obj.verticalAlign = arg0;
 			return 0;
 		}
@@ -628,7 +628,7 @@ public class FairyGUI_GTextFieldWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GTextField obj = (FairyGUI.GTextField)o;
-			FairyGUI.AutoSizeType arg0 = (FairyGUI.AutoSizeType)ToLua.CheckObject(L, 2, typeof(FairyGUI.AutoSizeType));
+			FairyGUI.AutoSizeType arg0 = (FairyGUI.AutoSizeType)ToLua.CheckObject(L, 2, TypeTraits<FairyGUI.AutoSizeType>.type);
 			obj.autoSize = arg0;
 			return 0;
 		}

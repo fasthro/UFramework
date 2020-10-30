@@ -7,17 +7,17 @@ public class UFramework_UI_UIPanelWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(UFramework.UI.UIPanel), typeof(System.Object));
-		L.RegFunction("AddPackage", AddPackage);
-		L.RegFunction("Show", Show);
-		L.RegFunction("Hide", Hide);
-		L.RegFunction("SendNotification", SendNotification);
-		L.RegFunction("UpdateSortOrder", UpdateSortOrder);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("layer", get_layer, null);
-		L.RegVar("isShowed", get_isShowed, null);
-		L.RegVar("isLoaded", get_isLoaded, null);
-		L.RegVar("isLoading", get_isLoading, null);
-		L.RegVar("isHidden", get_isHidden, null);
+		L.RegFunction("AddPackage", new LuaCSFunction(AddPackage));
+		L.RegFunction("Show", new LuaCSFunction(Show));
+		L.RegFunction("Hide", new LuaCSFunction(Hide));
+		L.RegFunction("SendNotification", new LuaCSFunction(SendNotification));
+		L.RegFunction("UpdateSortOrder", new LuaCSFunction(UpdateSortOrder));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("layer", new LuaCSFunction(get_layer), null);
+		L.RegVar("isShowed", new LuaCSFunction(get_isShowed), null);
+		L.RegVar("isLoaded", new LuaCSFunction(get_isLoaded), null);
+		L.RegVar("isLoading", new LuaCSFunction(get_isLoading), null);
+		L.RegVar("isHidden", new LuaCSFunction(get_isHidden), null);
 		L.EndClass();
 	}
 
@@ -77,7 +77,7 @@ public class UFramework_UI_UIPanelWrap
 		{
 			ToLua.CheckArgsCount(L, 2);
 			UFramework.UI.UIPanel obj = (UFramework.UI.UIPanel)ToLua.CheckObject<UFramework.UI.UIPanel>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.SendNotification(arg0);
 			return 0;
 		}
@@ -94,7 +94,7 @@ public class UFramework_UI_UIPanelWrap
 		{
 			ToLua.CheckArgsCount(L, 2);
 			UFramework.UI.UIPanel obj = (UFramework.UI.UIPanel)ToLua.CheckObject<UFramework.UI.UIPanel>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.UpdateSortOrder(arg0);
 			return 0;
 		}

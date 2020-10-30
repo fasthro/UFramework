@@ -7,19 +7,19 @@ public class FairyGUI_RelationsWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.Relations), typeof(System.Object));
-		L.RegFunction("Add", Add);
-		L.RegFunction("Remove", Remove);
-		L.RegFunction("Contains", Contains);
-		L.RegFunction("ClearFor", ClearFor);
-		L.RegFunction("ClearAll", ClearAll);
-		L.RegFunction("CopyFrom", CopyFrom);
-		L.RegFunction("Dispose", Dispose);
-		L.RegFunction("OnOwnerSizeChanged", OnOwnerSizeChanged);
-		L.RegFunction("Setup", Setup);
-		L.RegFunction("New", _CreateFairyGUI_Relations);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("handling", get_handling, set_handling);
-		L.RegVar("isEmpty", get_isEmpty, null);
+		L.RegFunction("Add", new LuaCSFunction(Add));
+		L.RegFunction("Remove", new LuaCSFunction(Remove));
+		L.RegFunction("Contains", new LuaCSFunction(Contains));
+		L.RegFunction("ClearFor", new LuaCSFunction(ClearFor));
+		L.RegFunction("ClearAll", new LuaCSFunction(ClearAll));
+		L.RegFunction("CopyFrom", new LuaCSFunction(CopyFrom));
+		L.RegFunction("Dispose", new LuaCSFunction(Dispose));
+		L.RegFunction("OnOwnerSizeChanged", new LuaCSFunction(OnOwnerSizeChanged));
+		L.RegFunction("Setup", new LuaCSFunction(Setup));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_Relations));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("handling", new LuaCSFunction(get_handling), new LuaCSFunction(set_handling));
+		L.RegVar("isEmpty", new LuaCSFunction(get_isEmpty), null);
 		L.EndClass();
 	}
 
@@ -59,7 +59,7 @@ public class FairyGUI_RelationsWrap
 			{
 				FairyGUI.Relations obj = (FairyGUI.Relations)ToLua.CheckObject<FairyGUI.Relations>(L, 1);
 				FairyGUI.GObject arg0 = (FairyGUI.GObject)ToLua.CheckObject<FairyGUI.GObject>(L, 2);
-				FairyGUI.RelationType arg1 = (FairyGUI.RelationType)ToLua.CheckObject(L, 3, typeof(FairyGUI.RelationType));
+				FairyGUI.RelationType arg1 = (FairyGUI.RelationType)ToLua.CheckObject(L, 3, TypeTraits<FairyGUI.RelationType>.type);
 				obj.Add(arg0, arg1);
 				return 0;
 			}
@@ -67,7 +67,7 @@ public class FairyGUI_RelationsWrap
 			{
 				FairyGUI.Relations obj = (FairyGUI.Relations)ToLua.CheckObject<FairyGUI.Relations>(L, 1);
 				FairyGUI.GObject arg0 = (FairyGUI.GObject)ToLua.CheckObject<FairyGUI.GObject>(L, 2);
-				FairyGUI.RelationType arg1 = (FairyGUI.RelationType)ToLua.CheckObject(L, 3, typeof(FairyGUI.RelationType));
+				FairyGUI.RelationType arg1 = (FairyGUI.RelationType)ToLua.CheckObject(L, 3, TypeTraits<FairyGUI.RelationType>.type);
 				bool arg2 = LuaDLL.luaL_checkboolean(L, 4);
 				obj.Add(arg0, arg1, arg2);
 				return 0;
@@ -91,7 +91,7 @@ public class FairyGUI_RelationsWrap
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.Relations obj = (FairyGUI.Relations)ToLua.CheckObject<FairyGUI.Relations>(L, 1);
 			FairyGUI.GObject arg0 = (FairyGUI.GObject)ToLua.CheckObject<FairyGUI.GObject>(L, 2);
-			FairyGUI.RelationType arg1 = (FairyGUI.RelationType)ToLua.CheckObject(L, 3, typeof(FairyGUI.RelationType));
+			FairyGUI.RelationType arg1 = (FairyGUI.RelationType)ToLua.CheckObject(L, 3, TypeTraits<FairyGUI.RelationType>.type);
 			obj.Remove(arg0, arg1);
 			return 0;
 		}

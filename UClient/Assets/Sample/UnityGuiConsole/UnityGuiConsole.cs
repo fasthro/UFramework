@@ -173,7 +173,7 @@ public class UnityGuiConsole : MonoBehaviour
                 Enqueue(queue, condition, stackTrace);
                 break;
             default:
-                Enqueue(queue, condition, stackTrace);
+                Enqueue(queue, condition, null);
                 break;
         }
         this.scrollPos_[index] = new Vector2(0, 100000f);

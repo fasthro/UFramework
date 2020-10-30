@@ -170,7 +170,7 @@ PlayerSettings:
   applicationIdentifier:
     Android: com.futureruler.game
   buildNumber: {}
-  AndroidBundleVersionCode: 89
+  AndroidBundleVersionCode: 100
   AndroidMinSdkVersion: 19
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
@@ -632,9 +632,9 @@ PlayerSettings:
   webGLThreadsSupport: 0
   webGLWasmStreaming: 0
   scriptingDefineSymbols:
-    1: ODIN_INSPECTOR
+    1: ODIN_INSPECTOR;LUAC_5_3
     4: ODIN_INSPECTOR
-    7: ODIN_INSPECTOR
+    7: ODIN_INSPECTOR;LUAC_5_3
     13: ODIN_INSPECTOR
   platformArchitecture: {}
   scriptingBackend:

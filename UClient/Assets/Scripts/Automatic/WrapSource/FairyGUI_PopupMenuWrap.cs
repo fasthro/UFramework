@@ -7,31 +7,31 @@ public class FairyGUI_PopupMenuWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.PopupMenu), typeof(FairyGUI.EventDispatcher));
-		L.RegFunction("AddItem", AddItem);
-		L.RegFunction("AddItemAt", AddItemAt);
-		L.RegFunction("AddSeperator", AddSeperator);
-		L.RegFunction("GetItemName", GetItemName);
-		L.RegFunction("SetItemText", SetItemText);
-		L.RegFunction("SetItemVisible", SetItemVisible);
-		L.RegFunction("SetItemGrayed", SetItemGrayed);
-		L.RegFunction("SetItemCheckable", SetItemCheckable);
-		L.RegFunction("SetItemChecked", SetItemChecked);
-		L.RegFunction("IsItemChecked", IsItemChecked);
-		L.RegFunction("RemoveItem", RemoveItem);
-		L.RegFunction("ClearItems", ClearItems);
-		L.RegFunction("Dispose", Dispose);
-		L.RegFunction("Show", Show);
-		L.RegFunction("Hide", Hide);
-		L.RegFunction("New", _CreateFairyGUI_PopupMenu);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("visibleItemCount", get_visibleItemCount, set_visibleItemCount);
-		L.RegVar("hideOnClickItem", get_hideOnClickItem, set_hideOnClickItem);
-		L.RegVar("autoSize", get_autoSize, set_autoSize);
-		L.RegVar("onPopup", get_onPopup, null);
-		L.RegVar("onClose", get_onClose, null);
-		L.RegVar("itemCount", get_itemCount, null);
-		L.RegVar("contentPane", get_contentPane, null);
-		L.RegVar("list", get_list, null);
+		L.RegFunction("AddItem", new LuaCSFunction(AddItem));
+		L.RegFunction("AddItemAt", new LuaCSFunction(AddItemAt));
+		L.RegFunction("AddSeperator", new LuaCSFunction(AddSeperator));
+		L.RegFunction("GetItemName", new LuaCSFunction(GetItemName));
+		L.RegFunction("SetItemText", new LuaCSFunction(SetItemText));
+		L.RegFunction("SetItemVisible", new LuaCSFunction(SetItemVisible));
+		L.RegFunction("SetItemGrayed", new LuaCSFunction(SetItemGrayed));
+		L.RegFunction("SetItemCheckable", new LuaCSFunction(SetItemCheckable));
+		L.RegFunction("SetItemChecked", new LuaCSFunction(SetItemChecked));
+		L.RegFunction("IsItemChecked", new LuaCSFunction(IsItemChecked));
+		L.RegFunction("RemoveItem", new LuaCSFunction(RemoveItem));
+		L.RegFunction("ClearItems", new LuaCSFunction(ClearItems));
+		L.RegFunction("Dispose", new LuaCSFunction(Dispose));
+		L.RegFunction("Show", new LuaCSFunction(Show));
+		L.RegFunction("Hide", new LuaCSFunction(Hide));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_PopupMenu));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("visibleItemCount", new LuaCSFunction(get_visibleItemCount), new LuaCSFunction(set_visibleItemCount));
+		L.RegVar("hideOnClickItem", new LuaCSFunction(get_hideOnClickItem), new LuaCSFunction(set_hideOnClickItem));
+		L.RegVar("autoSize", new LuaCSFunction(get_autoSize), new LuaCSFunction(set_autoSize));
+		L.RegVar("onPopup", new LuaCSFunction(get_onPopup), null);
+		L.RegVar("onClose", new LuaCSFunction(get_onClose), null);
+		L.RegVar("itemCount", new LuaCSFunction(get_itemCount), null);
+		L.RegVar("contentPane", new LuaCSFunction(get_contentPane), null);
+		L.RegVar("list", new LuaCSFunction(get_list), null);
 		L.EndClass();
 	}
 
@@ -113,7 +113,7 @@ public class FairyGUI_PopupMenuWrap
 			{
 				FairyGUI.PopupMenu obj = (FairyGUI.PopupMenu)ToLua.CheckObject<FairyGUI.PopupMenu>(L, 1);
 				string arg0 = ToLua.CheckString(L, 2);
-				int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+				int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 				FairyGUI.EventCallback1 arg2 = (FairyGUI.EventCallback1)ToLua.ToObject(L, 4);
 				FairyGUI.GButton o = obj.AddItemAt(arg0, arg1, arg2);
 				ToLua.PushObject(L, o);
@@ -123,7 +123,7 @@ public class FairyGUI_PopupMenuWrap
 			{
 				FairyGUI.PopupMenu obj = (FairyGUI.PopupMenu)ToLua.CheckObject<FairyGUI.PopupMenu>(L, 1);
 				string arg0 = ToLua.CheckString(L, 2);
-				int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+				int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 				FairyGUI.EventCallback0 arg2 = (FairyGUI.EventCallback0)ToLua.ToObject(L, 4);
 				FairyGUI.GButton o = obj.AddItemAt(arg0, arg1, arg2);
 				ToLua.PushObject(L, o);
@@ -156,7 +156,7 @@ public class FairyGUI_PopupMenuWrap
 			else if (count == 2)
 			{
 				FairyGUI.PopupMenu obj = (FairyGUI.PopupMenu)ToLua.CheckObject<FairyGUI.PopupMenu>(L, 1);
-				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+				int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 				obj.AddSeperator(arg0);
 				return 0;
 			}
@@ -178,7 +178,7 @@ public class FairyGUI_PopupMenuWrap
 		{
 			ToLua.CheckArgsCount(L, 2);
 			FairyGUI.PopupMenu obj = (FairyGUI.PopupMenu)ToLua.CheckObject<FairyGUI.PopupMenu>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			string o = obj.GetItemName(arg0);
 			LuaDLL.lua_pushstring(L, o);
 			return 1;
@@ -370,7 +370,7 @@ public class FairyGUI_PopupMenuWrap
 			{
 				FairyGUI.PopupMenu obj = (FairyGUI.PopupMenu)ToLua.CheckObject<FairyGUI.PopupMenu>(L, 1);
 				FairyGUI.GObject arg0 = (FairyGUI.GObject)ToLua.CheckObject<FairyGUI.GObject>(L, 2);
-				FairyGUI.PopupDirection arg1 = (FairyGUI.PopupDirection)ToLua.CheckObject(L, 3, typeof(FairyGUI.PopupDirection));
+				FairyGUI.PopupDirection arg1 = (FairyGUI.PopupDirection)ToLua.CheckObject(L, 3, TypeTraits<FairyGUI.PopupDirection>.type);
 				obj.Show(arg0, arg1);
 				return 0;
 			}
@@ -378,7 +378,7 @@ public class FairyGUI_PopupMenuWrap
 			{
 				FairyGUI.PopupMenu obj = (FairyGUI.PopupMenu)ToLua.CheckObject<FairyGUI.PopupMenu>(L, 1);
 				FairyGUI.GObject arg0 = (FairyGUI.GObject)ToLua.CheckObject<FairyGUI.GObject>(L, 2);
-				FairyGUI.PopupDirection arg1 = (FairyGUI.PopupDirection)ToLua.CheckObject(L, 3, typeof(FairyGUI.PopupDirection));
+				FairyGUI.PopupDirection arg1 = (FairyGUI.PopupDirection)ToLua.CheckObject(L, 3, TypeTraits<FairyGUI.PopupDirection>.type);
 				FairyGUI.PopupMenu arg2 = (FairyGUI.PopupMenu)ToLua.CheckObject<FairyGUI.PopupMenu>(L, 4);
 				obj.Show(arg0, arg1, arg2);
 				return 0;
@@ -571,7 +571,7 @@ public class FairyGUI_PopupMenuWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.PopupMenu obj = (FairyGUI.PopupMenu)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.visibleItemCount = arg0;
 			return 0;
 		}

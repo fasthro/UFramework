@@ -7,23 +7,23 @@ public class FairyGUI_GMovieClipWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.GMovieClip), typeof(FairyGUI.GObject));
-		L.RegFunction("Rewind", Rewind);
-		L.RegFunction("SyncStatus", SyncStatus);
-		L.RegFunction("Advance", Advance);
-		L.RegFunction("SetPlaySettings", SetPlaySettings);
-		L.RegFunction("ConstructFromResource", ConstructFromResource);
-		L.RegFunction("Setup_BeforeAdd", Setup_BeforeAdd);
-		L.RegFunction("New", _CreateFairyGUI_GMovieClip);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("onPlayEnd", get_onPlayEnd, null);
-		L.RegVar("playing", get_playing, set_playing);
-		L.RegVar("frame", get_frame, set_frame);
-		L.RegVar("color", get_color, set_color);
-		L.RegVar("flip", get_flip, set_flip);
-		L.RegVar("material", get_material, set_material);
-		L.RegVar("shader", get_shader, set_shader);
-		L.RegVar("timeScale", get_timeScale, set_timeScale);
-		L.RegVar("ignoreEngineTimeScale", get_ignoreEngineTimeScale, set_ignoreEngineTimeScale);
+		L.RegFunction("Rewind", new LuaCSFunction(Rewind));
+		L.RegFunction("SyncStatus", new LuaCSFunction(SyncStatus));
+		L.RegFunction("Advance", new LuaCSFunction(Advance));
+		L.RegFunction("SetPlaySettings", new LuaCSFunction(SetPlaySettings));
+		L.RegFunction("ConstructFromResource", new LuaCSFunction(ConstructFromResource));
+		L.RegFunction("Setup_BeforeAdd", new LuaCSFunction(Setup_BeforeAdd));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_GMovieClip));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("onPlayEnd", new LuaCSFunction(get_onPlayEnd), null);
+		L.RegVar("playing", new LuaCSFunction(get_playing), new LuaCSFunction(set_playing));
+		L.RegVar("frame", new LuaCSFunction(get_frame), new LuaCSFunction(set_frame));
+		L.RegVar("color", new LuaCSFunction(get_color), new LuaCSFunction(set_color));
+		L.RegVar("flip", new LuaCSFunction(get_flip), new LuaCSFunction(set_flip));
+		L.RegVar("material", new LuaCSFunction(get_material), new LuaCSFunction(set_material));
+		L.RegVar("shader", new LuaCSFunction(get_shader), new LuaCSFunction(set_shader));
+		L.RegVar("timeScale", new LuaCSFunction(get_timeScale), new LuaCSFunction(set_timeScale));
+		L.RegVar("ignoreEngineTimeScale", new LuaCSFunction(get_ignoreEngineTimeScale), new LuaCSFunction(set_ignoreEngineTimeScale));
 		L.EndClass();
 	}
 
@@ -108,10 +108,10 @@ public class FairyGUI_GMovieClipWrap
 		{
 			ToLua.CheckArgsCount(L, 5);
 			FairyGUI.GMovieClip obj = (FairyGUI.GMovieClip)ToLua.CheckObject<FairyGUI.GMovieClip>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
-			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
-			int arg2 = (int)LuaDLL.luaL_checknumber(L, 4);
-			int arg3 = (int)LuaDLL.luaL_checknumber(L, 5);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
+			int arg2 = (int)LuaDLL.luaL_checkinteger(L, 4);
+			int arg3 = (int)LuaDLL.luaL_checkinteger(L, 5);
 			obj.SetPlaySettings(arg0, arg1, arg2, arg3);
 			return 0;
 		}
@@ -145,7 +145,7 @@ public class FairyGUI_GMovieClipWrap
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.GMovieClip obj = (FairyGUI.GMovieClip)ToLua.CheckObject<FairyGUI.GMovieClip>(L, 1);
 			FairyGUI.Utils.ByteBuffer arg0 = (FairyGUI.Utils.ByteBuffer)ToLua.CheckObject<FairyGUI.Utils.ByteBuffer>(L, 2);
-			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			obj.Setup_BeforeAdd(arg0, arg1);
 			return 0;
 		}
@@ -354,7 +354,7 @@ public class FairyGUI_GMovieClipWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GMovieClip obj = (FairyGUI.GMovieClip)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.frame = arg0;
 			return 0;
 		}
@@ -392,7 +392,7 @@ public class FairyGUI_GMovieClipWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GMovieClip obj = (FairyGUI.GMovieClip)o;
-			FairyGUI.FlipType arg0 = (FairyGUI.FlipType)ToLua.CheckObject(L, 2, typeof(FairyGUI.FlipType));
+			FairyGUI.FlipType arg0 = (FairyGUI.FlipType)ToLua.CheckObject(L, 2, TypeTraits<FairyGUI.FlipType>.type);
 			obj.flip = arg0;
 			return 0;
 		}

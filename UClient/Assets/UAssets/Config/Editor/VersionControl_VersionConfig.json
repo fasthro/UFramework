@@ -1,1 +1,1 @@
-﻿{"address":0,"version":0,"minVersion":0,"platforms":[{"platform":0,"patchs":[],"supports":[],"historys":[],"releaseVersionCodes":[0]}]}
+﻿{"address":0,"version":0,"minVersion":0,"platforms":[{"platform":0,"patchs":[{"aVersion":0,"pVersion":0,"timestamp":1604055551647,"len":362,"displayName":"p0.0.1604055551647","displayLen":"362 B","displayTime":"2020-10-30 18:59:11","status":"Pending","isRelease":false,"files":[],"sFiles":[{"key":"3-Define.lua","dirIndex":3,"name":"Define.lua","len":357,"hash":"fc7d4f64"}]}],"supports":[],"historys":[],"releaseVersionCodes":[0]}]}

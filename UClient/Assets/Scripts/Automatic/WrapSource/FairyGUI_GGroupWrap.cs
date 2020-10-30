@@ -7,19 +7,19 @@ public class FairyGUI_GGroupWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.GGroup), typeof(FairyGUI.GObject));
-		L.RegFunction("SetBoundsChangedFlag", SetBoundsChangedFlag);
-		L.RegFunction("EnsureBoundsCorrect", EnsureBoundsCorrect);
-		L.RegFunction("Setup_BeforeAdd", Setup_BeforeAdd);
-		L.RegFunction("Setup_AfterAdd", Setup_AfterAdd);
-		L.RegFunction("New", _CreateFairyGUI_GGroup);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("layout", get_layout, set_layout);
-		L.RegVar("lineGap", get_lineGap, set_lineGap);
-		L.RegVar("columnGap", get_columnGap, set_columnGap);
-		L.RegVar("excludeInvisibles", get_excludeInvisibles, set_excludeInvisibles);
-		L.RegVar("autoSizeDisabled", get_autoSizeDisabled, set_autoSizeDisabled);
-		L.RegVar("mainGridMinSize", get_mainGridMinSize, set_mainGridMinSize);
-		L.RegVar("mainGridIndex", get_mainGridIndex, set_mainGridIndex);
+		L.RegFunction("SetBoundsChangedFlag", new LuaCSFunction(SetBoundsChangedFlag));
+		L.RegFunction("EnsureBoundsCorrect", new LuaCSFunction(EnsureBoundsCorrect));
+		L.RegFunction("Setup_BeforeAdd", new LuaCSFunction(Setup_BeforeAdd));
+		L.RegFunction("Setup_AfterAdd", new LuaCSFunction(Setup_AfterAdd));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_GGroup));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("layout", new LuaCSFunction(get_layout), new LuaCSFunction(set_layout));
+		L.RegVar("lineGap", new LuaCSFunction(get_lineGap), new LuaCSFunction(set_lineGap));
+		L.RegVar("columnGap", new LuaCSFunction(get_columnGap), new LuaCSFunction(set_columnGap));
+		L.RegVar("excludeInvisibles", new LuaCSFunction(get_excludeInvisibles), new LuaCSFunction(set_excludeInvisibles));
+		L.RegVar("autoSizeDisabled", new LuaCSFunction(get_autoSizeDisabled), new LuaCSFunction(set_autoSizeDisabled));
+		L.RegVar("mainGridMinSize", new LuaCSFunction(get_mainGridMinSize), new LuaCSFunction(set_mainGridMinSize));
+		L.RegVar("mainGridIndex", new LuaCSFunction(get_mainGridIndex), new LuaCSFunction(set_mainGridIndex));
 		L.EndClass();
 	}
 
@@ -102,7 +102,7 @@ public class FairyGUI_GGroupWrap
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.GGroup obj = (FairyGUI.GGroup)ToLua.CheckObject<FairyGUI.GGroup>(L, 1);
 			FairyGUI.Utils.ByteBuffer arg0 = (FairyGUI.Utils.ByteBuffer)ToLua.CheckObject<FairyGUI.Utils.ByteBuffer>(L, 2);
-			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			obj.Setup_BeforeAdd(arg0, arg1);
 			return 0;
 		}
@@ -120,7 +120,7 @@ public class FairyGUI_GGroupWrap
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.GGroup obj = (FairyGUI.GGroup)ToLua.CheckObject<FairyGUI.GGroup>(L, 1);
 			FairyGUI.Utils.ByteBuffer arg0 = (FairyGUI.Utils.ByteBuffer)ToLua.CheckObject<FairyGUI.Utils.ByteBuffer>(L, 2);
-			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			obj.Setup_AfterAdd(arg0, arg1);
 			return 0;
 		}
@@ -272,7 +272,7 @@ public class FairyGUI_GGroupWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GGroup obj = (FairyGUI.GGroup)o;
-			FairyGUI.GroupLayoutType arg0 = (FairyGUI.GroupLayoutType)ToLua.CheckObject(L, 2, typeof(FairyGUI.GroupLayoutType));
+			FairyGUI.GroupLayoutType arg0 = (FairyGUI.GroupLayoutType)ToLua.CheckObject(L, 2, TypeTraits<FairyGUI.GroupLayoutType>.type);
 			obj.layout = arg0;
 			return 0;
 		}
@@ -291,7 +291,7 @@ public class FairyGUI_GGroupWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GGroup obj = (FairyGUI.GGroup)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.lineGap = arg0;
 			return 0;
 		}
@@ -310,7 +310,7 @@ public class FairyGUI_GGroupWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GGroup obj = (FairyGUI.GGroup)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.columnGap = arg0;
 			return 0;
 		}
@@ -367,7 +367,7 @@ public class FairyGUI_GGroupWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GGroup obj = (FairyGUI.GGroup)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.mainGridMinSize = arg0;
 			return 0;
 		}
@@ -386,7 +386,7 @@ public class FairyGUI_GGroupWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GGroup obj = (FairyGUI.GGroup)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.mainGridIndex = arg0;
 			return 0;
 		}

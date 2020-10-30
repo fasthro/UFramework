@@ -7,60 +7,60 @@ public class FairyGUI_GComponentWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.GComponent), typeof(FairyGUI.GObject));
-		L.RegFunction("Dispose", Dispose);
-		L.RegFunction("InvalidateBatchingState", InvalidateBatchingState);
-		L.RegFunction("AddChild", AddChild);
-		L.RegFunction("AddChildAt", AddChildAt);
-		L.RegFunction("RemoveChild", RemoveChild);
-		L.RegFunction("RemoveChildAt", RemoveChildAt);
-		L.RegFunction("RemoveChildren", RemoveChildren);
-		L.RegFunction("GetChildAt", GetChildAt);
-		L.RegFunction("GetChild", GetChild);
-		L.RegFunction("GetChildByPath", GetChildByPath);
-		L.RegFunction("GetVisibleChild", GetVisibleChild);
-		L.RegFunction("GetChildInGroup", GetChildInGroup);
-		L.RegFunction("GetChildren", GetChildren);
-		L.RegFunction("GetChildIndex", GetChildIndex);
-		L.RegFunction("SetChildIndex", SetChildIndex);
-		L.RegFunction("SetChildIndexBefore", SetChildIndexBefore);
-		L.RegFunction("SwapChildren", SwapChildren);
-		L.RegFunction("SwapChildrenAt", SwapChildrenAt);
-		L.RegFunction("IsAncestorOf", IsAncestorOf);
-		L.RegFunction("ChangeChildrenOrder", ChangeChildrenOrder);
-		L.RegFunction("AddController", AddController);
-		L.RegFunction("GetControllerAt", GetControllerAt);
-		L.RegFunction("GetController", GetController);
-		L.RegFunction("RemoveController", RemoveController);
-		L.RegFunction("GetTransitionAt", GetTransitionAt);
-		L.RegFunction("GetTransition", GetTransition);
-		L.RegFunction("IsChildInView", IsChildInView);
-		L.RegFunction("GetFirstChildInView", GetFirstChildInView);
-		L.RegFunction("HandleControllerChanged", HandleControllerChanged);
-		L.RegFunction("SetBoundsChangedFlag", SetBoundsChangedFlag);
-		L.RegFunction("EnsureBoundsCorrect", EnsureBoundsCorrect);
-		L.RegFunction("ConstructFromResource", ConstructFromResource);
-		L.RegFunction("ConstructFromXML", ConstructFromXML);
-		L.RegFunction("Setup_AfterAdd", Setup_AfterAdd);
-		L.RegFunction("New", _CreateFairyGUI_GComponent);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("rootContainer", get_rootContainer, null);
-		L.RegVar("container", get_container, null);
-		L.RegVar("scrollPane", get_scrollPane, null);
-		L.RegVar("onDrop", get_onDrop, null);
-		L.RegVar("fairyBatching", get_fairyBatching, set_fairyBatching);
-		L.RegVar("opaque", get_opaque, set_opaque);
-		L.RegVar("margin", get_margin, set_margin);
-		L.RegVar("childrenRenderOrder", get_childrenRenderOrder, set_childrenRenderOrder);
-		L.RegVar("apexIndex", get_apexIndex, set_apexIndex);
-		L.RegVar("tabStopChildren", get_tabStopChildren, set_tabStopChildren);
-		L.RegVar("numChildren", get_numChildren, null);
-		L.RegVar("Controllers", get_Controllers, null);
-		L.RegVar("clipSoftness", get_clipSoftness, set_clipSoftness);
-		L.RegVar("mask", get_mask, set_mask);
-		L.RegVar("reversedMask", get_reversedMask, set_reversedMask);
-		L.RegVar("baseUserData", get_baseUserData, null);
-		L.RegVar("viewWidth", get_viewWidth, set_viewWidth);
-		L.RegVar("viewHeight", get_viewHeight, set_viewHeight);
+		L.RegFunction("Dispose", new LuaCSFunction(Dispose));
+		L.RegFunction("InvalidateBatchingState", new LuaCSFunction(InvalidateBatchingState));
+		L.RegFunction("AddChild", new LuaCSFunction(AddChild));
+		L.RegFunction("AddChildAt", new LuaCSFunction(AddChildAt));
+		L.RegFunction("RemoveChild", new LuaCSFunction(RemoveChild));
+		L.RegFunction("RemoveChildAt", new LuaCSFunction(RemoveChildAt));
+		L.RegFunction("RemoveChildren", new LuaCSFunction(RemoveChildren));
+		L.RegFunction("GetChildAt", new LuaCSFunction(GetChildAt));
+		L.RegFunction("GetChild", new LuaCSFunction(GetChild));
+		L.RegFunction("GetChildByPath", new LuaCSFunction(GetChildByPath));
+		L.RegFunction("GetVisibleChild", new LuaCSFunction(GetVisibleChild));
+		L.RegFunction("GetChildInGroup", new LuaCSFunction(GetChildInGroup));
+		L.RegFunction("GetChildren", new LuaCSFunction(GetChildren));
+		L.RegFunction("GetChildIndex", new LuaCSFunction(GetChildIndex));
+		L.RegFunction("SetChildIndex", new LuaCSFunction(SetChildIndex));
+		L.RegFunction("SetChildIndexBefore", new LuaCSFunction(SetChildIndexBefore));
+		L.RegFunction("SwapChildren", new LuaCSFunction(SwapChildren));
+		L.RegFunction("SwapChildrenAt", new LuaCSFunction(SwapChildrenAt));
+		L.RegFunction("IsAncestorOf", new LuaCSFunction(IsAncestorOf));
+		L.RegFunction("ChangeChildrenOrder", new LuaCSFunction(ChangeChildrenOrder));
+		L.RegFunction("AddController", new LuaCSFunction(AddController));
+		L.RegFunction("GetControllerAt", new LuaCSFunction(GetControllerAt));
+		L.RegFunction("GetController", new LuaCSFunction(GetController));
+		L.RegFunction("RemoveController", new LuaCSFunction(RemoveController));
+		L.RegFunction("GetTransitionAt", new LuaCSFunction(GetTransitionAt));
+		L.RegFunction("GetTransition", new LuaCSFunction(GetTransition));
+		L.RegFunction("IsChildInView", new LuaCSFunction(IsChildInView));
+		L.RegFunction("GetFirstChildInView", new LuaCSFunction(GetFirstChildInView));
+		L.RegFunction("HandleControllerChanged", new LuaCSFunction(HandleControllerChanged));
+		L.RegFunction("SetBoundsChangedFlag", new LuaCSFunction(SetBoundsChangedFlag));
+		L.RegFunction("EnsureBoundsCorrect", new LuaCSFunction(EnsureBoundsCorrect));
+		L.RegFunction("ConstructFromResource", new LuaCSFunction(ConstructFromResource));
+		L.RegFunction("ConstructFromXML", new LuaCSFunction(ConstructFromXML));
+		L.RegFunction("Setup_AfterAdd", new LuaCSFunction(Setup_AfterAdd));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_GComponent));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("rootContainer", new LuaCSFunction(get_rootContainer), null);
+		L.RegVar("container", new LuaCSFunction(get_container), null);
+		L.RegVar("scrollPane", new LuaCSFunction(get_scrollPane), null);
+		L.RegVar("onDrop", new LuaCSFunction(get_onDrop), null);
+		L.RegVar("fairyBatching", new LuaCSFunction(get_fairyBatching), new LuaCSFunction(set_fairyBatching));
+		L.RegVar("opaque", new LuaCSFunction(get_opaque), new LuaCSFunction(set_opaque));
+		L.RegVar("margin", new LuaCSFunction(get_margin), new LuaCSFunction(set_margin));
+		L.RegVar("childrenRenderOrder", new LuaCSFunction(get_childrenRenderOrder), new LuaCSFunction(set_childrenRenderOrder));
+		L.RegVar("apexIndex", new LuaCSFunction(get_apexIndex), new LuaCSFunction(set_apexIndex));
+		L.RegVar("tabStopChildren", new LuaCSFunction(get_tabStopChildren), new LuaCSFunction(set_tabStopChildren));
+		L.RegVar("numChildren", new LuaCSFunction(get_numChildren), null);
+		L.RegVar("Controllers", new LuaCSFunction(get_Controllers), null);
+		L.RegVar("clipSoftness", new LuaCSFunction(get_clipSoftness), new LuaCSFunction(set_clipSoftness));
+		L.RegVar("mask", new LuaCSFunction(get_mask), new LuaCSFunction(set_mask));
+		L.RegVar("reversedMask", new LuaCSFunction(get_reversedMask), new LuaCSFunction(set_reversedMask));
+		L.RegVar("baseUserData", new LuaCSFunction(get_baseUserData), null);
+		L.RegVar("viewWidth", new LuaCSFunction(get_viewWidth), new LuaCSFunction(set_viewWidth));
+		L.RegVar("viewHeight", new LuaCSFunction(get_viewHeight), new LuaCSFunction(set_viewHeight));
 		L.EndClass();
 	}
 
@@ -161,7 +161,7 @@ public class FairyGUI_GComponentWrap
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.GComponent obj = (FairyGUI.GComponent)ToLua.CheckObject<FairyGUI.GComponent>(L, 1);
 			FairyGUI.GObject arg0 = (FairyGUI.GObject)ToLua.CheckObject<FairyGUI.GObject>(L, 2);
-			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			FairyGUI.GObject o = obj.AddChildAt(arg0, arg1);
 			ToLua.PushObject(L, o);
 			return 1;
@@ -217,7 +217,7 @@ public class FairyGUI_GComponentWrap
 			if (count == 2)
 			{
 				FairyGUI.GComponent obj = (FairyGUI.GComponent)ToLua.CheckObject<FairyGUI.GComponent>(L, 1);
-				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+				int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 				FairyGUI.GObject o = obj.RemoveChildAt(arg0);
 				ToLua.PushObject(L, o);
 				return 1;
@@ -225,7 +225,7 @@ public class FairyGUI_GComponentWrap
 			else if (count == 3)
 			{
 				FairyGUI.GComponent obj = (FairyGUI.GComponent)ToLua.CheckObject<FairyGUI.GComponent>(L, 1);
-				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+				int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 				bool arg1 = LuaDLL.luaL_checkboolean(L, 3);
 				FairyGUI.GObject o = obj.RemoveChildAt(arg0, arg1);
 				ToLua.PushObject(L, o);
@@ -258,8 +258,8 @@ public class FairyGUI_GComponentWrap
 			else if (count == 4)
 			{
 				FairyGUI.GComponent obj = (FairyGUI.GComponent)ToLua.CheckObject<FairyGUI.GComponent>(L, 1);
-				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
-				int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+				int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
+				int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 				bool arg2 = LuaDLL.luaL_checkboolean(L, 4);
 				obj.RemoveChildren(arg0, arg1, arg2);
 				return 0;
@@ -282,7 +282,7 @@ public class FairyGUI_GComponentWrap
 		{
 			ToLua.CheckArgsCount(L, 2);
 			FairyGUI.GComponent obj = (FairyGUI.GComponent)ToLua.CheckObject<FairyGUI.GComponent>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			FairyGUI.GObject o = obj.GetChildAt(arg0);
 			ToLua.PushObject(L, o);
 			return 1;
@@ -409,7 +409,7 @@ public class FairyGUI_GComponentWrap
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.GComponent obj = (FairyGUI.GComponent)ToLua.CheckObject<FairyGUI.GComponent>(L, 1);
 			FairyGUI.GObject arg0 = (FairyGUI.GObject)ToLua.CheckObject<FairyGUI.GObject>(L, 2);
-			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			obj.SetChildIndex(arg0, arg1);
 			return 0;
 		}
@@ -427,7 +427,7 @@ public class FairyGUI_GComponentWrap
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.GComponent obj = (FairyGUI.GComponent)ToLua.CheckObject<FairyGUI.GComponent>(L, 1);
 			FairyGUI.GObject arg0 = (FairyGUI.GObject)ToLua.CheckObject<FairyGUI.GObject>(L, 2);
-			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			int o = obj.SetChildIndexBefore(arg0, arg1);
 			LuaDLL.lua_pushinteger(L, o);
 			return 1;
@@ -463,8 +463,8 @@ public class FairyGUI_GComponentWrap
 		{
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.GComponent obj = (FairyGUI.GComponent)ToLua.CheckObject<FairyGUI.GComponent>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
-			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			obj.SwapChildrenAt(arg0, arg1);
 			return 0;
 		}
@@ -533,7 +533,7 @@ public class FairyGUI_GComponentWrap
 		{
 			ToLua.CheckArgsCount(L, 2);
 			FairyGUI.GComponent obj = (FairyGUI.GComponent)ToLua.CheckObject<FairyGUI.GComponent>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			FairyGUI.Controller o = obj.GetControllerAt(arg0);
 			ToLua.PushObject(L, o);
 			return 1;
@@ -586,7 +586,7 @@ public class FairyGUI_GComponentWrap
 		{
 			ToLua.CheckArgsCount(L, 2);
 			FairyGUI.GComponent obj = (FairyGUI.GComponent)ToLua.CheckObject<FairyGUI.GComponent>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			FairyGUI.Transition o = obj.GetTransitionAt(arg0);
 			ToLua.PushObject(L, o);
 			return 1;
@@ -740,7 +740,7 @@ public class FairyGUI_GComponentWrap
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.GComponent obj = (FairyGUI.GComponent)ToLua.CheckObject<FairyGUI.GComponent>(L, 1);
 			FairyGUI.Utils.ByteBuffer arg0 = (FairyGUI.Utils.ByteBuffer)ToLua.CheckObject<FairyGUI.Utils.ByteBuffer>(L, 2);
-			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			obj.Setup_AfterAdd(arg0, arg1);
 			return 0;
 		}
@@ -1158,7 +1158,7 @@ public class FairyGUI_GComponentWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GComponent obj = (FairyGUI.GComponent)o;
-			FairyGUI.ChildrenRenderOrder arg0 = (FairyGUI.ChildrenRenderOrder)ToLua.CheckObject(L, 2, typeof(FairyGUI.ChildrenRenderOrder));
+			FairyGUI.ChildrenRenderOrder arg0 = (FairyGUI.ChildrenRenderOrder)ToLua.CheckObject(L, 2, TypeTraits<FairyGUI.ChildrenRenderOrder>.type);
 			obj.childrenRenderOrder = arg0;
 			return 0;
 		}
@@ -1177,7 +1177,7 @@ public class FairyGUI_GComponentWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GComponent obj = (FairyGUI.GComponent)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.apexIndex = arg0;
 			return 0;
 		}

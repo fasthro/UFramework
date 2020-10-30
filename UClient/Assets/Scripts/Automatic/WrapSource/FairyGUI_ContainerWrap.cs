@@ -7,45 +7,45 @@ public class FairyGUI_ContainerWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.Container), typeof(FairyGUI.DisplayObject));
-		L.RegFunction("AddChild", AddChild);
-		L.RegFunction("AddChildAt", AddChildAt);
-		L.RegFunction("Contains", Contains);
-		L.RegFunction("GetChildAt", GetChildAt);
-		L.RegFunction("GetChild", GetChild);
-		L.RegFunction("GetChildren", GetChildren);
-		L.RegFunction("GetChildIndex", GetChildIndex);
-		L.RegFunction("RemoveChild", RemoveChild);
-		L.RegFunction("RemoveChildAt", RemoveChildAt);
-		L.RegFunction("RemoveChildren", RemoveChildren);
-		L.RegFunction("SetChildIndex", SetChildIndex);
-		L.RegFunction("SwapChildren", SwapChildren);
-		L.RegFunction("SwapChildrenAt", SwapChildrenAt);
-		L.RegFunction("ChangeChildrenOrder", ChangeChildrenOrder);
-		L.RegFunction("GetDescendants", GetDescendants);
-		L.RegFunction("CreateGraphics", CreateGraphics);
-		L.RegFunction("GetBounds", GetBounds);
-		L.RegFunction("GetRenderCamera", GetRenderCamera);
-		L.RegFunction("HitTest", HitTest);
-		L.RegFunction("IsAncestorOf", IsAncestorOf);
-		L.RegFunction("InvalidateBatchingState", InvalidateBatchingState);
-		L.RegFunction("SetChildrenLayer", SetChildrenLayer);
-		L.RegFunction("Update", Update);
-		L.RegFunction("Dispose", Dispose);
-		L.RegFunction("New", _CreateFairyGUI_Container);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("renderMode", get_renderMode, set_renderMode);
-		L.RegVar("renderCamera", get_renderCamera, set_renderCamera);
-		L.RegVar("opaque", get_opaque, set_opaque);
-		L.RegVar("clipSoftness", get_clipSoftness, set_clipSoftness);
-		L.RegVar("hitArea", get_hitArea, set_hitArea);
-		L.RegVar("touchChildren", get_touchChildren, set_touchChildren);
-		L.RegVar("reversedMask", get_reversedMask, set_reversedMask);
-		L.RegVar("numChildren", get_numChildren, null);
-		L.RegVar("clipRect", get_clipRect, set_clipRect);
-		L.RegVar("mask", get_mask, set_mask);
-		L.RegVar("fairyBatching", get_fairyBatching, set_fairyBatching);
-		L.RegVar("tabStopChildren", get_tabStopChildren, set_tabStopChildren);
-		L.RegVar("onUpdate", get_onUpdate, set_onUpdate);
+		L.RegFunction("AddChild", new LuaCSFunction(AddChild));
+		L.RegFunction("AddChildAt", new LuaCSFunction(AddChildAt));
+		L.RegFunction("Contains", new LuaCSFunction(Contains));
+		L.RegFunction("GetChildAt", new LuaCSFunction(GetChildAt));
+		L.RegFunction("GetChild", new LuaCSFunction(GetChild));
+		L.RegFunction("GetChildren", new LuaCSFunction(GetChildren));
+		L.RegFunction("GetChildIndex", new LuaCSFunction(GetChildIndex));
+		L.RegFunction("RemoveChild", new LuaCSFunction(RemoveChild));
+		L.RegFunction("RemoveChildAt", new LuaCSFunction(RemoveChildAt));
+		L.RegFunction("RemoveChildren", new LuaCSFunction(RemoveChildren));
+		L.RegFunction("SetChildIndex", new LuaCSFunction(SetChildIndex));
+		L.RegFunction("SwapChildren", new LuaCSFunction(SwapChildren));
+		L.RegFunction("SwapChildrenAt", new LuaCSFunction(SwapChildrenAt));
+		L.RegFunction("ChangeChildrenOrder", new LuaCSFunction(ChangeChildrenOrder));
+		L.RegFunction("GetDescendants", new LuaCSFunction(GetDescendants));
+		L.RegFunction("CreateGraphics", new LuaCSFunction(CreateGraphics));
+		L.RegFunction("GetBounds", new LuaCSFunction(GetBounds));
+		L.RegFunction("GetRenderCamera", new LuaCSFunction(GetRenderCamera));
+		L.RegFunction("HitTest", new LuaCSFunction(HitTest));
+		L.RegFunction("IsAncestorOf", new LuaCSFunction(IsAncestorOf));
+		L.RegFunction("InvalidateBatchingState", new LuaCSFunction(InvalidateBatchingState));
+		L.RegFunction("SetChildrenLayer", new LuaCSFunction(SetChildrenLayer));
+		L.RegFunction("Update", new LuaCSFunction(Update));
+		L.RegFunction("Dispose", new LuaCSFunction(Dispose));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_Container));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("renderMode", new LuaCSFunction(get_renderMode), new LuaCSFunction(set_renderMode));
+		L.RegVar("renderCamera", new LuaCSFunction(get_renderCamera), new LuaCSFunction(set_renderCamera));
+		L.RegVar("opaque", new LuaCSFunction(get_opaque), new LuaCSFunction(set_opaque));
+		L.RegVar("clipSoftness", new LuaCSFunction(get_clipSoftness), new LuaCSFunction(set_clipSoftness));
+		L.RegVar("hitArea", new LuaCSFunction(get_hitArea), new LuaCSFunction(set_hitArea));
+		L.RegVar("touchChildren", new LuaCSFunction(get_touchChildren), new LuaCSFunction(set_touchChildren));
+		L.RegVar("reversedMask", new LuaCSFunction(get_reversedMask), new LuaCSFunction(set_reversedMask));
+		L.RegVar("numChildren", new LuaCSFunction(get_numChildren), null);
+		L.RegVar("clipRect", new LuaCSFunction(get_clipRect), new LuaCSFunction(set_clipRect));
+		L.RegVar("mask", new LuaCSFunction(get_mask), new LuaCSFunction(set_mask));
+		L.RegVar("fairyBatching", new LuaCSFunction(get_fairyBatching), new LuaCSFunction(set_fairyBatching));
+		L.RegVar("tabStopChildren", new LuaCSFunction(get_tabStopChildren), new LuaCSFunction(set_tabStopChildren));
+		L.RegVar("onUpdate", new LuaCSFunction(get_onUpdate), new LuaCSFunction(set_onUpdate));
 		L.EndClass();
 	}
 
@@ -113,7 +113,7 @@ public class FairyGUI_ContainerWrap
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.Container obj = (FairyGUI.Container)ToLua.CheckObject<FairyGUI.Container>(L, 1);
 			FairyGUI.DisplayObject arg0 = (FairyGUI.DisplayObject)ToLua.CheckObject<FairyGUI.DisplayObject>(L, 2);
-			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			FairyGUI.DisplayObject o = obj.AddChildAt(arg0, arg1);
 			ToLua.PushObject(L, o);
 			return 1;
@@ -149,7 +149,7 @@ public class FairyGUI_ContainerWrap
 		{
 			ToLua.CheckArgsCount(L, 2);
 			FairyGUI.Container obj = (FairyGUI.Container)ToLua.CheckObject<FairyGUI.Container>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			FairyGUI.DisplayObject o = obj.GetChildAt(arg0);
 			ToLua.PushObject(L, o);
 			return 1;
@@ -258,7 +258,7 @@ public class FairyGUI_ContainerWrap
 			if (count == 2)
 			{
 				FairyGUI.Container obj = (FairyGUI.Container)ToLua.CheckObject<FairyGUI.Container>(L, 1);
-				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+				int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 				FairyGUI.DisplayObject o = obj.RemoveChildAt(arg0);
 				ToLua.PushObject(L, o);
 				return 1;
@@ -266,7 +266,7 @@ public class FairyGUI_ContainerWrap
 			else if (count == 3)
 			{
 				FairyGUI.Container obj = (FairyGUI.Container)ToLua.CheckObject<FairyGUI.Container>(L, 1);
-				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+				int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 				bool arg1 = LuaDLL.luaL_checkboolean(L, 3);
 				FairyGUI.DisplayObject o = obj.RemoveChildAt(arg0, arg1);
 				ToLua.PushObject(L, o);
@@ -299,8 +299,8 @@ public class FairyGUI_ContainerWrap
 			else if (count == 4)
 			{
 				FairyGUI.Container obj = (FairyGUI.Container)ToLua.CheckObject<FairyGUI.Container>(L, 1);
-				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
-				int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+				int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
+				int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 				bool arg2 = LuaDLL.luaL_checkboolean(L, 4);
 				obj.RemoveChildren(arg0, arg1, arg2);
 				return 0;
@@ -324,7 +324,7 @@ public class FairyGUI_ContainerWrap
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.Container obj = (FairyGUI.Container)ToLua.CheckObject<FairyGUI.Container>(L, 1);
 			FairyGUI.DisplayObject arg0 = (FairyGUI.DisplayObject)ToLua.CheckObject<FairyGUI.DisplayObject>(L, 2);
-			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			obj.SetChildIndex(arg0, arg1);
 			return 0;
 		}
@@ -359,8 +359,8 @@ public class FairyGUI_ContainerWrap
 		{
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.Container obj = (FairyGUI.Container)ToLua.CheckObject<FairyGUI.Container>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
-			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			obj.SwapChildrenAt(arg0, arg1);
 			return 0;
 		}
@@ -532,7 +532,7 @@ public class FairyGUI_ContainerWrap
 		{
 			ToLua.CheckArgsCount(L, 2);
 			FairyGUI.Container obj = (FairyGUI.Container)ToLua.CheckObject<FairyGUI.Container>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.SetChildrenLayer(arg0);
 			return 0;
 		}
@@ -819,7 +819,7 @@ public class FairyGUI_ContainerWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.Container obj = (FairyGUI.Container)o;
-			UnityEngine.RenderMode arg0 = (UnityEngine.RenderMode)ToLua.CheckObject(L, 2, typeof(UnityEngine.RenderMode));
+			UnityEngine.RenderMode arg0 = (UnityEngine.RenderMode)ToLua.CheckObject(L, 2, TypeTraits<UnityEngine.RenderMode>.type);
 			obj.renderMode = arg0;
 			return 0;
 		}
@@ -838,7 +838,7 @@ public class FairyGUI_ContainerWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.Container obj = (FairyGUI.Container)o;
-			UnityEngine.Camera arg0 = (UnityEngine.Camera)ToLua.CheckObject(L, 2, typeof(UnityEngine.Camera));
+			UnityEngine.Camera arg0 = (UnityEngine.Camera)ToLua.CheckObject<UnityEngine.Camera>(L, 2);
 			obj.renderCamera = arg0;
 			return 0;
 		}
@@ -1024,7 +1024,7 @@ public class FairyGUI_ContainerWrap
 	{
 		try
 		{
-			FairyGUI.Container obj = (FairyGUI.Container)ToLua.CheckObject(L, 1, typeof(FairyGUI.Container));
+			FairyGUI.Container obj = (FairyGUI.Container)ToLua.CheckObject<FairyGUI.Container>(L, 1);
 			EventObject arg0 = null;
 
 			if (LuaDLL.lua_isuserdata(L, 2) != 0)

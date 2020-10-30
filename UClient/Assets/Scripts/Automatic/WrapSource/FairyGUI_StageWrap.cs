@@ -7,47 +7,47 @@ public class FairyGUI_StageWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.Stage), typeof(FairyGUI.Container));
-		L.RegFunction("Instantiate", Instantiate);
-		L.RegFunction("Dispose", Dispose);
-		L.RegFunction("SetFous", SetFous);
-		L.RegFunction("DoKeyNavigate", DoKeyNavigate);
-		L.RegFunction("GetTouchPosition", GetTouchPosition);
-		L.RegFunction("GetTouchTarget", GetTouchTarget);
-		L.RegFunction("GetAllTouch", GetAllTouch);
-		L.RegFunction("ResetInputState", ResetInputState);
-		L.RegFunction("CancelClick", CancelClick);
-		L.RegFunction("EnableSound", EnableSound);
-		L.RegFunction("DisableSound", DisableSound);
-		L.RegFunction("PlayOneShotSound", PlayOneShotSound);
-		L.RegFunction("OpenKeyboard", OpenKeyboard);
-		L.RegFunction("CloseKeyboard", CloseKeyboard);
-		L.RegFunction("InputString", InputString);
-		L.RegFunction("SetCustomInput", SetCustomInput);
-		L.RegFunction("ForceUpdate", ForceUpdate);
-		L.RegFunction("ApplyPanelOrder", ApplyPanelOrder);
-		L.RegFunction("SortWorldSpacePanelsByZOrder", SortWorldSpacePanelsByZOrder);
-		L.RegFunction("MonitorTexture", MonitorTexture);
-		L.RegFunction("AddTouchMonitor", AddTouchMonitor);
-		L.RegFunction("RemoveTouchMonitor", RemoveTouchMonitor);
-		L.RegFunction("IsTouchMonitoring", IsTouchMonitoring);
-		L.RegFunction("RegisterCursor", RegisterCursor);
-		L.RegFunction("New", _CreateFairyGUI_Stage);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("soundVolume", get_soundVolume, set_soundVolume);
-		L.RegVar("inst", get_inst, null);
-		L.RegVar("touchScreen", get_touchScreen, set_touchScreen);
-		L.RegVar("keyboardInput", get_keyboardInput, set_keyboardInput);
-		L.RegVar("isTouchOnUI", get_isTouchOnUI, null);
-		L.RegVar("devicePixelRatio", get_devicePixelRatio, set_devicePixelRatio);
-		L.RegVar("onStageResized", get_onStageResized, null);
-		L.RegVar("touchTarget", get_touchTarget, null);
-		L.RegVar("focus", get_focus, set_focus);
-		L.RegVar("touchPosition", get_touchPosition, null);
-		L.RegVar("touchCount", get_touchCount, null);
-		L.RegVar("keyboard", get_keyboard, set_keyboard);
-		L.RegVar("activeCursor", get_activeCursor, null);
-		L.RegVar("beforeUpdate", get_beforeUpdate, set_beforeUpdate);
-		L.RegVar("afterUpdate", get_afterUpdate, set_afterUpdate);
+		L.RegFunction("Instantiate", new LuaCSFunction(Instantiate));
+		L.RegFunction("Dispose", new LuaCSFunction(Dispose));
+		L.RegFunction("SetFous", new LuaCSFunction(SetFous));
+		L.RegFunction("DoKeyNavigate", new LuaCSFunction(DoKeyNavigate));
+		L.RegFunction("GetTouchPosition", new LuaCSFunction(GetTouchPosition));
+		L.RegFunction("GetTouchTarget", new LuaCSFunction(GetTouchTarget));
+		L.RegFunction("GetAllTouch", new LuaCSFunction(GetAllTouch));
+		L.RegFunction("ResetInputState", new LuaCSFunction(ResetInputState));
+		L.RegFunction("CancelClick", new LuaCSFunction(CancelClick));
+		L.RegFunction("EnableSound", new LuaCSFunction(EnableSound));
+		L.RegFunction("DisableSound", new LuaCSFunction(DisableSound));
+		L.RegFunction("PlayOneShotSound", new LuaCSFunction(PlayOneShotSound));
+		L.RegFunction("OpenKeyboard", new LuaCSFunction(OpenKeyboard));
+		L.RegFunction("CloseKeyboard", new LuaCSFunction(CloseKeyboard));
+		L.RegFunction("InputString", new LuaCSFunction(InputString));
+		L.RegFunction("SetCustomInput", new LuaCSFunction(SetCustomInput));
+		L.RegFunction("ForceUpdate", new LuaCSFunction(ForceUpdate));
+		L.RegFunction("ApplyPanelOrder", new LuaCSFunction(ApplyPanelOrder));
+		L.RegFunction("SortWorldSpacePanelsByZOrder", new LuaCSFunction(SortWorldSpacePanelsByZOrder));
+		L.RegFunction("MonitorTexture", new LuaCSFunction(MonitorTexture));
+		L.RegFunction("AddTouchMonitor", new LuaCSFunction(AddTouchMonitor));
+		L.RegFunction("RemoveTouchMonitor", new LuaCSFunction(RemoveTouchMonitor));
+		L.RegFunction("IsTouchMonitoring", new LuaCSFunction(IsTouchMonitoring));
+		L.RegFunction("RegisterCursor", new LuaCSFunction(RegisterCursor));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_Stage));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("soundVolume", new LuaCSFunction(get_soundVolume), new LuaCSFunction(set_soundVolume));
+		L.RegVar("inst", new LuaCSFunction(get_inst), null);
+		L.RegVar("touchScreen", new LuaCSFunction(get_touchScreen), new LuaCSFunction(set_touchScreen));
+		L.RegVar("keyboardInput", new LuaCSFunction(get_keyboardInput), new LuaCSFunction(set_keyboardInput));
+		L.RegVar("isTouchOnUI", new LuaCSFunction(get_isTouchOnUI), null);
+		L.RegVar("devicePixelRatio", new LuaCSFunction(get_devicePixelRatio), new LuaCSFunction(set_devicePixelRatio));
+		L.RegVar("onStageResized", new LuaCSFunction(get_onStageResized), null);
+		L.RegVar("touchTarget", new LuaCSFunction(get_touchTarget), null);
+		L.RegVar("focus", new LuaCSFunction(get_focus), new LuaCSFunction(set_focus));
+		L.RegVar("touchPosition", new LuaCSFunction(get_touchPosition), null);
+		L.RegVar("touchCount", new LuaCSFunction(get_touchCount), null);
+		L.RegVar("keyboard", new LuaCSFunction(get_keyboard), new LuaCSFunction(set_keyboard));
+		L.RegVar("activeCursor", new LuaCSFunction(get_activeCursor), null);
+		L.RegVar("beforeUpdate", new LuaCSFunction(get_beforeUpdate), new LuaCSFunction(set_beforeUpdate));
+		L.RegVar("afterUpdate", new LuaCSFunction(get_afterUpdate), new LuaCSFunction(set_afterUpdate));
 		L.EndClass();
 	}
 
@@ -163,7 +163,7 @@ public class FairyGUI_StageWrap
 		{
 			ToLua.CheckArgsCount(L, 2);
 			FairyGUI.Stage obj = (FairyGUI.Stage)ToLua.CheckObject<FairyGUI.Stage>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			UnityEngine.Vector2 o = obj.GetTouchPosition(arg0);
 			ToLua.Push(L, o);
 			return 1;
@@ -181,7 +181,7 @@ public class FairyGUI_StageWrap
 		{
 			ToLua.CheckArgsCount(L, 2);
 			FairyGUI.Stage obj = (FairyGUI.Stage)ToLua.CheckObject<FairyGUI.Stage>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			FairyGUI.DisplayObject o = obj.GetTouchTarget(arg0);
 			ToLua.PushObject(L, o);
 			return 1;
@@ -233,7 +233,7 @@ public class FairyGUI_StageWrap
 		{
 			ToLua.CheckArgsCount(L, 2);
 			FairyGUI.Stage obj = (FairyGUI.Stage)ToLua.CheckObject<FairyGUI.Stage>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.CancelClick(arg0);
 			return 0;
 		}
@@ -285,14 +285,14 @@ public class FairyGUI_StageWrap
 			if (count == 2)
 			{
 				FairyGUI.Stage obj = (FairyGUI.Stage)ToLua.CheckObject<FairyGUI.Stage>(L, 1);
-				UnityEngine.AudioClip arg0 = (UnityEngine.AudioClip)ToLua.CheckObject(L, 2, typeof(UnityEngine.AudioClip));
+				UnityEngine.AudioClip arg0 = (UnityEngine.AudioClip)ToLua.CheckObject<UnityEngine.AudioClip>(L, 2);
 				obj.PlayOneShotSound(arg0);
 				return 0;
 			}
 			else if (count == 3)
 			{
 				FairyGUI.Stage obj = (FairyGUI.Stage)ToLua.CheckObject<FairyGUI.Stage>(L, 1);
-				UnityEngine.AudioClip arg0 = (UnityEngine.AudioClip)ToLua.CheckObject(L, 2, typeof(UnityEngine.AudioClip));
+				UnityEngine.AudioClip arg0 = (UnityEngine.AudioClip)ToLua.CheckObject<UnityEngine.AudioClip>(L, 2);
 				float arg1 = (float)LuaDLL.luaL_checknumber(L, 3);
 				obj.PlayOneShotSound(arg0, arg1);
 				return 0;
@@ -321,7 +321,7 @@ public class FairyGUI_StageWrap
 			bool arg3 = LuaDLL.luaL_checkboolean(L, 5);
 			bool arg4 = LuaDLL.luaL_checkboolean(L, 6);
 			string arg5 = ToLua.CheckString(L, 7);
-			int arg6 = (int)LuaDLL.luaL_checknumber(L, 8);
+			int arg6 = (int)LuaDLL.luaL_checkinteger(L, 8);
 			bool arg7 = LuaDLL.luaL_checkboolean(L, 9);
 			obj.OpenKeyboard(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
 			return 0;
@@ -459,7 +459,7 @@ public class FairyGUI_StageWrap
 		{
 			ToLua.CheckArgsCount(L, 2);
 			FairyGUI.Stage obj = (FairyGUI.Stage)ToLua.CheckObject<FairyGUI.Stage>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.SortWorldSpacePanelsByZOrder(arg0);
 			return 0;
 		}
@@ -493,7 +493,7 @@ public class FairyGUI_StageWrap
 		{
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.Stage obj = (FairyGUI.Stage)ToLua.CheckObject<FairyGUI.Stage>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			FairyGUI.EventDispatcher arg1 = (FairyGUI.EventDispatcher)ToLua.CheckObject<FairyGUI.EventDispatcher>(L, 3);
 			obj.AddTouchMonitor(arg0, arg1);
 			return 0;
@@ -547,7 +547,7 @@ public class FairyGUI_StageWrap
 			ToLua.CheckArgsCount(L, 4);
 			FairyGUI.Stage obj = (FairyGUI.Stage)ToLua.CheckObject<FairyGUI.Stage>(L, 1);
 			string arg0 = ToLua.CheckString(L, 2);
-			UnityEngine.Texture2D arg1 = (UnityEngine.Texture2D)ToLua.CheckObject(L, 3, typeof(UnityEngine.Texture2D));
+			UnityEngine.Texture2D arg1 = (UnityEngine.Texture2D)ToLua.CheckObject<UnityEngine.Texture2D>(L, 3);
 			UnityEngine.Vector2 arg2 = ToLua.ToVector2(L, 4);
 			obj.RegisterCursor(arg0, arg1, arg2);
 			return 0;
@@ -820,6 +820,7 @@ public class FairyGUI_StageWrap
 		{
 			bool arg0 = LuaDLL.luaL_checkboolean(L, 2);
 			FairyGUI.Stage.touchScreen = arg0;
+			FairyGUI.Stage.touchScreen = arg0;
 			return 0;
 		}
 		catch (Exception e)
@@ -835,6 +836,7 @@ public class FairyGUI_StageWrap
 		{
 			bool arg0 = LuaDLL.luaL_checkboolean(L, 2);
 			FairyGUI.Stage.keyboardInput = arg0;
+			FairyGUI.Stage.keyboardInput = arg0;
 			return 0;
 		}
 		catch (Exception e)
@@ -849,6 +851,7 @@ public class FairyGUI_StageWrap
 		try
 		{
 			float arg0 = (float)LuaDLL.luaL_checknumber(L, 2);
+			FairyGUI.Stage.devicePixelRatio = arg0;
 			FairyGUI.Stage.devicePixelRatio = arg0;
 			return 0;
 		}
@@ -901,7 +904,7 @@ public class FairyGUI_StageWrap
 	{
 		try
 		{
-			FairyGUI.Stage obj = (FairyGUI.Stage)ToLua.CheckObject(L, 1, typeof(FairyGUI.Stage));
+			FairyGUI.Stage obj = (FairyGUI.Stage)ToLua.CheckObject<FairyGUI.Stage>(L, 1);
 			EventObject arg0 = null;
 
 			if (LuaDLL.lua_isuserdata(L, 2) != 0)
@@ -937,7 +940,7 @@ public class FairyGUI_StageWrap
 	{
 		try
 		{
-			FairyGUI.Stage obj = (FairyGUI.Stage)ToLua.CheckObject(L, 1, typeof(FairyGUI.Stage));
+			FairyGUI.Stage obj = (FairyGUI.Stage)ToLua.CheckObject<FairyGUI.Stage>(L, 1);
 			EventObject arg0 = null;
 
 			if (LuaDLL.lua_isuserdata(L, 2) != 0)

@@ -7,14 +7,14 @@ public class FairyGUI_UIObjectFactoryWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.UIObjectFactory), typeof(System.Object));
-		L.RegFunction("SetPackageItemExtension", SetPackageItemExtension);
-		L.RegFunction("SetLoaderExtension", SetLoaderExtension);
-		L.RegFunction("Clear", Clear);
-		L.RegFunction("NewObject", NewObject);
-		L.RegFunction("New", _CreateFairyGUI_UIObjectFactory);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegFunction("GComponentCreator", FairyGUI_UIObjectFactory_GComponentCreator);
-		L.RegFunction("GLoaderCreator", FairyGUI_UIObjectFactory_GLoaderCreator);
+		L.RegFunction("SetPackageItemExtension", new LuaCSFunction(SetPackageItemExtension));
+		L.RegFunction("SetLoaderExtension", new LuaCSFunction(SetLoaderExtension));
+		L.RegFunction("Clear", new LuaCSFunction(Clear));
+		L.RegFunction("NewObject", new LuaCSFunction(NewObject));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_UIObjectFactory));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegFunction("GComponentCreator", new LuaCSFunction(FairyGUI_UIObjectFactory_GComponentCreator));
+		L.RegFunction("GLoaderCreator", new LuaCSFunction(FairyGUI_UIObjectFactory_GLoaderCreator));
 		L.EndClass();
 	}
 
@@ -171,12 +171,15 @@ public class FairyGUI_UIObjectFactoryWrap
 			{
 				Delegate arg1 = DelegateTraits<FairyGUI.UIObjectFactory.GComponentCreator>.Create(func);
 				ToLua.Push(L, arg1);
+				func.Dispose();
 			}
 			else
 			{
 				LuaTable self = ToLua.CheckLuaTable(L, 2);
 				Delegate arg1 = DelegateTraits<FairyGUI.UIObjectFactory.GComponentCreator>.Create(func, self);
 				ToLua.Push(L, arg1);
+				func.Dispose();
+				self.Dispose();
 			}
 			return 1;
 		}
@@ -198,12 +201,15 @@ public class FairyGUI_UIObjectFactoryWrap
 			{
 				Delegate arg1 = DelegateTraits<FairyGUI.UIObjectFactory.GLoaderCreator>.Create(func);
 				ToLua.Push(L, arg1);
+				func.Dispose();
 			}
 			else
 			{
 				LuaTable self = ToLua.CheckLuaTable(L, 2);
 				Delegate arg1 = DelegateTraits<FairyGUI.UIObjectFactory.GLoaderCreator>.Create(func, self);
 				ToLua.Push(L, arg1);
+				func.Dispose();
+				self.Dispose();
 			}
 			return 1;
 		}

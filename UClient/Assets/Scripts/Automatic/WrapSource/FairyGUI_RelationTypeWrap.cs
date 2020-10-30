@@ -7,32 +7,32 @@ public class FairyGUI_RelationTypeWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginEnum(typeof(FairyGUI.RelationType));
-		L.RegVar("Left_Left", get_Left_Left, null);
-		L.RegVar("Left_Center", get_Left_Center, null);
-		L.RegVar("Left_Right", get_Left_Right, null);
-		L.RegVar("Center_Center", get_Center_Center, null);
-		L.RegVar("Right_Left", get_Right_Left, null);
-		L.RegVar("Right_Center", get_Right_Center, null);
-		L.RegVar("Right_Right", get_Right_Right, null);
-		L.RegVar("Top_Top", get_Top_Top, null);
-		L.RegVar("Top_Middle", get_Top_Middle, null);
-		L.RegVar("Top_Bottom", get_Top_Bottom, null);
-		L.RegVar("Middle_Middle", get_Middle_Middle, null);
-		L.RegVar("Bottom_Top", get_Bottom_Top, null);
-		L.RegVar("Bottom_Middle", get_Bottom_Middle, null);
-		L.RegVar("Bottom_Bottom", get_Bottom_Bottom, null);
-		L.RegVar("Width", get_Width, null);
-		L.RegVar("Height", get_Height, null);
-		L.RegVar("LeftExt_Left", get_LeftExt_Left, null);
-		L.RegVar("LeftExt_Right", get_LeftExt_Right, null);
-		L.RegVar("RightExt_Left", get_RightExt_Left, null);
-		L.RegVar("RightExt_Right", get_RightExt_Right, null);
-		L.RegVar("TopExt_Top", get_TopExt_Top, null);
-		L.RegVar("TopExt_Bottom", get_TopExt_Bottom, null);
-		L.RegVar("BottomExt_Top", get_BottomExt_Top, null);
-		L.RegVar("BottomExt_Bottom", get_BottomExt_Bottom, null);
-		L.RegVar("Size", get_Size, null);
-		L.RegFunction("IntToEnum", IntToEnum);
+		L.RegVar("Left_Left", new LuaCSFunction(get_Left_Left), null);
+		L.RegVar("Left_Center", new LuaCSFunction(get_Left_Center), null);
+		L.RegVar("Left_Right", new LuaCSFunction(get_Left_Right), null);
+		L.RegVar("Center_Center", new LuaCSFunction(get_Center_Center), null);
+		L.RegVar("Right_Left", new LuaCSFunction(get_Right_Left), null);
+		L.RegVar("Right_Center", new LuaCSFunction(get_Right_Center), null);
+		L.RegVar("Right_Right", new LuaCSFunction(get_Right_Right), null);
+		L.RegVar("Top_Top", new LuaCSFunction(get_Top_Top), null);
+		L.RegVar("Top_Middle", new LuaCSFunction(get_Top_Middle), null);
+		L.RegVar("Top_Bottom", new LuaCSFunction(get_Top_Bottom), null);
+		L.RegVar("Middle_Middle", new LuaCSFunction(get_Middle_Middle), null);
+		L.RegVar("Bottom_Top", new LuaCSFunction(get_Bottom_Top), null);
+		L.RegVar("Bottom_Middle", new LuaCSFunction(get_Bottom_Middle), null);
+		L.RegVar("Bottom_Bottom", new LuaCSFunction(get_Bottom_Bottom), null);
+		L.RegVar("Width", new LuaCSFunction(get_Width), null);
+		L.RegVar("Height", new LuaCSFunction(get_Height), null);
+		L.RegVar("LeftExt_Left", new LuaCSFunction(get_LeftExt_Left), null);
+		L.RegVar("LeftExt_Right", new LuaCSFunction(get_LeftExt_Right), null);
+		L.RegVar("RightExt_Left", new LuaCSFunction(get_RightExt_Left), null);
+		L.RegVar("RightExt_Right", new LuaCSFunction(get_RightExt_Right), null);
+		L.RegVar("TopExt_Top", new LuaCSFunction(get_TopExt_Top), null);
+		L.RegVar("TopExt_Bottom", new LuaCSFunction(get_TopExt_Bottom), null);
+		L.RegVar("BottomExt_Top", new LuaCSFunction(get_BottomExt_Top), null);
+		L.RegVar("BottomExt_Bottom", new LuaCSFunction(get_BottomExt_Bottom), null);
+		L.RegVar("Size", new LuaCSFunction(get_Size), null);
+		L.RegFunction("IntToEnum", new LuaCSFunction(IntToEnum));
 		L.EndEnum();
 		TypeTraits<FairyGUI.RelationType>.Check = CheckType;
 		StackTraits<FairyGUI.RelationType>.Push = Push;
@@ -43,9 +43,11 @@ public class FairyGUI_RelationTypeWrap
 		ToLua.Push(L, arg);
 	}
 
+	static Type TypeOf_FairyGUI_RelationType = typeof(FairyGUI.RelationType);
+
 	static bool CheckType(IntPtr L, int pos)
 	{
-		return TypeChecker.CheckEnumType(typeof(FairyGUI.RelationType), L, pos);
+		return TypeChecker.CheckEnumType(TypeOf_FairyGUI_RelationType, L, pos);
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -226,7 +228,7 @@ public class FairyGUI_RelationTypeWrap
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int IntToEnum(IntPtr L)
 	{
-		int arg0 = (int)LuaDLL.lua_tonumber(L, 1);
+		int arg0 = (int)LuaDLL.lua_tointeger(L, 1);
 		FairyGUI.RelationType o = (FairyGUI.RelationType)arg0;
 		ToLua.Push(L, o);
 		return 1;

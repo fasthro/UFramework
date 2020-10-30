@@ -7,40 +7,40 @@ public class FairyGUI_GTweenerWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.GTweener), typeof(System.Object));
-		L.RegFunction("SetDelay", SetDelay);
-		L.RegFunction("SetDuration", SetDuration);
-		L.RegFunction("SetBreakpoint", SetBreakpoint);
-		L.RegFunction("SetEase", SetEase);
-		L.RegFunction("SetEasePeriod", SetEasePeriod);
-		L.RegFunction("SetEaseOvershootOrAmplitude", SetEaseOvershootOrAmplitude);
-		L.RegFunction("SetRepeat", SetRepeat);
-		L.RegFunction("SetTimeScale", SetTimeScale);
-		L.RegFunction("SetIgnoreEngineTimeScale", SetIgnoreEngineTimeScale);
-		L.RegFunction("SetSnapping", SetSnapping);
-		L.RegFunction("SetPath", SetPath);
-		L.RegFunction("SetTarget", SetTarget);
-		L.RegFunction("SetUserData", SetUserData);
-		L.RegFunction("OnUpdate", OnUpdate);
-		L.RegFunction("OnStart", OnStart);
-		L.RegFunction("OnComplete", OnComplete);
-		L.RegFunction("SetListener", SetListener);
-		L.RegFunction("SetPaused", SetPaused);
-		L.RegFunction("Seek", Seek);
-		L.RegFunction("Kill", Kill);
-		L.RegFunction("New", _CreateFairyGUI_GTweener);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("delay", get_delay, null);
-		L.RegVar("duration", get_duration, null);
-		L.RegVar("repeat", get_repeat, null);
-		L.RegVar("target", get_target, null);
-		L.RegVar("userData", get_userData, null);
-		L.RegVar("startValue", get_startValue, null);
-		L.RegVar("endValue", get_endValue, null);
-		L.RegVar("value", get_value, null);
-		L.RegVar("deltaValue", get_deltaValue, null);
-		L.RegVar("normalizedTime", get_normalizedTime, null);
-		L.RegVar("completed", get_completed, null);
-		L.RegVar("allCompleted", get_allCompleted, null);
+		L.RegFunction("SetDelay", new LuaCSFunction(SetDelay));
+		L.RegFunction("SetDuration", new LuaCSFunction(SetDuration));
+		L.RegFunction("SetBreakpoint", new LuaCSFunction(SetBreakpoint));
+		L.RegFunction("SetEase", new LuaCSFunction(SetEase));
+		L.RegFunction("SetEasePeriod", new LuaCSFunction(SetEasePeriod));
+		L.RegFunction("SetEaseOvershootOrAmplitude", new LuaCSFunction(SetEaseOvershootOrAmplitude));
+		L.RegFunction("SetRepeat", new LuaCSFunction(SetRepeat));
+		L.RegFunction("SetTimeScale", new LuaCSFunction(SetTimeScale));
+		L.RegFunction("SetIgnoreEngineTimeScale", new LuaCSFunction(SetIgnoreEngineTimeScale));
+		L.RegFunction("SetSnapping", new LuaCSFunction(SetSnapping));
+		L.RegFunction("SetPath", new LuaCSFunction(SetPath));
+		L.RegFunction("SetTarget", new LuaCSFunction(SetTarget));
+		L.RegFunction("SetUserData", new LuaCSFunction(SetUserData));
+		L.RegFunction("OnUpdate", new LuaCSFunction(OnUpdate));
+		L.RegFunction("OnStart", new LuaCSFunction(OnStart));
+		L.RegFunction("OnComplete", new LuaCSFunction(OnComplete));
+		L.RegFunction("SetListener", new LuaCSFunction(SetListener));
+		L.RegFunction("SetPaused", new LuaCSFunction(SetPaused));
+		L.RegFunction("Seek", new LuaCSFunction(Seek));
+		L.RegFunction("Kill", new LuaCSFunction(Kill));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_GTweener));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("delay", new LuaCSFunction(get_delay), null);
+		L.RegVar("duration", new LuaCSFunction(get_duration), null);
+		L.RegVar("repeat", new LuaCSFunction(get_repeat), null);
+		L.RegVar("target", new LuaCSFunction(get_target), null);
+		L.RegVar("userData", new LuaCSFunction(get_userData), null);
+		L.RegVar("startValue", new LuaCSFunction(get_startValue), null);
+		L.RegVar("endValue", new LuaCSFunction(get_endValue), null);
+		L.RegVar("value", new LuaCSFunction(get_value), null);
+		L.RegVar("deltaValue", new LuaCSFunction(get_deltaValue), null);
+		L.RegVar("normalizedTime", new LuaCSFunction(get_normalizedTime), null);
+		L.RegVar("completed", new LuaCSFunction(get_completed), null);
+		L.RegVar("allCompleted", new LuaCSFunction(get_allCompleted), null);
 		L.EndClass();
 	}
 
@@ -132,7 +132,7 @@ public class FairyGUI_GTweenerWrap
 			if (count == 2)
 			{
 				FairyGUI.GTweener obj = (FairyGUI.GTweener)ToLua.CheckObject<FairyGUI.GTweener>(L, 1);
-				FairyGUI.EaseType arg0 = (FairyGUI.EaseType)ToLua.CheckObject(L, 2, typeof(FairyGUI.EaseType));
+				FairyGUI.EaseType arg0 = (FairyGUI.EaseType)ToLua.CheckObject(L, 2, TypeTraits<FairyGUI.EaseType>.type);
 				FairyGUI.GTweener o = obj.SetEase(arg0);
 				ToLua.PushObject(L, o);
 				return 1;
@@ -140,7 +140,7 @@ public class FairyGUI_GTweenerWrap
 			else if (count == 3)
 			{
 				FairyGUI.GTweener obj = (FairyGUI.GTweener)ToLua.CheckObject<FairyGUI.GTweener>(L, 1);
-				FairyGUI.EaseType arg0 = (FairyGUI.EaseType)ToLua.CheckObject(L, 2, typeof(FairyGUI.EaseType));
+				FairyGUI.EaseType arg0 = (FairyGUI.EaseType)ToLua.CheckObject(L, 2, TypeTraits<FairyGUI.EaseType>.type);
 				FairyGUI.CustomEase arg1 = (FairyGUI.CustomEase)ToLua.CheckObject<FairyGUI.CustomEase>(L, 3);
 				FairyGUI.GTweener o = obj.SetEase(arg0, arg1);
 				ToLua.PushObject(L, o);
@@ -203,7 +203,7 @@ public class FairyGUI_GTweenerWrap
 			if (count == 2)
 			{
 				FairyGUI.GTweener obj = (FairyGUI.GTweener)ToLua.CheckObject<FairyGUI.GTweener>(L, 1);
-				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+				int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 				FairyGUI.GTweener o = obj.SetRepeat(arg0);
 				ToLua.PushObject(L, o);
 				return 1;
@@ -211,7 +211,7 @@ public class FairyGUI_GTweenerWrap
 			else if (count == 3)
 			{
 				FairyGUI.GTweener obj = (FairyGUI.GTweener)ToLua.CheckObject<FairyGUI.GTweener>(L, 1);
-				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+				int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 				bool arg1 = LuaDLL.luaL_checkboolean(L, 3);
 				FairyGUI.GTweener o = obj.SetRepeat(arg0, arg1);
 				ToLua.PushObject(L, o);
@@ -319,7 +319,7 @@ public class FairyGUI_GTweenerWrap
 			{
 				FairyGUI.GTweener obj = (FairyGUI.GTweener)ToLua.CheckObject<FairyGUI.GTweener>(L, 1);
 				object arg0 = ToLua.ToVarObject(L, 2);
-				FairyGUI.TweenPropType arg1 = (FairyGUI.TweenPropType)ToLua.CheckObject(L, 3, typeof(FairyGUI.TweenPropType));
+				FairyGUI.TweenPropType arg1 = (FairyGUI.TweenPropType)ToLua.CheckObject(L, 3, TypeTraits<FairyGUI.TweenPropType>.type);
 				FairyGUI.GTweener o = obj.SetTarget(arg0, arg1);
 				ToLua.PushObject(L, o);
 				return 1;

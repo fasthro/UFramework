@@ -7,14 +7,14 @@ public class FairyGUI_GObjectPoolWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.GObjectPool), typeof(System.Object));
-		L.RegFunction("Clear", Clear);
-		L.RegFunction("GetObject", GetObject);
-		L.RegFunction("ReturnObject", ReturnObject);
-		L.RegFunction("New", _CreateFairyGUI_GObjectPool);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("initCallback", get_initCallback, set_initCallback);
-		L.RegVar("count", get_count, null);
-		L.RegFunction("InitCallbackDelegate", FairyGUI_GObjectPool_InitCallbackDelegate);
+		L.RegFunction("Clear", new LuaCSFunction(Clear));
+		L.RegFunction("GetObject", new LuaCSFunction(GetObject));
+		L.RegFunction("ReturnObject", new LuaCSFunction(ReturnObject));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_GObjectPool));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("initCallback", new LuaCSFunction(get_initCallback), new LuaCSFunction(set_initCallback));
+		L.RegVar("count", new LuaCSFunction(get_count), null);
+		L.RegFunction("InitCallbackDelegate", new LuaCSFunction(FairyGUI_GObjectPool_InitCallbackDelegate));
 		L.EndClass();
 	}
 
@@ -142,7 +142,13 @@ public class FairyGUI_GObjectPoolWrap
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GObjectPool obj = (FairyGUI.GObjectPool)o;
 			FairyGUI.GObjectPool.InitCallbackDelegate arg0 = (FairyGUI.GObjectPool.InitCallbackDelegate)ToLua.CheckDelegate<FairyGUI.GObjectPool.InitCallbackDelegate>(L, 2);
-			obj.initCallback = arg0;
+
+			if (!object.ReferenceEquals(obj.initCallback, arg0))
+			{
+				if (obj.initCallback != null) obj.initCallback.SubRef();
+				obj.initCallback = arg0;
+			}
+
 			return 0;
 		}
 		catch(Exception e)
@@ -163,12 +169,15 @@ public class FairyGUI_GObjectPoolWrap
 			{
 				Delegate arg1 = DelegateTraits<FairyGUI.GObjectPool.InitCallbackDelegate>.Create(func);
 				ToLua.Push(L, arg1);
+				func.Dispose();
 			}
 			else
 			{
 				LuaTable self = ToLua.CheckLuaTable(L, 2);
 				Delegate arg1 = DelegateTraits<FairyGUI.GObjectPool.InitCallbackDelegate>.Create(func, self);
 				ToLua.Push(L, arg1);
+				func.Dispose();
+				self.Dispose();
 			}
 			return 1;
 		}

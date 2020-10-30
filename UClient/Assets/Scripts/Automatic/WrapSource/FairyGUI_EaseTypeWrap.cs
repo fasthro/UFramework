@@ -7,39 +7,39 @@ public class FairyGUI_EaseTypeWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginEnum(typeof(FairyGUI.EaseType));
-		L.RegVar("Linear", get_Linear, null);
-		L.RegVar("SineIn", get_SineIn, null);
-		L.RegVar("SineOut", get_SineOut, null);
-		L.RegVar("SineInOut", get_SineInOut, null);
-		L.RegVar("QuadIn", get_QuadIn, null);
-		L.RegVar("QuadOut", get_QuadOut, null);
-		L.RegVar("QuadInOut", get_QuadInOut, null);
-		L.RegVar("CubicIn", get_CubicIn, null);
-		L.RegVar("CubicOut", get_CubicOut, null);
-		L.RegVar("CubicInOut", get_CubicInOut, null);
-		L.RegVar("QuartIn", get_QuartIn, null);
-		L.RegVar("QuartOut", get_QuartOut, null);
-		L.RegVar("QuartInOut", get_QuartInOut, null);
-		L.RegVar("QuintIn", get_QuintIn, null);
-		L.RegVar("QuintOut", get_QuintOut, null);
-		L.RegVar("QuintInOut", get_QuintInOut, null);
-		L.RegVar("ExpoIn", get_ExpoIn, null);
-		L.RegVar("ExpoOut", get_ExpoOut, null);
-		L.RegVar("ExpoInOut", get_ExpoInOut, null);
-		L.RegVar("CircIn", get_CircIn, null);
-		L.RegVar("CircOut", get_CircOut, null);
-		L.RegVar("CircInOut", get_CircInOut, null);
-		L.RegVar("ElasticIn", get_ElasticIn, null);
-		L.RegVar("ElasticOut", get_ElasticOut, null);
-		L.RegVar("ElasticInOut", get_ElasticInOut, null);
-		L.RegVar("BackIn", get_BackIn, null);
-		L.RegVar("BackOut", get_BackOut, null);
-		L.RegVar("BackInOut", get_BackInOut, null);
-		L.RegVar("BounceIn", get_BounceIn, null);
-		L.RegVar("BounceOut", get_BounceOut, null);
-		L.RegVar("BounceInOut", get_BounceInOut, null);
-		L.RegVar("Custom", get_Custom, null);
-		L.RegFunction("IntToEnum", IntToEnum);
+		L.RegVar("Linear", new LuaCSFunction(get_Linear), null);
+		L.RegVar("SineIn", new LuaCSFunction(get_SineIn), null);
+		L.RegVar("SineOut", new LuaCSFunction(get_SineOut), null);
+		L.RegVar("SineInOut", new LuaCSFunction(get_SineInOut), null);
+		L.RegVar("QuadIn", new LuaCSFunction(get_QuadIn), null);
+		L.RegVar("QuadOut", new LuaCSFunction(get_QuadOut), null);
+		L.RegVar("QuadInOut", new LuaCSFunction(get_QuadInOut), null);
+		L.RegVar("CubicIn", new LuaCSFunction(get_CubicIn), null);
+		L.RegVar("CubicOut", new LuaCSFunction(get_CubicOut), null);
+		L.RegVar("CubicInOut", new LuaCSFunction(get_CubicInOut), null);
+		L.RegVar("QuartIn", new LuaCSFunction(get_QuartIn), null);
+		L.RegVar("QuartOut", new LuaCSFunction(get_QuartOut), null);
+		L.RegVar("QuartInOut", new LuaCSFunction(get_QuartInOut), null);
+		L.RegVar("QuintIn", new LuaCSFunction(get_QuintIn), null);
+		L.RegVar("QuintOut", new LuaCSFunction(get_QuintOut), null);
+		L.RegVar("QuintInOut", new LuaCSFunction(get_QuintInOut), null);
+		L.RegVar("ExpoIn", new LuaCSFunction(get_ExpoIn), null);
+		L.RegVar("ExpoOut", new LuaCSFunction(get_ExpoOut), null);
+		L.RegVar("ExpoInOut", new LuaCSFunction(get_ExpoInOut), null);
+		L.RegVar("CircIn", new LuaCSFunction(get_CircIn), null);
+		L.RegVar("CircOut", new LuaCSFunction(get_CircOut), null);
+		L.RegVar("CircInOut", new LuaCSFunction(get_CircInOut), null);
+		L.RegVar("ElasticIn", new LuaCSFunction(get_ElasticIn), null);
+		L.RegVar("ElasticOut", new LuaCSFunction(get_ElasticOut), null);
+		L.RegVar("ElasticInOut", new LuaCSFunction(get_ElasticInOut), null);
+		L.RegVar("BackIn", new LuaCSFunction(get_BackIn), null);
+		L.RegVar("BackOut", new LuaCSFunction(get_BackOut), null);
+		L.RegVar("BackInOut", new LuaCSFunction(get_BackInOut), null);
+		L.RegVar("BounceIn", new LuaCSFunction(get_BounceIn), null);
+		L.RegVar("BounceOut", new LuaCSFunction(get_BounceOut), null);
+		L.RegVar("BounceInOut", new LuaCSFunction(get_BounceInOut), null);
+		L.RegVar("Custom", new LuaCSFunction(get_Custom), null);
+		L.RegFunction("IntToEnum", new LuaCSFunction(IntToEnum));
 		L.EndEnum();
 		TypeTraits<FairyGUI.EaseType>.Check = CheckType;
 		StackTraits<FairyGUI.EaseType>.Push = Push;
@@ -50,9 +50,11 @@ public class FairyGUI_EaseTypeWrap
 		ToLua.Push(L, arg);
 	}
 
+	static Type TypeOf_FairyGUI_EaseType = typeof(FairyGUI.EaseType);
+
 	static bool CheckType(IntPtr L, int pos)
 	{
-		return TypeChecker.CheckEnumType(typeof(FairyGUI.EaseType), L, pos);
+		return TypeChecker.CheckEnumType(TypeOf_FairyGUI_EaseType, L, pos);
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -282,7 +284,7 @@ public class FairyGUI_EaseTypeWrap
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int IntToEnum(IntPtr L)
 	{
-		int arg0 = (int)LuaDLL.lua_tonumber(L, 1);
+		int arg0 = (int)LuaDLL.lua_tointeger(L, 1);
 		FairyGUI.EaseType o = (FairyGUI.EaseType)arg0;
 		ToLua.Push(L, o);
 		return 1;

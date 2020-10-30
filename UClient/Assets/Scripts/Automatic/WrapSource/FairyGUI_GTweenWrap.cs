@@ -7,17 +7,17 @@ public class FairyGUI_GTweenWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.GTween), typeof(System.Object));
-		L.RegFunction("To", To);
-		L.RegFunction("ToDouble", ToDouble);
-		L.RegFunction("DelayedCall", DelayedCall);
-		L.RegFunction("Shake", Shake);
-		L.RegFunction("IsTweening", IsTweening);
-		L.RegFunction("Kill", Kill);
-		L.RegFunction("GetTween", GetTween);
-		L.RegFunction("Clean", Clean);
-		L.RegFunction("New", _CreateFairyGUI_GTween);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("catchCallbackExceptions", get_catchCallbackExceptions, set_catchCallbackExceptions);
+		L.RegFunction("To", new LuaCSFunction(To));
+		L.RegFunction("ToDouble", new LuaCSFunction(ToDouble));
+		L.RegFunction("DelayedCall", new LuaCSFunction(DelayedCall));
+		L.RegFunction("Shake", new LuaCSFunction(Shake));
+		L.RegFunction("IsTweening", new LuaCSFunction(IsTweening));
+		L.RegFunction("Kill", new LuaCSFunction(Kill));
+		L.RegFunction("GetTween", new LuaCSFunction(GetTween));
+		L.RegFunction("Clean", new LuaCSFunction(Clean));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_GTween));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("catchCallbackExceptions", new LuaCSFunction(get_catchCallbackExceptions), new LuaCSFunction(set_catchCallbackExceptions));
 		L.EndClass();
 	}
 
@@ -180,7 +180,7 @@ public class FairyGUI_GTweenWrap
 			else if (count == 2)
 			{
 				object arg0 = ToLua.ToVarObject(L, 1);
-				FairyGUI.TweenPropType arg1 = (FairyGUI.TweenPropType)ToLua.CheckObject(L, 2, typeof(FairyGUI.TweenPropType));
+				FairyGUI.TweenPropType arg1 = (FairyGUI.TweenPropType)ToLua.CheckObject(L, 2, TypeTraits<FairyGUI.TweenPropType>.type);
 				bool o = FairyGUI.GTween.IsTweening(arg0, arg1);
 				LuaDLL.lua_pushboolean(L, o);
 				return 1;
@@ -219,7 +219,7 @@ public class FairyGUI_GTweenWrap
 			else if (count == 3)
 			{
 				object arg0 = ToLua.ToVarObject(L, 1);
-				FairyGUI.TweenPropType arg1 = (FairyGUI.TweenPropType)ToLua.CheckObject(L, 2, typeof(FairyGUI.TweenPropType));
+				FairyGUI.TweenPropType arg1 = (FairyGUI.TweenPropType)ToLua.CheckObject(L, 2, TypeTraits<FairyGUI.TweenPropType>.type);
 				bool arg2 = LuaDLL.luaL_checkboolean(L, 3);
 				FairyGUI.GTween.Kill(arg0, arg1, arg2);
 				return 0;
@@ -252,7 +252,7 @@ public class FairyGUI_GTweenWrap
 			else if (count == 2)
 			{
 				object arg0 = ToLua.ToVarObject(L, 1);
-				FairyGUI.TweenPropType arg1 = (FairyGUI.TweenPropType)ToLua.CheckObject(L, 2, typeof(FairyGUI.TweenPropType));
+				FairyGUI.TweenPropType arg1 = (FairyGUI.TweenPropType)ToLua.CheckObject(L, 2, TypeTraits<FairyGUI.TweenPropType>.type);
 				FairyGUI.GTweener o = FairyGUI.GTween.GetTween(arg0, arg1);
 				ToLua.PushObject(L, o);
 				return 1;
@@ -303,6 +303,7 @@ public class FairyGUI_GTweenWrap
 		try
 		{
 			bool arg0 = LuaDLL.luaL_checkboolean(L, 2);
+			FairyGUI.GTween.catchCallbackExceptions = arg0;
 			FairyGUI.GTween.catchCallbackExceptions = arg0;
 			return 0;
 		}

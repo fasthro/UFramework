@@ -7,16 +7,16 @@ public class FairyGUI_GProgressBarWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.GProgressBar), typeof(FairyGUI.GComponent));
-		L.RegFunction("TweenValue", TweenValue);
-		L.RegFunction("Update", Update);
-		L.RegFunction("Setup_AfterAdd", Setup_AfterAdd);
-		L.RegFunction("New", _CreateFairyGUI_GProgressBar);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("titleType", get_titleType, set_titleType);
-		L.RegVar("min", get_min, set_min);
-		L.RegVar("max", get_max, set_max);
-		L.RegVar("value", get_value, set_value);
-		L.RegVar("reverse", get_reverse, set_reverse);
+		L.RegFunction("TweenValue", new LuaCSFunction(TweenValue));
+		L.RegFunction("Update", new LuaCSFunction(Update));
+		L.RegFunction("Setup_AfterAdd", new LuaCSFunction(Setup_AfterAdd));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_GProgressBar));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("titleType", new LuaCSFunction(get_titleType), new LuaCSFunction(set_titleType));
+		L.RegVar("min", new LuaCSFunction(get_min), new LuaCSFunction(set_min));
+		L.RegVar("max", new LuaCSFunction(get_max), new LuaCSFunction(set_max));
+		L.RegVar("value", new LuaCSFunction(get_value), new LuaCSFunction(set_value));
+		L.RegVar("reverse", new LuaCSFunction(get_reverse), new LuaCSFunction(set_reverse));
 		L.EndClass();
 	}
 
@@ -88,7 +88,7 @@ public class FairyGUI_GProgressBarWrap
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.GProgressBar obj = (FairyGUI.GProgressBar)ToLua.CheckObject<FairyGUI.GProgressBar>(L, 1);
 			FairyGUI.Utils.ByteBuffer arg0 = (FairyGUI.Utils.ByteBuffer)ToLua.CheckObject<FairyGUI.Utils.ByteBuffer>(L, 2);
-			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			obj.Setup_AfterAdd(arg0, arg1);
 			return 0;
 		}
@@ -202,7 +202,7 @@ public class FairyGUI_GProgressBarWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GProgressBar obj = (FairyGUI.GProgressBar)o;
-			FairyGUI.ProgressTitleType arg0 = (FairyGUI.ProgressTitleType)ToLua.CheckObject(L, 2, typeof(FairyGUI.ProgressTitleType));
+			FairyGUI.ProgressTitleType arg0 = (FairyGUI.ProgressTitleType)ToLua.CheckObject(L, 2, TypeTraits<FairyGUI.ProgressTitleType>.type);
 			obj.titleType = arg0;
 			return 0;
 		}

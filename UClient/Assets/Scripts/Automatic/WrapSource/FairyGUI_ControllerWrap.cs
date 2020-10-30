@@ -7,29 +7,29 @@ public class FairyGUI_ControllerWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.Controller), typeof(FairyGUI.EventDispatcher));
-		L.RegFunction("Dispose", Dispose);
-		L.RegFunction("SetSelectedIndex", SetSelectedIndex);
-		L.RegFunction("SetSelectedPage", SetSelectedPage);
-		L.RegFunction("GetPageName", GetPageName);
-		L.RegFunction("GetPageId", GetPageId);
-		L.RegFunction("GetPageIdByName", GetPageIdByName);
-		L.RegFunction("AddPage", AddPage);
-		L.RegFunction("AddPageAt", AddPageAt);
-		L.RegFunction("RemovePage", RemovePage);
-		L.RegFunction("RemovePageAt", RemovePageAt);
-		L.RegFunction("ClearPages", ClearPages);
-		L.RegFunction("HasPage", HasPage);
-		L.RegFunction("RunActions", RunActions);
-		L.RegFunction("Setup", Setup);
-		L.RegFunction("New", _CreateFairyGUI_Controller);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("name", get_name, set_name);
-		L.RegVar("onChanged", get_onChanged, null);
-		L.RegVar("selectedIndex", get_selectedIndex, set_selectedIndex);
-		L.RegVar("selectedPage", get_selectedPage, set_selectedPage);
-		L.RegVar("previsousIndex", get_previsousIndex, null);
-		L.RegVar("previousPage", get_previousPage, null);
-		L.RegVar("pageCount", get_pageCount, null);
+		L.RegFunction("Dispose", new LuaCSFunction(Dispose));
+		L.RegFunction("SetSelectedIndex", new LuaCSFunction(SetSelectedIndex));
+		L.RegFunction("SetSelectedPage", new LuaCSFunction(SetSelectedPage));
+		L.RegFunction("GetPageName", new LuaCSFunction(GetPageName));
+		L.RegFunction("GetPageId", new LuaCSFunction(GetPageId));
+		L.RegFunction("GetPageIdByName", new LuaCSFunction(GetPageIdByName));
+		L.RegFunction("AddPage", new LuaCSFunction(AddPage));
+		L.RegFunction("AddPageAt", new LuaCSFunction(AddPageAt));
+		L.RegFunction("RemovePage", new LuaCSFunction(RemovePage));
+		L.RegFunction("RemovePageAt", new LuaCSFunction(RemovePageAt));
+		L.RegFunction("ClearPages", new LuaCSFunction(ClearPages));
+		L.RegFunction("HasPage", new LuaCSFunction(HasPage));
+		L.RegFunction("RunActions", new LuaCSFunction(RunActions));
+		L.RegFunction("Setup", new LuaCSFunction(Setup));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_Controller));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("name", new LuaCSFunction(get_name), new LuaCSFunction(set_name));
+		L.RegVar("onChanged", new LuaCSFunction(get_onChanged), null);
+		L.RegVar("selectedIndex", new LuaCSFunction(get_selectedIndex), new LuaCSFunction(set_selectedIndex));
+		L.RegVar("selectedPage", new LuaCSFunction(get_selectedPage), new LuaCSFunction(set_selectedPage));
+		L.RegVar("previsousIndex", new LuaCSFunction(get_previsousIndex), null);
+		L.RegVar("previousPage", new LuaCSFunction(get_previousPage), null);
+		L.RegVar("pageCount", new LuaCSFunction(get_pageCount), null);
 		L.EndClass();
 	}
 
@@ -80,7 +80,7 @@ public class FairyGUI_ControllerWrap
 		{
 			ToLua.CheckArgsCount(L, 2);
 			FairyGUI.Controller obj = (FairyGUI.Controller)ToLua.CheckObject<FairyGUI.Controller>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.SetSelectedIndex(arg0);
 			return 0;
 		}
@@ -114,7 +114,7 @@ public class FairyGUI_ControllerWrap
 		{
 			ToLua.CheckArgsCount(L, 2);
 			FairyGUI.Controller obj = (FairyGUI.Controller)ToLua.CheckObject<FairyGUI.Controller>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			string o = obj.GetPageName(arg0);
 			LuaDLL.lua_pushstring(L, o);
 			return 1;
@@ -132,7 +132,7 @@ public class FairyGUI_ControllerWrap
 		{
 			ToLua.CheckArgsCount(L, 2);
 			FairyGUI.Controller obj = (FairyGUI.Controller)ToLua.CheckObject<FairyGUI.Controller>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			string o = obj.GetPageId(arg0);
 			LuaDLL.lua_pushstring(L, o);
 			return 1;
@@ -186,7 +186,7 @@ public class FairyGUI_ControllerWrap
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.Controller obj = (FairyGUI.Controller)ToLua.CheckObject<FairyGUI.Controller>(L, 1);
 			string arg0 = ToLua.CheckString(L, 2);
-			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			obj.AddPageAt(arg0, arg1);
 			return 0;
 		}
@@ -220,7 +220,7 @@ public class FairyGUI_ControllerWrap
 		{
 			ToLua.CheckArgsCount(L, 2);
 			FairyGUI.Controller obj = (FairyGUI.Controller)ToLua.CheckObject<FairyGUI.Controller>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.RemovePageAt(arg0);
 			return 0;
 		}
@@ -458,7 +458,7 @@ public class FairyGUI_ControllerWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.Controller obj = (FairyGUI.Controller)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.selectedIndex = arg0;
 			return 0;
 		}

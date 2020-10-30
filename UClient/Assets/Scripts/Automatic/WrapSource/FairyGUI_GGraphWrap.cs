@@ -7,19 +7,19 @@ public class FairyGUI_GGraphWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.GGraph), typeof(FairyGUI.GObject));
-		L.RegFunction("ReplaceMe", ReplaceMe);
-		L.RegFunction("AddBeforeMe", AddBeforeMe);
-		L.RegFunction("AddAfterMe", AddAfterMe);
-		L.RegFunction("SetNativeObject", SetNativeObject);
-		L.RegFunction("DrawRect", DrawRect);
-		L.RegFunction("DrawRoundRect", DrawRoundRect);
-		L.RegFunction("DrawEllipse", DrawEllipse);
-		L.RegFunction("DrawPolygon", DrawPolygon);
-		L.RegFunction("Setup_BeforeAdd", Setup_BeforeAdd);
-		L.RegFunction("New", _CreateFairyGUI_GGraph);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("color", get_color, set_color);
-		L.RegVar("shape", get_shape, null);
+		L.RegFunction("ReplaceMe", new LuaCSFunction(ReplaceMe));
+		L.RegFunction("AddBeforeMe", new LuaCSFunction(AddBeforeMe));
+		L.RegFunction("AddAfterMe", new LuaCSFunction(AddAfterMe));
+		L.RegFunction("SetNativeObject", new LuaCSFunction(SetNativeObject));
+		L.RegFunction("DrawRect", new LuaCSFunction(DrawRect));
+		L.RegFunction("DrawRoundRect", new LuaCSFunction(DrawRoundRect));
+		L.RegFunction("DrawEllipse", new LuaCSFunction(DrawEllipse));
+		L.RegFunction("DrawPolygon", new LuaCSFunction(DrawPolygon));
+		L.RegFunction("Setup_BeforeAdd", new LuaCSFunction(Setup_BeforeAdd));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_GGraph));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("color", new LuaCSFunction(get_color), new LuaCSFunction(set_color));
+		L.RegVar("shape", new LuaCSFunction(get_shape), null);
 		L.EndClass();
 	}
 
@@ -124,7 +124,7 @@ public class FairyGUI_GGraphWrap
 			FairyGUI.GGraph obj = (FairyGUI.GGraph)ToLua.CheckObject<FairyGUI.GGraph>(L, 1);
 			float arg0 = (float)LuaDLL.luaL_checknumber(L, 2);
 			float arg1 = (float)LuaDLL.luaL_checknumber(L, 3);
-			int arg2 = (int)LuaDLL.luaL_checknumber(L, 4);
+			int arg2 = (int)LuaDLL.luaL_checkinteger(L, 4);
 			UnityEngine.Color arg3 = ToLua.ToColor(L, 5);
 			UnityEngine.Color arg4 = ToLua.ToColor(L, 6);
 			obj.DrawRect(arg0, arg1, arg2, arg3, arg4);
@@ -223,7 +223,7 @@ public class FairyGUI_GGraphWrap
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.GGraph obj = (FairyGUI.GGraph)ToLua.CheckObject<FairyGUI.GGraph>(L, 1);
 			FairyGUI.Utils.ByteBuffer arg0 = (FairyGUI.Utils.ByteBuffer)ToLua.CheckObject<FairyGUI.Utils.ByteBuffer>(L, 2);
-			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			obj.Setup_BeforeAdd(arg0, arg1);
 			return 0;
 		}

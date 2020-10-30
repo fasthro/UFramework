@@ -7,28 +7,28 @@ public class FairyGUI_TextFormatWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.TextFormat), typeof(System.Object));
-		L.RegFunction("SetColor", SetColor);
-		L.RegFunction("EqualStyle", EqualStyle);
-		L.RegFunction("CopyFrom", CopyFrom);
-		L.RegFunction("FillVertexColors", FillVertexColors);
-		L.RegFunction("New", _CreateFairyGUI_TextFormat);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("size", get_size, set_size);
-		L.RegVar("font", get_font, set_font);
-		L.RegVar("color", get_color, set_color);
-		L.RegVar("lineSpacing", get_lineSpacing, set_lineSpacing);
-		L.RegVar("letterSpacing", get_letterSpacing, set_letterSpacing);
-		L.RegVar("bold", get_bold, set_bold);
-		L.RegVar("underline", get_underline, set_underline);
-		L.RegVar("italic", get_italic, set_italic);
-		L.RegVar("strikethrough", get_strikethrough, set_strikethrough);
-		L.RegVar("gradientColor", get_gradientColor, set_gradientColor);
-		L.RegVar("align", get_align, set_align);
-		L.RegVar("specialStyle", get_specialStyle, set_specialStyle);
-		L.RegVar("outline", get_outline, set_outline);
-		L.RegVar("outlineColor", get_outlineColor, set_outlineColor);
-		L.RegVar("shadowOffset", get_shadowOffset, set_shadowOffset);
-		L.RegVar("shadowColor", get_shadowColor, set_shadowColor);
+		L.RegFunction("SetColor", new LuaCSFunction(SetColor));
+		L.RegFunction("EqualStyle", new LuaCSFunction(EqualStyle));
+		L.RegFunction("CopyFrom", new LuaCSFunction(CopyFrom));
+		L.RegFunction("FillVertexColors", new LuaCSFunction(FillVertexColors));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_TextFormat));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("size", new LuaCSFunction(get_size), new LuaCSFunction(set_size));
+		L.RegVar("font", new LuaCSFunction(get_font), new LuaCSFunction(set_font));
+		L.RegVar("color", new LuaCSFunction(get_color), new LuaCSFunction(set_color));
+		L.RegVar("lineSpacing", new LuaCSFunction(get_lineSpacing), new LuaCSFunction(set_lineSpacing));
+		L.RegVar("letterSpacing", new LuaCSFunction(get_letterSpacing), new LuaCSFunction(set_letterSpacing));
+		L.RegVar("bold", new LuaCSFunction(get_bold), new LuaCSFunction(set_bold));
+		L.RegVar("underline", new LuaCSFunction(get_underline), new LuaCSFunction(set_underline));
+		L.RegVar("italic", new LuaCSFunction(get_italic), new LuaCSFunction(set_italic));
+		L.RegVar("strikethrough", new LuaCSFunction(get_strikethrough), new LuaCSFunction(set_strikethrough));
+		L.RegVar("gradientColor", new LuaCSFunction(get_gradientColor), new LuaCSFunction(set_gradientColor));
+		L.RegVar("align", new LuaCSFunction(get_align), new LuaCSFunction(set_align));
+		L.RegVar("specialStyle", new LuaCSFunction(get_specialStyle), new LuaCSFunction(set_specialStyle));
+		L.RegVar("outline", new LuaCSFunction(get_outline), new LuaCSFunction(set_outline));
+		L.RegVar("outlineColor", new LuaCSFunction(get_outlineColor), new LuaCSFunction(set_outlineColor));
+		L.RegVar("shadowOffset", new LuaCSFunction(get_shadowOffset), new LuaCSFunction(set_shadowOffset));
+		L.RegVar("shadowColor", new LuaCSFunction(get_shadowColor), new LuaCSFunction(set_shadowColor));
 		L.EndClass();
 	}
 
@@ -63,7 +63,7 @@ public class FairyGUI_TextFormatWrap
 		{
 			ToLua.CheckArgsCount(L, 2);
 			FairyGUI.TextFormat obj = (FairyGUI.TextFormat)ToLua.CheckObject<FairyGUI.TextFormat>(L, 1);
-			uint arg0 = (uint)LuaDLL.luaL_checknumber(L, 2);
+			uint arg0 = (uint)LuaDLL.luaL_checkinteger(L, 2);
 			obj.SetColor(arg0);
 			return 0;
 		}
@@ -438,7 +438,7 @@ public class FairyGUI_TextFormatWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.TextFormat obj = (FairyGUI.TextFormat)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.size = arg0;
 			return 0;
 		}
@@ -495,7 +495,7 @@ public class FairyGUI_TextFormatWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.TextFormat obj = (FairyGUI.TextFormat)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.lineSpacing = arg0;
 			return 0;
 		}
@@ -514,7 +514,7 @@ public class FairyGUI_TextFormatWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.TextFormat obj = (FairyGUI.TextFormat)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.letterSpacing = arg0;
 			return 0;
 		}
@@ -628,7 +628,7 @@ public class FairyGUI_TextFormatWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.TextFormat obj = (FairyGUI.TextFormat)o;
-			FairyGUI.AlignType arg0 = (FairyGUI.AlignType)ToLua.CheckObject(L, 2, typeof(FairyGUI.AlignType));
+			FairyGUI.AlignType arg0 = (FairyGUI.AlignType)ToLua.CheckObject(L, 2, TypeTraits<FairyGUI.AlignType>.type);
 			obj.align = arg0;
 			return 0;
 		}
@@ -647,7 +647,7 @@ public class FairyGUI_TextFormatWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.TextFormat obj = (FairyGUI.TextFormat)o;
-			FairyGUI.TextFormat.SpecialStyle arg0 = (FairyGUI.TextFormat.SpecialStyle)ToLua.CheckObject(L, 2, typeof(FairyGUI.TextFormat.SpecialStyle));
+			FairyGUI.TextFormat.SpecialStyle arg0 = (FairyGUI.TextFormat.SpecialStyle)ToLua.CheckObject(L, 2, TypeTraits<FairyGUI.TextFormat.SpecialStyle>.type);
 			obj.specialStyle = arg0;
 			return 0;
 		}

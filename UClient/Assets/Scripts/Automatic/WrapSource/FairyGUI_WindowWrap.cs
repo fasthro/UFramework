@@ -7,31 +7,31 @@ public class FairyGUI_WindowWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.Window), typeof(FairyGUI.GComponent));
-		L.RegFunction("AddUISource", AddUISource);
-		L.RegFunction("Show", Show);
-		L.RegFunction("ShowOn", ShowOn);
-		L.RegFunction("Hide", Hide);
-		L.RegFunction("HideImmediately", HideImmediately);
-		L.RegFunction("CenterOn", CenterOn);
-		L.RegFunction("ToggleStatus", ToggleStatus);
-		L.RegFunction("BringToFront", BringToFront);
-		L.RegFunction("ShowModalWait", ShowModalWait);
-		L.RegFunction("CloseModalWait", CloseModalWait);
-		L.RegFunction("Init", Init);
-		L.RegFunction("Dispose", Dispose);
-		L.RegFunction("New", _CreateFairyGUI_Window);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("bringToFontOnClick", get_bringToFontOnClick, set_bringToFontOnClick);
-		L.RegVar("contentPane", get_contentPane, set_contentPane);
-		L.RegVar("frame", get_frame, null);
-		L.RegVar("closeButton", get_closeButton, set_closeButton);
-		L.RegVar("dragArea", get_dragArea, set_dragArea);
-		L.RegVar("contentArea", get_contentArea, set_contentArea);
-		L.RegVar("modalWaitingPane", get_modalWaitingPane, null);
-		L.RegVar("isShowing", get_isShowing, null);
-		L.RegVar("isTop", get_isTop, null);
-		L.RegVar("modal", get_modal, set_modal);
-		L.RegVar("modalWaiting", get_modalWaiting, null);
+		L.RegFunction("AddUISource", new LuaCSFunction(AddUISource));
+		L.RegFunction("Show", new LuaCSFunction(Show));
+		L.RegFunction("ShowOn", new LuaCSFunction(ShowOn));
+		L.RegFunction("Hide", new LuaCSFunction(Hide));
+		L.RegFunction("HideImmediately", new LuaCSFunction(HideImmediately));
+		L.RegFunction("CenterOn", new LuaCSFunction(CenterOn));
+		L.RegFunction("ToggleStatus", new LuaCSFunction(ToggleStatus));
+		L.RegFunction("BringToFront", new LuaCSFunction(BringToFront));
+		L.RegFunction("ShowModalWait", new LuaCSFunction(ShowModalWait));
+		L.RegFunction("CloseModalWait", new LuaCSFunction(CloseModalWait));
+		L.RegFunction("Init", new LuaCSFunction(Init));
+		L.RegFunction("Dispose", new LuaCSFunction(Dispose));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_Window));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("bringToFontOnClick", new LuaCSFunction(get_bringToFontOnClick), new LuaCSFunction(set_bringToFontOnClick));
+		L.RegVar("contentPane", new LuaCSFunction(get_contentPane), new LuaCSFunction(set_contentPane));
+		L.RegVar("frame", new LuaCSFunction(get_frame), null);
+		L.RegVar("closeButton", new LuaCSFunction(get_closeButton), new LuaCSFunction(set_closeButton));
+		L.RegVar("dragArea", new LuaCSFunction(get_dragArea), new LuaCSFunction(set_dragArea));
+		L.RegVar("contentArea", new LuaCSFunction(get_contentArea), new LuaCSFunction(set_contentArea));
+		L.RegVar("modalWaitingPane", new LuaCSFunction(get_modalWaitingPane), null);
+		L.RegVar("isShowing", new LuaCSFunction(get_isShowing), null);
+		L.RegVar("isTop", new LuaCSFunction(get_isTop), null);
+		L.RegVar("modal", new LuaCSFunction(get_modal), new LuaCSFunction(set_modal));
+		L.RegVar("modalWaiting", new LuaCSFunction(get_modalWaiting), null);
 		L.EndClass();
 	}
 
@@ -207,7 +207,7 @@ public class FairyGUI_WindowWrap
 			else if (count == 2)
 			{
 				FairyGUI.Window obj = (FairyGUI.Window)ToLua.CheckObject<FairyGUI.Window>(L, 1);
-				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+				int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 				obj.ShowModalWait(arg0);
 				return 0;
 			}
@@ -239,7 +239,7 @@ public class FairyGUI_WindowWrap
 			else if (count == 2)
 			{
 				FairyGUI.Window obj = (FairyGUI.Window)ToLua.CheckObject<FairyGUI.Window>(L, 1);
-				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+				int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 				bool o = obj.CloseModalWait(arg0);
 				LuaDLL.lua_pushboolean(L, o);
 				return 1;

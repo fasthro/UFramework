@@ -7,60 +7,60 @@ public class FairyGUI_GListWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.GList), typeof(FairyGUI.GComponent));
-		L.RegFunction("Dispose", Dispose);
-		L.RegFunction("GetFromPool", GetFromPool);
-		L.RegFunction("AddItemFromPool", AddItemFromPool);
-		L.RegFunction("AddChildAt", AddChildAt);
-		L.RegFunction("RemoveChildAt", RemoveChildAt);
-		L.RegFunction("RemoveChildToPoolAt", RemoveChildToPoolAt);
-		L.RegFunction("RemoveChildToPool", RemoveChildToPool);
-		L.RegFunction("RemoveChildrenToPool", RemoveChildrenToPool);
-		L.RegFunction("GetSelection", GetSelection);
-		L.RegFunction("AddSelection", AddSelection);
-		L.RegFunction("RemoveSelection", RemoveSelection);
-		L.RegFunction("ClearSelection", ClearSelection);
-		L.RegFunction("SelectAll", SelectAll);
-		L.RegFunction("SelectNone", SelectNone);
-		L.RegFunction("SelectReverse", SelectReverse);
-		L.RegFunction("EnableSelectionFocusEvents", EnableSelectionFocusEvents);
-		L.RegFunction("EnableArrowKeyNavigation", EnableArrowKeyNavigation);
-		L.RegFunction("HandleArrowKey", HandleArrowKey);
-		L.RegFunction("ResizeToFit", ResizeToFit);
-		L.RegFunction("HandleControllerChanged", HandleControllerChanged);
-		L.RegFunction("ScrollToView", ScrollToView);
-		L.RegFunction("GetFirstChildInView", GetFirstChildInView);
-		L.RegFunction("ChildIndexToItemIndex", ChildIndexToItemIndex);
-		L.RegFunction("ItemIndexToChildIndex", ItemIndexToChildIndex);
-		L.RegFunction("SetVirtual", SetVirtual);
-		L.RegFunction("SetVirtualAndLoop", SetVirtualAndLoop);
-		L.RegFunction("RefreshVirtualList", RefreshVirtualList);
-		L.RegFunction("Setup_BeforeAdd", Setup_BeforeAdd);
-		L.RegFunction("Setup_AfterAdd", Setup_AfterAdd);
-		L.RegFunction("New", _CreateFairyGUI_GList);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("defaultItem", get_defaultItem, set_defaultItem);
-		L.RegVar("foldInvisibleItems", get_foldInvisibleItems, set_foldInvisibleItems);
-		L.RegVar("selectionMode", get_selectionMode, set_selectionMode);
-		L.RegVar("itemRenderer", get_itemRenderer, set_itemRenderer);
-		L.RegVar("itemProvider", get_itemProvider, set_itemProvider);
-		L.RegVar("scrollItemToViewOnClick", get_scrollItemToViewOnClick, set_scrollItemToViewOnClick);
-		L.RegVar("onClickItem", get_onClickItem, null);
-		L.RegVar("onRightClickItem", get_onRightClickItem, null);
-		L.RegVar("layout", get_layout, set_layout);
-		L.RegVar("lineCount", get_lineCount, set_lineCount);
-		L.RegVar("columnCount", get_columnCount, set_columnCount);
-		L.RegVar("lineGap", get_lineGap, set_lineGap);
-		L.RegVar("columnGap", get_columnGap, set_columnGap);
-		L.RegVar("align", get_align, set_align);
-		L.RegVar("verticalAlign", get_verticalAlign, set_verticalAlign);
-		L.RegVar("autoResizeItem", get_autoResizeItem, set_autoResizeItem);
-		L.RegVar("defaultItemSize", get_defaultItemSize, set_defaultItemSize);
-		L.RegVar("itemPool", get_itemPool, null);
-		L.RegVar("selectedIndex", get_selectedIndex, set_selectedIndex);
-		L.RegVar("selectionController", get_selectionController, set_selectionController);
-		L.RegVar("touchItem", get_touchItem, null);
-		L.RegVar("isVirtual", get_isVirtual, null);
-		L.RegVar("numItems", get_numItems, set_numItems);
+		L.RegFunction("Dispose", new LuaCSFunction(Dispose));
+		L.RegFunction("GetFromPool", new LuaCSFunction(GetFromPool));
+		L.RegFunction("AddItemFromPool", new LuaCSFunction(AddItemFromPool));
+		L.RegFunction("AddChildAt", new LuaCSFunction(AddChildAt));
+		L.RegFunction("RemoveChildAt", new LuaCSFunction(RemoveChildAt));
+		L.RegFunction("RemoveChildToPoolAt", new LuaCSFunction(RemoveChildToPoolAt));
+		L.RegFunction("RemoveChildToPool", new LuaCSFunction(RemoveChildToPool));
+		L.RegFunction("RemoveChildrenToPool", new LuaCSFunction(RemoveChildrenToPool));
+		L.RegFunction("GetSelection", new LuaCSFunction(GetSelection));
+		L.RegFunction("AddSelection", new LuaCSFunction(AddSelection));
+		L.RegFunction("RemoveSelection", new LuaCSFunction(RemoveSelection));
+		L.RegFunction("ClearSelection", new LuaCSFunction(ClearSelection));
+		L.RegFunction("SelectAll", new LuaCSFunction(SelectAll));
+		L.RegFunction("SelectNone", new LuaCSFunction(SelectNone));
+		L.RegFunction("SelectReverse", new LuaCSFunction(SelectReverse));
+		L.RegFunction("EnableSelectionFocusEvents", new LuaCSFunction(EnableSelectionFocusEvents));
+		L.RegFunction("EnableArrowKeyNavigation", new LuaCSFunction(EnableArrowKeyNavigation));
+		L.RegFunction("HandleArrowKey", new LuaCSFunction(HandleArrowKey));
+		L.RegFunction("ResizeToFit", new LuaCSFunction(ResizeToFit));
+		L.RegFunction("HandleControllerChanged", new LuaCSFunction(HandleControllerChanged));
+		L.RegFunction("ScrollToView", new LuaCSFunction(ScrollToView));
+		L.RegFunction("GetFirstChildInView", new LuaCSFunction(GetFirstChildInView));
+		L.RegFunction("ChildIndexToItemIndex", new LuaCSFunction(ChildIndexToItemIndex));
+		L.RegFunction("ItemIndexToChildIndex", new LuaCSFunction(ItemIndexToChildIndex));
+		L.RegFunction("SetVirtual", new LuaCSFunction(SetVirtual));
+		L.RegFunction("SetVirtualAndLoop", new LuaCSFunction(SetVirtualAndLoop));
+		L.RegFunction("RefreshVirtualList", new LuaCSFunction(RefreshVirtualList));
+		L.RegFunction("Setup_BeforeAdd", new LuaCSFunction(Setup_BeforeAdd));
+		L.RegFunction("Setup_AfterAdd", new LuaCSFunction(Setup_AfterAdd));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_GList));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("defaultItem", new LuaCSFunction(get_defaultItem), new LuaCSFunction(set_defaultItem));
+		L.RegVar("foldInvisibleItems", new LuaCSFunction(get_foldInvisibleItems), new LuaCSFunction(set_foldInvisibleItems));
+		L.RegVar("selectionMode", new LuaCSFunction(get_selectionMode), new LuaCSFunction(set_selectionMode));
+		L.RegVar("itemRenderer", new LuaCSFunction(get_itemRenderer), new LuaCSFunction(set_itemRenderer));
+		L.RegVar("itemProvider", new LuaCSFunction(get_itemProvider), new LuaCSFunction(set_itemProvider));
+		L.RegVar("scrollItemToViewOnClick", new LuaCSFunction(get_scrollItemToViewOnClick), new LuaCSFunction(set_scrollItemToViewOnClick));
+		L.RegVar("onClickItem", new LuaCSFunction(get_onClickItem), null);
+		L.RegVar("onRightClickItem", new LuaCSFunction(get_onRightClickItem), null);
+		L.RegVar("layout", new LuaCSFunction(get_layout), new LuaCSFunction(set_layout));
+		L.RegVar("lineCount", new LuaCSFunction(get_lineCount), new LuaCSFunction(set_lineCount));
+		L.RegVar("columnCount", new LuaCSFunction(get_columnCount), new LuaCSFunction(set_columnCount));
+		L.RegVar("lineGap", new LuaCSFunction(get_lineGap), new LuaCSFunction(set_lineGap));
+		L.RegVar("columnGap", new LuaCSFunction(get_columnGap), new LuaCSFunction(set_columnGap));
+		L.RegVar("align", new LuaCSFunction(get_align), new LuaCSFunction(set_align));
+		L.RegVar("verticalAlign", new LuaCSFunction(get_verticalAlign), new LuaCSFunction(set_verticalAlign));
+		L.RegVar("autoResizeItem", new LuaCSFunction(get_autoResizeItem), new LuaCSFunction(set_autoResizeItem));
+		L.RegVar("defaultItemSize", new LuaCSFunction(get_defaultItemSize), new LuaCSFunction(set_defaultItemSize));
+		L.RegVar("itemPool", new LuaCSFunction(get_itemPool), null);
+		L.RegVar("selectedIndex", new LuaCSFunction(get_selectedIndex), new LuaCSFunction(set_selectedIndex));
+		L.RegVar("selectionController", new LuaCSFunction(get_selectionController), new LuaCSFunction(set_selectionController));
+		L.RegVar("touchItem", new LuaCSFunction(get_touchItem), null);
+		L.RegVar("isVirtual", new LuaCSFunction(get_isVirtual), null);
+		L.RegVar("numItems", new LuaCSFunction(get_numItems), new LuaCSFunction(set_numItems));
 		L.EndClass();
 	}
 
@@ -163,7 +163,7 @@ public class FairyGUI_GListWrap
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.GList obj = (FairyGUI.GList)ToLua.CheckObject<FairyGUI.GList>(L, 1);
 			FairyGUI.GObject arg0 = (FairyGUI.GObject)ToLua.CheckObject<FairyGUI.GObject>(L, 2);
-			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			FairyGUI.GObject o = obj.AddChildAt(arg0, arg1);
 			ToLua.PushObject(L, o);
 			return 1;
@@ -184,7 +184,7 @@ public class FairyGUI_GListWrap
 			if (count == 2)
 			{
 				FairyGUI.GList obj = (FairyGUI.GList)ToLua.CheckObject<FairyGUI.GList>(L, 1);
-				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+				int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 				FairyGUI.GObject o = obj.RemoveChildAt(arg0);
 				ToLua.PushObject(L, o);
 				return 1;
@@ -192,7 +192,7 @@ public class FairyGUI_GListWrap
 			else if (count == 3)
 			{
 				FairyGUI.GList obj = (FairyGUI.GList)ToLua.CheckObject<FairyGUI.GList>(L, 1);
-				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+				int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 				bool arg1 = LuaDLL.luaL_checkboolean(L, 3);
 				FairyGUI.GObject o = obj.RemoveChildAt(arg0, arg1);
 				ToLua.PushObject(L, o);
@@ -216,7 +216,7 @@ public class FairyGUI_GListWrap
 		{
 			ToLua.CheckArgsCount(L, 2);
 			FairyGUI.GList obj = (FairyGUI.GList)ToLua.CheckObject<FairyGUI.GList>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.RemoveChildToPoolAt(arg0);
 			return 0;
 		}
@@ -259,8 +259,8 @@ public class FairyGUI_GListWrap
 			else if (count == 3)
 			{
 				FairyGUI.GList obj = (FairyGUI.GList)ToLua.CheckObject<FairyGUI.GList>(L, 1);
-				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
-				int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+				int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
+				int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 				obj.RemoveChildrenToPool(arg0, arg1);
 				return 0;
 			}
@@ -292,7 +292,7 @@ public class FairyGUI_GListWrap
 			else if (count == 2)
 			{
 				FairyGUI.GList obj = (FairyGUI.GList)ToLua.CheckObject<FairyGUI.GList>(L, 1);
-				System.Collections.Generic.List<int> arg0 = (System.Collections.Generic.List<int>)ToLua.CheckObject(L, 2, typeof(System.Collections.Generic.List<int>));
+				System.Collections.Generic.List<int> arg0 = (System.Collections.Generic.List<int>)ToLua.CheckObject(L, 2, TypeTraits<System.Collections.Generic.List<int>>.type);
 				System.Collections.Generic.List<int> o = obj.GetSelection(arg0);
 				ToLua.PushSealed(L, o);
 				return 1;
@@ -315,7 +315,7 @@ public class FairyGUI_GListWrap
 		{
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.GList obj = (FairyGUI.GList)ToLua.CheckObject<FairyGUI.GList>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			bool arg1 = LuaDLL.luaL_checkboolean(L, 3);
 			obj.AddSelection(arg0, arg1);
 			return 0;
@@ -333,7 +333,7 @@ public class FairyGUI_GListWrap
 		{
 			ToLua.CheckArgsCount(L, 2);
 			FairyGUI.GList obj = (FairyGUI.GList)ToLua.CheckObject<FairyGUI.GList>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.RemoveSelection(arg0);
 			return 0;
 		}
@@ -448,7 +448,7 @@ public class FairyGUI_GListWrap
 		{
 			ToLua.CheckArgsCount(L, 2);
 			FairyGUI.GList obj = (FairyGUI.GList)ToLua.CheckObject<FairyGUI.GList>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			int o = obj.HandleArrowKey(arg0);
 			LuaDLL.lua_pushinteger(L, o);
 			return 1;
@@ -475,15 +475,15 @@ public class FairyGUI_GListWrap
 			else if (count == 2)
 			{
 				FairyGUI.GList obj = (FairyGUI.GList)ToLua.CheckObject<FairyGUI.GList>(L, 1);
-				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+				int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 				obj.ResizeToFit(arg0);
 				return 0;
 			}
 			else if (count == 3)
 			{
 				FairyGUI.GList obj = (FairyGUI.GList)ToLua.CheckObject<FairyGUI.GList>(L, 1);
-				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
-				int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+				int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
+				int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 				obj.ResizeToFit(arg0, arg1);
 				return 0;
 			}
@@ -525,14 +525,14 @@ public class FairyGUI_GListWrap
 			if (count == 2)
 			{
 				FairyGUI.GList obj = (FairyGUI.GList)ToLua.CheckObject<FairyGUI.GList>(L, 1);
-				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+				int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 				obj.ScrollToView(arg0);
 				return 0;
 			}
 			else if (count == 3)
 			{
 				FairyGUI.GList obj = (FairyGUI.GList)ToLua.CheckObject<FairyGUI.GList>(L, 1);
-				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+				int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 				bool arg1 = LuaDLL.luaL_checkboolean(L, 3);
 				obj.ScrollToView(arg0, arg1);
 				return 0;
@@ -540,7 +540,7 @@ public class FairyGUI_GListWrap
 			else if (count == 4)
 			{
 				FairyGUI.GList obj = (FairyGUI.GList)ToLua.CheckObject<FairyGUI.GList>(L, 1);
-				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+				int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 				bool arg1 = LuaDLL.luaL_checkboolean(L, 3);
 				bool arg2 = LuaDLL.luaL_checkboolean(L, 4);
 				obj.ScrollToView(arg0, arg1, arg2);
@@ -581,7 +581,7 @@ public class FairyGUI_GListWrap
 		{
 			ToLua.CheckArgsCount(L, 2);
 			FairyGUI.GList obj = (FairyGUI.GList)ToLua.CheckObject<FairyGUI.GList>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			int o = obj.ChildIndexToItemIndex(arg0);
 			LuaDLL.lua_pushinteger(L, o);
 			return 1;
@@ -599,7 +599,7 @@ public class FairyGUI_GListWrap
 		{
 			ToLua.CheckArgsCount(L, 2);
 			FairyGUI.GList obj = (FairyGUI.GList)ToLua.CheckObject<FairyGUI.GList>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			int o = obj.ItemIndexToChildIndex(arg0);
 			LuaDLL.lua_pushinteger(L, o);
 			return 1;
@@ -666,7 +666,7 @@ public class FairyGUI_GListWrap
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.GList obj = (FairyGUI.GList)ToLua.CheckObject<FairyGUI.GList>(L, 1);
 			FairyGUI.Utils.ByteBuffer arg0 = (FairyGUI.Utils.ByteBuffer)ToLua.CheckObject<FairyGUI.Utils.ByteBuffer>(L, 2);
-			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			obj.Setup_BeforeAdd(arg0, arg1);
 			return 0;
 		}
@@ -684,7 +684,7 @@ public class FairyGUI_GListWrap
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.GList obj = (FairyGUI.GList)ToLua.CheckObject<FairyGUI.GList>(L, 1);
 			FairyGUI.Utils.ByteBuffer arg0 = (FairyGUI.Utils.ByteBuffer)ToLua.CheckObject<FairyGUI.Utils.ByteBuffer>(L, 2);
-			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			obj.Setup_AfterAdd(arg0, arg1);
 			return 0;
 		}
@@ -1178,7 +1178,7 @@ public class FairyGUI_GListWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GList obj = (FairyGUI.GList)o;
-			FairyGUI.ListSelectionMode arg0 = (FairyGUI.ListSelectionMode)ToLua.CheckObject(L, 2, typeof(FairyGUI.ListSelectionMode));
+			FairyGUI.ListSelectionMode arg0 = (FairyGUI.ListSelectionMode)ToLua.CheckObject(L, 2, TypeTraits<FairyGUI.ListSelectionMode>.type);
 			obj.selectionMode = arg0;
 			return 0;
 		}
@@ -1198,7 +1198,13 @@ public class FairyGUI_GListWrap
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GList obj = (FairyGUI.GList)o;
 			FairyGUI.ListItemRenderer arg0 = (FairyGUI.ListItemRenderer)ToLua.CheckDelegate<FairyGUI.ListItemRenderer>(L, 2);
-			obj.itemRenderer = arg0;
+
+			if (!object.ReferenceEquals(obj.itemRenderer, arg0))
+			{
+				if (obj.itemRenderer != null) obj.itemRenderer.SubRef();
+				obj.itemRenderer = arg0;
+			}
+
 			return 0;
 		}
 		catch(Exception e)
@@ -1217,7 +1223,13 @@ public class FairyGUI_GListWrap
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GList obj = (FairyGUI.GList)o;
 			FairyGUI.ListItemProvider arg0 = (FairyGUI.ListItemProvider)ToLua.CheckDelegate<FairyGUI.ListItemProvider>(L, 2);
-			obj.itemProvider = arg0;
+
+			if (!object.ReferenceEquals(obj.itemProvider, arg0))
+			{
+				if (obj.itemProvider != null) obj.itemProvider.SubRef();
+				obj.itemProvider = arg0;
+			}
+
 			return 0;
 		}
 		catch(Exception e)
@@ -1254,7 +1266,7 @@ public class FairyGUI_GListWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GList obj = (FairyGUI.GList)o;
-			FairyGUI.ListLayoutType arg0 = (FairyGUI.ListLayoutType)ToLua.CheckObject(L, 2, typeof(FairyGUI.ListLayoutType));
+			FairyGUI.ListLayoutType arg0 = (FairyGUI.ListLayoutType)ToLua.CheckObject(L, 2, TypeTraits<FairyGUI.ListLayoutType>.type);
 			obj.layout = arg0;
 			return 0;
 		}
@@ -1273,7 +1285,7 @@ public class FairyGUI_GListWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GList obj = (FairyGUI.GList)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.lineCount = arg0;
 			return 0;
 		}
@@ -1292,7 +1304,7 @@ public class FairyGUI_GListWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GList obj = (FairyGUI.GList)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.columnCount = arg0;
 			return 0;
 		}
@@ -1311,7 +1323,7 @@ public class FairyGUI_GListWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GList obj = (FairyGUI.GList)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.lineGap = arg0;
 			return 0;
 		}
@@ -1330,7 +1342,7 @@ public class FairyGUI_GListWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GList obj = (FairyGUI.GList)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.columnGap = arg0;
 			return 0;
 		}
@@ -1349,7 +1361,7 @@ public class FairyGUI_GListWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GList obj = (FairyGUI.GList)o;
-			FairyGUI.AlignType arg0 = (FairyGUI.AlignType)ToLua.CheckObject(L, 2, typeof(FairyGUI.AlignType));
+			FairyGUI.AlignType arg0 = (FairyGUI.AlignType)ToLua.CheckObject(L, 2, TypeTraits<FairyGUI.AlignType>.type);
 			obj.align = arg0;
 			return 0;
 		}
@@ -1368,7 +1380,7 @@ public class FairyGUI_GListWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GList obj = (FairyGUI.GList)o;
-			FairyGUI.VertAlignType arg0 = (FairyGUI.VertAlignType)ToLua.CheckObject(L, 2, typeof(FairyGUI.VertAlignType));
+			FairyGUI.VertAlignType arg0 = (FairyGUI.VertAlignType)ToLua.CheckObject(L, 2, TypeTraits<FairyGUI.VertAlignType>.type);
 			obj.verticalAlign = arg0;
 			return 0;
 		}
@@ -1425,7 +1437,7 @@ public class FairyGUI_GListWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GList obj = (FairyGUI.GList)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.selectedIndex = arg0;
 			return 0;
 		}
@@ -1463,7 +1475,7 @@ public class FairyGUI_GListWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GList obj = (FairyGUI.GList)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.numItems = arg0;
 			return 0;
 		}

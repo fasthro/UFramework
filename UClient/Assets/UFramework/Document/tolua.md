@@ -9,7 +9,7 @@
 - ToLua\Source
 - ToLua\ToLua
 
-##### 2.  注释掉 TuLuaMenu.cs 内代码
+##### 2.  注释掉 ToLuaMenu.cs 内代码
 ```csharp
 // static ToLuaMenu()
 // {

@@ -7,45 +7,45 @@ public class FairyGUI_UIPackageWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.UIPackage), typeof(System.Object));
-		L.RegFunction("GetVar", GetVar);
-		L.RegFunction("SetVar", SetVar);
-		L.RegFunction("GetById", GetById);
-		L.RegFunction("GetByName", GetByName);
-		L.RegFunction("AddPackage", AddPackage);
-		L.RegFunction("RemovePackage", RemovePackage);
-		L.RegFunction("RemoveAllPackages", RemoveAllPackages);
-		L.RegFunction("GetPackages", GetPackages);
-		L.RegFunction("CreateObject", CreateObject);
-		L.RegFunction("CreateObjectFromURL", CreateObjectFromURL);
-		L.RegFunction("CreateObjectAsync", CreateObjectAsync);
-		L.RegFunction("GetItemAsset", GetItemAsset);
-		L.RegFunction("GetItemAssetByURL", GetItemAssetByURL);
-		L.RegFunction("GetItemURL", GetItemURL);
-		L.RegFunction("GetItemByURL", GetItemByURL);
-		L.RegFunction("NormalizeURL", NormalizeURL);
-		L.RegFunction("SetStringsSource", SetStringsSource);
-		L.RegFunction("LoadAllAssets", LoadAllAssets);
-		L.RegFunction("UnloadAssets", UnloadAssets);
-		L.RegFunction("ReloadAssets", ReloadAssets);
-		L.RegFunction("GetItems", GetItems);
-		L.RegFunction("GetItem", GetItem);
-		L.RegFunction("GetItemByName", GetItemByName);
-		L.RegFunction("SetItemAsset", SetItemAsset);
-		L.RegFunction("New", _CreateFairyGUI_UIPackage);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("unloadBundleByFGUI", get_unloadBundleByFGUI, set_unloadBundleByFGUI);
-		L.RegVar("URL_PREFIX", get_URL_PREFIX, null);
-		L.RegVar("id", get_id, null);
-		L.RegVar("name", get_name, null);
-		L.RegVar("branch", get_branch, set_branch);
-		L.RegVar("assetPath", get_assetPath, null);
-		L.RegVar("customId", get_customId, set_customId);
-		L.RegVar("resBundle", get_resBundle, null);
-		L.RegVar("dependencies", get_dependencies, null);
-		L.RegVar("onReleaseResource", get_onReleaseResource, set_onReleaseResource);
-		L.RegFunction("LoadResource", FairyGUI_UIPackage_LoadResource);
-		L.RegFunction("LoadResourceAsync", FairyGUI_UIPackage_LoadResourceAsync);
-		L.RegFunction("CreateObjectCallback", FairyGUI_UIPackage_CreateObjectCallback);
+		L.RegFunction("GetVar", new LuaCSFunction(GetVar));
+		L.RegFunction("SetVar", new LuaCSFunction(SetVar));
+		L.RegFunction("GetById", new LuaCSFunction(GetById));
+		L.RegFunction("GetByName", new LuaCSFunction(GetByName));
+		L.RegFunction("AddPackage", new LuaCSFunction(AddPackage));
+		L.RegFunction("RemovePackage", new LuaCSFunction(RemovePackage));
+		L.RegFunction("RemoveAllPackages", new LuaCSFunction(RemoveAllPackages));
+		L.RegFunction("GetPackages", new LuaCSFunction(GetPackages));
+		L.RegFunction("CreateObject", new LuaCSFunction(CreateObject));
+		L.RegFunction("CreateObjectFromURL", new LuaCSFunction(CreateObjectFromURL));
+		L.RegFunction("CreateObjectAsync", new LuaCSFunction(CreateObjectAsync));
+		L.RegFunction("GetItemAsset", new LuaCSFunction(GetItemAsset));
+		L.RegFunction("GetItemAssetByURL", new LuaCSFunction(GetItemAssetByURL));
+		L.RegFunction("GetItemURL", new LuaCSFunction(GetItemURL));
+		L.RegFunction("GetItemByURL", new LuaCSFunction(GetItemByURL));
+		L.RegFunction("NormalizeURL", new LuaCSFunction(NormalizeURL));
+		L.RegFunction("SetStringsSource", new LuaCSFunction(SetStringsSource));
+		L.RegFunction("LoadAllAssets", new LuaCSFunction(LoadAllAssets));
+		L.RegFunction("UnloadAssets", new LuaCSFunction(UnloadAssets));
+		L.RegFunction("ReloadAssets", new LuaCSFunction(ReloadAssets));
+		L.RegFunction("GetItems", new LuaCSFunction(GetItems));
+		L.RegFunction("GetItem", new LuaCSFunction(GetItem));
+		L.RegFunction("GetItemByName", new LuaCSFunction(GetItemByName));
+		L.RegFunction("SetItemAsset", new LuaCSFunction(SetItemAsset));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_UIPackage));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("unloadBundleByFGUI", new LuaCSFunction(get_unloadBundleByFGUI), new LuaCSFunction(set_unloadBundleByFGUI));
+		L.RegVar("URL_PREFIX", new LuaCSFunction(get_URL_PREFIX), null);
+		L.RegVar("id", new LuaCSFunction(get_id), null);
+		L.RegVar("name", new LuaCSFunction(get_name), null);
+		L.RegVar("branch", new LuaCSFunction(get_branch), new LuaCSFunction(set_branch));
+		L.RegVar("assetPath", new LuaCSFunction(get_assetPath), null);
+		L.RegVar("customId", new LuaCSFunction(get_customId), new LuaCSFunction(set_customId));
+		L.RegVar("resBundle", new LuaCSFunction(get_resBundle), null);
+		L.RegVar("dependencies", new LuaCSFunction(get_dependencies), null);
+		L.RegVar("onReleaseResource", new LuaCSFunction(get_onReleaseResource), new LuaCSFunction(set_onReleaseResource));
+		L.RegFunction("LoadResource", new LuaCSFunction(FairyGUI_UIPackage_LoadResource));
+		L.RegFunction("LoadResourceAsync", new LuaCSFunction(FairyGUI_UIPackage_LoadResourceAsync));
+		L.RegFunction("CreateObjectCallback", new LuaCSFunction(FairyGUI_UIPackage_CreateObjectCallback));
 		L.EndClass();
 	}
 
@@ -641,7 +641,7 @@ public class FairyGUI_UIPackageWrap
 			FairyGUI.UIPackage obj = (FairyGUI.UIPackage)ToLua.CheckObject<FairyGUI.UIPackage>(L, 1);
 			FairyGUI.PackageItem arg0 = (FairyGUI.PackageItem)ToLua.CheckObject<FairyGUI.PackageItem>(L, 2);
 			object arg1 = ToLua.ToVarObject(L, 3);
-			FairyGUI.DestroyMethod arg2 = (FairyGUI.DestroyMethod)ToLua.CheckObject(L, 4, typeof(FairyGUI.DestroyMethod));
+			FairyGUI.DestroyMethod arg2 = (FairyGUI.DestroyMethod)ToLua.CheckObject(L, 4, TypeTraits<FairyGUI.DestroyMethod>.type);
 			obj.SetItemAsset(arg0, arg1, arg2);
 			return 0;
 		}
@@ -821,6 +821,7 @@ public class FairyGUI_UIPackageWrap
 		{
 			bool arg0 = LuaDLL.luaL_checkboolean(L, 2);
 			FairyGUI.UIPackage.unloadBundleByFGUI = arg0;
+			FairyGUI.UIPackage.unloadBundleByFGUI = arg0;
 			return 0;
 		}
 		catch (Exception e)
@@ -835,6 +836,7 @@ public class FairyGUI_UIPackageWrap
 		try
 		{
 			string arg0 = ToLua.CheckString(L, 2);
+			FairyGUI.UIPackage.branch = arg0;
 			FairyGUI.UIPackage.branch = arg0;
 			return 0;
 		}
@@ -910,12 +912,15 @@ public class FairyGUI_UIPackageWrap
 			{
 				Delegate arg1 = DelegateTraits<FairyGUI.UIPackage.LoadResource>.Create(func);
 				ToLua.Push(L, arg1);
+				func.Dispose();
 			}
 			else
 			{
 				LuaTable self = ToLua.CheckLuaTable(L, 2);
 				Delegate arg1 = DelegateTraits<FairyGUI.UIPackage.LoadResource>.Create(func, self);
 				ToLua.Push(L, arg1);
+				func.Dispose();
+				self.Dispose();
 			}
 			return 1;
 		}
@@ -937,12 +942,15 @@ public class FairyGUI_UIPackageWrap
 			{
 				Delegate arg1 = DelegateTraits<FairyGUI.UIPackage.LoadResourceAsync>.Create(func);
 				ToLua.Push(L, arg1);
+				func.Dispose();
 			}
 			else
 			{
 				LuaTable self = ToLua.CheckLuaTable(L, 2);
 				Delegate arg1 = DelegateTraits<FairyGUI.UIPackage.LoadResourceAsync>.Create(func, self);
 				ToLua.Push(L, arg1);
+				func.Dispose();
+				self.Dispose();
 			}
 			return 1;
 		}
@@ -964,12 +972,15 @@ public class FairyGUI_UIPackageWrap
 			{
 				Delegate arg1 = DelegateTraits<FairyGUI.UIPackage.CreateObjectCallback>.Create(func);
 				ToLua.Push(L, arg1);
+				func.Dispose();
 			}
 			else
 			{
 				LuaTable self = ToLua.CheckLuaTable(L, 2);
 				Delegate arg1 = DelegateTraits<FairyGUI.UIPackage.CreateObjectCallback>.Create(func, self);
 				ToLua.Push(L, arg1);
+				func.Dispose();
+				self.Dispose();
 			}
 			return 1;
 		}

@@ -7,30 +7,30 @@ public class FairyGUI_GTextInputWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.GTextInput), typeof(FairyGUI.GTextField));
-		L.RegFunction("SetSelection", SetSelection);
-		L.RegFunction("ReplaceSelection", ReplaceSelection);
-		L.RegFunction("Setup_BeforeAdd", Setup_BeforeAdd);
-		L.RegFunction("New", _CreateFairyGUI_GTextInput);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("inputTextField", get_inputTextField, null);
-		L.RegVar("onChanged", get_onChanged, null);
-		L.RegVar("onSubmit", get_onSubmit, null);
-		L.RegVar("editable", get_editable, set_editable);
-		L.RegVar("hideInput", get_hideInput, set_hideInput);
-		L.RegVar("maxLength", get_maxLength, set_maxLength);
-		L.RegVar("restrict", get_restrict, set_restrict);
-		L.RegVar("displayAsPassword", get_displayAsPassword, set_displayAsPassword);
-		L.RegVar("caretPosition", get_caretPosition, set_caretPosition);
-		L.RegVar("promptText", get_promptText, set_promptText);
-		L.RegVar("keyboardInput", get_keyboardInput, set_keyboardInput);
-		L.RegVar("keyboardType", get_keyboardType, set_keyboardType);
-		L.RegVar("disableIME", get_disableIME, set_disableIME);
-		L.RegVar("emojies", get_emojies, set_emojies);
-		L.RegVar("border", get_border, set_border);
-		L.RegVar("corner", get_corner, set_corner);
-		L.RegVar("borderColor", get_borderColor, set_borderColor);
-		L.RegVar("backgroundColor", get_backgroundColor, set_backgroundColor);
-		L.RegVar("mouseWheelEnabled", get_mouseWheelEnabled, set_mouseWheelEnabled);
+		L.RegFunction("SetSelection", new LuaCSFunction(SetSelection));
+		L.RegFunction("ReplaceSelection", new LuaCSFunction(ReplaceSelection));
+		L.RegFunction("Setup_BeforeAdd", new LuaCSFunction(Setup_BeforeAdd));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_GTextInput));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("inputTextField", new LuaCSFunction(get_inputTextField), null);
+		L.RegVar("onChanged", new LuaCSFunction(get_onChanged), null);
+		L.RegVar("onSubmit", new LuaCSFunction(get_onSubmit), null);
+		L.RegVar("editable", new LuaCSFunction(get_editable), new LuaCSFunction(set_editable));
+		L.RegVar("hideInput", new LuaCSFunction(get_hideInput), new LuaCSFunction(set_hideInput));
+		L.RegVar("maxLength", new LuaCSFunction(get_maxLength), new LuaCSFunction(set_maxLength));
+		L.RegVar("restrict", new LuaCSFunction(get_restrict), new LuaCSFunction(set_restrict));
+		L.RegVar("displayAsPassword", new LuaCSFunction(get_displayAsPassword), new LuaCSFunction(set_displayAsPassword));
+		L.RegVar("caretPosition", new LuaCSFunction(get_caretPosition), new LuaCSFunction(set_caretPosition));
+		L.RegVar("promptText", new LuaCSFunction(get_promptText), new LuaCSFunction(set_promptText));
+		L.RegVar("keyboardInput", new LuaCSFunction(get_keyboardInput), new LuaCSFunction(set_keyboardInput));
+		L.RegVar("keyboardType", new LuaCSFunction(get_keyboardType), new LuaCSFunction(set_keyboardType));
+		L.RegVar("disableIME", new LuaCSFunction(get_disableIME), new LuaCSFunction(set_disableIME));
+		L.RegVar("emojies", new LuaCSFunction(get_emojies), new LuaCSFunction(set_emojies));
+		L.RegVar("border", new LuaCSFunction(get_border), new LuaCSFunction(set_border));
+		L.RegVar("corner", new LuaCSFunction(get_corner), new LuaCSFunction(set_corner));
+		L.RegVar("borderColor", new LuaCSFunction(get_borderColor), new LuaCSFunction(set_borderColor));
+		L.RegVar("backgroundColor", new LuaCSFunction(get_backgroundColor), new LuaCSFunction(set_backgroundColor));
+		L.RegVar("mouseWheelEnabled", new LuaCSFunction(get_mouseWheelEnabled), new LuaCSFunction(set_mouseWheelEnabled));
 		L.EndClass();
 	}
 
@@ -65,8 +65,8 @@ public class FairyGUI_GTextInputWrap
 		{
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.GTextInput obj = (FairyGUI.GTextInput)ToLua.CheckObject<FairyGUI.GTextInput>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
-			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			obj.SetSelection(arg0, arg1);
 			return 0;
 		}
@@ -101,7 +101,7 @@ public class FairyGUI_GTextInputWrap
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.GTextInput obj = (FairyGUI.GTextInput)ToLua.CheckObject<FairyGUI.GTextInput>(L, 1);
 			FairyGUI.Utils.ByteBuffer arg0 = (FairyGUI.Utils.ByteBuffer)ToLua.CheckObject<FairyGUI.Utils.ByteBuffer>(L, 2);
-			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			obj.Setup_BeforeAdd(arg0, arg1);
 			return 0;
 		}
@@ -519,7 +519,7 @@ public class FairyGUI_GTextInputWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GTextInput obj = (FairyGUI.GTextInput)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.maxLength = arg0;
 			return 0;
 		}
@@ -576,7 +576,7 @@ public class FairyGUI_GTextInputWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GTextInput obj = (FairyGUI.GTextInput)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.caretPosition = arg0;
 			return 0;
 		}
@@ -633,7 +633,7 @@ public class FairyGUI_GTextInputWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GTextInput obj = (FairyGUI.GTextInput)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.keyboardType = arg0;
 			return 0;
 		}
@@ -671,7 +671,7 @@ public class FairyGUI_GTextInputWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GTextInput obj = (FairyGUI.GTextInput)o;
-			System.Collections.Generic.Dictionary<uint,FairyGUI.Emoji> arg0 = (System.Collections.Generic.Dictionary<uint,FairyGUI.Emoji>)ToLua.CheckObject(L, 2, typeof(System.Collections.Generic.Dictionary<uint,FairyGUI.Emoji>));
+			System.Collections.Generic.Dictionary<uint,FairyGUI.Emoji> arg0 = (System.Collections.Generic.Dictionary<uint,FairyGUI.Emoji>)ToLua.CheckObject(L, 2, TypeTraits<System.Collections.Generic.Dictionary<uint,FairyGUI.Emoji>>.type);
 			obj.emojies = arg0;
 			return 0;
 		}
@@ -690,7 +690,7 @@ public class FairyGUI_GTextInputWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GTextInput obj = (FairyGUI.GTextInput)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.border = arg0;
 			return 0;
 		}
@@ -709,7 +709,7 @@ public class FairyGUI_GTextInputWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GTextInput obj = (FairyGUI.GTextInput)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.corner = arg0;
 			return 0;
 		}

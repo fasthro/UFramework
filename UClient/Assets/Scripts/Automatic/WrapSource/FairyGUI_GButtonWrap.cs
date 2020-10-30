@@ -7,35 +7,35 @@ public class FairyGUI_GButtonWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.GButton), typeof(FairyGUI.GComponent));
-		L.RegFunction("FireClick", FireClick);
-		L.RegFunction("GetTextField", GetTextField);
-		L.RegFunction("HandleControllerChanged", HandleControllerChanged);
-		L.RegFunction("Setup_AfterAdd", Setup_AfterAdd);
-		L.RegFunction("New", _CreateFairyGUI_GButton);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("sound", get_sound, set_sound);
-		L.RegVar("soundVolumeScale", get_soundVolumeScale, set_soundVolumeScale);
-		L.RegVar("changeStateOnClick", get_changeStateOnClick, set_changeStateOnClick);
-		L.RegVar("linkedPopup", get_linkedPopup, set_linkedPopup);
-		L.RegVar("UP", get_UP, null);
-		L.RegVar("DOWN", get_DOWN, null);
-		L.RegVar("OVER", get_OVER, null);
-		L.RegVar("SELECTED_OVER", get_SELECTED_OVER, null);
-		L.RegVar("DISABLED", get_DISABLED, null);
-		L.RegVar("SELECTED_DISABLED", get_SELECTED_DISABLED, null);
-		L.RegVar("onChanged", get_onChanged, null);
-		L.RegVar("icon", get_icon, set_icon);
-		L.RegVar("title", get_title, set_title);
-		L.RegVar("text", get_text, set_text);
-		L.RegVar("selectedIcon", get_selectedIcon, set_selectedIcon);
-		L.RegVar("selectedTitle", get_selectedTitle, set_selectedTitle);
-		L.RegVar("titleColor", get_titleColor, set_titleColor);
-		L.RegVar("color", get_color, set_color);
-		L.RegVar("titleFontSize", get_titleFontSize, set_titleFontSize);
-		L.RegVar("selected", get_selected, set_selected);
-		L.RegVar("mode", get_mode, set_mode);
-		L.RegVar("relatedController", get_relatedController, set_relatedController);
-		L.RegVar("relatedPageId", get_relatedPageId, set_relatedPageId);
+		L.RegFunction("FireClick", new LuaCSFunction(FireClick));
+		L.RegFunction("GetTextField", new LuaCSFunction(GetTextField));
+		L.RegFunction("HandleControllerChanged", new LuaCSFunction(HandleControllerChanged));
+		L.RegFunction("Setup_AfterAdd", new LuaCSFunction(Setup_AfterAdd));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_GButton));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("sound", new LuaCSFunction(get_sound), new LuaCSFunction(set_sound));
+		L.RegVar("soundVolumeScale", new LuaCSFunction(get_soundVolumeScale), new LuaCSFunction(set_soundVolumeScale));
+		L.RegVar("changeStateOnClick", new LuaCSFunction(get_changeStateOnClick), new LuaCSFunction(set_changeStateOnClick));
+		L.RegVar("linkedPopup", new LuaCSFunction(get_linkedPopup), new LuaCSFunction(set_linkedPopup));
+		L.RegVar("UP", new LuaCSFunction(get_UP), null);
+		L.RegVar("DOWN", new LuaCSFunction(get_DOWN), null);
+		L.RegVar("OVER", new LuaCSFunction(get_OVER), null);
+		L.RegVar("SELECTED_OVER", new LuaCSFunction(get_SELECTED_OVER), null);
+		L.RegVar("DISABLED", new LuaCSFunction(get_DISABLED), null);
+		L.RegVar("SELECTED_DISABLED", new LuaCSFunction(get_SELECTED_DISABLED), null);
+		L.RegVar("onChanged", new LuaCSFunction(get_onChanged), null);
+		L.RegVar("icon", new LuaCSFunction(get_icon), new LuaCSFunction(set_icon));
+		L.RegVar("title", new LuaCSFunction(get_title), new LuaCSFunction(set_title));
+		L.RegVar("text", new LuaCSFunction(get_text), new LuaCSFunction(set_text));
+		L.RegVar("selectedIcon", new LuaCSFunction(get_selectedIcon), new LuaCSFunction(set_selectedIcon));
+		L.RegVar("selectedTitle", new LuaCSFunction(get_selectedTitle), new LuaCSFunction(set_selectedTitle));
+		L.RegVar("titleColor", new LuaCSFunction(get_titleColor), new LuaCSFunction(set_titleColor));
+		L.RegVar("color", new LuaCSFunction(get_color), new LuaCSFunction(set_color));
+		L.RegVar("titleFontSize", new LuaCSFunction(get_titleFontSize), new LuaCSFunction(set_titleFontSize));
+		L.RegVar("selected", new LuaCSFunction(get_selected), new LuaCSFunction(set_selected));
+		L.RegVar("mode", new LuaCSFunction(get_mode), new LuaCSFunction(set_mode));
+		L.RegVar("relatedController", new LuaCSFunction(get_relatedController), new LuaCSFunction(set_relatedController));
+		L.RegVar("relatedPageId", new LuaCSFunction(get_relatedPageId), new LuaCSFunction(set_relatedPageId));
 		L.EndClass();
 	}
 
@@ -138,7 +138,7 @@ public class FairyGUI_GButtonWrap
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.GButton obj = (FairyGUI.GButton)ToLua.CheckObject<FairyGUI.GButton>(L, 1);
 			FairyGUI.Utils.ByteBuffer arg0 = (FairyGUI.Utils.ByteBuffer)ToLua.CheckObject<FairyGUI.Utils.ByteBuffer>(L, 2);
-			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			obj.Setup_AfterAdd(arg0, arg1);
 			return 0;
 		}
@@ -773,7 +773,7 @@ public class FairyGUI_GButtonWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GButton obj = (FairyGUI.GButton)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.titleFontSize = arg0;
 			return 0;
 		}
@@ -811,7 +811,7 @@ public class FairyGUI_GButtonWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GButton obj = (FairyGUI.GButton)o;
-			FairyGUI.ButtonMode arg0 = (FairyGUI.ButtonMode)ToLua.CheckObject(L, 2, typeof(FairyGUI.ButtonMode));
+			FairyGUI.ButtonMode arg0 = (FairyGUI.ButtonMode)ToLua.CheckObject(L, 2, TypeTraits<FairyGUI.ButtonMode>.type);
 			obj.mode = arg0;
 			return 0;
 		}

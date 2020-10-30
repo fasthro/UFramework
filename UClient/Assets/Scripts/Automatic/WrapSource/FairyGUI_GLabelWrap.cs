@@ -7,17 +7,17 @@ public class FairyGUI_GLabelWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(FairyGUI.GLabel), typeof(FairyGUI.GComponent));
-		L.RegFunction("GetTextField", GetTextField);
-		L.RegFunction("Setup_AfterAdd", Setup_AfterAdd);
-		L.RegFunction("New", _CreateFairyGUI_GLabel);
-		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegVar("icon", get_icon, set_icon);
-		L.RegVar("title", get_title, set_title);
-		L.RegVar("text", get_text, set_text);
-		L.RegVar("editable", get_editable, set_editable);
-		L.RegVar("titleColor", get_titleColor, set_titleColor);
-		L.RegVar("titleFontSize", get_titleFontSize, set_titleFontSize);
-		L.RegVar("color", get_color, set_color);
+		L.RegFunction("GetTextField", new LuaCSFunction(GetTextField));
+		L.RegFunction("Setup_AfterAdd", new LuaCSFunction(Setup_AfterAdd));
+		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_GLabel));
+		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("icon", new LuaCSFunction(get_icon), new LuaCSFunction(set_icon));
+		L.RegVar("title", new LuaCSFunction(get_title), new LuaCSFunction(set_title));
+		L.RegVar("text", new LuaCSFunction(get_text), new LuaCSFunction(set_text));
+		L.RegVar("editable", new LuaCSFunction(get_editable), new LuaCSFunction(set_editable));
+		L.RegVar("titleColor", new LuaCSFunction(get_titleColor), new LuaCSFunction(set_titleColor));
+		L.RegVar("titleFontSize", new LuaCSFunction(get_titleFontSize), new LuaCSFunction(set_titleFontSize));
+		L.RegVar("color", new LuaCSFunction(get_color), new LuaCSFunction(set_color));
 		L.EndClass();
 	}
 
@@ -70,7 +70,7 @@ public class FairyGUI_GLabelWrap
 			ToLua.CheckArgsCount(L, 3);
 			FairyGUI.GLabel obj = (FairyGUI.GLabel)ToLua.CheckObject<FairyGUI.GLabel>(L, 1);
 			FairyGUI.Utils.ByteBuffer arg0 = (FairyGUI.Utils.ByteBuffer)ToLua.CheckObject<FairyGUI.Utils.ByteBuffer>(L, 2);
-			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			obj.Setup_AfterAdd(arg0, arg1);
 			return 0;
 		}
@@ -317,7 +317,7 @@ public class FairyGUI_GLabelWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			FairyGUI.GLabel obj = (FairyGUI.GLabel)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.titleFontSize = arg0;
 			return 0;
 		}
