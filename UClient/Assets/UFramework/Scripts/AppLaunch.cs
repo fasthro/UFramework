@@ -46,8 +46,7 @@ namespace UFramework
             // 下载器
             Download.Instance.Default();
             // 版本器
-            Updater.Instance.StartUpdate(OnUpdaterCompleted);
-
+            Updater.Instance.StartUpdate(launch, OnUpdaterCompleted);
         }
 
         private void OnUpdaterCompleted()
@@ -60,6 +59,12 @@ namespace UFramework
         {
             _initialized = true;
             App.Initialize();
+            launch.ShowTouchBeginOperation(OnStartNewWorld);
+        }
+
+        private void OnStartNewWorld()
+        {
+            Debug.Log(">> start new world <<");
         }
 
         protected override void OnSingletonUpdate(float deltaTime)

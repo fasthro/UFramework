@@ -154,15 +154,13 @@ namespace UFramework.VersionControl
 
         public static Version LoadVersion(string path)
         {
-            Debug.Log(">>> load version: " + path);
             if (!IOPath.FileExists(path)) return null;
 
             var ver = new Version();
             using (var stream = File.OpenRead(path))
             {
-                Debug.Log(">>> load version len: " + stream.Length);
                 var reader = new BinaryReader(stream);
-                
+
                 // base
                 ver.version = reader.ReadInt32();
                 ver.minVersion = reader.ReadInt32();

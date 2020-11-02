@@ -7,3 +7,6 @@ Description:
 
 -- local launch = typesys.new(panel)
 -- launch:show()
+print("111111111111")
+print("22222222222")
+print("22222222223")

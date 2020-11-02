@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UFramework.Config;
+using UFramework.VersionControl;
 using UnityEngine;
 
 namespace UFramework
@@ -108,6 +109,25 @@ namespace UFramework
                 return null;
             }
             return ManagerDictionary[managerName];
+        }
+
+        #endregion
+
+        #region other
+
+        /// <summary>
+        /// 显示版本
+        /// </summary>
+        /// <value></value>
+        public static string Version
+        {
+            get
+            {
+                var pvc = Updater.Instance.patchVersionCode;
+                var vc = Updater.Instance.versionCode;
+                if (pvc == -1) return string.Format("A{0}_V{1}_PE", Application.version, vc);
+                else return string.Format("A{0}_V{1}_P{2}", Application.version, vc, pvc);
+            }
         }
 
         #endregion

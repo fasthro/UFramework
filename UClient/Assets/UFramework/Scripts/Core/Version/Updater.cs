@@ -17,34 +17,84 @@ using System;
 
 namespace UFramework.VersionControl
 {
+    public enum UpdaterStep
+    {
+        Init,
+        CheckVersionCopy,
+        CheckFileCopy,
+        Copy,
+        RequestVersion,
+        CheckVersion,
+        CheckDownload,
+        OptionDownload,
+        Download,
+        Completed,
+    }
+
+    /// <summary>
+    /// 更新器接口
+    /// </summary>
+    public interface IUpdater
+    {
+        /// <summary>
+        /// 开始更新流程
+        /// </summary>
+        void OnStartUpdate();
+
+        /// <summary>
+        /// 更新状态切换
+        /// </summary>
+        /// <param name="step"></param>
+        void OnStep(UpdaterStep step);
+
+        /// <summary>
+        /// 进度
+        /// </summary>
+        /// <param name="progress"></param>
+        void OnProgress(float progress);
+
+        /// <summary>
+        /// 更新完成
+        /// </summary>
+        void OnEndUpdate();
+    }
+
     [MonoSingletonPath("UFramework/Updater")]
     public class Updater : MonoSingleton<Updater>
     {
-        enum Step
+        public float progress
         {
-            Init,
-            CheckVersionCopy,
-            CheckFileCopy,
-            Copy,
-            RequestVersion,
-            CheckVersion,
-            CheckDownload,
-            OptionDownload,
-            Download,
-            Completed,
+            get { return ((float)_value / (float)_maxValue); }
         }
 
-        public float progress
+        public int versionCode
         {
             get
             {
-                return ((float)_value / (float)_maxValue);
+                if (_newVersion != null) return _newVersion.version;
+                else if (_appVersion != null) return _appVersion.version;
+                else return UConfig.Read<AppConfig>().version;
             }
         }
 
-        private Action _onCompleted;
+        public int patchVersionCode
+        {
+            get
+            {
+                var v = _newVersion != null ? _newVersion : _appVersion;
+                if (v != null)
+                {
+                    var c = v.GetVersionInfo(v.version).patchs.Length;
+                    if (c == 0) return -1;
+                    return c - 1;
+                }
+                else return -1;
+            }
+        }
 
-        private Step _step;
+        private IUpdater _listener;
+        private Action _onCompleted;
+        private UpdaterStep _step;
 
         private AppConfig _app;
 
@@ -95,56 +145,63 @@ namespace UFramework.VersionControl
 
         protected override void OnSingletonUpdate(float deltaTime)
         {
-            if (_step == Step.CheckFileCopy || _step == Step.Copy || _step == Step.Download)
-                Debug.Log("_step: " + _step.ToString() + " progress: " + progress);
+            if (_step == UpdaterStep.CheckFileCopy || _step == UpdaterStep.Copy || _step == UpdaterStep.Download)
+                _listener?.OnProgress(progress);
         }
 
         /// <summary>
         /// 开始执行版本更新
         /// </summary>
-        /// <param name="onCompleted"></param>
-        public void StartUpdate(Action onCompleted)
+        /// <param name="listener">更新接口</param>
+        /// <param name="onCompleted">更新完成事件回调</param>
+        public void StartUpdate(IUpdater listener = null, Action onCompleted = null)
         {
+            _onCompleted = onCompleted;
+            _listener = listener;
+            _listener?.OnStartUpdate();
+
             if (_app.isDevelopmentVersion)
             {
-                onCompleted.InvokeGracefully();
-                return;
+                _listener?.OnEndUpdate();
+                _onCompleted.InvokeGracefully();
             }
-
-            _onCompleted = onCompleted;
-            StepChecking(Step.Init);
-            StepChecking(Step.CheckVersionCopy);
+            else
+            {
+                StepChecking(UpdaterStep.Init);
+                StepChecking(UpdaterStep.CheckVersionCopy);
+            }
         }
 
-        private void StepChecking(Step step)
+        private void StepChecking(UpdaterStep step)
         {
-            Debug.Log(">>>>>> step: " + step.ToString());
+            _listener?.OnStep(step);
+
             _step = step;
             switch (_step)
             {
-                case Step.Init:
+                case UpdaterStep.Init:
                     if (!IOPath.DirectoryExists(assetBundlePath))
                         IOPath.DirectoryCreate(assetBundlePath);
                     break;
-                case Step.CheckVersionCopy:
+                case UpdaterStep.CheckVersionCopy:
                     UFactoryCoroutine.CreateRun(CheckVersionCopy());
                     break;
-                case Step.CheckFileCopy:
+                case UpdaterStep.CheckFileCopy:
                     UFactoryCoroutine.CreateRun(CheckFileCopy());
                     break;
-                case Step.Copy:
+                case UpdaterStep.Copy:
                     UFactoryCoroutine.CreateRun(UpdateCopy());
                     break;
-                case Step.RequestVersion:
+                case UpdaterStep.RequestVersion:
                     UFactoryCoroutine.CreateRun(RequestVersion());
                     break;
-                case Step.CheckVersion:
+                case UpdaterStep.CheckVersion:
                     UFactoryCoroutine.CreateRun(CheckVersion());
                     break;
-                case Step.CheckDownload:
+                case UpdaterStep.CheckDownload:
                     UFactoryCoroutine.CreateRun(CheckDownloads());
                     break;
-                case Step.OptionDownload:
+                case UpdaterStep.OptionDownload:
                     UFactoryCoroutine.CreateRun(OptionDownloadPatch());
                     break;
             }
@@ -152,7 +209,7 @@ namespace UFramework.VersionControl
 
         private IEnumerator CheckVersionCopy()
         {
-            _newVersion = Version.LoadVersion(versionPath);
+            LoadNewVersion(true);
 
             var request = UnityWebRequest.Get(versionStreamingPath);
             request.downloadHandler = new DownloadHandlerFile(versionOriginalPath);
@@ -162,14 +219,14 @@ namespace UFramework.VersionControl
                 var version = Version.LoadVersion(versionOriginalPath);
                 _maxValue = version.files.Length + version.sFiles.Length;
                 _value = 0;
-                _step = Step.Copy;
+                _step = UpdaterStep.Copy;
 
                 _newVersion = _newVersion == null ? version : _newVersion;
                 _appVersion = version;
                 request.Dispose();
 
-                if (_appVersion.version > _newVersion.version) StepChecking(Step.Copy);
-                else StepChecking(Step.CheckFileCopy);
+                if (_appVersion.version > _newVersion.version) StepChecking(UpdaterStep.Copy);
+                else StepChecking(UpdaterStep.CheckFileCopy);
             }
             else
             {
@@ -177,7 +234,7 @@ namespace UFramework.VersionControl
                 yield return mb;
                 if (mb.isOk)
                 {
-                    StartUpdate(_onCompleted);
+                    StartUpdate(_listener, _onCompleted);
                 }
                 else
                 {
@@ -211,8 +268,8 @@ namespace UFramework.VersionControl
             }
 
             if (_repairFiles.Count > 0 || _repairSFiles.Count > 0)
-                _step = Step.Copy;
-            else _step = Step.RequestVersion;
+                _step = UpdaterStep.Copy;
+            else _step = UpdaterStep.RequestVersion;
 
             StepChecking(_step);
         }
@@ -250,7 +307,7 @@ namespace UFramework.VersionControl
                 _value++;
             }
 
-            StepChecking(Step.RequestVersion);
+            StepChecking(UpdaterStep.RequestVersion);
         }
 
         /// <summary>
@@ -265,7 +322,7 @@ namespace UFramework.VersionControl
                 yield return mb;
                 if (mb.isOk)
                 {
-                    StartUpdate(_onCompleted);
+                    StartUpdate(_listener, _onCompleted);
                 }
                 else
                 {
@@ -286,7 +343,7 @@ namespace UFramework.VersionControl
                 yield return mb;
                 if (mb.isOk)
                 {
-                    StartUpdate(_onCompleted);
+                    StartUpdate(_listener, _onCompleted);
                 }
                 else
                 {
@@ -296,17 +353,16 @@ namespace UFramework.VersionControl
             }
             else
             {
-                if (_newVersion == null)
-                    _newVersion = Version.LoadVersion(versionPath);
+                LoadNewVersion();
 
                 var v2 = Version.LoadVersion(tp);
-                if (v2.timestamp < _newVersion.timestamp)
+                if (v2.timestamp < _newVersion.timestamp || v2.version < _appVersion.version)
                 {
                     var mb = MessageBox.Allocate().Show("提示", string.Format("获取服务器版本失败：联系开发人员更新远程版本文件", error), "重试", "退出");
                     yield return mb;
                     if (mb.isOk)
                     {
-                        StartUpdate(_onCompleted);
+                        StartUpdate(_listener, _onCompleted);
                     }
                     else
                     {
@@ -319,7 +375,7 @@ namespace UFramework.VersionControl
                     IOPath.FileRename(tp, Version.FileName);
                     _newVersion = v2;
 
-                    StepChecking(Step.CheckVersion);
+                    StepChecking(UpdaterStep.CheckVersion);
                 }
             }
         }
@@ -330,19 +386,21 @@ namespace UFramework.VersionControl
         /// <returns></returns>
         private IEnumerator CheckVersion()
         {
-            if (_appVersion == null)
-                _appVersion = Version.LoadVersion(versionPath);
+            // app
+            LoadAppVersion();
 
             if (_appVersion == null)
             {
                 var request = UnityWebRequest.Get(versionStreamingPath);
                 request.downloadHandler = new DownloadHandlerFile(versionOriginalPath);
                 yield return request.SendWebRequest();
-                if (string.IsNullOrEmpty(request.error))
-                {
-                    _appVersion = Version.LoadVersion(versionOriginalPath);
-                }
+                if (request.isDone && string.IsNullOrEmpty(request.error))
+                    LoadAppVersion(true);
             }
+
+            // new
+            LoadNewVersion();
+
             if (_appVersion.version < _newVersion.minVersion)
             {
                 var mb = MessageBox.Allocate().Show("提示", "有新版本发布，请更新到最新版本", "更新", "退出");
@@ -357,7 +415,7 @@ namespace UFramework.VersionControl
                 }
                 yield break;
             }
-            else StepChecking(Step.CheckDownload);
+            else StepChecking(UpdaterStep.CheckDownload);
         }
 
         /// <summary>
@@ -366,8 +424,7 @@ namespace UFramework.VersionControl
         /// <returns></returns>
         private IEnumerator CheckDownloads()
         {
-            if (_newVersion == null)
-                _newVersion = Version.LoadVersion(versionPath);
+            LoadNewVersion();
 
             var versionInfo = _newVersion.GetVersionInfo(UConfig.Read<AppConfig>().version);
 
@@ -505,7 +562,7 @@ namespace UFramework.VersionControl
             downloadFiles.Clear();
             downloadSFiles.Clear();
 
-            if (_downloader.count > 0) StepChecking(Step.OptionDownload);
+            if (_downloader.count > 0) StepChecking(UpdaterStep.OptionDownload);
             else OnCompleted();
         }
 
@@ -519,10 +576,25 @@ namespace UFramework.VersionControl
             yield return mb;
             if (mb.isOk)
             {
-                _step = Step.Download;
+                _step = UpdaterStep.Download;
                 _downloader.StartDownload();
             }
             else Quit();
+            yield break;
+        }
+
+        private IEnumerator UpdaterFailed()
+        {
+            var mb = MessageBox.Allocate().Show("提示", string.Format("版本更新失败，请联系开发人员", _downloader.GetFormatDownloadSize()), "重试", "退出");
+            yield return mb;
+            if (mb.isOk)
+            {
+                StartUpdate(_listener, _onCompleted);
+            }
+            else
+            {
+                Quit();
+            }
             yield break;
         }
 
@@ -531,14 +603,13 @@ namespace UFramework.VersionControl
         /// </summary>
         private void OnPatchDownloadFailed()
         {
-            _step = Step.Completed;
-            Debug.Log("updater failed.");
+            UFactoryCoroutine.CreateRun(UpdaterFailed());
         }
 
         private void OnCompleted()
         {
-            Debug.Log("updater finished.");
-            _step = Step.Completed;
+            StepChecking(UpdaterStep.Completed);
+            _listener?.OnEndUpdate();
             _onCompleted.InvokeGracefully();
         }
 
@@ -549,6 +620,18 @@ namespace UFramework.VersionControl
 #else
             Application.Quit();
 #endif
+        }
+
+        private void LoadNewVersion(bool force = false)
+        {
+            if (force || _newVersion == null)
+                _newVersion = Version.LoadVersion(versionPath);
+        }
+
+        private void LoadAppVersion(bool force = false)
+        {
+            if (force || _appVersion == null)
+                _appVersion = Version.LoadVersion(versionOriginalPath);
         }
 
         private string GetStreamingAssetsPath()
