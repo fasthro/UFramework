@@ -8,6 +8,7 @@ using UFramework.Network;
 using System.Collections.Generic;
 using Google.Protobuf;
 using LuaInterface;
+using UnityEngine;
 
 namespace UFramework
 {
@@ -16,14 +17,14 @@ namespace UFramework
         /// <summary>
         /// Socket Client
         /// </summary>
-        private SocketClient m_client;
+        private SocketClient _client;
 
         /// <summary>
         /// 消息处理队列
         /// </summary>
         /// <typeparam name="SocketEventArgs"></typeparam>
         /// <returns></returns>
-        private Queue<SocketEventArgs> m_socketEventArgQueue = new Queue<SocketEventArgs>();
+        private Queue<SocketEventArgs> _socketEventArgQueue = new Queue<SocketEventArgs>();
 
         /// <summary>
         /// 会话记录保证发送与接收一一对应
@@ -31,18 +32,15 @@ namespace UFramework
         /// <typeparam name="int"></typeparam>
         /// <typeparam name="int"></typeparam>
         /// <returns></returns>
-        private Dictionary<int, int> m_sessionDictionary = new Dictionary<int, int>();
+        private Dictionary<int, int> _sessionDictionary = new Dictionary<int, int>();
 
         /// <summary>
-        /// 是否连接
+        /// connected
         /// </summary>
         /// <value></value>
         public bool isConnected
         {
-            get
-            {
-                return m_client != null && m_client.isConnected && m_client.isSocketConnected;
-            }
+            get { return _client != null && _client.isConnected; }
         }
 
         protected override void OnInitialize()
@@ -50,7 +48,10 @@ namespace UFramework
             // 初始化对象池
             ObjectPool<SocketEventArgs>.Instance.Initialize(10, 10);
 
-            m_client = new SocketClient(OnSocketEventCallback);
+            _client = new SocketClient(OnSocketEventCallback);
+            _client.connectTimeout = 5000;
+            _client.receiveBufferSize = 4096;
+            _client.sendBufferSize = 4096;
         }
 
         /// <summary>
@@ -59,24 +60,24 @@ namespace UFramework
         /// <param name="args"></param>
         private void OnSocketEventCallback(SocketEventArgs args)
         {
-            m_socketEventArgQueue.Enqueue(args);
+            _socketEventArgQueue.Enqueue(args);
         }
 
         protected override void OnUpdate(float deltaTime)
         {
-            if (m_client != null) m_client.Update();
+            if (_client != null) _client.Update();
 
-            if (m_socketEventArgQueue.Count > 0)
+            if (_socketEventArgQueue.Count > 0)
             {
-                var args = m_socketEventArgQueue.Dequeue();
+                var args = _socketEventArgQueue.Dequeue();
 
                 switch (args.socketState)
                 {
                     case SocketState.Received:
                         var pack = args.socketPack;
-                        if (m_sessionDictionary.ContainsKey(pack.cmd))
+                        if (_sessionDictionary.ContainsKey(pack.cmd))
                         {
-                            pack.valid = pack.sessionId == m_sessionDictionary[pack.cmd];
+                            pack.valid = pack.sessionId == _sessionDictionary[pack.cmd];
                         }
                         else
                         {
@@ -86,6 +87,10 @@ namespace UFramework
                     case SocketState.Connected:
                         break;
                     case SocketState.Disconnected:
+                        if (string.IsNullOrEmpty(args.error))
+                            Debug.LogError("socket exception: [" + args.exception.ToString() + "]");
+                        else
+                            Debug.LogError("socket exception: [" + args.exception.ToString() + "] error: " + args.error);
                         break;
                     default:
                         break;
@@ -98,7 +103,7 @@ namespace UFramework
         {
             if (!isConnected)
             {
-                m_client.Connect(ip, port);
+                _client.Connect(ip, port);
             }
         }
 
@@ -106,14 +111,14 @@ namespace UFramework
         {
             if (isConnected)
             {
-                var sessionId = m_client.Send(pack);
-                if (!m_sessionDictionary.ContainsKey(pack.cmd))
+                var sessionId = _client.Send(pack);
+                if (!_sessionDictionary.ContainsKey(pack.cmd))
                 {
-                    m_sessionDictionary.Add(pack.cmd, sessionId);
+                    _sessionDictionary.Add(pack.cmd, sessionId);
                 }
                 else
                 {
-                    m_sessionDictionary[pack.cmd] = sessionId;
+                    _sessionDictionary[pack.cmd] = sessionId;
                 }
             }
         }
@@ -122,14 +127,14 @@ namespace UFramework
         {
             if (isConnected)
             {
-                var sessionId = m_client.Send(cmd, message);
-                if (!m_sessionDictionary.ContainsKey(cmd))
+                var sessionId = _client.Send(cmd, message);
+                if (!_sessionDictionary.ContainsKey(cmd))
                 {
-                    m_sessionDictionary.Add(cmd, sessionId);
+                    _sessionDictionary.Add(cmd, sessionId);
                 }
                 else
                 {
-                    m_sessionDictionary[cmd] = sessionId;
+                    _sessionDictionary[cmd] = sessionId;
                 }
             }
         }
@@ -151,6 +156,7 @@ namespace UFramework
 
         protected override void OnDispose()
         {
+            _client?.Disconnecte();
         }
     }
 }

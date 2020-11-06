@@ -65,6 +65,8 @@ namespace UFramework
         private void OnStartNewWorld()
         {
             Debug.Log(">> start new world <<");
+
+            App.GetManager<TCPManager>().Connecte("39.97.236.132", 8888);
         }
 
         protected override void OnSingletonUpdate(float deltaTime)

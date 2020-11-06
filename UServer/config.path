@@ -1,0 +1,9 @@
+root = "$ROOT/"
+source_root = root .. "source/"
+skynet_root = root .. "skynet/"
+
+luaservice = skynet_root .. "service/?.lua;" .. source_root .. "service/?.lua;"
+lualoader = skynet_root .. "lualib/loader.lua"
+lua_path = skynet_root.."lualib/?.lua;"..skynet_root.."lualib/?/init.lua"..source_root.."game/?.lua"..source_root.."util/?.lua"..source_root.."lib/?.lua"
+lua_cpath = skynet_root .. "luaclib/?.so"
+cpath = skynet_root.."cservice/?.so"

@@ -1,0 +1,16 @@
+include "config.path"
+
+thread = 8
+logpath = root
+harbor = 1
+address = "127.0.0.1:2526"
+master = "127.0.0.1:2013"
+standalone = "0.0.0.0:2013"
+start = "main"
+
+bootstrap = "snlua bootstrap"	-- The service for bootstrap
+
+if $DAEMON then
+	logger = root .. "skynet.log"
+	daemon = root .. "skynet.pid"
+end
