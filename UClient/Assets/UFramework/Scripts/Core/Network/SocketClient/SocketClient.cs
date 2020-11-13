@@ -9,18 +9,10 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using UnityEngine;
-using Google.Protobuf;
-using System.Collections.Generic;
-using UFramework.Messenger;
-using UFramework.Pool;
-using UFramework.Tools;
 
 namespace UFramework.Network
 {
-    /// <summary>
-    /// socket state
-    /// </summary>
-    public enum SocketState
+    public enum SocketStatus
     {
         Connected,
         Disconnected,
@@ -28,7 +20,7 @@ namespace UFramework.Network
         Received,
     }
 
-    public enum SocketException
+    public enum SocketError
     {
         Timeout,
         Connect,
@@ -36,138 +28,33 @@ namespace UFramework.Network
         Send,
     }
 
-    /// <summary>
-    /// socket event callback args
-    /// </summary>
-    public class SocketEventArgs : IPoolObject
-    {
-        // socket state
-        public SocketState socketState { get; private set; }
-
-        // socket pack
-        public SocketPack socketPack { get; private set; }
-
-        // cmd
-        public int cmd { get; private set; }
-
-        // exception
-        public SocketException exception { get; private set; }
-
-        // error
-        public string error { get; private set; }
-
-        public SocketEventArgs()
-        {
-        }
-
-        #region pool
-
-        public bool isRecycled { get; set; }
-
-        public static SocketEventArgs Allocate(SocketState socketState)
-        {
-            var obj = ObjectPool<SocketEventArgs>.Instance.Allocate();
-            obj.socketState = socketState;
-            return obj;
-        }
-
-        public static SocketEventArgs Allocate(SocketState socketState, SocketPack socketPack)
-        {
-            var obj = ObjectPool<SocketEventArgs>.Instance.Allocate();
-            obj.socketState = socketState;
-            obj.socketPack = socketPack;
-            return obj;
-        }
-
-        public static SocketEventArgs Allocate(SocketState socketState, int cmd)
-        {
-            var obj = ObjectPool<SocketEventArgs>.Instance.Allocate();
-            obj.socketState = socketState;
-            obj.cmd = cmd;
-            return obj;
-        }
-
-        public static SocketEventArgs Allocate(SocketState socketState, SocketException exception, string error)
-        {
-            var obj = ObjectPool<SocketEventArgs>.Instance.Allocate();
-            obj.socketState = socketState;
-            obj.exception = exception;
-            obj.error = error;
-            return obj;
-        }
-
-        public void Recycle()
-        {
-            ObjectPool<SocketEventArgs>.Instance.Recycle(this);
-        }
-
-        public void OnRecycle()
-        {
-
-        }
-        #endregion
-    }
-
     public class SocketClient
     {
+        readonly static int HEAD_SIZE = 16;
+
         /// <summary>
-        /// socket async object
+        /// ip
         /// </summary>
-        class AsyncObject
-        {
-            public Socket socket { get; set; }
-            public List<int> cmds = new List<int>();
-        }
-
-        // socket
-        private Socket _client;
-
-        // 数据接收线程
-        private Thread _recThread;
-
-        // 事件监听
-        private event UCallback<SocketEventArgs> _listener;
-
-        #region receive
-
-        // 数据接收池
-        private byte[] _recCache;
-        // 数据接收处理器
-        private SocketReceiver _receiver;
-        // 接收的数据包
-        private SocketPack _recPack;
-
-        #endregion
-
-        #region send
-
-        // 发送包头
-        public SocketPackHeader _sendPackHeader;
-        // 发送队列
-        private Queue<byte[]> _sendQueue;
-        // 发送命令队列
-        private Queue<int> _sendCmdQueue;
-        // 发送缓存池
-        private ByteCache _sendCache;
-        // 发送命令数组
-        private AsyncObject _sendAsyncObj;
-        // 发送数据大小
-        private int _sendSize;
-
-        #endregion
-
-        // 双队列事件机制
-        private DoubleQueue<SocketEventArgs> _eventQueue;
-
+        /// <value></value>
         public string ip { get; private set; }
-        public int port { get; private set; }
-        public bool isConnected { get; private set; }
-        public bool isConnecting { get; private set; }
 
-        private float _connectDecreaseTime;
-        private int _connectTimeout = 5000;
-        private int _receiveBufferSize = 4096;
-        private int _sendBufferSize = 4096;
+        /// <summary>
+        /// port
+        /// </summary>
+        /// <value></value>
+        public int port { get; private set; }
+
+        /// <summary>
+        /// 已连接
+        /// </summary>
+        /// <value></value>
+        public bool isConnected { get; private set; }
+
+        /// <summary>
+        /// 连接中
+        /// </summary>
+        /// <value></value>
+        public bool isConnecting { get; private set; }
 
         /// <summary>
         /// 连接超时时间
@@ -196,47 +83,55 @@ namespace UFramework.Network
             set { _sendBufferSize = value; }
         }
 
+        private Socket _client;
+        private Thread _thread;
+        private ISocketListener _listener;
+
+        private byte[] _buffer;
+        private AutoByteArray _sender;
+        private AutoByteArray _receiver;
+        private FixedByteArray _header;
+
+        private int _packSize;
+        private int _cmd;
+        private long _session;
+        private short _packType;
+
+        private float _connectDecreaseTime;
+        private int _connectTimeout = 5000;
+        private int _receiveBufferSize = 4096;
+        private int _sendBufferSize = 4096;
+
+        private bool _isSending;
+        private bool _isBodyParsing;
+
         /// <summary>
         /// socket client
         /// </summary>
         /// <param name="callback"></param>
-        public SocketClient(UCallback<SocketEventArgs> callback)
+        public SocketClient(ISocketListener listener)
         {
-            _listener = callback;
-            _recCache = new byte[receiveBufferSize];
-            _receiver = new SocketReceiver();
-            _sendPackHeader = new SocketPackHeader();
-            _eventQueue = new DoubleQueue<SocketEventArgs>(128);
-            _sendQueue = new Queue<byte[]>();
-            _sendCmdQueue = new Queue<int>();
-            _sendCache = new ByteCache();
-            _sendAsyncObj = new AsyncObject();
+            _buffer = new byte[receiveBufferSize];
+            _listener = listener;
+            _sender = new AutoByteArray();
+            _receiver = new AutoByteArray();
+            _header = new FixedByteArray(HEAD_SIZE);
         }
 
-        public void Update()
+        public void OnUpdate()
         {
             if (isConnecting)
             {
                 _connectDecreaseTime -= Time.unscaledDeltaTime;
                 if (_connectDecreaseTime <= 0)
-                {
-                    Exception(SocketException.Timeout);
-                }
+                    OnException(SocketError.Timeout);
             }
-
-            if (isConnected)
+            else if (isConnected)
             {
                 ProcessSend();
             }
-
-            ProcessEvent();
         }
 
-        /// <summary>
-        /// 连接服务器
-        /// </summary>
-        /// <param name="ip"></param>
-        /// <param name="port"></param>
         public void Connect(string ip, int port)
         {
             this.port = port;
@@ -273,24 +168,14 @@ namespace UFramework.Network
                 _client = new Socket(newAddressFamily, SocketType.Stream, ProtocolType.Tcp);
                 _client.NoDelay = true;
 
-                _sendAsyncObj.socket = _client;
                 _client.BeginConnect(ipEndpoint, new AsyncCallback(OnConnetSucceed), _client);
                 isConnecting = true;
                 _connectDecreaseTime = (float)connectTimeout / 1000f;
             }
             catch (System.Exception e)
             {
-                Exception(SocketException.Connect, e);
+                OnException(SocketError.Connect, e);
             }
-        }
-
-        /// <summary>
-        /// 重新连接服务器
-        /// </summary>
-        public void ReConnect()
-        {
-            OnDisconnected();
-            Connect();
         }
 
         private void OnConnetSucceed(IAsyncResult iar)
@@ -302,81 +187,68 @@ namespace UFramework.Network
                 isConnected = true;
                 isConnecting = false;
 
-                AddEventQueue(SocketEventArgs.Allocate(SocketState.Connected));
+                _listener.OnConnected();
 
-                _recThread = new Thread(new ThreadStart(OnReceive));
-                _recThread.IsBackground = true;
-                _recThread.Start();
+                _thread = new Thread(new ThreadStart(OnReceive));
+                _thread.IsBackground = true;
+                _thread.Start();
             }
             catch (Exception e)
             {
-                Exception(SocketException.Connect, e);
+                OnException(SocketError.Connect, e);
             }
         }
 
-        public int Send(SocketPack pack)
+        public void Send(SocketPack pack)
         {
-            if (!isConnected || _client == null || !_client.Connected) return -1;
-            _sendCmdQueue.Enqueue(pack.cmd);
-            _sendQueue.Enqueue(_sendPackHeader.Write(pack.cmd, pack.data));
-            return _sendPackHeader.sessionId;
+            Send(pack.headData);
+            Send(pack.rawData);
         }
 
-        public int Send(int cmd, IMessage message)
+        public void Send(byte[] data)
         {
-            return Send(new SocketPack(cmd, message));
+            if (!isConnected || _client == null || !_client.Connected)
+            {
+                Debug.LogError("SocketClient Socket 未连接，无法发送消息!");
+                return;
+            }
+            _sender.Write(data);
+        }
+
+        private void ProcessSend()
+        {
+            if (_isSending) return;
+            try
+            {
+                if (!_sender.isEmpty())
+                {
+                    _isSending = true;
+                    if (_sender.dataSize > sendBufferSize)
+                    {
+                        _client.BeginSend(_sender.Read(sendBufferSize), 0, sendBufferSize, SocketFlags.DontRoute, OnSend, null);
+                    }
+                    else
+                    {
+                        var len = _sender.dataSize;
+                        _client.BeginSend(_sender.ReadAll(), 0, len, SocketFlags.DontRoute, OnSend, null);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                OnException(SocketError.Send, e);
+            }
         }
 
         private void OnSend(IAsyncResult iar)
         {
             try
             {
-                var obj = ((AsyncObject)iar.AsyncState);
-                obj.socket.EndSend(iar);
-                for (int i = 0; i < obj.cmds.Count; i++)
-                {
-                    AddEventQueue(SocketEventArgs.Allocate(SocketState.Send, obj.cmds[i]));
-                }
+                _isSending = false;
             }
             catch (Exception e)
             {
-                Exception(SocketException.Send, e);
-            }
-        }
-
-        private void ProcessSend()
-        {
-            try
-            {
-                _sendCache.Clear();
-                if (_sendQueue.Count > 0)
-                {
-                    _sendCache.Clear();
-                }
-                _sendAsyncObj.cmds.Clear();
-                _sendSize = 0;
-                for (; _sendQueue.Count > 0;)
-                {
-                    byte[] data = _sendQueue.Peek();
-                    if ((_sendSize > 0 && data.Length + _sendSize > sendBufferSize) || data == null) break;
-                    _sendSize += data.Length;
-                    _sendCache.Write(data, data.Length);
-                    _sendQueue.Dequeue();
-                    _sendAsyncObj.cmds.Add(_sendCmdQueue.Dequeue());
-                }
-                if (_sendCache.size > 0)
-                {
-                    bool succeed = false;
-                    byte[] data = _sendCache.Read(_sendCache.size, ref succeed);
-                    if (succeed)
-                    {
-                        _client.BeginSend(data, 0, data.Length, SocketFlags.DontRoute, new AsyncCallback(OnSend), _sendAsyncObj);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Exception(SocketException.Send, e);
+                OnException(SocketError.Send, e);
             }
         }
 
@@ -388,42 +260,62 @@ namespace UFramework.Network
                 {
                     if (_client.Connected)
                     {
-                        // 接受数据
-                        int bSize = _client.Receive(_recCache);
+                        int bSize = _client.Receive(_buffer);
                         if (bSize > 0)
                         {
-                            // 向接受者Push数据
-                            _receiver.Push(_recCache, bSize);
-                            // 尝试在向接受者获取Pack
-                            while ((_recPack = _receiver.TryGetPack()) != null)
+
+                            _receiver.Write(_buffer, bSize);
+                            SocketPack pack = null;
+                            while ((pack = ParsePack()) != null)
                             {
-                                AddEventQueue(SocketEventArgs.Allocate(SocketState.Received, _recPack));
+                                _listener.OnReceive(pack);
                             }
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    Exception(SocketException.Receive, e);
+                    OnException(SocketError.Receive, e);
                     break;
                 }
             }
         }
 
-        private void Exception(SocketException exception, Exception e = null)
+        private SocketPack ParsePack()
         {
-            OnDisconnected();
-            if (e != null)
-                AddEventQueue(SocketEventArgs.Allocate(SocketState.Disconnected, exception, e.ToString()));
-            else
-                AddEventQueue(SocketEventArgs.Allocate(SocketState.Disconnected, exception, null));
+            if (!_isBodyParsing)
+            {
+                if (_receiver.dataSize >= HEAD_SIZE)
+                {
+                    if (_header.isEmpty())
+                    {
+                        _header.Write(_receiver.Read(HEAD_SIZE));
+                        _isBodyParsing = true;
+
+                        _packSize = _header.ReadInt32();
+                        _cmd = _header.ReadInt32();
+                        _session = _header.ReadInt64();
+                        _packType = _header.ReadInt16();
+                    }
+                }
+            }
+
+            if (_isBodyParsing)
+            {
+                if (_receiver.dataSize >= _packSize)
+                {
+                    return null;
+                }
+            }
+            return null;
         }
 
         public void Disconnecte()
         {
-            if (!isConnected) return;
+            if (!isConnected)
+                return;
             OnDisconnected();
-            AddEventQueue(SocketEventArgs.Allocate(SocketState.Disconnected));
+            _listener.OnDisconnected();
         }
 
         private void OnDisconnected()
@@ -433,9 +325,9 @@ namespace UFramework.Network
             isConnected = false;
             isConnecting = false;
 
-            if (_recThread != null)
-                _recThread.Abort();
-            _recThread = null;
+            if (_thread != null)
+                _thread.Abort();
+            _thread = null;
 
             if (_client != null && _client.Connected)
             {
@@ -445,19 +337,11 @@ namespace UFramework.Network
             _client = null;
         }
 
-        private void AddEventQueue(SocketEventArgs arg)
+        private void OnException(SocketError error, Exception e = null)
         {
-            _eventQueue.Enqueue(arg);
-        }
-
-        private void ProcessEvent()
-        {
-            _eventQueue.Swap();
-
-            while (!_eventQueue.IsEmpty())
-            {
-                _listener.InvokeGracefully(_eventQueue.Dequeue());
-            }
+            if (isConnected) OnDisconnected();
+            isConnecting = false;
+            _listener.OnNetworkError(error, e);
         }
 
         public static string GetIP(string domain)

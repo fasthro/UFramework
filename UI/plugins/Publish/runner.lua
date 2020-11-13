@@ -42,8 +42,9 @@ function runner:ctor(handler)
 
     self.packageName = handler:ToFilename(handler.pkg.name)
     self.exportPath = handler.exportPath .. "/" .. self.packageName
-    self.exportCodePath = handler.exportCodePath .. "/Automatic/Lua/FairyGUI/" .. self.packageName
+    self.exportCodePath = handler.exportCodePath .. "/Automatic/Lua/FComponent/" .. self.packageName
     self.exportPanelCodePath = handler.exportCodePath .. "/Lua/Panel"
+    self.definePanelPath = handler.exportCodePath .. "/Lua/Define/DefinePanel.lua"
 
     -- 不使用 FairyGUI 提供的类导出功能
     handler.genCode = false
@@ -90,6 +91,16 @@ function runner:execute()
             self:_genPanelCode(class)
         end
     end
+
+    -- 生成 package 索引
+    -- if self:_checkPackageEmpty() then
+    --     self:_genPackageIndex()
+    -- else
+    --     utils.directoryDelete(self.exportCodePath)
+    -- end
+
+    self:_genPackageIndex()
+    self:_updateDefinePanel()
 end
 
 function runner:_genComponentCode(info)
@@ -134,7 +145,7 @@ function runner:_genComponentCode(info)
         writer:writeln(methods[k])
     end
 
-    writer:writeln(string.format('fui.register_extension("ui://%s%s", component)', self.package.id, info.resId))
+    writer:writeln(string.format('fgui.register_extension("ui://%s%s", component)', self.package.id, info.resId))
     writer:writeln()
     writer:writeln("return component")
 
@@ -227,43 +238,80 @@ function runner:_genPanelCode(info)
 
     local writer = CodeFileWriter.new()
     writer:reset()
-    writer:writeln("-- uframework automatically generated")
 
-    writer:writeln()
     writer:writeln("local panel = typesys.def." .. _panelName .. "{")
-    writer:writelnTab("__super = UIPanel,")
+    writer:writelnTab("__super = typesys.BasePanel,")
     writer:writeln("}")
     writer:writeln()
 
     writer:writeln("function panel:__ctor()")
     writer:writelnTab('self._name = "' .. info.className .. '"')
     writer:writelnTab('self._package = "' .. self.packageName .. '"')
-    writer:writelnTab("self._layer = UI_LAYER.PANEL")
+    writer:writelnTab("self._layer = PANEL_LAYER.PANEL")
     writer:writelnTab("self._dependences = nil")
     writer:writeln()
     writer:writelnTab("panel.__super.__ctor(self)")
     writer:writeln("end")
     writer:writeln()
 
-    writer:writeln("function panel:_onShow()")
+    writer:writeln("function panel:_onAwake()")
     writer:writeln("end")
     writer:writeln()
 
-    writer:writeln("function panel:_onHide()")
+    writer:writeln("function panel:_onDispose()")
     writer:writeln("end")
     writer:writeln()
 
-    writer:writeln("function panel:_onNotification(id)")
+    writer:writeln("function panel:onShow()")
+    writer:writelnTab("panel.__super.onShow(self)")
     writer:writeln("end")
     writer:writeln()
 
-    writer:writeln("function panel:_onNetMessage()")
+    writer:writeln("function panel:onHide()")
+    writer:writeln("end")
+    writer:writeln()
+
+    writer:writeln("function panel:onEventReceive(id)")
+    writer:writeln("end")
+    writer:writeln()
+
+    writer:writeln("function panel:onNetworReceive()")
     writer:writeln("end")
     writer:writeln()
 
     writer:writeln("return panel")
 
     writer:save(_panelPath)
+end
+
+function runner:_updateDefinePanel()
+    local writer = CodeFileWriter.new()
+    writer:reset()
+    writer:writeln("-- uframework automatically generated")
+
+    local files = utils.directoryGetFiles(self.exportPanelCodePath, "*.lua")
+    for k = 0, files.Length - 1 do
+        local fn = utils.fileName(files[k])
+        writer:writeln(string.format('require("Panel.%s")', fn))
+    end
+    writer:save(self.definePanelPath)
+end
+
+function runner:_checkPackageEmpty()
+    return utils.directoryGetFiles(self.exportCodePath, "*.lua").Length > 0
+end
+
+function runner:_genPackageIndex()
+    local writer = CodeFileWriter.new()
+    writer:reset()
+    writer:writeln("-- uframework automatically generated")
+
+    local files = utils.directoryGetFiles(self.exportCodePath, "*.lua")
+    for k = 0, files.Length - 1 do
+        local fn = utils.fileName(files[k])
+        writer:writeln(string.format('require("FComponent.%s.%s")', self.packageName, fn))
+    end
+    writer:save(string.format("%s/%s", self.exportCodePath, "PackageComponent.lua"))
 end
 
 return runner

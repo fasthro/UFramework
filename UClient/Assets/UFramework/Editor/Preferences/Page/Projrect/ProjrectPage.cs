@@ -24,7 +24,13 @@ namespace UFramework.Editor.Preferences
         /// </summary>
         [BoxGroup("UI Settings")]
         [LabelText("    Use FairyGUI")]
+        [OnValueChanged("OnValueChanged_useFairyGUI")]
         public bool useFairyGUI;
+
+        private void OnValueChanged_useFairyGUI()
+        {
+            UpdateFairyGUISymbols();
+        }
 
         /// <summary>
         /// 设计分辨率
@@ -75,6 +81,41 @@ namespace UFramework.Editor.Preferences
             describeObject.designResolutionY = designResolutionY;
             describeObject.uiDirectory = uiDirectory;
             describeObject.Save();
+        }
+
+        private void UpdateFairyGUISymbols()
+        {
+            string symbol = "FAIRYGUI_TOLUA";
+            if (useFairyGUI)
+            {
+                Utils.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone, symbol);
+                Utils.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Android, symbol);
+                Utils.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.iOS, symbol);
+            }
+            else
+            {
+                Utils.RemoveScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone, symbol);
+                Utils.RemoveScriptingDefineSymbolsForGroup(BuildTargetGroup.Android, symbol);
+                Utils.RemoveScriptingDefineSymbolsForGroup(BuildTargetGroup.iOS, symbol);
+            }
+        }
+
+        private void UpdateOtherSymbols()
+        {
+            string symbol = "LUAC_5_3";
+            Utils.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone, symbol);
+            Utils.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Android, symbol);
+            Utils.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.iOS, symbol);
+        }
+
+        public static void InitProject()
+        {
+            var page = new ProjrectPage();
+            page.OnRenderBefore();
+            // 更新FairyGUI符号
+            page.UpdateFairyGUISymbols();
+            // 更新其他符号
+            page.UpdateOtherSymbols();
         }
     }
 }

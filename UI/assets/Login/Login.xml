@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="2048,1152">
+  <displayList>
+    <component id="n0_unrx" name="n0" src="unrx1" fileName="Components/Backgound.xml" pkg="h49w8gjg" xy="0,0">
+      <relation target="" sidePair="width-width,height-height"/>
+    </component>
+    <component id="n1_unrx" name="_username" src="unrx1" fileName="Components/Input/Input_White_Username.xml" pkg="5w14mmk5" xy="660,627" size="727,100" group="n4_unrx"/>
+    <component id="n2_unrx" name="_password" src="unrx5" fileName="Components/Input/Input_White_Password.xml" pkg="5w14mmk5" xy="660,758" size="727,100" group="n4_unrx"/>
+    <component id="n3_unrx" name="_login" src="unrx1" fileName="Components/Yellow-Button.xml" pkg="hamedtby" xy="850,909" group="n4_unrx"/>
+    <group id="n4_unrx" name="opt" xy="660,627" size="727,382" advanced="true">
+      <relation target="" sidePair="center-center,middle-middle"/>
+    </group>
+  </displayList>
+</component>

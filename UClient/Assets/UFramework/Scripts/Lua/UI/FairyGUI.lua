@@ -1,9 +1,8 @@
 --[[
 Author: fasthro
 Date: 2020-09-25 10:33:20
-Description: fairy
+Description: FairyGUI
 --]]
-
 EventContext = FairyGUI.EventContext
 EventListener = FairyGUI.EventListener
 EventDispatcher = FairyGUI.EventDispatcher
@@ -64,7 +63,9 @@ function fgui.window_class(base)
         local ins = FairyGUI.Window.New()
         tolua.setpeer(ins, t)
         ins:SetLuaPeer(t)
-        if t.ctor then t.ctor(ins, ...) end
+        if t.ctor then
+            t.ctor(ins, ...)
+        end
 
         return ins
     end
@@ -73,7 +74,7 @@ function fgui.window_class(base)
 end
 
 function fgui.register_extension(url, extension)
-    FairyGUI.UIObjectFactory.SetExtension(url, typeof(extension.base),extension.Extend)
+    FairyGUI.UIObjectFactory.SetExtension(url, typeof(extension.base), extension.Extend)
 end
 
 function fgui.extension_class(base)
@@ -90,4 +91,8 @@ function fgui.extension_class(base)
     end
 
     return o
+end
+
+function fgui.load_component_package(packageName)
+    require(string.format("FComponent.%s.PackageComponent", packageName))
 end

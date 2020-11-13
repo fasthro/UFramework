@@ -4,6 +4,8 @@
  * @Description: BaseManager
  */
 
+using UnityEngine;
+
 namespace UFramework
 {
     public abstract class BaseManager
@@ -42,5 +44,15 @@ namespace UFramework
         }
 
         protected abstract void OnDispose();
+
+        protected virtual void Log(object message)
+        {
+            Debug.Log(message);
+        }
+
+        protected virtual void LogError(object message)
+        {
+            Debug.LogError(message);
+        }
     }
 }

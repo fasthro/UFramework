@@ -64,9 +64,10 @@ namespace UFramework
 
         private void OnStartNewWorld()
         {
-            Debug.Log(">> start new world <<");
+            launch.Dispose();
+            launch = null;
 
-            App.GetManager<TCPManager>().Connecte("39.97.236.132", 8888);
+            App.GetManager<LuaManager>().luaEngine.Call("runner");
         }
 
         protected override void OnSingletonUpdate(float deltaTime)

@@ -6,6 +6,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using LuaInterface;
 using UFramework.Config;
 using UFramework.VersionControl;
 using UnityEngine;
@@ -78,8 +79,7 @@ namespace UFramework
         static void InitializeManager()
         {
             AddManager<LuaManager>();
-            AddManager<UIManager>();
-            AddManager<TCPManager>();
+            AddManager<NetManager>();
         }
 
         static T AddManager<T>() where T : BaseManager, new()
@@ -183,6 +183,16 @@ namespace UFramework
             {
                 Managers[i].Dispose();
             }
+        }
+
+        /// <summary>
+        /// 查询 Lua 文件
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public static string FindLuaFile(string fileName)
+        {
+            return LuaFileUtils.Instance.FindFile(fileName);
         }
     }
 }

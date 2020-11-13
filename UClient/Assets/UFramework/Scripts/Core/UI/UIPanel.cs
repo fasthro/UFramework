@@ -3,7 +3,9 @@
  * @Date: 2020-09-29 11:36:31
  * @Description: panel base
  */
+using System;
 using System.Collections.Generic;
+using LuaInterface;
 using UFramework.Messenger;
 using UnityEngine;
 
@@ -55,7 +57,7 @@ namespace UFramework.UI
 
         private int _packageCount;
         private bool _inited;
-
+        private LuaTable _peerTable;
         #endregion
 
         /// <summary>
@@ -112,8 +114,10 @@ namespace UFramework.UI
         {
             isShowed = true;
 
-            UMessenger.AddListener<int>(Global.EVENT_UI_NOTIFICATION, OnNotification);
-            UMessenger.AddListener(Global.EVENT_UI_NET_MESSAGE, OnNetMessage);
+            UMessenger.AddListener<int>(Global.Event_Panel, OnReceiveEvent);
+            UMessenger.AddListener(Global.Event_Panel_Network, OnReceivePack);
+
+            LuaCall("onShow");
         }
 
         private void Init()
@@ -144,23 +148,60 @@ namespace UFramework.UI
 
         protected virtual void OnHide()
         {
-            UMessenger.RemoveListener<int>(Global.EVENT_UI_NOTIFICATION, OnNotification);
-            UMessenger.RemoveListener(Global.EVENT_UI_NET_MESSAGE, OnNetMessage);
+            UMessenger.RemoveListener<int>(Global.Event_Panel, OnReceiveEvent);
+            UMessenger.RemoveListener(Global.Event_Panel_Network, OnReceivePack);
+
+            LuaCall("onHide");
         }
 
-        public void SendNotification(int id)
+        public void LuaBind(LuaTable peerTable)
         {
-            UMessenger.Broadcast<int>(Global.EVENT_UI_NOTIFICATION, id);
+            _peerTable = peerTable;
         }
 
-        protected virtual void OnNotification(int id)
+        [NoToLua]
+        public bool LuaCall(string funcName, params object[] args)
         {
-
+            if (_peerTable != null)
+            {
+                LuaFunction ctor = _peerTable.GetLuaFunction(funcName);
+                if (ctor != null)
+                {
+                    try
+                    {
+                        if (args.Length == 0)
+                            ctor.Call(_peerTable);
+                        else if (args.Length == 1)
+                            ctor.Call(_peerTable, args[0]);
+                        else if (args.Length == 2)
+                            ctor.Call(_peerTable, args[0], args[1]);
+                        else if (args.Length == 3)
+                            ctor.Call(_peerTable, args[0], args[1], args[2]);
+                    }
+                    catch (Exception err)
+                    {
+                        Debug.LogError(err);
+                    }
+                    ctor.Dispose();
+                    return true;
+                }
+            }
+            return false;
         }
 
-        protected virtual void OnNetMessage()
+        public void BroadcastEvent(int id)
         {
+            UMessenger.Broadcast<int>(Global.Event_Panel, id);
+        }
 
+        protected virtual void OnReceiveEvent(int id)
+        {
+            LuaCall("onReceiveEvent", id);
+        }
+
+        protected virtual void OnReceivePack()
+        {
+            LuaCall("onReceivePack");
         }
 
         /// <summary>

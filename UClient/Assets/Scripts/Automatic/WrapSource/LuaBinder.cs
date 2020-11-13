@@ -167,10 +167,18 @@ public static class LuaBinder
 		L.RegFunction("GTweenCallback1", new LuaCSFunction(FairyGUI_GTweenCallback1));
 		L.EndModule();
 		L.BeginModule("UFramework");
+		UFramework_AppWrap.Register(L);
+		UFramework_IOPathWrap.Register(L);
+		UFramework_NetManagerWrap.Register(L);
+		UFramework_ResManagerWrap.Register(L);
+		UFramework_BaseManagerWrap.Register(L);
 		L.BeginModule("UI");
 		UFramework_UI_UIPanelWrap.Register(L);
 		UFramework_UI_FiaryPanelWrap.Register(L);
 		UFramework_UI_LayerWrap.Register(L);
+		L.EndModule();
+		L.BeginModule("Messenger");
+		L.RegFunction("UCallback_UFramework_Assets_AssetRequest", new LuaCSFunction(UFramework_Messenger_UCallback_UFramework_Assets_AssetRequest));
 		L.EndModule();
 		L.EndModule();
 		L.EndModule();
@@ -1638,6 +1646,36 @@ public static class LuaBinder
 			{
 				LuaTable self = ToLua.CheckLuaTable(L, 2);
 				Delegate arg1 = DelegateTraits<FairyGUI.GTweenCallback1>.Create(func, self);
+				ToLua.Push(L, arg1);
+				func.Dispose();
+				self.Dispose();
+			}
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int UFramework_Messenger_UCallback_UFramework_Assets_AssetRequest(IntPtr L)
+	{
+		try
+		{
+			int count = LuaDLL.lua_gettop(L);
+			LuaFunction func = ToLua.CheckLuaFunction(L, 1);
+
+			if (count == 1)
+			{
+				Delegate arg1 = DelegateTraits<UFramework.Messenger.UCallback<UFramework.Assets.AssetRequest>>.Create(func);
+				ToLua.Push(L, arg1);
+				func.Dispose();
+			}
+			else
+			{
+				LuaTable self = ToLua.CheckLuaTable(L, 2);
+				Delegate arg1 = DelegateTraits<UFramework.Messenger.UCallback<UFramework.Assets.AssetRequest>>.Create(func, self);
 				ToLua.Push(L, arg1);
 				func.Dispose();
 				self.Dispose();

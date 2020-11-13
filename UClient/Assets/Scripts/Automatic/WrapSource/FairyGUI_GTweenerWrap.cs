@@ -358,28 +358,12 @@ public class FairyGUI_GTweenerWrap
 	{
 		try
 		{
-			int count = LuaDLL.lua_gettop(L);
-
-			if (count == 2 && TypeChecker.CheckTypes<FairyGUI.GTweenCallback>(L, 2))
-			{
-				FairyGUI.GTweener obj = (FairyGUI.GTweener)ToLua.CheckObject<FairyGUI.GTweener>(L, 1);
-				FairyGUI.GTweenCallback arg0 = (FairyGUI.GTweenCallback)ToLua.ToObject(L, 2);
-				FairyGUI.GTweener o = obj.OnUpdate(arg0);
-				ToLua.PushObject(L, o);
-				return 1;
-			}
-			else if (count == 2 && TypeChecker.CheckTypes<FairyGUI.GTweenCallback1>(L, 2))
-			{
-				FairyGUI.GTweener obj = (FairyGUI.GTweener)ToLua.CheckObject<FairyGUI.GTweener>(L, 1);
-				FairyGUI.GTweenCallback1 arg0 = (FairyGUI.GTweenCallback1)ToLua.ToObject(L, 2);
-				FairyGUI.GTweener o = obj.OnUpdate(arg0);
-				ToLua.PushObject(L, o);
-				return 1;
-			}
-			else
-			{
-				return LuaDLL.luaL_throw(L, "invalid arguments to method: FairyGUI.GTweener.OnUpdate");
-			}
+			ToLua.CheckArgsCount(L, 2);
+			FairyGUI.GTweener obj = (FairyGUI.GTweener)ToLua.CheckObject<FairyGUI.GTweener>(L, 1);
+			FairyGUI.GTweenCallback1 arg0 = (FairyGUI.GTweenCallback1)ToLua.CheckDelegate<FairyGUI.GTweenCallback1>(L, 2);
+			FairyGUI.GTweener o = obj.OnUpdate(arg0);
+			ToLua.PushObject(L, o);
+			return 1;
 		}
 		catch (Exception e)
 		{
@@ -392,28 +376,12 @@ public class FairyGUI_GTweenerWrap
 	{
 		try
 		{
-			int count = LuaDLL.lua_gettop(L);
-
-			if (count == 2 && TypeChecker.CheckTypes<FairyGUI.GTweenCallback>(L, 2))
-			{
-				FairyGUI.GTweener obj = (FairyGUI.GTweener)ToLua.CheckObject<FairyGUI.GTweener>(L, 1);
-				FairyGUI.GTweenCallback arg0 = (FairyGUI.GTweenCallback)ToLua.ToObject(L, 2);
-				FairyGUI.GTweener o = obj.OnStart(arg0);
-				ToLua.PushObject(L, o);
-				return 1;
-			}
-			else if (count == 2 && TypeChecker.CheckTypes<FairyGUI.GTweenCallback1>(L, 2))
-			{
-				FairyGUI.GTweener obj = (FairyGUI.GTweener)ToLua.CheckObject<FairyGUI.GTweener>(L, 1);
-				FairyGUI.GTweenCallback1 arg0 = (FairyGUI.GTweenCallback1)ToLua.ToObject(L, 2);
-				FairyGUI.GTweener o = obj.OnStart(arg0);
-				ToLua.PushObject(L, o);
-				return 1;
-			}
-			else
-			{
-				return LuaDLL.luaL_throw(L, "invalid arguments to method: FairyGUI.GTweener.OnStart");
-			}
+			ToLua.CheckArgsCount(L, 2);
+			FairyGUI.GTweener obj = (FairyGUI.GTweener)ToLua.CheckObject<FairyGUI.GTweener>(L, 1);
+			FairyGUI.GTweenCallback1 arg0 = (FairyGUI.GTweenCallback1)ToLua.CheckDelegate<FairyGUI.GTweenCallback1>(L, 2);
+			FairyGUI.GTweener o = obj.OnStart(arg0);
+			ToLua.PushObject(L, o);
+			return 1;
 		}
 		catch (Exception e)
 		{
@@ -426,28 +394,12 @@ public class FairyGUI_GTweenerWrap
 	{
 		try
 		{
-			int count = LuaDLL.lua_gettop(L);
-
-			if (count == 2 && TypeChecker.CheckTypes<FairyGUI.GTweenCallback>(L, 2))
-			{
-				FairyGUI.GTweener obj = (FairyGUI.GTweener)ToLua.CheckObject<FairyGUI.GTweener>(L, 1);
-				FairyGUI.GTweenCallback arg0 = (FairyGUI.GTweenCallback)ToLua.ToObject(L, 2);
-				FairyGUI.GTweener o = obj.OnComplete(arg0);
-				ToLua.PushObject(L, o);
-				return 1;
-			}
-			else if (count == 2 && TypeChecker.CheckTypes<FairyGUI.GTweenCallback1>(L, 2))
-			{
-				FairyGUI.GTweener obj = (FairyGUI.GTweener)ToLua.CheckObject<FairyGUI.GTweener>(L, 1);
-				FairyGUI.GTweenCallback1 arg0 = (FairyGUI.GTweenCallback1)ToLua.ToObject(L, 2);
-				FairyGUI.GTweener o = obj.OnComplete(arg0);
-				ToLua.PushObject(L, o);
-				return 1;
-			}
-			else
-			{
-				return LuaDLL.luaL_throw(L, "invalid arguments to method: FairyGUI.GTweener.OnComplete");
-			}
+			ToLua.CheckArgsCount(L, 2);
+			FairyGUI.GTweener obj = (FairyGUI.GTweener)ToLua.CheckObject<FairyGUI.GTweener>(L, 1);
+			FairyGUI.GTweenCallback1 arg0 = (FairyGUI.GTweenCallback1)ToLua.CheckDelegate<FairyGUI.GTweenCallback1>(L, 2);
+			FairyGUI.GTweener o = obj.OnComplete(arg0);
+			ToLua.PushObject(L, o);
+			return 1;
 		}
 		catch (Exception e)
 		{

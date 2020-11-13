@@ -91,18 +91,27 @@ public class FairyGUI_EventListenerWrap
 		{
 			int count = LuaDLL.lua_gettop(L);
 
-			if (count == 2 && TypeChecker.CheckTypes<FairyGUI.EventCallback1>(L, 2))
+			if (count == 2)
 			{
 				FairyGUI.EventListener obj = (FairyGUI.EventListener)ToLua.CheckObject<FairyGUI.EventListener>(L, 1);
-				FairyGUI.EventCallback1 arg0 = (FairyGUI.EventCallback1)ToLua.ToObject(L, 2);
+				FairyGUI.EventCallback1 arg0 = (FairyGUI.EventCallback1)ToLua.CheckDelegate<FairyGUI.EventCallback1>(L, 2);
 				obj.Add(arg0);
 				return 0;
 			}
-			else if (count == 2 && TypeChecker.CheckTypes<FairyGUI.EventCallback0>(L, 2))
+			else if (count == 3 && TypeChecker.CheckTypes<LuaInterface.LuaTable>(L, 3))
 			{
 				FairyGUI.EventListener obj = (FairyGUI.EventListener)ToLua.CheckObject<FairyGUI.EventListener>(L, 1);
-				FairyGUI.EventCallback0 arg0 = (FairyGUI.EventCallback0)ToLua.ToObject(L, 2);
-				obj.Add(arg0);
+				LuaFunction arg0 = ToLua.CheckLuaFunction(L, 2);
+				LuaTable arg1 = ToLua.ToLuaTable(L, 3);
+				obj.Add(arg0, arg1);
+				return 0;
+			}
+			else if (count == 3 && TypeChecker.CheckTypes<FairyGUI.GComponent>(L, 3))
+			{
+				FairyGUI.EventListener obj = (FairyGUI.EventListener)ToLua.CheckObject<FairyGUI.EventListener>(L, 1);
+				LuaFunction arg0 = ToLua.CheckLuaFunction(L, 2);
+				FairyGUI.GComponent arg1 = (FairyGUI.GComponent)ToLua.ToObject(L, 3);
+				obj.Add(arg0, arg1);
 				return 0;
 			}
 			else
@@ -123,18 +132,27 @@ public class FairyGUI_EventListenerWrap
 		{
 			int count = LuaDLL.lua_gettop(L);
 
-			if (count == 2 && TypeChecker.CheckTypes<FairyGUI.EventCallback1>(L, 2))
+			if (count == 2)
 			{
 				FairyGUI.EventListener obj = (FairyGUI.EventListener)ToLua.CheckObject<FairyGUI.EventListener>(L, 1);
-				FairyGUI.EventCallback1 arg0 = (FairyGUI.EventCallback1)ToLua.ToObject(L, 2);
+				FairyGUI.EventCallback1 arg0 = (FairyGUI.EventCallback1)ToLua.CheckDelegate<FairyGUI.EventCallback1>(L, 2);
 				obj.Remove(arg0);
 				return 0;
 			}
-			else if (count == 2 && TypeChecker.CheckTypes<FairyGUI.EventCallback0>(L, 2))
+			else if (count == 3 && TypeChecker.CheckTypes<LuaInterface.LuaTable>(L, 3))
 			{
 				FairyGUI.EventListener obj = (FairyGUI.EventListener)ToLua.CheckObject<FairyGUI.EventListener>(L, 1);
-				FairyGUI.EventCallback0 arg0 = (FairyGUI.EventCallback0)ToLua.ToObject(L, 2);
-				obj.Remove(arg0);
+				LuaFunction arg0 = ToLua.CheckLuaFunction(L, 2);
+				LuaTable arg1 = ToLua.ToLuaTable(L, 3);
+				obj.Remove(arg0, arg1);
+				return 0;
+			}
+			else if (count == 3 && TypeChecker.CheckTypes<FairyGUI.GComponent>(L, 3))
+			{
+				FairyGUI.EventListener obj = (FairyGUI.EventListener)ToLua.CheckObject<FairyGUI.EventListener>(L, 1);
+				LuaFunction arg0 = ToLua.CheckLuaFunction(L, 2);
+				FairyGUI.GComponent arg1 = (FairyGUI.GComponent)ToLua.ToObject(L, 3);
+				obj.Remove(arg0, arg1);
 				return 0;
 			}
 			else
@@ -155,18 +173,27 @@ public class FairyGUI_EventListenerWrap
 		{
 			int count = LuaDLL.lua_gettop(L);
 
-			if (count == 2 && TypeChecker.CheckTypes<FairyGUI.EventCallback1>(L, 2))
+			if (count == 2)
 			{
 				FairyGUI.EventListener obj = (FairyGUI.EventListener)ToLua.CheckObject<FairyGUI.EventListener>(L, 1);
-				FairyGUI.EventCallback1 arg0 = (FairyGUI.EventCallback1)ToLua.ToObject(L, 2);
+				FairyGUI.EventCallback1 arg0 = (FairyGUI.EventCallback1)ToLua.CheckDelegate<FairyGUI.EventCallback1>(L, 2);
 				obj.Set(arg0);
 				return 0;
 			}
-			else if (count == 2 && TypeChecker.CheckTypes<FairyGUI.EventCallback0>(L, 2))
+			else if (count == 3 && TypeChecker.CheckTypes<LuaInterface.LuaTable>(L, 3))
 			{
 				FairyGUI.EventListener obj = (FairyGUI.EventListener)ToLua.CheckObject<FairyGUI.EventListener>(L, 1);
-				FairyGUI.EventCallback0 arg0 = (FairyGUI.EventCallback0)ToLua.ToObject(L, 2);
-				obj.Set(arg0);
+				LuaFunction arg0 = ToLua.CheckLuaFunction(L, 2);
+				LuaTable arg1 = ToLua.ToLuaTable(L, 3);
+				obj.Set(arg0, arg1);
+				return 0;
+			}
+			else if (count == 3 && TypeChecker.CheckTypes<FairyGUI.GComponent>(L, 3))
+			{
+				FairyGUI.EventListener obj = (FairyGUI.EventListener)ToLua.CheckObject<FairyGUI.EventListener>(L, 1);
+				LuaFunction arg0 = ToLua.CheckLuaFunction(L, 2);
+				FairyGUI.GComponent arg1 = (FairyGUI.GComponent)ToLua.ToObject(L, 3);
+				obj.Set(arg0, arg1);
 				return 0;
 			}
 			else

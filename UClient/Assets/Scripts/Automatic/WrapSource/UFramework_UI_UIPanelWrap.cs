@@ -10,7 +10,8 @@ public class UFramework_UI_UIPanelWrap
 		L.RegFunction("AddPackage", new LuaCSFunction(AddPackage));
 		L.RegFunction("Show", new LuaCSFunction(Show));
 		L.RegFunction("Hide", new LuaCSFunction(Hide));
-		L.RegFunction("SendNotification", new LuaCSFunction(SendNotification));
+		L.RegFunction("LuaBind", new LuaCSFunction(LuaBind));
+		L.RegFunction("BroadcastEvent", new LuaCSFunction(BroadcastEvent));
 		L.RegFunction("UpdateSortOrder", new LuaCSFunction(UpdateSortOrder));
 		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
 		L.RegVar("layer", new LuaCSFunction(get_layer), null);
@@ -71,14 +72,31 @@ public class UFramework_UI_UIPanelWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int SendNotification(IntPtr L)
+	static int LuaBind(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			UFramework.UI.UIPanel obj = (UFramework.UI.UIPanel)ToLua.CheckObject<UFramework.UI.UIPanel>(L, 1);
+			LuaTable arg0 = ToLua.CheckLuaTable(L, 2);
+			obj.LuaBind(arg0);
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int BroadcastEvent(IntPtr L)
 	{
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
 			UFramework.UI.UIPanel obj = (UFramework.UI.UIPanel)ToLua.CheckObject<UFramework.UI.UIPanel>(L, 1);
 			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
-			obj.SendNotification(arg0);
+			obj.BroadcastEvent(arg0);
 			return 0;
 		}
 		catch (Exception e)

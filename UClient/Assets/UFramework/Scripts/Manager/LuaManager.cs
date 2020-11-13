@@ -17,7 +17,7 @@ namespace UFramework
         static LuaState lua;
         private LuaLooper m_loop = null;
 
-        private LuaTable luaApp;
+        public LuaTable luaEngine { get; private set; }
         private LuaFunction luaAppUpdateFunc;
         private LuaFunction luaAppLateUpdateFunc;
         private LuaFunction luaAppFixedUpdateFunc;
@@ -38,12 +38,12 @@ namespace UFramework
             m_loop = AppLaunch.mainGameObject.AddComponent<LuaLooper>();
             m_loop.luaState = lua;
 
-            DoFile("LuaApp");
-            luaApp = lua.GetTable("luaApp");
-            luaAppUpdateFunc = luaApp.GetLuaFunction("update");
-            luaAppLateUpdateFunc = luaApp.GetLuaFunction("lateUpdate");
-            luaAppFixedUpdateFunc = luaApp.GetLuaFunction("fixedUpdate");
-            luaApp.Call("start");
+            DoFile("LuaEngine");
+            luaEngine = lua.GetTable("_engine");
+            luaAppUpdateFunc = luaEngine.GetLuaFunction("update");
+            luaAppLateUpdateFunc = luaEngine.GetLuaFunction("lateUpdate");
+            luaAppFixedUpdateFunc = luaEngine.GetLuaFunction("fixedUpdate");
+            luaEngine.Call("launch");
         }
 
         #region lib
@@ -57,6 +57,7 @@ namespace UFramework
             lua.AddPreLoadLib("lpeg", new LuaCSFunction(LuaDLL.luaopen_lpeg));
             lua.AddPreLoadLib("cjson", new LuaCSFunction(LuaDLL.luaopen_cjson));
             lua.AddPreLoadLib("cjson.safe", new LuaCSFunction(LuaDLL.luaopen_cjson_safe));
+            lua.AddPreLoadLib("crypt", new LuaCSFunction(LuaDLL.luaopen_client_crypt));
             lua.AddPreLoadLib("protobuf.c", new LuaCSFunction(LuaDLL.luaopen_protobuf_c));
 #if (UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX) && !LUAC_5_3
             lua.AddPreLoadLib("bit", new LuaCSFunction(LuaDLL.luaopen_bit));
@@ -292,12 +293,12 @@ namespace UFramework
                 luaAppFixedUpdateFunc = null;
             }
 
-            if (luaApp != null)
+            if (luaEngine != null)
             {
-                luaApp.Call("destory");
+                luaEngine.Call("destory");
 
-                luaApp.Dispose();
-                luaApp = null;
+                luaEngine.Dispose();
+                luaEngine = null;
             }
 
             if (m_loop != null)

@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <packageDescription id="5w14mmk5">
-  <resources/>
+  <resources>
+    <component id="unrx1" name="Input_White_Username.xml" path="/Components/Input/" exported="true"/>
+    <image id="unrx3" name="Pink-Button-Outline.png" path="/Images/" scale="9grid" scale9grid="87,25,174,50"/>
+    <image id="unrx4" name="White-Button.png" path="/Images/" scale="9grid" scale9grid="87,25,174,50"/>
+    <component id="unrx5" name="Input_White_Password.xml" path="/Components/Input/" exported="true"/>
+  </resources>
   <publish name=""/>
 </packageDescription>

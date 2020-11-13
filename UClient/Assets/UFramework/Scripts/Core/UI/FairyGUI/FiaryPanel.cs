@@ -5,12 +5,14 @@
  */
 using System.Collections.Generic;
 using FairyGUI;
+using LuaInterface;
 
 namespace UFramework.UI
 {
     public class FiaryPanel : UIPanel
     {
         public Window window { get; private set; }
+        public GComponent view { get; private set; }
 
         private string _packageName;
         private string _panelName;
@@ -29,6 +31,7 @@ namespace UFramework.UI
             window.contentPane = UIPackage.CreateObject(_packageName, _panelName).asCom;
             window.contentPane.SetSize(GRoot.inst.width, GRoot.inst.height);
             window.sortingOrder = LayerAgents.Register(this);
+            view = window.contentPane;
         }
 
         protected override void OnShowAnimation()
@@ -48,14 +51,14 @@ namespace UFramework.UI
             window.Hide();
         }
 
-        protected override void OnNotification(int id)
+        protected override void OnReceiveEvent(int id)
         {
-            base.OnNotification(id);
+            base.OnReceiveEvent(id);
         }
 
-        protected override void OnNetMessage()
+        protected override void OnReceivePack()
         {
-            base.OnNetMessage();
+            base.OnReceivePack();
         }
 
         public override void UpdateSortOrder(int order)

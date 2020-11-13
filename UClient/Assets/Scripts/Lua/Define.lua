@@ -1,12 +1,26 @@
 --[[
 Author: fasthro
 Date: 2020-10-07 17:21:14
-Description: 
+Description: define
 --]]
--- local panel = require("Panel.LaunchPanel")
+require("Define.DefineManager")
+require("Define.DefineCtrl")
+require("Define.DefinePanel")
+------------------------------------------- uframework csharp -------------------------------------------
+_G._app = UFramework.App
 
--- local launch = typesys.new(panel)
--- launch:show()
-print("111111111111")
-print("22222222222")
-print("22222222223")
+-- panel layer
+_G.PANEL_LAYER = {
+    SCNEN = UFramework.UI.Layer.SCNEN,
+    PANEL = UFramework.UI.Layer.PANEL,
+    MESSAGE_BOX = UFramework.UI.Layer.MESSAGE_BOX,
+    GUIDE = UFramework.UI.Layer.GUIDE,
+    NOTIFICATION = UFramework.UI.Layer.NOTIFICATION,
+    NETWORK = UFramework.UI.Layer.NETWORK,
+    LOADER = UFramework.UI.Layer.LOADER,
+    TOP = UFramework.UI.Layer.TOP
+}
+
+------------------------------------------- global -------------------------------------------
+_G._engine = nil
+_G._managerCenter = nil

@@ -52,5 +52,43 @@ namespace UFramework.Editor
 
             return asset;
         }
+
+        public static void SetScriptingDefineSymbolsForGroup(BuildTargetGroup group, string symbol)
+        {
+            var symbols = PlayerSettings.GetScriptingDefineSymbolsForGroup(group);
+            var sbs = symbols.Split(';');
+            for (int i = 0; i < sbs.Length; i++)
+            {
+                if (sbs[i].Equals(symbol))
+                {
+                    return;
+                }
+            }
+            if (sbs.Length > 0)
+                symbols += ";";
+            symbols += symbol;
+            PlayerSettings.SetScriptingDefineSymbolsForGroup(group, symbols);
+        }
+
+        public static void RemoveScriptingDefineSymbolsForGroup(BuildTargetGroup group, string symbol)
+        {
+            var symbols = PlayerSettings.GetScriptingDefineSymbolsForGroup(group);
+            var sbs = symbols.Split(';');
+            string ns = "";
+            for (int i = 0; i < sbs.Length; i++)
+            {
+                if (!sbs[i].Equals(symbol))
+                {
+                    if (string.IsNullOrEmpty(ns))
+                        ns += sbs[i];
+                    else
+                    {
+                        ns += ";";
+                        ns += sbs[i];
+                    }
+                }
+            }
+            PlayerSettings.SetScriptingDefineSymbolsForGroup(group, ns);
+        }
     }
 }

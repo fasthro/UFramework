@@ -80,6 +80,13 @@ namespace UFramework.UI
             }
         }
 
+        protected override void LoadCompleted()
+        {
+            if (!isStandby)
+                LuaManager.Call<string>("fgui.load_component_package", packageName);
+            base.LoadCompleted();
+        }
+
         protected override void OnReferenceEmpty()
         {
             if (isStandby) return;

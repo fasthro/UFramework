@@ -89,16 +89,15 @@ namespace UFramework.UI
         /// <summary>
         /// 加载完成
         /// </summary>
-        protected void LoadCompleted()
+        protected virtual void LoadCompleted()
         {
-            if (isStandby)
+            if (isStandby) OnReferenceEmpty();
+            else
             {
-                OnReferenceEmpty();
-                return;
+                loadState = LoadState.Loaded;
+                onCompleted.InvokeGracefully();
+                onCompleted = null;
             }
-            loadState = LoadState.Loaded;
-            onCompleted.InvokeGracefully();
-            onCompleted = null;
         }
 
         /// <summary>

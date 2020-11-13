@@ -298,6 +298,12 @@ namespace UFramework.Editor.Preferences
             }
             bindTypes.Add(_GT(typeof(UFramework.UI.Layer)));
 
+            bindTypes.Add(_GT(typeof(UFramework.App)));
+            bindTypes.Add(_GT(typeof(UFramework.IOPath)));
+            
+            bindTypes.Add(_GT(typeof(UFramework.NetManager)));
+            bindTypes.Add(_GT(typeof(UFramework.ResManager)));
+
             CustomSettings.customTypeList = bindTypes.ToArray();
 
             ToLuaMenu.GenLuaAll();

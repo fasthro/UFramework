@@ -47,6 +47,7 @@ skynet.start(function()
 
 	skynet.dispatch("client", function(_,_, msg)
 		-- the simple echo service
+		skynet.error("--------------------------------------------->>>")
 		skynet.sleep(10)	-- sleep a while
 		skynet.ret(msg)
 	end)

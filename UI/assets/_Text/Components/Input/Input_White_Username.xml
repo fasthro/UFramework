@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="348,100" extention="Button">
+  <displayList>
+    <image id="n1_unrx" name="n1" src="unrx4" fileName="Images/White-Button.png" xy="0,0" size="348,100">
+      <relation target="" sidePair="width-width,height-height"/>
+    </image>
+    <image id="n0_unrx" name="n0" src="unrx3" fileName="Images/Pink-Button-Outline.png" xy="0,0" size="348,100">
+      <relation target="" sidePair="width-width,height-height"/>
+    </image>
+    <text id="n2_unrx" name="title" xy="18,28" size="64,42" fontSize="30" color="#333333" text="账号">
+      <relation target="" sidePair="middle-middle"/>
+    </text>
+    <text id="n3_unrx" name="_input" xy="93,29" size="239,42" fontSize="30" color="#333333" align="center" vAlign="middle" autoSize="none" text="" input="true" prompt="点击输入用户名" maxLength="16">
+      <relation target="" sidePair="middle-middle,rightext-right"/>
+    </text>
+  </displayList>
+  <Button downEffect="dark" downEffectValue=".8"/>
+</component>

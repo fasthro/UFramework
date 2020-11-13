@@ -41,6 +41,7 @@ public class FairyGUI_GComponentWrap
 		L.RegFunction("ConstructFromResource", new LuaCSFunction(ConstructFromResource));
 		L.RegFunction("ConstructFromXML", new LuaCSFunction(ConstructFromXML));
 		L.RegFunction("Setup_AfterAdd", new LuaCSFunction(Setup_AfterAdd));
+		L.RegFunction("SetLuaPeer", new LuaCSFunction(SetLuaPeer));
 		L.RegFunction("New", new LuaCSFunction(_CreateFairyGUI_GComponent));
 		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
 		L.RegVar("rootContainer", new LuaCSFunction(get_rootContainer), null);
@@ -742,6 +743,23 @@ public class FairyGUI_GComponentWrap
 			FairyGUI.Utils.ByteBuffer arg0 = (FairyGUI.Utils.ByteBuffer)ToLua.CheckObject<FairyGUI.Utils.ByteBuffer>(L, 2);
 			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			obj.Setup_AfterAdd(arg0, arg1);
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int SetLuaPeer(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			FairyGUI.GComponent obj = (FairyGUI.GComponent)ToLua.CheckObject<FairyGUI.GComponent>(L, 1);
+			LuaTable arg0 = ToLua.CheckLuaTable(L, 2);
+			obj.SetLuaPeer(arg0);
 			return 0;
 		}
 		catch (Exception e)

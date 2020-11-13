@@ -428,19 +428,7 @@ namespace UFramework
         /// <returns></returns>
         public static string FileName(string path, bool extension = false)
         {
-            FileInfo info = new FileInfo(path);
-            return extension ? info.Name : info.Name.Substring(0, info.Name.Length - info.Extension.Length);
-        }
-
-        /// <summary>
-        /// 文件名称
-        /// </summary>
-        /// <param name="info"></param>
-        /// <param name="extension"></param>
-        /// <returns></returns>
-        public static string FileName(FileInfo fileInfo, bool extension = false)
-        {
-            return extension ? fileInfo.Name : fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length);
+            return extension ? Path.GetFileName(path) : Path.GetFileNameWithoutExtension(path);
         }
         #endregion
     }

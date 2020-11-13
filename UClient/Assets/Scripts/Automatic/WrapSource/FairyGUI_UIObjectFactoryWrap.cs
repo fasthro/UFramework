@@ -8,6 +8,7 @@ public class FairyGUI_UIObjectFactoryWrap
 	{
 		L.BeginClass(typeof(FairyGUI.UIObjectFactory), typeof(System.Object));
 		L.RegFunction("SetPackageItemExtension", new LuaCSFunction(SetPackageItemExtension));
+		L.RegFunction("SetExtension", new LuaCSFunction(SetExtension));
 		L.RegFunction("SetLoaderExtension", new LuaCSFunction(SetLoaderExtension));
 		L.RegFunction("Clear", new LuaCSFunction(Clear));
 		L.RegFunction("NewObject", new LuaCSFunction(NewObject));
@@ -67,6 +68,24 @@ public class FairyGUI_UIObjectFactoryWrap
 			{
 				return LuaDLL.luaL_throw(L, "invalid arguments to method: FairyGUI.UIObjectFactory.SetPackageItemExtension");
 			}
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int SetExtension(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 3);
+			string arg0 = ToLua.CheckString(L, 1);
+			System.Type arg1 = ToLua.CheckMonoType(L, 2);
+			LuaFunction arg2 = ToLua.CheckLuaFunction(L, 3);
+			FairyGUI.UIObjectFactory.SetExtension(arg0, arg1, arg2);
+			return 0;
 		}
 		catch (Exception e)
 		{

@@ -11,6 +11,7 @@ public class UFramework_UI_FiaryPanelWrap
 		L.RegFunction("New", new LuaCSFunction(_CreateUFramework_UI_FiaryPanel));
 		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
 		L.RegVar("window", new LuaCSFunction(get_window), null);
+		L.RegVar("view", new LuaCSFunction(get_view), null);
 		L.EndClass();
 	}
 
@@ -74,6 +75,25 @@ public class UFramework_UI_FiaryPanelWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o, "attempt to index window on a nil value");
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_view(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			UFramework.UI.FiaryPanel obj = (UFramework.UI.FiaryPanel)o;
+			FairyGUI.GComponent ret = obj.view;
+			ToLua.PushObject(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o, "attempt to index view on a nil value");
 		}
 	}
 }
