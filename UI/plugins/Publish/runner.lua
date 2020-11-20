@@ -44,7 +44,7 @@ function runner:ctor(handler)
     self.exportPath = handler.exportPath .. "/" .. self.packageName
     self.exportCodePath = handler.exportCodePath .. "/Automatic/Lua/FComponent/" .. self.packageName
     self.exportPanelCodePath = handler.exportCodePath .. "/Lua/Panel"
-    self.definePanelPath = handler.exportCodePath .. "/Lua/Define/DefinePanel.lua"
+    self.definePanelPath = handler.exportCodePath .. "/Automatic/Lua/DefinePanel.lua"
 
     -- 不使用 FairyGUI 提供的类导出功能
     handler.genCode = false

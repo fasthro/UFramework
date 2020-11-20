@@ -10,18 +10,26 @@ function _G.__parsedtn(dn)
     return dn, false
 end
 
-function _G.__newdtn(dtn)
+function _G.__newdtn(dtn, ...)
     local _name, _dt = __parsedtn(dtn)
     if _dt then
-        return typesys.new(dtn), _name
+        return typesys.new(dtn, ...), _name
     end
-    return assert(typesys.new(typesys[_name]), string.format("%s type undefined!", _name)), _name
+    return assert(typesys.new(typesys[_name], ...), string.format("%s type undefined!", _name)), _name
 end
 
-function _G.__newdt()
-    local _name, _dt = __parsedtn(dtn)
+function _G.__newdt(dt, ...)
+    local _name, _dt = __parsedtn(dt)
     if _dt then
-        return typesys.new(dtn)
+        return typesys.new(dt, ...)
     end
-    return assert(typesys.new(typesys[_name]), string.format("%s type undefined!", _name))
+    return assert(typesys.new(typesys[_name], ...), string.format("%s type undefined!", _name))
+end
+
+function _G.__log(data)
+    print(data)
+end
+
+function _G.__error(data)
+    error(data)
 end

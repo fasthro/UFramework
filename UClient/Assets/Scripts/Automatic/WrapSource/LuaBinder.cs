@@ -169,6 +169,7 @@ public static class LuaBinder
 		L.BeginModule("UFramework");
 		UFramework_AppWrap.Register(L);
 		UFramework_IOPathWrap.Register(L);
+		UFramework_CryptWrap.Register(L);
 		UFramework_NetManagerWrap.Register(L);
 		UFramework_ResManagerWrap.Register(L);
 		UFramework_BaseManagerWrap.Register(L);
@@ -176,6 +177,12 @@ public static class LuaBinder
 		UFramework_UI_UIPanelWrap.Register(L);
 		UFramework_UI_FiaryPanelWrap.Register(L);
 		UFramework_UI_LayerWrap.Register(L);
+		L.EndModule();
+		L.BeginModule("Network");
+		UFramework_Network_SocketPackWrap.Register(L);
+		UFramework_Network_SocketPackLineWrap.Register(L);
+		UFramework_Network_SocketPackProtobufWrap.Register(L);
+		UFramework_Network_SocketPackStreamWrap.Register(L);
 		L.EndModule();
 		L.BeginModule("Messenger");
 		L.RegFunction("UCallback_UFramework_Assets_AssetRequest", new LuaCSFunction(UFramework_Messenger_UCallback_UFramework_Assets_AssetRequest));

@@ -1,7 +1,6 @@
 local panel =
     typesys.def.LoginPanel {
-    __super = typesys.BasePanel,
-    weak_loginCtrl = typesys.LoginCtrl
+    __super = typesys.BasePanel
 }
 
 function panel:__ctor()
@@ -14,7 +13,6 @@ function panel:__ctor()
 end
 
 function panel:_onAwake()
-    self.loginCtrl = self:getCtrl(typesys.LoginCtrl)
 end
 
 function panel:_onDispose()
@@ -23,8 +21,14 @@ end
 function panel:onShow()
     panel.__super.onShow(self)
 
+    self.view._username._input.text = "fasthro"
+    self.view._password._input.text = "password"
+
     local on_click_login = function()
-        self.loginCtrl:login()
+        local username = self.view._username._input.text
+        local password = self.view._password._input.text
+        local serverid = "1"
+        LoginCtrl:login(username, password, serverid)
     end
     self:_bindClick(self.view._login, on_click_login)
 end

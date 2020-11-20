@@ -8,6 +8,7 @@ public class UFramework_NetManagerWrap
 	{
 		L.BeginClass(typeof(UFramework.NetManager), typeof(UFramework.BaseManager));
 		L.RegFunction("Connecte", new LuaCSFunction(Connecte));
+		L.RegFunction("Send", new LuaCSFunction(Send));
 		L.RegFunction("OnConnected", new LuaCSFunction(OnConnected));
 		L.RegFunction("OnDisconnected", new LuaCSFunction(OnDisconnected));
 		L.RegFunction("OnReceive", new LuaCSFunction(OnReceive));
@@ -53,6 +54,46 @@ public class UFramework_NetManagerWrap
 			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			obj.Connecte(arg0, arg1);
 			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int Send(IntPtr L)
+	{
+		try
+		{
+			int count = LuaDLL.lua_gettop(L);
+
+			if (count == 2 && TypeChecker.CheckTypes<string>(L, 2))
+			{
+				UFramework.NetManager obj = (UFramework.NetManager)ToLua.CheckObject<UFramework.NetManager>(L, 1);
+				string arg0 = ToLua.ToString(L, 2);
+				obj.Send(arg0);
+				return 0;
+			}
+			else if (count == 2 && TypeChecker.CheckTypes<byte[]>(L, 2))
+			{
+				UFramework.NetManager obj = (UFramework.NetManager)ToLua.CheckObject<UFramework.NetManager>(L, 1);
+				byte[] arg0 = ToLua.CheckByteBuffer(L, 2);
+				obj.Send(arg0);
+				return 0;
+			}
+			else if (count == 3)
+			{
+				UFramework.NetManager obj = (UFramework.NetManager)ToLua.CheckObject<UFramework.NetManager>(L, 1);
+				string arg0 = ToLua.CheckString(L, 2);
+				System.Text.Encoding arg1 = (System.Text.Encoding)ToLua.CheckObject<System.Text.Encoding>(L, 3);
+				obj.Send(arg0, arg1);
+				return 0;
+			}
+			else
+			{
+				return LuaDLL.luaL_throw(L, "invalid arguments to method: UFramework.NetManager.Send");
+			}
 		}
 		catch (Exception e)
 		{

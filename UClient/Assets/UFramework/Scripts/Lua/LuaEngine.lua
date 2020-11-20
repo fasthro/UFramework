@@ -7,6 +7,7 @@ require("Extension.TableExtension")
 require("UI.FairyGUI")
 require("UI.BasePanel")
 require("Define")
+require("DefinePanel")
 require("Common.Function")
 require("ManagerCenter")
 
@@ -14,56 +15,56 @@ local _new = typesys.new
 local _setRootObject = typesys.setRootObject
 local _typesys_gc = typesys.gc
 
-_engine =
-    typesys.def._engine {
+LuaEngine =
+    typesys.def.LuaEngine {
     managerCenter = typesys.ManagerCenter
 }
 
-function _engine:__ctor()
-    _engine.instance = self
+function LuaEngine:__ctor()
+    LuaEngine.instance = self
 end
 
-function _engine:__dtor()
-    _engine.instance = nil
+function LuaEngine:__dtor()
+    LuaEngine.instance = nil
 end
 
 -- static
-function _engine.launch()
-    _setRootObject(_new(_engine))
+function LuaEngine.launch()
+    _setRootObject(_new(LuaEngine))
 end
 
-function _engine.runner()
-    _engine.onRunner(_engine.instance)
+function LuaEngine.runner()
+    LuaEngine.onRunner(LuaEngine.instance)
 end
 
-function _engine.update()
-    _engine.onUpdate(_engine.instance)
+function LuaEngine.update()
+    LuaEngine.onUpdate(LuaEngine.instance)
 end
 
-function _engine.lateUpdate()
-    _engine.onLateUpdate(_engine.instance)
+function LuaEngine.lateUpdate()
+    LuaEngine.onLateUpdate(LuaEngine.instance)
 end
 
-function _engine.fixedUpdate()
-    _engine.onFixedUpdate(_engine.instance)
+function LuaEngine.fixedUpdate()
+    LuaEngine.onFixedUpdate(LuaEngine.instance)
 end
 
-function _engine.shutdown()
+function LuaEngine.shutdown()
     _setRootObject(nil)
 end
 
 -- members
-function _engine:onRunner()
+function LuaEngine:onRunner()
     self.managerCenter = _new(typesys.ManagerCenter)
-    self.managerCenter:getManager(typesys.CtrlManager):getCtrl(typesys.LoginCtrl):initialize()
+    LoginCtrl:initialize()
 end
 
-function _engine:onUpdate()
+function LuaEngine:onUpdate()
 end
 
-function _engine:onLateUpdate()
+function LuaEngine:onLateUpdate()
     _typesys_gc()
 end
 
-function _engine:onFixedUpdate()
+function LuaEngine:onFixedUpdate()
 end

@@ -4,26 +4,25 @@ Date: 2020-11-13 14:25:40
 Description: controller manager
 --]]
 
+require("Controller.BaseCtrl")
+require("Controller.LoginCtrl")
+
 local CtrlManager =
     typesys.def.CtrlManager {
     __super = typesys.BaseManager,
     _ctrls = typesys.map
 }
 
-function CtrlManager:__ctor()
-    self._ctrls = typesys.new(typesys.map, type(""), typesys.BaseCtrl)
-    self:_addCtrl(typesys.LoginCtrl)
-end
-
-function CtrlManager:__dtor()
-end
-
 function CtrlManager:initialize()
+    self._ctrls = typesys.new(typesys.map, type(""), typesys.BaseCtrl)
+
+    _G.LoginCtrl = self:_addCtrl(typesys.LoginCtrl)
 end
 
 function CtrlManager:_addCtrl(name)
     local _ctrl, _name = __newdtn(name)
     self._ctrls:set(_name, _ctrl)
+    return _ctrl
 end
 
 function CtrlManager:getCtrl(name)
