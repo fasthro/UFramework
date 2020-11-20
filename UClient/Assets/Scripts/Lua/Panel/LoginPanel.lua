@@ -1,7 +1,6 @@
 local panel =
     typesys.def.LoginPanel {
     __super = typesys.BasePanel,
-    weak_loginCtrl = typesys.LoginCtrl
 }
 
 function panel:__ctor()
@@ -14,7 +13,6 @@ function panel:__ctor()
 end
 
 function panel:_onAwake()
-    self.loginCtrl = self:getCtrl(typesys.LoginCtrl)
 end
 
 function panel:_onDispose()
@@ -24,7 +22,7 @@ function panel:onShow()
     panel.__super.onShow(self)
 
     local on_click_login = function()
-        self.loginCtrl:login()
+        LoginCtrl:login()
     end
     self:_bindClick(self.view._login, on_click_login)
 end

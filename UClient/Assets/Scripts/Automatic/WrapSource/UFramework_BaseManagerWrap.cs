@@ -12,6 +12,7 @@ public class UFramework_BaseManagerWrap
 		L.RegFunction("LateUpdate", new LuaCSFunction(LateUpdate));
 		L.RegFunction("FixedUpdate", new LuaCSFunction(FixedUpdate));
 		L.RegFunction("Dispose", new LuaCSFunction(Dispose));
+		L.RegFunction("LuaBind", new LuaCSFunction(LuaBind));
 		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
 		L.EndClass();
 	}
@@ -89,6 +90,23 @@ public class UFramework_BaseManagerWrap
 			ToLua.CheckArgsCount(L, 1);
 			UFramework.BaseManager obj = (UFramework.BaseManager)ToLua.CheckObject<UFramework.BaseManager>(L, 1);
 			obj.Dispose();
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int LuaBind(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			UFramework.BaseManager obj = (UFramework.BaseManager)ToLua.CheckObject<UFramework.BaseManager>(L, 1);
+			LuaTable arg0 = ToLua.CheckLuaTable(L, 2);
+			obj.LuaBind(arg0);
 			return 0;
 		}
 		catch (Exception e)

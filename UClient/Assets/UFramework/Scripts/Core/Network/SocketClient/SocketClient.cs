@@ -104,6 +104,7 @@ namespace UFramework.Network
 
         private bool _isSending;
         private bool _isBodyParsing;
+        private bool _isException;
 
         /// <summary>
         /// socket client
@@ -151,6 +152,7 @@ namespace UFramework.Network
 
             try
             {
+                _isException = false;
                 string newIp = "";
                 string connetIp = ip;
                 // ipv6 & ipv4
@@ -180,6 +182,8 @@ namespace UFramework.Network
 
         private void OnConnetSucceed(IAsyncResult iar)
         {
+            if (_isException) return;
+
             try
             {
                 Debug.Log("socket connect to server succeed.");
@@ -263,13 +267,16 @@ namespace UFramework.Network
                         int bSize = _client.Receive(_buffer);
                         if (bSize > 0)
                         {
-
                             _receiver.Write(_buffer, bSize);
-                            SocketPack pack = null;
-                            while ((pack = ParsePack()) != null)
-                            {
-                                _listener.OnReceive(pack);
-                            }
+
+                            var pack = new SocketPackStream(_receiver.Read(bSize));
+                            _listener.OnReceive(pack);
+
+                            // SocketPack pack = null;
+                            // while ((pack = ParsePack()) != null)
+                            // {
+                            //     _listener.OnReceive(pack);
+                            // }
                         }
                     }
                 }
@@ -339,9 +346,12 @@ namespace UFramework.Network
 
         private void OnException(SocketError error, Exception e = null)
         {
+            _isException = true;
             if (isConnected) OnDisconnected();
             isConnecting = false;
             _listener.OnNetworkError(error, e);
+
+            Debug.LogError(string.Format("socket exception: {0}. {1}", error.ToString(), e != null ? e.ToString() : ""));
         }
 
         public static string GetIP(string domain)

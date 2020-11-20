@@ -9,10 +9,17 @@ function BaseCtrl:__ctor()
 end
 
 function BaseCtrl:__dtor()
-    print("-----------------------------ccccccccccccccccccc")
 end
 
 function BaseCtrl:initialize()
+end
+
+function BaseCtrl:log(data)
+    __log(data)
+end
+
+function BaseCtrl:error(data)
+    __error(data)
 end
 
 return BaseCtrl

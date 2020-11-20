@@ -1,0 +1,92 @@
+11/20/20 13:27:45.21 [:00000002] LAUNCH snlua bootstrap
+11/20/20 13:27:45.33 [:00000003] LAUNCH snlua launcher
+11/20/20 13:27:45.36 [:00000004] LAUNCH snlua cdummy
+11/20/20 13:27:45.41 [:00000005] LAUNCH harbor 0 4
+11/20/20 13:27:45.41 [:00000006] LAUNCH snlua datacenterd
+11/20/20 13:27:45.41 [:00000007] LAUNCH snlua service_mgr
+11/20/20 13:27:45.46 [:00000008] LAUNCH snlua mainlogin
+11/20/20 13:27:45.52 [:00000009] LAUNCH snlua debug_console 8801
+11/20/20 13:27:45.64 [:00000009] Start debug console at 127.0.0.1:8801
+11/20/20 13:27:45.64 [:0000000a] LAUNCH snlua logind
+11/20/20 13:27:45.70 [:0000000b] LAUNCH snlua logind
+11/20/20 13:27:45.77 [:0000000c] LAUNCH snlua logind
+11/20/20 13:27:45.88 [:0000000d] LAUNCH snlua logind
+11/20/20 13:27:45.93 [:0000000e] LAUNCH snlua logind
+11/20/20 13:27:46.04 [:0000000f] LAUNCH snlua logind
+11/20/20 13:27:46.11 [:00000010] LAUNCH snlua logind
+11/20/20 13:27:46.15 [:00000011] LAUNCH snlua logind
+11/20/20 13:27:46.23 [:00000012] LAUNCH snlua logind
+11/20/20 13:27:46.33 [:0000000a] login server listen at : 0.0.0.0 8001
+11/20/20 13:27:46.33 [:00000008] KILL self
+11/20/20 13:27:46.33 [:00000002] KILL self
+11/20/20 13:28:29.68 [:0000000b] connect from 192.168.1.105:58824 (fd = 3)
+11/20/20 13:28:42.79 [:0000000b] auth failed: socket (fd = 3) closed
+11/20/20 13:28:42.79 [:0000000a] invalid client (fd = 3) error = src/service/login/loginserver.lua:125: socket error
+11/20/20 13:30:11.12 [:0000000c] connect from 192.168.1.105:58882 (fd = 4)
+11/20/20 13:30:17.64 [:0000000c] auth failed: socket (fd = 4) closed
+11/20/20 13:30:17.65 [:0000000a] invalid client (fd = 4) error = src/service/login/loginserver.lua:125: socket error
+11/20/20 13:30:48.89 [:0000000d] connect from 192.168.1.105:58901 (fd = 5)
+11/20/20 13:31:17.35 [:0000000d] auth failed: socket (fd = 5) closed
+11/20/20 13:31:17.35 [:0000000a] invalid client (fd = 5) error = src/service/login/loginserver.lua:125: socket error
+11/20/20 13:59:48.82 [:0000000e] connect from 192.168.1.105:59877 (fd = 6)
+11/20/20 13:59:55.50 [:0000000e] auth failed: socket (fd = 6) closed
+11/20/20 13:59:55.50 [:0000000a] invalid client (fd = 6) error = src/service/login/loginserver.lua:125: socket error
+11/20/20 14:37:48.98 [:0000000f] connect from 192.168.1.105:60973 (fd = 7)
+11/20/20 14:37:57.87 [:0000000f] auth failed: socket (fd = 7) closed
+11/20/20 14:37:57.88 [:0000000a] invalid client (fd = 7) error = src/service/login/loginserver.lua:125: socket error
+11/20/20 14:39:23.19 [:00000010] connect from 192.168.1.105:61048 (fd = 8)
+11/20/20 14:42:00.48 [:00000010] socket: error on 8 Connection reset by peer
+11/20/20 14:42:00.48 [:00000010] auth failed: socket (fd = 8) closed
+11/20/20 14:42:00.49 [:0000000a] invalid client (fd = 8) error = src/service/login/loginserver.lua:125: socket error
+11/20/20 14:44:04.10 [:00000011] connect from 192.168.1.105:61231 (fd = 9)
+11/20/20 14:52:08.69 [:00000011] auth failed: socket (fd = 9) closed
+11/20/20 14:52:08.70 [:0000000a] invalid client (fd = 9) error = src/service/login/loginserver.lua:125: socket error
+11/20/20 14:52:15.75 [:00000012] connect from 192.168.1.105:61535 (fd = 10)
+11/20/20 14:52:40.30 [:00000012] auth failed: socket (fd = 10) closed
+11/20/20 14:52:40.30 [:0000000a] invalid client (fd = 10) error = src/service/login/loginserver.lua:125: socket error
+11/20/20 14:54:35.09 [:0000000b] connect from 192.168.1.105:61616 (fd = 11)
+11/20/20 14:57:06.49 [:0000000b] auth failed: socket (fd = 11) closed
+11/20/20 14:57:06.49 [:0000000a] invalid client (fd = 11) error = src/service/login/loginserver.lua:125: socket error
+11/20/20 14:57:18.37 [:0000000c] connect from 192.168.1.105:61744 (fd = 12)
+11/20/20 14:57:27.72 [:0000000c] auth failed: socket (fd = 12) closed
+11/20/20 14:57:27.72 [:0000000a] invalid client (fd = 12) error = src/service/login/loginserver.lua:125: socket error
+11/20/20 15:10:12.28 [:0000000d] connect from 192.168.1.105:62416 (fd = 13)
+11/20/20 15:10:17.57 [:0000000d] auth failed: socket (fd = 13) closed
+11/20/20 15:10:17.58 [:0000000a] invalid client (fd = 13) error = src/service/login/loginserver.lua:125: socket error
+11/20/20 15:44:39.63 [:0000000e] connect from 192.168.1.105:63855 (fd = 14)
+11/20/20 15:44:43.08 [:0000000e] auth failed: socket (fd = 14) closed
+11/20/20 15:44:43.08 [:0000000a] invalid client (fd = 14) error = src/service/login/loginserver.lua:125: socket error
+11/20/20 15:48:43.70 [:0000000f] connect from 192.168.1.105:63984 (fd = 15)
+11/20/20 15:48:45.09 [:0000000f] auth failed: socket (fd = 15) closed
+11/20/20 15:48:45.09 [:0000000a] invalid client (fd = 15) error = src/service/login/loginserver.lua:125: socket error
+11/20/20 15:52:03.86 [:00000010] connect from 192.168.1.105:64110 (fd = 16)
+11/20/20 15:52:04.85 [:00000010] auth failed: socket (fd = 16) closed
+11/20/20 15:52:04.85 [:0000000a] invalid client (fd = 16) error = src/service/login/loginserver.lua:125: socket error
+11/20/20 15:57:13.56 [:00000011] connect from 192.168.1.105:64293 (fd = 17)
+11/20/20 15:57:16.45 [:00000011] auth failed: socket (fd = 17) closed
+11/20/20 15:57:16.45 [:0000000a] invalid client (fd = 17) error = src/service/login/loginserver.lua:125: socket error
+11/20/20 17:20:19.91 [:00000012] connect from 192.168.1.105:51102 (fd = 18)
+11/20/20 17:20:21.41 [:00000012] auth failed: socket (fd = 18) closed
+11/20/20 17:20:21.49 [:0000000a] invalid client (fd = 18) error = src/service/login/loginserver.lua:125: socket error
+11/20/20 17:38:18.70 [:0000000b] connect from 192.168.1.105:51678 (fd = 19)
+11/20/20 17:39:55.28 [:0000000b] auth failed: socket (fd = 19) closed
+11/20/20 17:39:55.28 [:0000000a] invalid client (fd = 19) error = src/service/login/loginserver.lua:125: socket error
+11/20/20 17:40:01.74 [:0000000c] connect from 192.168.1.105:51732 (fd = 20)
+11/20/20 17:40:40.13 [:0000000c] auth failed: socket (fd = 20) closed
+11/20/20 17:40:40.14 [:0000000a] invalid client (fd = 20) error = src/service/login/loginserver.lua:125: socket error
+11/20/20 17:40:46.85 [:0000000d] connect from 192.168.1.105:51751 (fd = 21)
+11/20/20 17:41:06.26 [:0000000d] auth failed: socket (fd = 21) closed
+11/20/20 17:41:06.31 [:0000000a] invalid client (fd = 21) error = src/service/login/loginserver.lua:125: socket error
+11/20/20 17:41:16.19 [:0000000e] connect from 192.168.1.105:51779 (fd = 22)
+11/20/20 17:42:47.58 [:0000000e] auth failed: socket (fd = 22) closed
+11/20/20 17:42:47.58 [:0000000a] invalid client (fd = 22) error = src/service/login/loginserver.lua:125: socket error
+11/20/20 17:42:53.99 [:0000000f] connect from 192.168.1.105:51822 (fd = 23)
+11/20/20 17:50:32.93 [:0000000f] auth failed: socket (fd = 23) closed
+11/20/20 17:50:32.93 [:0000000a] invalid client (fd = 23) error = src/service/login/loginserver.lua:125: socket error
+11/20/20 17:51:03.95 [:00000010] connect from 192.168.1.105:52069 (fd = 24)
+11/20/20 17:52:23.26 [:00000010] socket: error on 24 Connection reset by peer
+11/20/20 17:52:23.26 [:00000010] auth failed: socket (fd = 24) closed
+11/20/20 17:52:23.26 [:0000000a] invalid client (fd = 24) error = src/service/login/loginserver.lua:125: socket error
+11/20/20 17:53:12.27 [:00000011] connect from 192.168.1.105:52141 (fd = 25)
+11/20/20 17:54:10.77 [:00000011] auth failed: socket (fd = 25) closed
+11/20/20 17:54:10.77 [:0000000a] invalid client (fd = 25) error = src/service/login/loginserver.lua:125: socket error

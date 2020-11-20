@@ -9,15 +9,8 @@ local PanelManager =
     _panels = typesys.map
 }
 
-function PanelManager:__ctor()
-    self._panels = typesys.new(typesys.map, type(""), typesys.BasePanel)
-end
-
-function PanelManager:__dtor()
-end
-
 function PanelManager:initialize()
-    PanelManager.__super.__ctor(self)
+    self._panels = typesys.new(typesys.map, type(""), typesys.BasePanel)
 end
 
 function PanelManager:getPanel(name)

@@ -39,7 +39,7 @@ namespace UFramework
             m_loop.luaState = lua;
 
             DoFile("LuaEngine");
-            luaEngine = lua.GetTable("_engine");
+            luaEngine = lua.GetTable("LuaEngine");
             luaAppUpdateFunc = luaEngine.GetLuaFunction("update");
             luaAppLateUpdateFunc = luaEngine.GetLuaFunction("lateUpdate");
             luaAppFixedUpdateFunc = luaEngine.GetLuaFunction("fixedUpdate");

@@ -3,12 +3,7 @@
  * @Date: 2020-05-26 22:39:27
  * @Description: TCPManager(Socket Manager)
  */
-using UFramework.Pool;
 using UFramework.Network;
-using System.Collections.Generic;
-using Google.Protobuf;
-using LuaInterface;
-using UnityEngine;
 using UFramework.Tools;
 using System;
 
@@ -26,7 +21,7 @@ namespace UFramework
         /// </summary>
         /// <typeparam name="SocketPack"></typeparam>
         /// <returns></returns>
-        private DoubleQueue<SocketPack> _packs = new DoubleQueue<SocketPack>();
+        private DoubleQueue<SocketPack> _packQueue = new DoubleQueue<SocketPack>();
 
         /// <summary>
         /// connected
@@ -40,7 +35,7 @@ namespace UFramework
         protected override void OnInitialize()
         {
             _client = new SocketClient(this);
-            _client.connectTimeout = 5000;
+            _client.connectTimeout = 15000;
             _client.receiveBufferSize = 4096;
             _client.sendBufferSize = 4096;
         }
@@ -53,29 +48,45 @@ namespace UFramework
             }
         }
 
-        #region ISocketListener
-        public void OnConnected()
+        public void Sendbyte(byte[] value)
         {
-            Log("net connected!");
-            var pack = new SocketPackLine();
-            pack.WriteInt(100);
-            pack.Pack();
-            _client.Send(pack);
+            _client.Send(value);
         }
 
-        public void OnDisconnected()
+        #region ISocketListener
+        public void OnConnected() { ThreadQueue.EnqueueMain(_OnConnected); }
+        private void _OnConnected()
         {
-            Log("net disconnected!");
+            LuaCall("onConnected");
+        }
+
+        public void OnDisconnected() { ThreadQueue.EnqueueMain(_OnDisconnected); }
+        private void _OnDisconnected()
+        {
+            LuaCall("onDisconnected");
         }
 
         public void OnReceive(SocketPack pack)
         {
-            _packs.Enqueue(pack);
+            _packQueue.Enqueue(pack);
+            ThreadQueue.EnqueueMain(_OnReceive);
         }
 
-        public void OnNetworkError(SocketError code, Exception error)
+        private void _OnReceive()
         {
-            LogError(string.Format("net error: {0}. {1}", code.ToString(), error != null ? error.ToString() : ""));
+            _packQueue.Swap();
+            while (!_packQueue.IsEmpty())
+            {
+                var pack = _packQueue.Dequeue();
+                Log("onreceive len = " + pack.rawDataSize);
+                LuaCall("onReceive", pack);
+            }
+        }
+
+        public void OnNetworkError(SocketError code, Exception error) { ThreadQueue.EnqueueMain(_OnNetworkError, code, error); }
+        private void _OnNetworkError(object code, object error)
+        {
+            LuaCall("onNetworkError");
         }
 
         #endregion
@@ -83,7 +94,7 @@ namespace UFramework
         #region BaseManager
         protected override void OnUpdate(float deltaTime)
         {
-            _client.OnUpdate();
+            _client?.OnUpdate();
         }
 
         protected override void OnLateUpdate()

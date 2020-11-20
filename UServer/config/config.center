@@ -1,0 +1,10 @@
+include("config.base")
+
+logger = "./log/center.log"
+daemon = "center.pid"
+harbor = 0
+start = "maincenter"
+serverid  = 1
+
+
+ 

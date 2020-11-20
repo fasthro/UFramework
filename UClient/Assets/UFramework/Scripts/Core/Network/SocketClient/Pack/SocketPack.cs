@@ -65,5 +65,9 @@ namespace UFramework.Network
             head.Write(rawData.Length + 16);
             headData = head.GetBuffer();
         }
+
+        public SocketPackLine ToLinePack() { return this as SocketPackLine; }
+        public SocketPackProtobuf ToProtobufPack() { return this as SocketPackProtobuf; }
+        public SocketPackStream ToStreamPack() { return this as SocketPackStream; }
     }
 }

@@ -1,0 +1,10 @@
+include("config.base")
+
+logger = "./log/game.log"
+daemon = "game.pid"
+harbor = 0
+start = "maingame"
+serverid  = 1
+
+
+ 

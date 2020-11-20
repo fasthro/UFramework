@@ -59,10 +59,10 @@ namespace UFramework
         {
             _initialized = true;
             App.Initialize();
-            launch.ShowTouchBeginOperation(OnStartNewWorld);
+            launch.ShowTouchBeginOperation(OnRunner);
         }
 
-        private void OnStartNewWorld()
+        private void OnRunner()
         {
             launch.Dispose();
             launch = null;

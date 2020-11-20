@@ -8,6 +8,7 @@ public class UFramework_NetManagerWrap
 	{
 		L.BeginClass(typeof(UFramework.NetManager), typeof(UFramework.BaseManager));
 		L.RegFunction("Connecte", new LuaCSFunction(Connecte));
+		L.RegFunction("Sendbyte", new LuaCSFunction(Sendbyte));
 		L.RegFunction("OnConnected", new LuaCSFunction(OnConnected));
 		L.RegFunction("OnDisconnected", new LuaCSFunction(OnDisconnected));
 		L.RegFunction("OnReceive", new LuaCSFunction(OnReceive));
@@ -52,6 +53,23 @@ public class UFramework_NetManagerWrap
 			string arg0 = ToLua.CheckString(L, 2);
 			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
 			obj.Connecte(arg0, arg1);
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int Sendbyte(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			UFramework.NetManager obj = (UFramework.NetManager)ToLua.CheckObject<UFramework.NetManager>(L, 1);
+			byte[] arg0 = ToLua.CheckByteBuffer(L, 2);
+			obj.Sendbyte(arg0);
 			return 0;
 		}
 		catch (Exception e)

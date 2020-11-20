@@ -4,6 +4,8 @@
  * @Description: BaseManager
  */
 
+using System;
+using LuaInterface;
 using UnityEngine;
 
 namespace UFramework
@@ -44,6 +46,47 @@ namespace UFramework
         }
 
         protected abstract void OnDispose();
+
+        #region lua
+
+        protected LuaTable _lua;
+
+        public void LuaBind(LuaTable lua)
+        {
+            _lua = lua;
+        }
+
+        [NoToLua]
+        protected bool LuaCall(string funcName, params object[] args)
+        {
+            if (_lua != null)
+            {
+                LuaFunction ctor = _lua.GetLuaFunction(funcName);
+                if (ctor != null)
+                {
+                    try
+                    {
+                        if (args.Length == 0)
+                            ctor.Call(_lua);
+                        else if (args.Length == 1)
+                            ctor.Call(_lua, args[0]);
+                        else if (args.Length == 2)
+                            ctor.Call(_lua, args[0], args[1]);
+                        else if (args.Length == 3)
+                            ctor.Call(_lua, args[0], args[1], args[2]);
+                    }
+                    catch (Exception err)
+                    {
+                        Debug.LogError(err);
+                    }
+                    ctor.Dispose();
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        #endregion
 
         protected virtual void Log(object message)
         {

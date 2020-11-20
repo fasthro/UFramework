@@ -57,7 +57,7 @@ namespace UFramework.UI
 
         private int _packageCount;
         private bool _inited;
-        private LuaTable _peerTable;
+        private LuaTable _lua;
         #endregion
 
         /// <summary>
@@ -154,29 +154,29 @@ namespace UFramework.UI
             LuaCall("onHide");
         }
 
-        public void LuaBind(LuaTable peerTable)
+        public void LuaBind(LuaTable lua)
         {
-            _peerTable = peerTable;
+            _lua = lua;
         }
 
         [NoToLua]
-        public bool LuaCall(string funcName, params object[] args)
+        protected bool LuaCall(string funcName, params object[] args)
         {
-            if (_peerTable != null)
+            if (_lua != null)
             {
-                LuaFunction ctor = _peerTable.GetLuaFunction(funcName);
+                LuaFunction ctor = _lua.GetLuaFunction(funcName);
                 if (ctor != null)
                 {
                     try
                     {
                         if (args.Length == 0)
-                            ctor.Call(_peerTable);
+                            ctor.Call(_lua);
                         else if (args.Length == 1)
-                            ctor.Call(_peerTable, args[0]);
+                            ctor.Call(_lua, args[0]);
                         else if (args.Length == 2)
-                            ctor.Call(_peerTable, args[0], args[1]);
+                            ctor.Call(_lua, args[0], args[1]);
                         else if (args.Length == 3)
-                            ctor.Call(_peerTable, args[0], args[1], args[2]);
+                            ctor.Call(_lua, args[0], args[1], args[2]);
                     }
                     catch (Exception err)
                     {

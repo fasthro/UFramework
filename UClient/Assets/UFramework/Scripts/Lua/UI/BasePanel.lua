@@ -68,13 +68,4 @@ function panel:_bindClick(obj, func)
     obj.onClick:Set(func, self)
 end
 
-------------------------------------
-function panel:getManager(name)
-    return _managerCenter:getManager(name)
-end
-
-function panel:getCtrl(name)
-    return self:getManager(typesys.CtrlManager):getCtrl(name)
-end
-
 return panel

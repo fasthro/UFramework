@@ -3,11 +3,10 @@ Author: fasthro
 Date: 2020-10-07 17:21:14
 Description: define
 --]]
-require("Define.DefineManager")
-require("Define.DefineCtrl")
-require("Define.DefinePanel")
+require("DefineEvent")
+
 ------------------------------------------- uframework csharp -------------------------------------------
-_G._app = UFramework.App
+_G.App = UFramework.App
 
 -- panel layer
 _G.PANEL_LAYER = {
@@ -22,5 +21,14 @@ _G.PANEL_LAYER = {
 }
 
 ------------------------------------------- global -------------------------------------------
-_G._engine = nil
-_G._managerCenter = nil
+_G.LuaEngine = nil
+
+-- manager
+_G.CtrlManager = nil
+_G.EventManager = nil
+_G.NetManager = nil
+_G.PanelManager = nil
+_G.ResManager = nil
+
+-- ctrl
+_G.LoginCtrl = nil
