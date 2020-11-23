@@ -1,26 +1,28 @@
-11/23/20 19:22:25.41 [:00000002] LAUNCH snlua bootstrap
-11/23/20 19:22:25.55 [:00000003] LAUNCH snlua launcher
-11/23/20 19:22:25.59 [:00000004] LAUNCH snlua cdummy
-11/23/20 19:22:25.61 [:00000005] LAUNCH harbor 0 4
-11/23/20 19:22:25.61 [:00000006] LAUNCH snlua datacenterd
-11/23/20 19:22:25.64 [:00000007] LAUNCH snlua service_mgr
-11/23/20 19:22:25.65 [:00000008] LAUNCH snlua mainlogin
-11/23/20 19:22:25.70 [:00000009] LAUNCH snlua clusterd
-11/23/20 19:22:25.90 [:0000000a] LAUNCH snlua debug_console 8801
-11/23/20 19:22:26.08 [:0000000a] Start debug console at 127.0.0.1:8801
-11/23/20 19:22:26.08 [:0000000b] LAUNCH snlua logind
-11/23/20 19:22:26.13 [:0000000c] LAUNCH snlua logind
-11/23/20 19:22:26.17 [:0000000d] LAUNCH snlua logind
-11/23/20 19:22:26.24 [:0000000e] LAUNCH snlua logind
-11/23/20 19:22:26.35 [:0000000f] LAUNCH snlua logind
-11/23/20 19:22:26.45 [:00000010] LAUNCH snlua logind
-11/23/20 19:22:26.78 [:00000011] LAUNCH snlua logind
-11/23/20 19:22:26.93 [:00000012] LAUNCH snlua logind
-11/23/20 19:22:27.04 [:00000013] LAUNCH snlua logind
-11/23/20 19:22:27.24 [:0000000b] login server listen at : 0.0.0.0 8001
-11/23/20 19:22:27.24 [:00000014] LAUNCH snlua gate
-11/23/20 19:22:27.39 [:00000014] Listen on 0.0.0.0:2502
-11/23/20 19:22:27.40 [:00000008] KILL self
-11/23/20 19:22:27.40 [:00000002] KILL self
-11/23/20 19:22:42.88 [:0000000c] connect from 192.168.1.105:55332 (fd = 4)
-11/23/20 19:22:42.92 [:00000015] LAUNCH snlua clustersender node1 fasthro-virtual-machine12643 0.0.0.0 2503
+11/23/20 19:38:49.37 [:00000002] LAUNCH snlua bootstrap
+11/23/20 19:38:49.45 [:00000003] LAUNCH snlua launcher
+11/23/20 19:38:49.60 [:00000004] LAUNCH snlua cdummy
+11/23/20 19:38:49.62 [:00000005] LAUNCH harbor 0 4
+11/23/20 19:38:49.62 [:00000006] LAUNCH snlua datacenterd
+11/23/20 19:38:49.64 [:00000007] LAUNCH snlua service_mgr
+11/23/20 19:38:49.72 [:00000008] LAUNCH snlua mainlogin
+11/23/20 19:38:49.80 [:00000009] LAUNCH snlua clusterd
+11/23/20 19:38:49.85 [:0000000a] LAUNCH snlua debug_console 8801
+11/23/20 19:38:49.93 [:0000000a] Start debug console at 127.0.0.1:8801
+11/23/20 19:38:49.93 [:0000000b] LAUNCH snlua logind
+11/23/20 19:38:50.06 [:0000000c] LAUNCH snlua logind
+11/23/20 19:38:50.15 [:0000000d] LAUNCH snlua logind
+11/23/20 19:38:50.20 [:0000000e] LAUNCH snlua logind
+11/23/20 19:38:50.35 [:0000000f] LAUNCH snlua logind
+11/23/20 19:38:50.45 [:00000010] LAUNCH snlua logind
+11/23/20 19:38:50.59 [:00000011] LAUNCH snlua logind
+11/23/20 19:38:50.69 [:00000012] LAUNCH snlua logind
+11/23/20 19:38:50.78 [:00000013] LAUNCH snlua logind
+11/23/20 19:38:50.84 [:0000000b] login server listen at : 0.0.0.0 8001
+11/23/20 19:38:50.84 [:00000014] LAUNCH snlua gate
+11/23/20 19:38:50.93 [:00000014] Listen on 0.0.0.0:2502
+11/23/20 19:38:50.93 [:00000008] KILL self
+11/23/20 19:38:50.93 [:00000002] KILL self
+11/23/20 19:39:11.11 [:0000000c] connect from 192.168.1.105:56012 (fd = 4)
+11/23/20 19:39:11.15 [:00000015] LAUNCH snlua clustersender node1 fasthro-virtual-machine13083 0.0.0.0 2503
+11/23/20 19:39:11.19 [:0000000b] <login> addr:0.0.0.0:8003 uid:fasthro secret:—)Íè+
+ subid:2

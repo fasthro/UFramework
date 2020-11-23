@@ -58,6 +58,11 @@ namespace UFramework
             _client.Send(value);
         }
 
+        public void Sendbyte(byte[] value)
+        {
+            _client.Send(value);
+        }
+
         #region ISocketListener
         public void OnConnected() { ThreadQueue.EnqueueMain(_OnConnected); }
         private void _OnConnected()

@@ -1,17 +1,17 @@
-11/23/20 19:22:26.51 [:00000002] LAUNCH snlua bootstrap
-11/23/20 19:22:26.78 [:00000003] LAUNCH snlua launcher
-11/23/20 19:22:26.84 [:00000004] LAUNCH snlua cdummy
-11/23/20 19:22:26.89 [:00000005] LAUNCH harbor 0 4
-11/23/20 19:22:26.89 [:00000006] LAUNCH snlua datacenterd
-11/23/20 19:22:26.92 [:00000007] LAUNCH snlua service_mgr
-11/23/20 19:22:26.96 [:00000008] LAUNCH snlua maingame
-11/23/20 19:22:27.03 [:00000009] LAUNCH snlua clusterd
-11/23/20 19:22:27.11 [:0000000a] LAUNCH snlua debug_console 8803
-11/23/20 19:22:27.31 [:0000000a] Start debug console at 127.0.0.1:8803
-11/23/20 19:22:27.33 [:0000000b] LAUNCH snlua hubd node1
-11/23/20 19:22:27.40 [:0000000c] LAUNCH snlua gate
-11/23/20 19:22:27.52 [:0000000c] Listen on 0.0.0.0:2503
-11/23/20 19:22:27.52 [:00000008] KILL self
-11/23/20 19:22:27.52 [:00000002] KILL self
-11/23/20 19:22:42.95 [:00000009] socket accept from 127.0.0.1:55716
-11/23/20 19:22:42.95 [:0000000d] LAUNCH snlua clusteragent 9 12 3
+11/23/20 19:38:50.41 [:00000002] LAUNCH snlua bootstrap
+11/23/20 19:38:50.54 [:00000003] LAUNCH snlua launcher
+11/23/20 19:38:50.59 [:00000004] LAUNCH snlua cdummy
+11/23/20 19:38:50.60 [:00000005] LAUNCH harbor 0 4
+11/23/20 19:38:50.60 [:00000006] LAUNCH snlua datacenterd
+11/23/20 19:38:50.61 [:00000007] LAUNCH snlua service_mgr
+11/23/20 19:38:50.70 [:00000008] LAUNCH snlua maingame
+11/23/20 19:38:50.78 [:00000009] LAUNCH snlua clusterd
+11/23/20 19:38:50.84 [:0000000a] LAUNCH snlua debug_console 8803
+11/23/20 19:38:50.94 [:0000000a] Start debug console at 127.0.0.1:8803
+11/23/20 19:38:50.94 [:0000000b] LAUNCH snlua hubd node1
+11/23/20 19:38:51.03 [:0000000c] LAUNCH snlua gate
+11/23/20 19:38:51.14 [:0000000c] Listen on 0.0.0.0:2503
+11/23/20 19:38:51.15 [:00000008] KILL self
+11/23/20 19:38:51.15 [:00000002] KILL self
+11/23/20 19:39:11.17 [:00000009] socket accept from 127.0.0.1:55752
+11/23/20 19:39:11.17 [:0000000d] LAUNCH snlua clusteragent 9 12 3
