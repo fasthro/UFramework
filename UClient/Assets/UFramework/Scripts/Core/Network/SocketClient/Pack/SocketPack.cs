@@ -63,7 +63,7 @@ namespace UFramework.Network
         {
             var head = new FixedByteArray(16);
             head.Write(rawData.Length + 16);
-            headData = head.GetBuffer();
+            headData = head.data;
         }
 
         public SocketPackLine ToLinePack() { return this as SocketPackLine; }

@@ -225,16 +225,16 @@ namespace UFramework.Network
             if (_isSending) return;
             try
             {
-                if (!_sender.isEmpty())
+                if (!_sender.isEmpty)
                 {
                     _isSending = true;
-                    if (_sender.dataSize > sendBufferSize)
+                    if (_sender.size > sendBufferSize)
                     {
                         _client.BeginSend(_sender.Read(sendBufferSize), 0, sendBufferSize, SocketFlags.DontRoute, OnSend, null);
                     }
                     else
                     {
-                        var len = _sender.dataSize;
+                        var len = _sender.size;
                         _client.BeginSend(_sender.ReadAll(), 0, len, SocketFlags.DontRoute, OnSend, null);
                     }
                 }
@@ -293,9 +293,9 @@ namespace UFramework.Network
         {
             if (!_isBodyParsing)
             {
-                if (_receiver.dataSize >= HEAD_SIZE)
+                if (_receiver.size >= HEAD_SIZE)
                 {
-                    if (_header.isEmpty())
+                    if (_header.isEmpty)
                     {
                         _header.Write(_receiver.Read(HEAD_SIZE));
                         _isBodyParsing = true;
@@ -310,7 +310,7 @@ namespace UFramework.Network
 
             if (_isBodyParsing)
             {
-                if (_receiver.dataSize >= _packSize)
+                if (_receiver.size >= _packSize)
                 {
                     return null;
                 }

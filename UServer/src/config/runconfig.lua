@@ -1,6 +1,5 @@
 
 return {
-    
     brokecachelen = 5, -- 玩家链接断开之后保持agent多长时间，超过则清楚agent缓存数据, 单位为秒
     
     -- 数据库服务配置

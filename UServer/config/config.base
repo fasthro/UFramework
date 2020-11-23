@@ -4,6 +4,7 @@ bootstrap = "snlua bootstrap"
 cpath     = "skynet/cservice/?.so"
 lualoader  = "skynet/lualib/loader.lua"
 cluster = "src/config/clustername.lua"
+preload = "src/preload/preload.lua"
 
 local function concat(args)
   local r = ''
@@ -21,20 +22,23 @@ luaservice = concat {
 	"src/service/center/?.lua",
 	"src/service/login/?.lua",
 	"src/service/game/?.lua",
-	"src/service/proto/?.lua",
+	"src/service/common/?.lua",
 }
 
 lua_path = concat {
 	"skynet/lualib/?.lua",
 
 	"src/config/?.lua",
+	"src/client/?.lua",
+	"src/proto/?.lua",
+	"src/preload/?.lua",
 	
 	"src/mainservice/?.lua",
 	"src/service/?.lua",
 	"src/service/center/?.lua",
 	"src/service/login/?.lua",
 	"src/service/game/?.lua",
-	"src/service/proto/?.lua",
+	"src/service/common/?.lua",
 }
 
 lua_cpath  = concat {

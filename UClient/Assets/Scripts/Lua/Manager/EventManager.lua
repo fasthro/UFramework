@@ -50,8 +50,8 @@ function EventWrap:add(listener, owner)
 end
 
 function EventWrap:has(listener)
-    for k, v in pairs(self.listeners) do
-        if v:equal(listener) then
+    for k, v in ipairs(self._listeners) do
+        if v.equal ~= nil and v:equal(listener) then
             return true
         end
     end
@@ -59,9 +59,9 @@ function EventWrap:has(listener)
 end
 
 function EventWrap:remove(listener)
-    for k, v in pairs(self.listeners) do
+    for k, v in ipairs(self._listeners) do
         if v:equal(listener) then
-            self._listener:set(k, nil)
+            self._listeners:set(k, nil)
             break
         end
     end
@@ -143,7 +143,7 @@ function EventManager:has(eventname, listener)
     end
     local wrap = self._listeners:get(eventname)
     if wrap ~= nil then
-        return wrap:hase(listener), wrap
+        return wrap:has(listener), wrap
     end
     return false, wrap
 end

@@ -1,4 +1,4 @@
-local loginserver = require "loginserver"
+local login = require "snax.loginserver"
 local crypt = require "skynet.crypt"
 local skynet = require "skynet"
 local cluster = require "skynet.cluster"
@@ -47,7 +47,7 @@ function server.login_handler(serverid, uid, secret)
     end
     
     logic.addonline(uid, {subid = subid, server = nodeserver.conf.name})
-    skynet.error(string.format("<login> addr:%s:%s uid:%s secret:%s subid:%s", nodeserver.conf.host, nodeserver.conf.port, uid, secret, subid))
+    logger.info(string.format("<login> addr:%s:%s uid:%s secret:%s subid:%s", nodeserver.conf.host, nodeserver.conf.port, uid, secret, subid))
     return subid
 end
 
@@ -60,7 +60,7 @@ end
 function CMD.logout(uid, subid)
     local u = user_online[uid]
     if u then
-        print(string.format("%s@%s is logout", uid, u.server))
+        logger.info(string.format("<login> %s@%s is logout", uid, u.server))
         user_online[uid] = nil
     end
 end
@@ -70,4 +70,4 @@ function server.command_handler(command, ...)
     return f(...)
 end
 
-loginserver(server)
+login(server)

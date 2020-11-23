@@ -3,6 +3,7 @@ Author: fasthro
 Date: 2020-10-07 17:21:14
 Description: define
 --]]
+require("Const.LoginConst")
 require("DefineEvent")
 
 ------------------------------------------- uframework csharp -------------------------------------------

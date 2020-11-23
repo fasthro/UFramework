@@ -30,13 +30,6 @@ Success:
 ]]
 local crypt = UFramework.Crypt
 
--- 登录验证状态
-local LOGIN_AUTHOR_STATUS = {
-    CHALLENGE = 0,
-    HANDSHAKE_KEY = 1,
-    AUTH_RESULT = 2
-}
-
 local LoginCtrl =
     typesys.def.LoginCtrl {
     __super = typesys.BaseCtrl,
@@ -76,7 +69,7 @@ end
 function LoginCtrl:onReceived(pack)
     local spack = pack:ToStreamPack()
     local code = spack:GetString()
-    print("onreceived > " .. code)
+
     if self._status == LOGIN_AUTHOR_STATUS.CHALLENGE then
         -- challenge
         self._challenge = crypt.Base64Decode(code)
@@ -96,12 +89,15 @@ function LoginCtrl:onReceived(pack)
     elseif self._status == LOGIN_AUTHOR_STATUS.AUTH_RESULT then
         -- authResult
         local result = tonumber(string.sub(code, 1, 3))
-        print("auth result：" .. result)
-        if result == 200 then
-        elseif result == 400 then
-        elseif result == 401 then
-        elseif result == 403 then
-        elseif result == 406 then
+
+        if result == LOGIN_AUTHOR_CODE.SUCCEED then
+            print("login result: 成功")
+        elseif result == LOGIN_AUTHOR_CODE.UNAUTHORIZED then
+            print("login result: 授权失败")
+        elseif result == LOGIN_AUTHOR_CODE.FORBIDDERN then
+            print("login result: 无权访问")
+        elseif result == LOGIN_AUTHOR_CODE.ALREADY then
+            print("login result: 重复登录")
         end
     end
 end

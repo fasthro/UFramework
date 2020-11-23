@@ -1,17 +1,85 @@
-11/23/20 19:22:26.51 [:00000002] LAUNCH snlua bootstrap
-11/23/20 19:22:26.78 [:00000003] LAUNCH snlua launcher
-11/23/20 19:22:26.84 [:00000004] LAUNCH snlua cdummy
-11/23/20 19:22:26.89 [:00000005] LAUNCH harbor 0 4
-11/23/20 19:22:26.89 [:00000006] LAUNCH snlua datacenterd
-11/23/20 19:22:26.92 [:00000007] LAUNCH snlua service_mgr
-11/23/20 19:22:26.96 [:00000008] LAUNCH snlua maingame
-11/23/20 19:22:27.03 [:00000009] LAUNCH snlua clusterd
-11/23/20 19:22:27.11 [:0000000a] LAUNCH snlua debug_console 8803
-11/23/20 19:22:27.31 [:0000000a] Start debug console at 127.0.0.1:8803
-11/23/20 19:22:27.33 [:0000000b] LAUNCH snlua hubd node1
-11/23/20 19:22:27.40 [:0000000c] LAUNCH snlua gate
-11/23/20 19:22:27.52 [:0000000c] Listen on 0.0.0.0:2503
-11/23/20 19:22:27.52 [:00000008] KILL self
-11/23/20 19:22:27.52 [:00000002] KILL self
-11/23/20 19:22:42.95 [:00000009] socket accept from 127.0.0.1:55716
-11/23/20 19:22:42.95 [:0000000d] LAUNCH snlua clusteragent 9 12 3
+11/24/20 17:37:06.19 [:00000002] LAUNCH snlua bootstrap
+11/24/20 17:37:06.61 [:00000003] LAUNCH snlua launcher
+11/24/20 17:37:06.80 [:00000004] LAUNCH snlua cdummy
+11/24/20 17:37:07.02 [:00000005] LAUNCH harbor 0 4
+11/24/20 17:37:07.03 [:00000006] LAUNCH snlua datacenterd
+11/24/20 17:37:07.15 [:00000007] LAUNCH snlua service_mgr
+11/24/20 17:37:07.28 [:00000008] LAUNCH snlua maingame
+11/24/20 17:37:07.45 [:00000009] LAUNCH snlua clusterd
+11/24/20 17:37:07.59 [:0000000a] LAUNCH snlua debug_console 8803
+11/24/20 17:37:07.82 [:0000000a] Start debug console at 127.0.0.1:8803
+11/24/20 17:37:07.82 [:0000000b] LAUNCH snlua protoloader
+11/24/20 17:37:07.94 [:0000000c] LAUNCH snlua hubd node1
+11/24/20 17:37:08.06 [:0000000d] LAUNCH snlua hub_slave
+11/24/20 17:37:08.27 [:0000000e] LAUNCH snlua gated
+11/24/20 17:37:08.41 [:0000000e] Listen on 0.0.0.0:8003
+11/24/20 17:37:08.41 [:0000000f] LAUNCH snlua gate
+11/24/20 17:37:08.45 [:0000000f] Listen on 0.0.0.0:2503
+11/24/20 17:37:08.45 [:00000008] KILL self
+11/24/20 17:37:08.45 [:00000002] KILL self
+11/24/20 17:37:17.60 [:00000009] socket accept from 127.0.0.1:42622
+11/24/20 17:37:17.60 [:00000010] LAUNCH snlua clusteragent 9 15 4
+11/24/20 17:38:52.14 [:0000000c] lua call [10 to :c : 0 msgsz = 19] error : [31mskynet/lualib/skynet.lua:837: skynet/lualib/skynet.lua:327: src/service/game/hubd.lua:48: attempt to index a nil value (field 'connection')
+stack traceback:
+	src/service/game/hubd.lua:48: in local 'f'
+	src/service/game/hubd.lua:102: in upvalue 'f'
+	skynet/lualib/skynet.lua:279: in function <skynet/lualib/skynet.lua:251>
+stack traceback:
+	[C]: in function 'assert'
+	skynet/lualib/skynet.lua:837: in function 'skynet.manager.dispatch_message'[0m
+11/24/20 17:39:53.32 [:0000000c] lua call [10 to :c : 0 msgsz = 19] error : [31mskynet/lualib/skynet.lua:837: skynet/lualib/skynet.lua:327: src/service/game/hubd.lua:48: attempt to index a nil value (field 'connection')
+stack traceback:
+	src/service/game/hubd.lua:48: in local 'f'
+	src/service/game/hubd.lua:102: in upvalue 'f'
+	skynet/lualib/skynet.lua:279: in function <skynet/lualib/skynet.lua:251>
+stack traceback:
+	[C]: in function 'assert'
+	skynet/lualib/skynet.lua:837: in function 'skynet.manager.dispatch_message'[0m
+11/24/20 17:43:32.02 [:0000000c] lua call [10 to :c : 0 msgsz = 19] error : [31mskynet/lualib/skynet.lua:837: skynet/lualib/skynet.lua:327: src/service/game/hubd.lua:48: attempt to index a nil value (field 'connection')
+stack traceback:
+	src/service/game/hubd.lua:48: in local 'f'
+	src/service/game/hubd.lua:102: in upvalue 'f'
+	skynet/lualib/skynet.lua:279: in function <skynet/lualib/skynet.lua:251>
+stack traceback:
+	[C]: in function 'assert'
+	skynet/lualib/skynet.lua:837: in function 'skynet.manager.dispatch_message'[0m
+11/24/20 17:45:13.26 [:0000000c] lua call [10 to :c : 0 msgsz = 19] error : [31mskynet/lualib/skynet.lua:837: skynet/lualib/skynet.lua:327: src/service/game/hubd.lua:48: attempt to index a nil value (field 'connection')
+stack traceback:
+	src/service/game/hubd.lua:48: in local 'f'
+	src/service/game/hubd.lua:102: in upvalue 'f'
+	skynet/lualib/skynet.lua:279: in function <skynet/lualib/skynet.lua:251>
+stack traceback:
+	[C]: in function 'assert'
+	skynet/lualib/skynet.lua:837: in function 'skynet.manager.dispatch_message'[0m
+11/24/20 17:45:45.90 [:0000000c] lua call [10 to :c : 0 msgsz = 19] error : [31mskynet/lualib/skynet.lua:837: skynet/lualib/skynet.lua:327: src/service/game/hubd.lua:48: attempt to index a nil value (field 'connection')
+stack traceback:
+	src/service/game/hubd.lua:48: in local 'f'
+	src/service/game/hubd.lua:102: in upvalue 'f'
+	skynet/lualib/skynet.lua:279: in function <skynet/lualib/skynet.lua:251>
+stack traceback:
+	[C]: in function 'assert'
+	skynet/lualib/skynet.lua:837: in function 'skynet.manager.dispatch_message'[0m
+11/24/20 17:46:19.32 [:0000000c] lua call [10 to :c : 0 msgsz = 19] error : [31mskynet/lualib/skynet.lua:837: skynet/lualib/skynet.lua:327: src/service/game/hubd.lua:48: attempt to index a nil value (field 'connection')
+stack traceback:
+	src/service/game/hubd.lua:48: in local 'f'
+	src/service/game/hubd.lua:102: in upvalue 'f'
+	skynet/lualib/skynet.lua:279: in function <skynet/lualib/skynet.lua:251>
+stack traceback:
+	[C]: in function 'assert'
+	skynet/lualib/skynet.lua:837: in function 'skynet.manager.dispatch_message'[0m
+11/24/20 17:49:55.57 [:0000000c] lua call [10 to :c : 0 msgsz = 19] error : [31mskynet/lualib/skynet.lua:837: skynet/lualib/skynet.lua:327: src/service/game/hubd.lua:48: attempt to index a nil value (field 'connection')
+stack traceback:
+	src/service/game/hubd.lua:48: in local 'f'
+	src/service/game/hubd.lua:102: in upvalue 'f'
+	skynet/lualib/skynet.lua:279: in function <skynet/lualib/skynet.lua:251>
+stack traceback:
+	[C]: in function 'assert'
+	skynet/lualib/skynet.lua:837: in function 'skynet.manager.dispatch_message'[0m
+11/24/20 17:58:19.56 [:0000000c] lua call [10 to :c : 0 msgsz = 19] error : [31mskynet/lualib/skynet.lua:837: skynet/lualib/skynet.lua:327: src/service/game/hubd.lua:48: attempt to index a nil value (field 'connection')
+stack traceback:
+	src/service/game/hubd.lua:48: in local 'f'
+	src/service/game/hubd.lua:102: in upvalue 'f'
+	skynet/lualib/skynet.lua:279: in function <skynet/lualib/skynet.lua:251>
+stack traceback:
+	[C]: in function 'assert'
+	skynet/lualib/skynet.lua:837: in function 'skynet.manager.dispatch_message'[0m

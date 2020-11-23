@@ -1,26 +1,44 @@
-11/23/20 19:22:25.41 [:00000002] LAUNCH snlua bootstrap
-11/23/20 19:22:25.55 [:00000003] LAUNCH snlua launcher
-11/23/20 19:22:25.59 [:00000004] LAUNCH snlua cdummy
-11/23/20 19:22:25.61 [:00000005] LAUNCH harbor 0 4
-11/23/20 19:22:25.61 [:00000006] LAUNCH snlua datacenterd
-11/23/20 19:22:25.64 [:00000007] LAUNCH snlua service_mgr
-11/23/20 19:22:25.65 [:00000008] LAUNCH snlua mainlogin
-11/23/20 19:22:25.70 [:00000009] LAUNCH snlua clusterd
-11/23/20 19:22:25.90 [:0000000a] LAUNCH snlua debug_console 8801
-11/23/20 19:22:26.08 [:0000000a] Start debug console at 127.0.0.1:8801
-11/23/20 19:22:26.08 [:0000000b] LAUNCH snlua logind
-11/23/20 19:22:26.13 [:0000000c] LAUNCH snlua logind
-11/23/20 19:22:26.17 [:0000000d] LAUNCH snlua logind
-11/23/20 19:22:26.24 [:0000000e] LAUNCH snlua logind
-11/23/20 19:22:26.35 [:0000000f] LAUNCH snlua logind
-11/23/20 19:22:26.45 [:00000010] LAUNCH snlua logind
-11/23/20 19:22:26.78 [:00000011] LAUNCH snlua logind
-11/23/20 19:22:26.93 [:00000012] LAUNCH snlua logind
-11/23/20 19:22:27.04 [:00000013] LAUNCH snlua logind
-11/23/20 19:22:27.24 [:0000000b] login server listen at : 0.0.0.0 8001
-11/23/20 19:22:27.24 [:00000014] LAUNCH snlua gate
-11/23/20 19:22:27.39 [:00000014] Listen on 0.0.0.0:2502
-11/23/20 19:22:27.40 [:00000008] KILL self
-11/23/20 19:22:27.40 [:00000002] KILL self
-11/23/20 19:22:42.88 [:0000000c] connect from 192.168.1.105:55332 (fd = 4)
-11/23/20 19:22:42.92 [:00000015] LAUNCH snlua clustersender node1 fasthro-virtual-machine12643 0.0.0.0 2503
+11/24/20 17:37:04.98 [:00000002] LAUNCH snlua bootstrap
+11/24/20 17:37:05.15 [:00000003] LAUNCH snlua launcher
+11/24/20 17:37:05.26 [:00000004] LAUNCH snlua cdummy
+11/24/20 17:37:05.27 [:00000005] LAUNCH harbor 0 4
+11/24/20 17:37:05.28 [:00000006] LAUNCH snlua datacenterd
+11/24/20 17:37:05.29 [:00000007] LAUNCH snlua service_mgr
+11/24/20 17:37:05.38 [:00000008] LAUNCH snlua mainlogin
+11/24/20 17:37:05.41 [:00000009] LAUNCH snlua clusterd
+11/24/20 17:37:05.43 [:0000000a] LAUNCH snlua debug_console 8801
+11/24/20 17:37:05.50 [:0000000a] Start debug console at 127.0.0.1:8801
+11/24/20 17:37:05.51 [:0000000b] LAUNCH snlua logind
+11/24/20 17:37:05.86 [:0000000c] LAUNCH snlua logind
+11/24/20 17:37:06.32 [:0000000d] LAUNCH snlua logind
+11/24/20 17:37:06.62 [:0000000e] LAUNCH snlua logind
+11/24/20 17:37:06.96 [:0000000f] LAUNCH snlua logind
+11/24/20 17:37:07.20 [:00000010] LAUNCH snlua logind
+11/24/20 17:37:07.30 [:00000011] LAUNCH snlua logind
+11/24/20 17:37:07.39 [:00000012] LAUNCH snlua logind
+11/24/20 17:37:07.60 [:00000013] LAUNCH snlua logind
+11/24/20 17:37:07.69 [:0000000b] login server listen at : 0.0.0.0 8001
+11/24/20 17:37:07.69 [:00000014] LAUNCH snlua gate
+11/24/20 17:37:07.79 [:00000014] Listen on 0.0.0.0:2502
+11/24/20 17:37:07.80 [:00000008] KILL self
+11/24/20 17:37:07.80 [:00000002] KILL self
+11/24/20 17:37:17.52 [:0000000c] connect from 192.168.1.105:63840 (fd = 4)
+11/24/20 17:37:17.56 [:00000015] LAUNCH snlua clustersender node1 fasthro-virtual-machine11308 0.0.0.0 2503
+11/24/20 17:37:17.62 [:0000000b] [info] <login> addr:0.0.0.0:8003 uid:fasthro secret:ı„@#˛≥ subid:2
+11/24/20 17:38:52.09 [:0000000d] connect from 192.168.1.105:63920 (fd = 6)
+11/24/20 17:38:52.14 [:0000000b] [info] <login> addr:0.0.0.0:8003 uid:fasthro secret:8©«Gl·5 subid:3
+11/24/20 17:39:53.28 [:0000000e] connect from 192.168.1.105:63972 (fd = 7)
+11/24/20 17:39:53.32 [:0000000b] [info] <login> addr:0.0.0.0:8003 uid:fasthro secret:µAu÷∂òn& subid:4
+11/24/20 17:43:31.98 [:0000000f] connect from 192.168.1.105:64302 (fd = 8)
+11/24/20 17:43:32.02 [:0000000b] [info] <login> addr:0.0.0.0:8003 uid:fasthro secret:†ts˙@‡’ subid:5
+11/24/20 17:45:13.22 [:00000010] connect from 192.168.1.105:64389 (fd = 9)
+11/24/20 17:45:13.26 [:0000000b] [info] <login> addr:0.0.0.0:8003 uid:fasthro secret:?v6÷¨ïV subid:6
+11/24/20 17:45:45.86 [:00000011] connect from 192.168.1.105:64418 (fd = 10)
+11/24/20 17:45:45.90 [:0000000b] [info] <login> addr:0.0.0.0:8003 uid:fasthro secret:
+œè]æ&3 subid:7
+11/24/20 17:46:19.28 [:00000012] connect from 192.168.1.105:64447 (fd = 11)
+11/24/20 17:46:19.32 [:0000000b] [info] <login> addr:0.0.0.0:8003 uid:fasthro secret::Œ∞§Äê subid:8
+11/24/20 17:49:55.53 [:00000013] connect from 192.168.1.105:64776 (fd = 12)
+11/24/20 17:49:55.57 [:0000000b] [info] <login> addr:0.0.0.0:8003 uid:fasthro secret:8˛·˙Û subid:9
+11/24/20 17:58:19.50 [:0000000c] connect from 192.168.1.105:65358 (fd = 13)
+11/24/20 17:58:19.56 [:0000000b] [info] <login> addr:0.0.0.0:8003 uid:fasthro secret:¿˛’Ì,§v subid:10

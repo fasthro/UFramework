@@ -10,72 +10,74 @@ namespace UFramework.Network
 {
     public class AutoByteArray
     {
-        /// <summary>
-        /// 默认容量
-        /// </summary>
-        readonly static int DEFAULT_CAPACITY = 16;
-
         private byte[] _buffer;
-        public int dataSize { get; private set; }
-        public int capacity { get; private set; }
-
-        public AutoByteArray()
+        public int size { get; private set; }
+        public int freeSize { get { return _buffer.Length - size; } }
+        public bool isEmpty
         {
-            _buffer = new byte[DEFAULT_CAPACITY];
-            dataSize = 0;
+            get { return size == 0; }
         }
 
-        public AutoByteArray Write(byte[] value)
+        private int _minCapacity;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="capacity">初始容量</param>
+        /// <param name="minCapacity">最小容量</param>
+        public AutoByteArray(int capacity = 128, int minCapacity = 16)
         {
-            return Write(value, value.Length);
+            _buffer = new byte[capacity];
+            _minCapacity = minCapacity;
+            size = 0;
         }
 
-        public AutoByteArray Write(byte[] value, int len)
+        public void Write(byte[] value)
         {
-            Resize(len);
-            Array.Copy(value, 0, _buffer, dataSize, len);
-            dataSize += len;
-            return this;
+            Write(value, value.Length);
         }
 
-        public byte[] Read(int len)
+        public void Write(byte[] value, int len)
         {
-            if (len <= dataSize)
-            {
-                byte[] newBytes = new byte[len];
-                Array.Copy(_buffer, 0, newBytes, 0, len);
-                dataSize -= len;
-                return newBytes;
-            }
-            Debug.LogError("AutoByteArray 读取长度超出数据长度!");
-            return null;
+            if (freeSize < len)
+                Resize((size + len) * 2);
+            Array.Copy(value, 0, _buffer, size, len);
+            size += len;
         }
 
         public byte[] ReadAll()
         {
-            return Read(dataSize);
+            return Read(size);
         }
 
-        private void Resize(int len)
+        public byte[] Read(int len)
         {
-            var free = capacity - dataSize;
-            var expand = len - free;
-            if (free < len)
+            if (len <= size)
             {
-                byte[] newBytes = new byte[(capacity + expand) * 2];
-                Array.Copy(_buffer, 0, newBytes, 0, _buffer.Length);
-                _buffer = newBytes;
+                byte[] newBytes = new byte[len];
+                Array.Copy(_buffer, 0, newBytes, 0, len);
+                size -= len;
+                if (size <= _buffer.Length / 4)
+                {
+                    var ns = _buffer.Length / 2;
+                    if (ns > _minCapacity)
+                        Resize(ns);
+                }
+                return newBytes;
             }
+            return new byte[] { };
         }
 
-        public bool isEmpty()
+        private void Resize(int tlen)
         {
-            return dataSize == 0;
+            byte[] newBytes = new byte[tlen];
+            Array.Copy(_buffer, 0, newBytes, 0, size);
+            _buffer = newBytes;
         }
 
-        public void Reset()
+        public void Clear()
         {
-            dataSize = 0;
+            size = 0;
         }
     }
 }

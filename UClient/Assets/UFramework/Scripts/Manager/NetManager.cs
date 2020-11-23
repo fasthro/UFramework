@@ -28,10 +28,7 @@ namespace UFramework
         /// connected
         /// </summary>、
         /// <value></value>
-        public bool isConnected
-        {
-            get { return _client != null && _client.isConnected; }
-        }
+        public bool isConnected { get { return _client != null && _client.isConnected; } }
 
         protected override void OnInitialize()
         {
@@ -41,11 +38,22 @@ namespace UFramework
             _client.sendBufferSize = 8192;
         }
 
+        /// <summary>
+        /// 连接服务器
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <param name="port"></param>
         public void Connecte(string ip, int port)
         {
             if (!isConnected)
                 _client.Connect(ip, port);
         }
+
+        /// <summary>
+        /// send string
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="encoding"></param>
         public void Send(string value, Encoding encoding = null)
         {
             if (encoding == null)
@@ -53,19 +61,32 @@ namespace UFramework
             Send(encoding.GetBytes(value));
         }
 
+        /// <summary>
+        /// send bytes
+        /// </summary>
+        /// <param name="value"></param>
         public void Send(byte[] value)
         {
             _client.Send(value);
         }
 
         #region ISocketListener
-        public void OnConnected() { ThreadQueue.EnqueueMain(_OnConnected); }
+
+        public void OnConnected()
+        {
+            ThreadQueue.EnqueueMain(_OnConnected);
+        }
+
         private void _OnConnected()
         {
             LuaCall("onConnected");
         }
 
-        public void OnDisconnected() { ThreadQueue.EnqueueMain(_OnDisconnected); }
+        public void OnDisconnected()
+        {
+            ThreadQueue.EnqueueMain(_OnDisconnected);
+        }
+
         private void _OnDisconnected()
         {
             LuaCall("onDisconnected");
@@ -83,12 +104,16 @@ namespace UFramework
             while (!_packQueue.IsEmpty())
             {
                 var pack = _packQueue.Dequeue();
-                Log("onreceive len = " + pack.rawDataSize);
+                // Log("onreceive len = " + pack.rawDataSize);
                 LuaCall("onReceive", pack);
             }
         }
 
-        public void OnNetworkError(SocketError code, Exception error) { ThreadQueue.EnqueueMain(_OnNetworkError, code, error); }
+        public void OnNetworkError(SocketError code, Exception error)
+        {
+            ThreadQueue.EnqueueMain(_OnNetworkError, code, error);
+        }
+
         private void _OnNetworkError(object code, object error)
         {
             LuaCall("onNetworkError");
@@ -103,14 +128,10 @@ namespace UFramework
         }
 
         protected override void OnLateUpdate()
-        {
-
-        }
+        { }
 
         protected override void OnFixedUpdate()
-        {
-
-        }
+        { }
 
         protected override void OnDispose()
         {
