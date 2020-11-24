@@ -24,21 +24,22 @@
 11/24/20 17:37:07.80 [:00000002] KILL self
 11/24/20 17:37:17.52 [:0000000c] connect from 192.168.1.105:63840 (fd = 4)
 11/24/20 17:37:17.56 [:00000015] LAUNCH snlua clustersender node1 fasthro-virtual-machine11308 0.0.0.0 2503
-11/24/20 17:37:17.62 [:0000000b] [info] <login> addr:0.0.0.0:8003 uid:fasthro secret:õã@#ş³ subid:2
+11/24/20 17:37:17.62 [:0000000b] [info] <login> addr:0.0.0.0:8003 uid:fasthro secret:ï¿½ï¿½@#ï¿½ï¿½ subid:2
 11/24/20 17:38:52.09 [:0000000d] connect from 192.168.1.105:63920 (fd = 6)
-11/24/20 17:38:52.14 [:0000000b] [info] <login> addr:0.0.0.0:8003 uid:fasthro secret:8©ÇGlá5 subid:3
+11/24/20 17:38:52.14 [:0000000b] [info] <login> addr:0.0.0.0:8003 uid:fasthro secret:8ï¿½ï¿½Glï¿½5 subid:3
 11/24/20 17:39:53.28 [:0000000e] connect from 192.168.1.105:63972 (fd = 7)
-11/24/20 17:39:53.32 [:0000000b] [info] <login> addr:0.0.0.0:8003 uid:fasthro secret:µAuÖ¶˜n& subid:4
+11/24/20 17:39:53.32 [:0000000b] [info] <login> addr:0.0.0.0:8003 uid:fasthro secret:ï¿½AuÖ¶ï¿½n& subid:4
 11/24/20 17:43:31.98 [:0000000f] connect from 192.168.1.105:64302 (fd = 8)
-11/24/20 17:43:32.02 [:0000000b] [info] <login> addr:0.0.0.0:8003 uid:fasthro secret: ğtsú@àÕ subid:5
+11/24/20 17:43:32.02 [:0000000b] [info] <login> addr:0.0.0.0:8003 uid:fasthro secret:ï¿½ï¿½tsï¿½@ï¿½ï¿½ subid:5
 11/24/20 17:45:13.22 [:00000010] connect from 192.168.1.105:64389 (fd = 9)
-11/24/20 17:45:13.26 [:0000000b] [info] <login> addr:0.0.0.0:8003 uid:fasthro secret:?v6Ö¬•V subid:6
+11/24/20 17:45:13.26 [:0000000b] [info] <login> addr:0.0.0.0:8003 uid:fasthro secret:?v6Ö¬ï¿½V subid:6
 11/24/20 17:45:45.86 [:00000011] connect from 192.168.1.105:64418 (fd = 10)
 11/24/20 17:45:45.90 [:0000000b] [info] <login> addr:0.0.0.0:8003 uid:fasthro secret:
-Ï]¾&3 subid:7
+Ï]ï¿½&3 subid:7
 11/24/20 17:46:19.28 [:00000012] connect from 192.168.1.105:64447 (fd = 11)
-11/24/20 17:46:19.32 [:0000000b] [info] <login> addr:0.0.0.0:8003 uid:fasthro secret::Î°¤€ subid:8
+11/24/20 17:46:19.32 [:0000000b] [info] <login> addr:0.0.0.0:8003 uid:fasthro secret:
+:Î°ï¿½ï¿½ï¿½ subid:8
 11/24/20 17:49:55.53 [:00000013] connect from 192.168.1.105:64776 (fd = 12)
-11/24/20 17:49:55.57 [:0000000b] [info] <login> addr:0.0.0.0:8003 uid:fasthro secret:8şáúó subid:9
+11/24/20 17:49:55.57 [:0000000b] [info] <login> addr:0.0.0.0:8003 uid:fasthro secret:8ï¿½ï¿½ï¿½ï¿½ subid:9
 11/24/20 17:58:19.50 [:0000000c] connect from 192.168.1.105:65358 (fd = 13)
-11/24/20 17:58:19.56 [:0000000b] [info] <login> addr:0.0.0.0:8003 uid:fasthro secret:ÀşÕí,¤v subid:10
+11/24/20 17:58:19.56 [:0000000b] [info] <login> addr:0.0.0.0:8003 uid:fasthro secret:ï¿½ï¿½ï¿½ï¿½,ï¿½v subid:10
