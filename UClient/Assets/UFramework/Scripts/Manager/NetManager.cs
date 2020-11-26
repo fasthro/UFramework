@@ -50,6 +50,15 @@ namespace UFramework
         }
 
         /// <summary>
+        /// 设置网络包解析选项
+        /// </summary>
+        /// <param name="option"></param>
+        public void SetPackOption(SocketPackOption option)
+        {
+            _client.packOption = option;
+        }
+
+        /// <summary>
         /// send string
         /// </summary>
         /// <param name="value"></param>
@@ -72,51 +81,66 @@ namespace UFramework
 
         #region ISocketListener
 
-        public void OnConnected()
+        public void OnSocketConnected()
         {
-            ThreadQueue.EnqueueMain(_OnConnected);
+            ThreadQueue.EnqueueMain(_OnSocketConnected);
         }
 
-        private void _OnConnected()
+        private void _OnSocketConnected()
         {
-            LuaCall("onConnected");
+            LuaCall("onSocketConnected");
         }
 
-        public void OnDisconnected()
+        public void OnSocketDisconnected()
         {
-            ThreadQueue.EnqueueMain(_OnDisconnected);
+            _packQueue.Clear();
+            ThreadQueue.EnqueueMain(_OnSocketDisconnected);
         }
 
-        private void _OnDisconnected()
+        private void _OnSocketDisconnected()
         {
-            LuaCall("onDisconnected");
+            LuaCall("onSocketDisconnected");
         }
 
-        public void OnReceive(SocketPack pack)
+        public void OnSocketReceive(SocketPack pack)
         {
             _packQueue.Enqueue(pack);
-            ThreadQueue.EnqueueMain(_OnReceive);
+            ThreadQueue.EnqueueMain(_OnSocketReceive);
         }
 
-        private void _OnReceive()
+        private void _OnSocketReceive()
         {
             _packQueue.Swap();
             while (!_packQueue.IsEmpty())
             {
                 var pack = _packQueue.Dequeue();
-                // Log("onreceive len = " + pack.rawDataSize);
-                LuaCall("onReceive", pack);
+                switch (_client.packOption)
+                {
+                    case SocketPackOption.Linear:
+                        LuaCall("onSocketReceive", pack.ToPack<SocketPackLinear>());
+                        break;
+                    case SocketPackOption.Protobuf:
+                        LuaCall("onSocketReceive", pack.ToPack<SocketPackProtobuf>());
+                        break;
+                    case SocketPackOption.Sproto:
+                        LuaCall("onSocketReceive", pack.ToPack<SocketPackSproto>());
+                        break;
+                    case SocketPackOption.RawByte:
+                        LuaCall("onSocketReceive", pack.ToPack<SocketPackRawByte>());
+                        break;
+                }
             }
         }
 
-        public void OnNetworkError(SocketError code, Exception error)
+        public void OnSocketException(Exception exception)
         {
-            ThreadQueue.EnqueueMain(_OnNetworkError, code, error);
+            _packQueue.Clear();
+            ThreadQueue.EnqueueMain(_OnSocketException, exception);
         }
 
-        private void _OnNetworkError(object code, object error)
+        private void _OnSocketException(object exception)
         {
-            LuaCall("onNetworkError");
+            LuaCall("onSocketException", exception.ToString());
         }
 
         #endregion

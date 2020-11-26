@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="2048,1152" overflow="hidden" opaque="false">
+  <displayList>
+    <component id="n0_10ewg" name="_root" src="10ewg3" fileName="Components/root.xml" xy="1024,350">
+      <relation target="" sidePair="center-center,middle-middle"/>
+    </component>
+  </displayList>
+</component>

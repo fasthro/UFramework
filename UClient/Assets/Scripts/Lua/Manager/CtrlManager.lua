@@ -6,6 +6,7 @@ Description: controller manager
 
 require("Controller.BaseCtrl")
 require("Controller.LoginCtrl")
+require("Controller.AlertCtrl")
 
 local CtrlManager =
     typesys.def.CtrlManager {
@@ -17,6 +18,7 @@ function CtrlManager:initialize()
     self._ctrls = typesys.new(typesys.map, type(""), typesys.BaseCtrl)
 
     _G.LoginCtrl = self:_addCtrl(typesys.LoginCtrl)
+    _G.AlertCtrl = self:_addCtrl(typesys.AlertCtrl)
 end
 
 function CtrlManager:_addCtrl(name)

@@ -13,20 +13,12 @@ using UnityEngine;
 
 namespace UFramework.Network
 {
-    public enum SocketStatus
+    public enum SocketPackOption
     {
-        Connected,
-        Disconnected,
-        Send,
-        Received,
-    }
-
-    public enum SocketError
-    {
-        Timeout,
-        Connect,
-        Receive,
-        Send,
+        Linear,
+        Protobuf,
+        Sproto,
+        RawByte,
     }
 
     public class SocketClient
@@ -84,6 +76,16 @@ namespace UFramework.Network
             set { _sendBufferSize = value; }
         }
 
+        /// <summary>
+        /// 包解析选项
+        /// </summary>
+        /// <value></value>
+        public SocketPackOption packOption
+        {
+            get { return _packOption; }
+            set { _packOption = value; }
+        }
+
         private Socket _client;
         private Thread _thread;
         private ISocketListener _listener;
@@ -98,6 +100,7 @@ namespace UFramework.Network
         private long _session;
         private short _packType;
 
+        private SocketPackOption _packOption;
         private float _connectDecreaseTime;
         private int _connectTimeout = 5000;
         private int _receiveBufferSize = 4096;
@@ -108,9 +111,9 @@ namespace UFramework.Network
         private bool _isException;
 
         /// <summary>
-        /// socket client
+        /// 
         /// </summary>
-        /// <param name="callback"></param>
+        /// <param name="listener"></param>
         public SocketClient(ISocketListener listener)
         {
             _buffer = new byte[receiveBufferSize];
@@ -118,6 +121,7 @@ namespace UFramework.Network
             _sender = new AutoByteArray();
             _receiver = new AutoByteArray();
             _header = new FixedByteArray(HEAD_SIZE);
+            _packOption = SocketPackOption.RawByte;
         }
 
         public void OnUpdate()
@@ -126,7 +130,7 @@ namespace UFramework.Network
             {
                 _connectDecreaseTime -= Time.unscaledDeltaTime;
                 if (_connectDecreaseTime <= 0)
-                    OnException(SocketError.Timeout);
+                    OnException(new Exception("连接超时"));
             }
             else if (isConnected)
             {
@@ -177,7 +181,7 @@ namespace UFramework.Network
             }
             catch (System.Exception e)
             {
-                OnException(SocketError.Connect, e);
+                OnException(e);
             }
         }
 
@@ -192,7 +196,7 @@ namespace UFramework.Network
                 isConnected = true;
                 isConnecting = false;
 
-                _listener.OnConnected();
+                _listener.OnSocketConnected();
 
                 _thread = new Thread(new ThreadStart(OnReceive));
                 _thread.IsBackground = true;
@@ -200,7 +204,7 @@ namespace UFramework.Network
             }
             catch (Exception e)
             {
-                OnException(SocketError.Connect, e);
+                OnException(e);
             }
         }
 
@@ -241,7 +245,7 @@ namespace UFramework.Network
             }
             catch (Exception e)
             {
-                OnException(SocketError.Send, e);
+                OnException(e);
             }
         }
 
@@ -253,7 +257,7 @@ namespace UFramework.Network
             }
             catch (Exception e)
             {
-                OnException(SocketError.Send, e);
+                OnException(e);
             }
         }
 
@@ -270,8 +274,15 @@ namespace UFramework.Network
                         {
                             _receiver.Write(_buffer, bSize);
 
-                            var pack = new SocketPackStream(_receiver.Read(bSize));
-                            _listener.OnReceive(pack);
+                            SocketPack pack = null;
+                            switch (_packOption)
+                            {
+                                case SocketPackOption.RawByte:
+                                    pack = new SocketPackRawByte(_receiver.Read(bSize));
+                                    break;
+
+                            }
+                            _listener.OnSocketReceive(pack);
 
                             // SocketPack pack = null;
                             // while ((pack = ParsePack()) != null)
@@ -283,8 +294,7 @@ namespace UFramework.Network
                 }
                 catch (Exception e)
                 {
-                    OnException(SocketError.Receive, e);
-                    break;
+                    OnException(e);
                 }
             }
         }
@@ -323,7 +333,7 @@ namespace UFramework.Network
             if (!isConnected)
                 return;
             OnDisconnected();
-            _listener.OnDisconnected();
+            _listener.OnSocketDisconnected();
         }
 
         private void OnDisconnected()
@@ -345,14 +355,14 @@ namespace UFramework.Network
             _client = null;
         }
 
-        private void OnException(SocketError error, Exception e = null)
+        private void OnException(Exception e = null)
         {
+            Debug.LogError(string.Format("socket exception: {1}", e != null ? e.ToString() : ""));
+
             _isException = true;
             if (isConnected) OnDisconnected();
             isConnecting = false;
-            _listener.OnNetworkError(error, e);
-
-            Debug.LogError(string.Format("socket exception: {0}. {1}", error.ToString(), e != null ? e.ToString() : ""));
+            _listener.OnSocketException(e);
         }
 
         public static string GetIP(string domain)

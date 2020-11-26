@@ -4,6 +4,7 @@ logger = "./log/center.log"
 daemon = "center.pid"
 harbor = 0
 start = "maincenter"
+harborname = "center"
 
 
  

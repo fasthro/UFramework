@@ -1,7 +1,7 @@
 /*
  * @Author: fasthro
  * @Date: 2020-11-09 11:22:41
- * @Description: Protobuf Pack
+ * @Description: google protobuf
  */
 using Google.Protobuf;
 using LuaInterface;
@@ -46,7 +46,5 @@ namespace UFramework.Network
             }
             return _rawLuaData;
         }
-
-        public override SocketPackType packType { get { return SocketPackType.Protobuf; } }
     }
 }

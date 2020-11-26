@@ -8,11 +8,12 @@ public class UFramework_NetManagerWrap
 	{
 		L.BeginClass(typeof(UFramework.NetManager), typeof(UFramework.BaseManager));
 		L.RegFunction("Connecte", new LuaCSFunction(Connecte));
+		L.RegFunction("SetPackOption", new LuaCSFunction(SetPackOption));
 		L.RegFunction("Send", new LuaCSFunction(Send));
-		L.RegFunction("OnConnected", new LuaCSFunction(OnConnected));
-		L.RegFunction("OnDisconnected", new LuaCSFunction(OnDisconnected));
-		L.RegFunction("OnReceive", new LuaCSFunction(OnReceive));
-		L.RegFunction("OnNetworkError", new LuaCSFunction(OnNetworkError));
+		L.RegFunction("OnSocketConnected", new LuaCSFunction(OnSocketConnected));
+		L.RegFunction("OnSocketDisconnected", new LuaCSFunction(OnSocketDisconnected));
+		L.RegFunction("OnSocketReceive", new LuaCSFunction(OnSocketReceive));
+		L.RegFunction("OnSocketException", new LuaCSFunction(OnSocketException));
 		L.RegFunction("New", new LuaCSFunction(_CreateUFramework_NetManager));
 		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
 		L.RegVar("isConnected", new LuaCSFunction(get_isConnected), null);
@@ -62,6 +63,23 @@ public class UFramework_NetManagerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int SetPackOption(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			UFramework.NetManager obj = (UFramework.NetManager)ToLua.CheckObject<UFramework.NetManager>(L, 1);
+			UFramework.Network.SocketPackOption arg0 = (UFramework.Network.SocketPackOption)ToLua.CheckObject(L, 2, TypeTraits<UFramework.Network.SocketPackOption>.type);
+			obj.SetPackOption(arg0);
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int Send(IntPtr L)
 	{
 		try
@@ -102,13 +120,13 @@ public class UFramework_NetManagerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int OnConnected(IntPtr L)
+	static int OnSocketConnected(IntPtr L)
 	{
 		try
 		{
 			ToLua.CheckArgsCount(L, 1);
 			UFramework.NetManager obj = (UFramework.NetManager)ToLua.CheckObject<UFramework.NetManager>(L, 1);
-			obj.OnConnected();
+			obj.OnSocketConnected();
 			return 0;
 		}
 		catch (Exception e)
@@ -118,13 +136,13 @@ public class UFramework_NetManagerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int OnDisconnected(IntPtr L)
+	static int OnSocketDisconnected(IntPtr L)
 	{
 		try
 		{
 			ToLua.CheckArgsCount(L, 1);
 			UFramework.NetManager obj = (UFramework.NetManager)ToLua.CheckObject<UFramework.NetManager>(L, 1);
-			obj.OnDisconnected();
+			obj.OnSocketDisconnected();
 			return 0;
 		}
 		catch (Exception e)
@@ -134,14 +152,14 @@ public class UFramework_NetManagerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int OnReceive(IntPtr L)
+	static int OnSocketReceive(IntPtr L)
 	{
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
 			UFramework.NetManager obj = (UFramework.NetManager)ToLua.CheckObject<UFramework.NetManager>(L, 1);
 			UFramework.Network.SocketPack arg0 = (UFramework.Network.SocketPack)ToLua.CheckObject<UFramework.Network.SocketPack>(L, 2);
-			obj.OnReceive(arg0);
+			obj.OnSocketReceive(arg0);
 			return 0;
 		}
 		catch (Exception e)
@@ -151,15 +169,14 @@ public class UFramework_NetManagerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int OnNetworkError(IntPtr L)
+	static int OnSocketException(IntPtr L)
 	{
 		try
 		{
-			ToLua.CheckArgsCount(L, 3);
+			ToLua.CheckArgsCount(L, 2);
 			UFramework.NetManager obj = (UFramework.NetManager)ToLua.CheckObject<UFramework.NetManager>(L, 1);
-			UFramework.Network.SocketError arg0 = (UFramework.Network.SocketError)ToLua.CheckObject(L, 2, TypeTraits<UFramework.Network.SocketError>.type);
-			System.Exception arg1 = (System.Exception)ToLua.CheckObject<System.Exception>(L, 3);
-			obj.OnNetworkError(arg0, arg1);
+			System.Exception arg0 = (System.Exception)ToLua.CheckObject<System.Exception>(L, 2);
+			obj.OnSocketException(arg0);
 			return 0;
 		}
 		catch (Exception e)

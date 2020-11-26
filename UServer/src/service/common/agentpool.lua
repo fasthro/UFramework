@@ -1,4 +1,5 @@
-local skynet = require "skynetex"
+local skynet = require "skynet"
+require "skynet.manager"
 
 local CMD = {}
 

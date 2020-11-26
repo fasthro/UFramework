@@ -4,9 +4,9 @@ namespace UFramework.Network
 {
     public interface ISocketListener
     {
-        void OnConnected();
-        void OnDisconnected();
-        void OnReceive(SocketPack pack);
-        void OnNetworkError(SocketError code, Exception error);
+        void OnSocketConnected();
+        void OnSocketDisconnected();
+        void OnSocketReceive(SocketPack pack);
+        void OnSocketException(Exception exception);
     }
 }

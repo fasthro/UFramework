@@ -25,11 +25,3 @@ function _G.__newdt(dt, ...)
     end
     return assert(typesys.new(typesys[_name], ...), string.format("%s type undefined!", _name))
 end
-
-function _G.__log(data)
-    print(data)
-end
-
-function _G.__error(data)
-    error(data)
-end

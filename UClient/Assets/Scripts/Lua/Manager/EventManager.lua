@@ -50,7 +50,8 @@ function EventWrap:add(listener, owner)
 end
 
 function EventWrap:has(listener)
-    for k, v in ipairs(self._listeners) do
+    for k = 1, self._listeners:size() do
+        local v = self._listeners:get(k)
         if v.equal ~= nil and v:equal(listener) then
             return true
         end
@@ -59,7 +60,8 @@ function EventWrap:has(listener)
 end
 
 function EventWrap:remove(listener)
-    for k, v in ipairs(self._listeners) do
+    for k = 1, self._listeners:size() do
+        local v = self._listeners:get(k)
         if v:equal(listener) then
             self._listeners:set(k, nil)
             break
@@ -114,6 +116,7 @@ end
 -- @param listener 监听器
 function EventManager:remove(eventname, listener)
     if eventname == "" or eventname == nil or #eventname == 0 then
+        logger.error("event manager remove eventname is empty.")
         return
     end
     if listener == nil then

@@ -5,18 +5,6 @@
  */
 namespace UFramework.Network
 {
-    public enum SocketPackType
-    {
-        /// <summary>
-        /// 行的形式读取和写入数据
-        /// </summary>
-        Line,
-
-        /// <summary>
-        /// Protobuf形式读取和写入数据
-        /// </summary>
-        Protobuf,
-    }
 
     public abstract class SocketPack
     {
@@ -51,12 +39,6 @@ namespace UFramework.Network
         public int rawDataSize { get { return rawData.Length; } }
 
         /// <summary>
-        /// 包类型
-        /// </summary>
-        /// <value></value>
-        public abstract SocketPackType packType { get; }
-
-        /// <summary>
         /// 打包数据
         /// </summary>
         public virtual void Pack()
@@ -66,8 +48,14 @@ namespace UFramework.Network
             headData = head.data;
         }
 
-        public SocketPackLine ToLinePack() { return this as SocketPackLine; }
-        public SocketPackProtobuf ToProtobufPack() { return this as SocketPackProtobuf; }
-        public SocketPackStream ToStreamPack() { return this as SocketPackStream; }
+        /// <summary>
+        /// 转换对象类型
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T ToPack<T>() where T : SocketPack
+        {
+            return (T)this;
+        }
     }
 }

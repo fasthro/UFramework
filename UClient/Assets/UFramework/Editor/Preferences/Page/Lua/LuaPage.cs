@@ -298,10 +298,11 @@ namespace UFramework.Editor.Preferences
             }
             bindTypes.Add(_GT(typeof(UFramework.UI.Layer)));
 
+            bindTypes.Add(_GT(typeof(UFramework.Network.SocketPackOption)));
             bindTypes.Add(_GT(typeof(UFramework.Network.SocketPack)));
-            bindTypes.Add(_GT(typeof(UFramework.Network.SocketPackLine)));
+            bindTypes.Add(_GT(typeof(UFramework.Network.SocketPackLinear)));
             bindTypes.Add(_GT(typeof(UFramework.Network.SocketPackProtobuf)));
-            bindTypes.Add(_GT(typeof(UFramework.Network.SocketPackStream)));
+            bindTypes.Add(_GT(typeof(UFramework.Network.SocketPackRawByte)));
 
             bindTypes.Add(_GT(typeof(UFramework.App)));
             bindTypes.Add(_GT(typeof(UFramework.IOPath)));

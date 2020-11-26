@@ -11,7 +11,8 @@ local panel =
     _layer = typesys.__unmanaged,
     _package = "",
     _dependences = typesys.__unmanaged,
-    _fullScreen = false,
+    _fullScreen = false, -- 是否全屏（如果全屏就会关闭世界相机，用于性能优化）
+    _immortal = false, -- 永生不会被销毁
     view = typesys.__unmanaged
 }
 
@@ -63,6 +64,12 @@ function panel:onReceivePack()
 end
 
 ------------------------------------
+function panel:_createObject(resName, packageName)
+    if packageName == nil then
+        packageName = self._package
+    end
+    return UIPackage.CreateObject(packageName, resName)
+end
 
 function panel:_bindClick(obj, func)
     obj.onClick:Set(func, self)

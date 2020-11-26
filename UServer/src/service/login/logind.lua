@@ -1,20 +1,23 @@
-local login = require "snax.loginserver"
+local login = require "loginserver"
 local crypt = require "skynet.crypt"
 local skynet = require "skynet"
 local cluster = require "skynet.cluster"
-
 local runconfig = require "runconfig"
 
-local nodeconf = runconfig.login.conf
-local logic = require "logic.login"
+local harborname = skynet.getenv("harborname")
+local nodeconf = runconfig[harborname]
 
 local server = {
-    host = nodeconf.host,
-    port = nodeconf.port,
+    host = nodeconf.conf.host,
+    port = nodeconf.conf.port,
     multilogin = false, -- disallow multilogin
-    name = nodeconf.name,
-    instance = tonumber(nodeconf.instance) or 8
+    name = nodeconf.conf.name,
+    instance = nodeconf.conf.instance or 8
 }
+
+local server_list = {}
+local user_online = {}
+local user_login = {}
 
 function server.auth_handler(token)
     -- the token is base64(user)@base64(server):base64(password)
@@ -26,41 +29,34 @@ function server.auth_handler(token)
     return server, user
 end
 
-function server.login_handler(serverid, uid, secret)
-    local nodeserver = logic.getserver(serverid)
-    local hub = ".hubd"
-    
+function server.login_handler(server, uid, secret, addr)
+    logger.debug(string.format("%s@%s is login, secret is %s", uid, server, crypt.hexencode(secret)))
+    local gameserver = assert(server_list[server], "Unknown server")
     -- only one can login, because disallow multilogin
-    local last = logic.getonline(uid)
+    local last = user_online[uid]
     if last then
-        cluster.send(last.server, hub, "kick", {uid = uid})
-        logic.removeonline(uid)
+        cluster.call(last.address.harborname, last.address.addr, "kick", uid, last.subid)
     end
-    -- 再次确认用户在线状态
-    if logic.getonline(uid) then
+    if user_online[uid] then
         error(string.format("user %s is already online", uid))
     end
     
-    local ok, subid = pcall(cluster.call, nodeserver.conf.name, hub, "access", {uid = uid, secret = secret, serverid = serverid})
-    if not ok then
-        error("login gameserver error.")
-    end
-    
-    logic.addonline(uid, {subid = subid, server = nodeserver.conf.name})
-    logger.info(string.format("<login> addr:%s:%s uid:%s secret:%s subid:%s", nodeserver.conf.host, nodeserver.conf.port, uid, secret, subid))
+    local subid = tostring(cluster.call(gameserver.harborname, gameserver.addr, "login", uid, secret, addr))
+    user_online[uid] = {address = gameserver, subid = subid, server = server}
     return subid
 end
 
 local CMD = {}
 
-function CMD.register_gate(server, address)
-    server_list[server] = address
+function CMD.register_gate(server, address, harborname)
+    logger.info(string.format("register gate [ server: %s, address: %s, harborname: %s]", server, address, harborname))
+    server_list[server] = {addr = address, harborname = harborname}
 end
 
 function CMD.logout(uid, subid)
     local u = user_online[uid]
     if u then
-        logger.info(string.format("<login> %s@%s is logout", uid, u.server))
+        print(string.format("%s@%s is logout", uid, u.server))
         user_online[uid] = nil
     end
 end

@@ -29,7 +29,7 @@ lua_path = concat {
 	"skynet/lualib/?.lua",
 
 	"src/config/?.lua",
-	"src/client/?.lua",
+	"src/player/?.lua",
 	"src/proto/?.lua",
 	"src/preload/?.lua",
 	

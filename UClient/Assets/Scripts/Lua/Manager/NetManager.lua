@@ -15,6 +15,10 @@ function NetManager:connect(ip, port)
     self._ext:Connecte(ip, port)
 end
 
+function NetManager:setPackOption(option)
+    self._ext:SetPackOption(option)
+end
+
 function NetManager:sendBytes(value)
     self._ext:Send(value)
 end
@@ -23,22 +27,23 @@ function NetManager:sendString(value)
     self._ext:Send(value, nil)
 end
 
-function NetManager:onConnected()
-    print("onConnected.")
-    EventManager:broadcast(EVENT_NAMES.NetConnected)
+function NetManager:onSocketConnected()
+    print("onSocketConnected.")
+    EventManager:broadcast(EVENT_NAMES.NET_CONNECTED)
 end
 
-function NetManager:onDisconnected()
-    print("onDisconnected.")
-    EventManager:broadcast(EVENT_NAMES.NetDisconnected)
+function NetManager:onSocketDisconnected()
+    print("onSocketDisconnected.")
+    EventManager:broadcast(EVENT_NAMES.NET_DISCONNECTED)
 end
 
-function NetManager:onNetworkError()
-    print("onNetworkError.")
+function NetManager:onSocketException(exception)
+    print("onSocketException.[" .. exception .. "]")
+    EventManager:broadcast(EVENT_NAMES.NET_EXCEPTION)
 end
 
-function NetManager:onReceive(pack)
-    EventManager:broadcast(EVENT_NAMES.NetReceived, pack)
+function NetManager:onSocketReceive(pack)
+    EventManager:broadcast(EVENT_NAMES.NET_RECEIVED, pack)
 end
 
 return NetManager

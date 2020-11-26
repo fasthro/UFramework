@@ -26,6 +26,7 @@ function PanelManager:showPanel(name)
         self._panels:set(_name, panel)
     end
     panel:show()
+    return panel
 end
 
 function PanelManager:hidePanel(name)

@@ -6,9 +6,12 @@ Description: main
 require("Extension.TableExtension")
 require("UI.FairyGUI")
 require("UI.BasePanel")
+require("Common.Const")
+require("Common.EventName")
+require("Common.Function")
+require("Common.Logger")
 require("Define")
 require("DefinePanel")
-require("Common.Function")
 require("ManagerCenter")
 
 local _new = typesys.new
@@ -56,6 +59,7 @@ end
 -- members
 function LuaEngine:onRunner()
     self.managerCenter = _new(typesys.ManagerCenter)
+    AlertCtrl:initialize()
     LoginCtrl:initialize()
 end
 

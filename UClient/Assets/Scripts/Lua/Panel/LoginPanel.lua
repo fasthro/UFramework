@@ -27,7 +27,7 @@ function panel:onShow()
     local on_click_login = function()
         local username = self.view._username._input.text
         local password = self.view._password._input.text
-        local serverid = "1"
+        local serverid = "gate_name1"
         LoginCtrl:login(username, password, serverid)
     end
     self:_bindClick(self.view._login, on_click_login)

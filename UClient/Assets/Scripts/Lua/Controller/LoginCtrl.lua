@@ -36,7 +36,8 @@ local LoginCtrl =
     _username = "",
     _password = "",
     _serverid = "",
-    _status = 0, -- 账号验证状态
+    _status = 0, -- 登录状态
+    _authStatus = 0, -- 授权状态
     _challenge = typesys.__unmanaged,
     _clientkey = typesys.__unmanaged,
     _secret = typesys.__unmanaged
@@ -50,33 +51,41 @@ function LoginCtrl:__dtor()
 end
 
 function LoginCtrl:initialize()
+    self._status = LOGIN_STATUS.LOGOUT
     PanelManager:showPanel(typesys.LoginPanel)
 end
 
 function LoginCtrl:login(username, password, serverid)
-    EventManager:once(EVENT_NAMES.NetConnected, self.onConnected, self)
-    EventManager:add(EVENT_NAMES.NetReceived, self.onReceived, self)
+    if self._status == LOGIN_STATUS.LOGINED then
+        logger.warning("账号已经登录.")
+        return
+    end
+
+    EventManager:once(EVENT_NAMES.NET_DISCONNECTED, self.onDisconnected, self)
+    EventManager:once(EVENT_NAMES.NET_EXCEPTION, self.onDisconnected, self)
+    EventManager:add(EVENT_NAMES.NET_RECEIVED, self.onReceived, self)
     self._username = username
     self._password = password
     self._serverid = serverid
-    self._status = LOGIN_AUTHOR_STATUS.CHALLENGE
+    self._authStatus = LOGIN_AUTHOR_STATUS.CHALLENGE
     NetManager:connect("192.168.1.171", 8001)
+    NetManager:setPackOption(SOCKET_PACK_OPTION.RAW_BYTE)
 end
 
-function LoginCtrl:onConnected()
+function LoginCtrl:onDisconnected()
+    self:removeEvent()
 end
 
 function LoginCtrl:onReceived(pack)
-    local spack = pack:ToStreamPack()
-    local code = spack:GetString()
+    local code = pack:ParseString()
 
-    if self._status == LOGIN_AUTHOR_STATUS.CHALLENGE then
+    if self._authStatus == LOGIN_AUTHOR_STATUS.CHALLENGE then
         -- challenge
         self._challenge = crypt.Base64Decode(code)
         self._clientkey = crypt.RandomKey()
         self:sendCode(crypt.Base64Encode(crypt.DHExchange(self._clientkey)))
-        self._status = LOGIN_AUTHOR_STATUS.HANDSHAKE_KEY
-    elseif self._status == LOGIN_AUTHOR_STATUS.HANDSHAKE_KEY then
+        self._authStatus = LOGIN_AUTHOR_STATUS.HANDSHAKE_KEY
+    elseif self._authStatus == LOGIN_AUTHOR_STATUS.HANDSHAKE_KEY then
         -- handshakeKey
         self._secret = crypt.DHSecret(crypt.Base64Decode(code), self._clientkey)
         self:sendCode(crypt.Base64Encode(crypt.HMAC64(self._challenge, self._secret)))
@@ -85,25 +94,30 @@ function LoginCtrl:onReceived(pack)
         local token = string.format("%s@%s:%s", crypt.Base64Encode(self._username), crypt.Base64Encode(self._serverid), crypt.Base64Encode(self._password))
         self:sendCode(crypt.Base64Encode(crypt.DesEncode(self._secret, token)))
 
-        self._status = LOGIN_AUTHOR_STATUS.AUTH_RESULT
-    elseif self._status == LOGIN_AUTHOR_STATUS.AUTH_RESULT then
-        -- authResult
+        self._authStatus = LOGIN_AUTHOR_STATUS.AUTH_RESULT
+    elseif self._authStatus == LOGIN_AUTHOR_STATUS.AUTH_RESULT then
+        -- auth result
         local result = tonumber(string.sub(code, 1, 3))
-
         if result == LOGIN_AUTHOR_CODE.SUCCEED then
-            print("login result: 成功")
-        elseif result == LOGIN_AUTHOR_CODE.UNAUTHORIZED then
-            print("login result: 授权失败")
-        elseif result == LOGIN_AUTHOR_CODE.FORBIDDERN then
-            print("login result: 无权访问")
-        elseif result == LOGIN_AUTHOR_CODE.ALREADY then
-            print("login result: 重复登录")
+            AlertCtrl:createLine("账号登录成功")
+            self._status = LOGIN_STATUS.LOGINED
+            EventManager:broadcast(EVENT_NAMES.LOGIN_SUCCEED)
+        else
+            AlertCtrl:createLine(string.format("账号登录失败.[%s]", result))
+            EventManager:broadcast(EVENT_NAMES.LOGIN_FAILED, result)
         end
+        self:removeEvent()
     end
 end
 
 function LoginCtrl:sendCode(code)
     NetManager:sendString(code .. "\n")
+end
+
+function LoginCtrl:removeEvent()
+    EventManager:remove(EVENT_NAMES.NET_DISCONNECTED, self.onDisconnected)
+    EventManager:remove(EVENT_NAMES.NET_EXCEPTION, self.onDisconnected)
+    EventManager:remove(EVENT_NAMES.NET_RECEIVED, self.onReceived)
 end
 
 return LoginCtrl

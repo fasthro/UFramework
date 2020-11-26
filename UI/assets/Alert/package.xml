@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="i894r9q6">
+  <resources>
+    <component id="10ewg0" name="AlertLine.xml" path="/Images/" exported="true"/>
+    <component id="10ewg1" name="LineItem.xml" path="/Components/Line/" exported="true"/>
+    <component id="10ewg2" name="AlertMessageBox.xml" path="/" exported="true"/>
+    <component id="10ewg3" name="root.xml" path="/Components/"/>
+  </resources>
+  <publish name=""/>
+</packageDescription>

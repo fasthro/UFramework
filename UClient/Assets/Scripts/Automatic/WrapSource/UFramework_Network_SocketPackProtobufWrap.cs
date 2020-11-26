@@ -10,7 +10,6 @@ public class UFramework_Network_SocketPackProtobufWrap
 		L.RegFunction("GetRawLuaData", new LuaCSFunction(GetRawLuaData));
 		L.RegFunction("New", new LuaCSFunction(_CreateUFramework_Network_SocketPackProtobuf));
 		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
-		L.RegVar("packType", new LuaCSFunction(get_packType), null);
 		L.EndClass();
 	}
 
@@ -67,25 +66,6 @@ public class UFramework_Network_SocketPackProtobufWrap
 		catch (Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_packType(IntPtr L)
-	{
-		object o = null;
-
-		try
-		{
-			o = ToLua.ToObject(L, 1);
-			UFramework.Network.SocketPackProtobuf obj = (UFramework.Network.SocketPackProtobuf)o;
-			UFramework.Network.SocketPackType ret = obj.packType;
-			ToLua.Push(L, ret);
-			return 1;
-		}
-		catch(Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e, o, "attempt to index packType on a nil value");
 		}
 	}
 }
