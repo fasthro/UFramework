@@ -4,7 +4,6 @@
     <component id="8a1u0" name="MessageBox.xml" path="/" exported="true"/>
     <component id="nx0v7" name="Background.xml" path="/Components/"/>
     <image id="nmjq9" name="Clean-Minimalistic_Info-Alert.png" path="/Design/"/>
-    <image id="nmjqa" name="Dark-Popup-Background.png" path="/Images/" scale="9grid" scale9grid="20,20,24,24"/>
     <component id="nmjqc" name="Background-Center.xml" path="/Components/"/>
     <image id="nmjqd" name="Alert-Icon-Small.png" path="/Images/"/>
     <image id="nmjqe" name="Close-Icon-Small.png" path="/Images/"/>

@@ -3,7 +3,6 @@
  * @Date: 2020-09-15 17:30:01
  * @Description: editor utils
  */
-
 using UnityEditor;
 using UnityEngine;
 
@@ -89,6 +88,34 @@ namespace UFramework.Editor
                 }
             }
             PlayerSettings.SetScriptingDefineSymbolsForGroup(group, ns);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="proc"></param>
+        /// <param name="args"></param>
+        /// <param name="workdir"></param>
+        public static void ExecuteProcess(string proc, string args, string workdir)
+        {
+            Debug.Log(string.Format("execute process > {0}:{1}", proc, args));
+
+            System.Diagnostics.ProcessStartInfo info = new System.Diagnostics.ProcessStartInfo();
+            info.FileName = proc;
+            info.Arguments = args;
+            info.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+            info.UseShellExecute = false;
+            info.RedirectStandardError = true;
+            info.WorkingDirectory = workdir;
+
+            System.Diagnostics.Process pro = System.Diagnostics.Process.Start(info);
+            pro.WaitForExit();
+
+            string msg = pro.StandardError.ReadToEnd();
+            if (!string.IsNullOrEmpty(msg))
+            {
+                Debug.Log(msg);
+            }
         }
     }
 }

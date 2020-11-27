@@ -277,7 +277,8 @@ namespace UFramework
                 if (info.Exists)
                     info.Delete();
 
-                File.WriteAllText(info.FullName, content, encoding);
+                if (encoding == null) File.WriteAllText(info.FullName, content);
+                else File.WriteAllText(info.FullName, content, encoding);
             }
             catch (Exception e)
             {
@@ -429,6 +430,17 @@ namespace UFramework
         public static string FileName(string path, bool extension = false)
         {
             return extension ? Path.GetFileName(path) : Path.GetFileNameWithoutExtension(path);
+        }
+
+        /// <summary>
+        /// 文件后缀名称
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="extension"></param>
+        /// <returns></returns>
+        public static string FileExtensionName(string path)
+        {
+            return Path.GetExtension(path);
         }
         #endregion
     }

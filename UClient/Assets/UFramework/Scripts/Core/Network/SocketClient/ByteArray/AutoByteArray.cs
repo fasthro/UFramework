@@ -25,7 +25,7 @@ namespace UFramework.Network
         /// </summary>
         /// <param name="capacity">初始容量</param>
         /// <param name="minCapacity">最小容量</param>
-        public AutoByteArray(int capacity = 128, int minCapacity = 16)
+        public AutoByteArray(int capacity = 16, int minCapacity = 16)
         {
             _buffer = new byte[capacity];
             _minCapacity = minCapacity;
@@ -56,7 +56,11 @@ namespace UFramework.Network
             {
                 byte[] newBytes = new byte[len];
                 Array.Copy(_buffer, 0, newBytes, 0, len);
+
                 size -= len;
+                for (int i = 0; i < size; i++)
+                    _buffer[i] = _buffer[i + len];
+
                 if (size <= _buffer.Length / 4)
                 {
                     var ns = _buffer.Length / 2;
@@ -78,6 +82,23 @@ namespace UFramework.Network
         public void Clear()
         {
             size = 0;
+        }
+
+        public override string ToString()
+        {
+            string res = "";
+            for (int i = 0; i < _buffer.Length; i++)
+            {
+                if (i < _buffer.Length - 1)
+                {
+                    res += _buffer[i] + ",";
+                }
+                else
+                {
+                    res += _buffer[i];
+                }
+            }
+            return string.Format("capacity: {0} size: {1} [{2}]", _buffer.Length, size, res);
         }
     }
 }

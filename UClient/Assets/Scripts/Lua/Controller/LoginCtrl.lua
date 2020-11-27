@@ -69,7 +69,7 @@ function LoginCtrl:login(username, password, serverid)
     self._serverid = serverid
     self._authStatus = LOGIN_AUTHOR_STATUS.CHALLENGE
     NetManager:connect("192.168.1.171", 8001)
-    NetManager:setPackOption(SOCKET_PACK_OPTION.RAW_BYTE)
+    NetManager:setProtocalBinary(true)
 end
 
 function LoginCtrl:onDisconnected()
@@ -77,7 +77,7 @@ function LoginCtrl:onDisconnected()
 end
 
 function LoginCtrl:onReceived(pack)
-    local code = pack:ParseString()
+    local code = pack:ReadString()
 
     if self._authStatus == LOGIN_AUTHOR_STATUS.CHALLENGE then
         -- challenge
@@ -101,6 +101,7 @@ function LoginCtrl:onReceived(pack)
         if result == LOGIN_AUTHOR_CODE.SUCCEED then
             AlertCtrl:createLine("账号登录成功")
             self._status = LOGIN_STATUS.LOGINED
+            NetManager:setProtocalBinary(false)
             EventManager:broadcast(EVENT_NAMES.LOGIN_SUCCEED)
         else
             AlertCtrl:createLine(string.format("账号登录失败.[%s]", result))
@@ -111,7 +112,9 @@ function LoginCtrl:onReceived(pack)
 end
 
 function LoginCtrl:sendCode(code)
-    NetManager:sendString(code .. "\n")
+    local pack = NetManager:createPack(PROTOCAL_TYPE.BINARY)
+    pack:WriteBuffer(code .. "\n")
+    NetManager:sendPack(pack)
 end
 
 function LoginCtrl:removeEvent()

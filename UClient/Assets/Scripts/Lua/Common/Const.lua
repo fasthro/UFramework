@@ -4,11 +4,12 @@ Date: 2020-11-25 11:25:50
 Description: 系统常量
 --]]
 -- 网络数据包解析选项
-_G.SOCKET_PACK_OPTION = {
-    LINEAR = UFramework.Network.SocketPackOption.Linear, -- 线性流
-    PROTOBUF = UFramework.Network.SocketPackOption.Protobuf, -- Google Protobuf
-    SPROTO = UFramework.Network.SocketPackOption.Sproto, -- Sproto
-    RAW_BYTE = UFramework.Network.SocketPackOption.RawByte -- 原始字
+_G.PROTOCAL_TYPE = {
+    BINARY = UFramework.Network.ProtocalType.Binary,
+    LINEAR_BINARY = UFramework.Network.ProtocalType.LinearBinary,
+    PBC = UFramework.Network.ProtocalType.PBC,
+    PROTOBUF = UFramework.Network.ProtocalType.Protobuf,
+    SPROTO = UFramework.Network.ProtocalType.Sproto
 }
 
 -- UI面板层
@@ -42,4 +43,9 @@ _G.LOGIN_AUTHOR_CODE = {
 _G.LOGIN_STATUS = {
     LOGINED = 1, -- 已经登陆
     LOGOUT = 2 -- 离线
+}
+
+-- 提示 MessageBox 类型
+_G.ALERT_MESSAGEBOX_TYPE = {
+    NORMAL = 1
 }

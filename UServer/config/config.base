@@ -28,6 +28,8 @@ luaservice = concat {
 lua_path = concat {
 	"skynet/lualib/?.lua",
 
+	"src/lualib/?.lua",
+
 	"src/config/?.lua",
 	"src/player/?.lua",
 	"src/proto/?.lua",
@@ -43,4 +45,5 @@ lua_path = concat {
 
 lua_cpath  = concat {
   "skynet/luaclib/?.so",
+  "luaclib/?.so",
 }

@@ -28,6 +28,7 @@ public class UFramework_IOPathWrap
 		L.RegFunction("FileSize", new LuaCSFunction(FileSize));
 		L.RegFunction("FileMD5", new LuaCSFunction(FileMD5));
 		L.RegFunction("FileName", new LuaCSFunction(FileName));
+		L.RegFunction("FileExtensionName", new LuaCSFunction(FileExtensionName));
 		L.EndStaticLibs();
 	}
 
@@ -601,6 +602,23 @@ public class UFramework_IOPathWrap
 			{
 				return LuaDLL.luaL_throw(L, "invalid arguments to method: UFramework.IOPath.FileName");
 			}
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int FileExtensionName(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			string arg0 = ToLua.CheckString(L, 1);
+			string o = UFramework.IOPath.FileExtensionName(arg0);
+			LuaDLL.lua_pushstring(L, o);
+			return 1;
 		}
 		catch (Exception e)
 		{

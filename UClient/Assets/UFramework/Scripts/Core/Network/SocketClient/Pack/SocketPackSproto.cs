@@ -7,6 +7,6 @@ namespace UFramework.Network
 {
     public class SocketPackSproto : SocketPack
     {
-
+        public override ProtocalType protocal { get { return ProtocalType.Sproto; } }
     }
 }

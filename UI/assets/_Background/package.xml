@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <packageDescription id="h49w8gjg">
   <resources>
-    <image id="unrx0" name="Dark-Skin-Background.png" path="/Images/"/>
-    <component id="unrx1" name="Backgound.xml" path="/Components/" exported="true"/>
+    <image id="unrx0" name="Skin-1.png" path="/Images/"/>
+    <component id="unrx1" name="Skin-1.xml" path="/Components/" exported="true"/>
+    <component id="10ewg2" name="Transparent.xml" path="/Components/" exported="true"/>
+    <image id="nmjqa" name="Black.png" path="/Images/" scale="9grid" scale9grid="20,20,24,24"/>
+    <component id="10ewg3" name="Black.xml" path="/Components/" exported="true"/>
   </resources>
   <publish name=""/>
 </packageDescription>

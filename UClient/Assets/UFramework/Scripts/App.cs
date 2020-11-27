@@ -70,6 +70,21 @@ namespace UFramework
             }
         }
 
+        /// <summary>
+        /// PB
+        /// </summary>
+        /// <value></value>
+        public static string PBDirectory
+        {
+            get
+            {
+                var appConfig = UConfig.Read<AppConfig>();
+                if (appConfig.isDevelopmentVersion)
+                    return IOPath.PathCombine(Application.dataPath, "Scripts/Automatic/Lua/PB");
+                else return IOPath.PathCombine(Application.persistentDataPath, "Lua/9eb42865081803c085ef7ce653312ab8/PB");
+            }
+        }
+
         #endregion
 
         #region manager
@@ -183,16 +198,6 @@ namespace UFramework
             {
                 Managers[i].Dispose();
             }
-        }
-
-        /// <summary>
-        /// 查询 Lua 文件
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <returns></returns>
-        public static string FindLuaFile(string fileName)
-        {
-            return LuaFileUtils.Instance.FindFile(fileName);
         }
     }
 }

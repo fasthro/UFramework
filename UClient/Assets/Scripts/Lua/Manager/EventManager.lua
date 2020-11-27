@@ -176,9 +176,9 @@ function EventManager:_create(eventname, listener, owner, isonce)
         wrap:add(listener, owner)
     else
         if eventname == nil or eventname == "" or #eventname == 0 then
-            __error(string.format("eventname is empty.", eventname))
+            logger.error(string.format("eventname is empty.", eventname))
         else
-            __error(string.format("eventname: %s already existed.", eventname))
+            logger.error(string.format("eventname: %s already existed.", eventname))
         end
     end
 end

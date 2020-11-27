@@ -7,14 +7,55 @@ public class UFramework_Network_SocketPackWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(UFramework.Network.SocketPack), typeof(System.Object));
+		L.RegFunction("WriteBuffer", new LuaCSFunction(WriteBuffer));
 		L.RegFunction("Pack", new LuaCSFunction(Pack));
+		L.RegFunction("Unpack", new LuaCSFunction(Unpack));
 		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
-		L.RegVar("CMD", new LuaCSFunction(get_CMD), null);
-		L.RegVar("session", new LuaCSFunction(get_session), null);
-		L.RegVar("headData", new LuaCSFunction(get_headData), null);
+		L.RegVar("cmd", new LuaCSFunction(get_cmd), null);
 		L.RegVar("rawData", new LuaCSFunction(get_rawData), null);
 		L.RegVar("rawDataSize", new LuaCSFunction(get_rawDataSize), null);
+		L.RegVar("protocal", new LuaCSFunction(get_protocal), null);
 		L.EndClass();
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int WriteBuffer(IntPtr L)
+	{
+		try
+		{
+			int count = LuaDLL.lua_gettop(L);
+
+			if (count == 2 && TypeChecker.CheckTypes<byte[]>(L, 2))
+			{
+				UFramework.Network.SocketPack obj = (UFramework.Network.SocketPack)ToLua.CheckObject<UFramework.Network.SocketPack>(L, 1);
+				byte[] arg0 = ToLua.CheckByteBuffer(L, 2);
+				obj.WriteBuffer(arg0);
+				return 0;
+			}
+			else if (count == 2 && TypeChecker.CheckTypes<string>(L, 2))
+			{
+				UFramework.Network.SocketPack obj = (UFramework.Network.SocketPack)ToLua.CheckObject<UFramework.Network.SocketPack>(L, 1);
+				string arg0 = ToLua.ToString(L, 2);
+				obj.WriteBuffer(arg0);
+				return 0;
+			}
+			else if (count == 3)
+			{
+				UFramework.Network.SocketPack obj = (UFramework.Network.SocketPack)ToLua.CheckObject<UFramework.Network.SocketPack>(L, 1);
+				string arg0 = ToLua.CheckString(L, 2);
+				System.Text.Encoding arg1 = (System.Text.Encoding)ToLua.CheckObject<System.Text.Encoding>(L, 3);
+				obj.WriteBuffer(arg0, arg1);
+				return 0;
+			}
+			else
+			{
+				return LuaDLL.luaL_throw(L, "invalid arguments to method: UFramework.Network.SocketPack.WriteBuffer");
+			}
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -34,7 +75,23 @@ public class UFramework_Network_SocketPackWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_CMD(IntPtr L)
+	static int Unpack(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			UFramework.Network.SocketPack obj = (UFramework.Network.SocketPack)ToLua.CheckObject<UFramework.Network.SocketPack>(L, 1);
+			obj.Unpack();
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_cmd(IntPtr L)
 	{
 		object o = null;
 
@@ -42,51 +99,13 @@ public class UFramework_Network_SocketPackWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			UFramework.Network.SocketPack obj = (UFramework.Network.SocketPack)o;
-			int ret = obj.CMD;
+			int ret = obj.cmd;
 			LuaDLL.lua_pushinteger(L, ret);
 			return 1;
 		}
 		catch(Exception e)
 		{
-			return LuaDLL.toluaL_exception(L, e, o, "attempt to index CMD on a nil value");
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_session(IntPtr L)
-	{
-		object o = null;
-
-		try
-		{
-			o = ToLua.ToObject(L, 1);
-			UFramework.Network.SocketPack obj = (UFramework.Network.SocketPack)o;
-			long ret = obj.session;
-			LuaDLL.tolua_pushint64(L, ret);
-			return 1;
-		}
-		catch(Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e, o, "attempt to index session on a nil value");
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_headData(IntPtr L)
-	{
-		object o = null;
-
-		try
-		{
-			o = ToLua.ToObject(L, 1);
-			UFramework.Network.SocketPack obj = (UFramework.Network.SocketPack)o;
-			byte[] ret = obj.headData;
-			ToLua.Push(L, ret);
-			return 1;
-		}
-		catch(Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e, o, "attempt to index headData on a nil value");
+			return LuaDLL.toluaL_exception(L, e, o, "attempt to index cmd on a nil value");
 		}
 	}
 
@@ -125,6 +144,25 @@ public class UFramework_Network_SocketPackWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o, "attempt to index rawDataSize on a nil value");
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_protocal(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			UFramework.Network.SocketPack obj = (UFramework.Network.SocketPack)o;
+			UFramework.Network.ProtocalType ret = obj.protocal;
+			ToLua.Push(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o, "attempt to index protocal on a nil value");
 		}
 	}
 }

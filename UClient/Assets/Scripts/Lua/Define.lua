@@ -5,6 +5,7 @@ Description: define
 --]]
 ------------------------------------------- uframework csharp -------------------------------------------
 _G.App = UFramework.App
+_G.IOPath = UFramework.IOPath
 
 ------------------------------------------- global -------------------------------------------
 _G.LuaEngine = nil

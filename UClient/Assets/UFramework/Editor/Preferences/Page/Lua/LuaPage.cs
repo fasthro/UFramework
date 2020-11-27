@@ -298,11 +298,13 @@ namespace UFramework.Editor.Preferences
             }
             bindTypes.Add(_GT(typeof(UFramework.UI.Layer)));
 
-            bindTypes.Add(_GT(typeof(UFramework.Network.SocketPackOption)));
+            bindTypes.Add(_GT(typeof(UFramework.Network.ProtocalType)));
             bindTypes.Add(_GT(typeof(UFramework.Network.SocketPack)));
-            bindTypes.Add(_GT(typeof(UFramework.Network.SocketPackLinear)));
+            bindTypes.Add(_GT(typeof(UFramework.Network.SocketPackBinary)));
+            bindTypes.Add(_GT(typeof(UFramework.Network.SocketPackLinearBinary)));
+            bindTypes.Add(_GT(typeof(UFramework.Network.SocketPackPBC)));
             bindTypes.Add(_GT(typeof(UFramework.Network.SocketPackProtobuf)));
-            bindTypes.Add(_GT(typeof(UFramework.Network.SocketPackRawByte)));
+            bindTypes.Add(_GT(typeof(UFramework.Network.SocketPackSproto)));
 
             bindTypes.Add(_GT(typeof(UFramework.App)));
             bindTypes.Add(_GT(typeof(UFramework.IOPath)));
@@ -391,6 +393,7 @@ namespace UFramework.Editor.Preferences
         /// </summary>
         public void BuildScripts(bool encode, bool clean)
         {
+            string[] patterns = new string[] { "*.lua", "*.pb" };
             var outPath = IOPath.PathCombine(App.TempDirectory, "Lua");
             var bc = UConfig.Read<LuaBuildConfig>();
             if (clean)
@@ -411,32 +414,35 @@ namespace UFramework.Editor.Preferences
             for (int i = 0; i < searchPaths.Count; i++)
             {
                 var searchItem = searchPaths[i];
-                var files = IOPath.DirectoryGetFiles(searchItem.path, "*.lua", SearchOption.AllDirectories);
-                for (int k = 0; k < files.Length; k++)
+                for (int p = 0; p < patterns.Length; p++)
                 {
-                    var file = IOPath.PathUnitySeparator(files[k]);
-
-                    var newFile = searchItem.pathMD5 + IOPath.PathReplace(file, searchItem.path);
-                    var newFullFile = IOPath.PathCombine(outPath, newFile);
-
-                    var bFile = new LuaBuildFile() { sourcePath = file, destPath = newFile };
-                    using (var stream = File.OpenRead(file))
+                    var files = IOPath.DirectoryGetFiles(searchItem.path, patterns[p], SearchOption.AllDirectories);
+                    for (int k = 0; k < files.Length; k++)
                     {
-                        bFile.len = stream.Length;
-                        bFile.hash = HashUtils.GetCRC32Hash(stream);
-                    }
+                        var file = IOPath.PathUnitySeparator(files[k]);
 
-                    if (!IOPath.FileExists(newFullFile))
-                        nFiles.Add(bFile);
-                    else if (!fileMap.ContainsKey(file))
-                        nFiles.Add(bFile);
-                    else
-                    {
-                        var sourceFile = fileMap[file];
-                        if (bFile.len != sourceFile.len || !bFile.hash.Equals(sourceFile.hash))
+                        var newFile = searchItem.pathMD5 + IOPath.PathReplace(file, searchItem.path);
+                        var newFullFile = IOPath.PathCombine(outPath, newFile);
+
+                        var bFile = new LuaBuildFile() { sourcePath = file, destPath = newFile };
+                        using (var stream = File.OpenRead(file))
+                        {
+                            bFile.len = stream.Length;
+                            bFile.hash = HashUtils.GetCRC32Hash(stream);
+                        }
+
+                        if (!IOPath.FileExists(newFullFile))
                             nFiles.Add(bFile);
+                        else if (!fileMap.ContainsKey(file))
+                            nFiles.Add(bFile);
+                        else
+                        {
+                            var sourceFile = fileMap[file];
+                            if (bFile.len != sourceFile.len || !bFile.hash.Equals(sourceFile.hash))
+                                nFiles.Add(bFile);
+                        }
+                        nFileMap.Add(file);
                     }
-                    nFileMap.Add(file);
                 }
             }
 
@@ -447,8 +453,8 @@ namespace UFramework.Editor.Preferences
                 var dir = Path.GetDirectoryName(fullFile);
                 if (!IOPath.DirectoryExists(dir))
                     IOPath.DirectoryCreate(dir);
-
-                if (encode) EncodeLuaFile(file.sourcePath, fullFile);
+                var isLuaFile = IOPath.FileExtensionName(file.sourcePath).Equals(".lua");
+                if (encode && isLuaFile) EncodeLuaFile(file.sourcePath, fullFile);
                 else IOPath.FileCopy(file.sourcePath, fullFile);
 
                 string title = "Processing...[" + i + " - " + nFiles.Count + "]";

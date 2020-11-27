@@ -30,6 +30,16 @@ namespace UFramework
         /// <value></value>
         public bool isConnected { get { return _client != null && _client.isConnected; } }
 
+        /// <summary>
+        /// 二进制协议解析
+        /// </summary>
+        /// <param name="option"></param>
+        public bool isProtocalBinary
+        {
+            get { return _client.isProtocalBinary; }
+            set { _client.isProtocalBinary = value; }
+        }
+
         protected override void OnInitialize()
         {
             _client = new SocketClient(this);
@@ -50,34 +60,42 @@ namespace UFramework
         }
 
         /// <summary>
-        /// 设置网络包解析选项
-        /// </summary>
-        /// <param name="option"></param>
-        public void SetPackOption(SocketPackOption option)
-        {
-            _client.packOption = option;
-        }
-
-        /// <summary>
-        /// send string
+        /// send pack
         /// </summary>
         /// <param name="value"></param>
-        /// <param name="encoding"></param>
-        public void Send(string value, Encoding encoding = null)
+        public void Send(SocketPack pack)
         {
-            if (encoding == null)
-                encoding = Encoding.UTF8;
-            Send(encoding.GetBytes(value));
+            _client.Send(pack);
         }
 
-        /// <summary>
-        /// send bytes
-        /// </summary>
-        /// <param name="value"></param>
-        public void Send(byte[] value)
+        #region pack creater
+
+        public SocketPackBinary CreateWriterWPackBinary()
         {
-            _client.Send(value);
+            return SocketPack.CreateWriter<SocketPackBinary>(-1);
         }
+
+        public SocketPackLinearBinary CreateWriterPackLinearBinary(int cmd)
+        {
+            return SocketPack.CreateWriter<SocketPackLinearBinary>(cmd);
+        }
+
+        public SocketPackPBC CreateWriterPackPBC(int cmd)
+        {
+            return SocketPack.CreateWriter<SocketPackPBC>(cmd);
+        }
+
+        public SocketPackProtobuf CreateWriterPackProtobuf(int cmd)
+        {
+            return SocketPack.CreateWriter<SocketPackProtobuf>(cmd);
+        }
+
+        public SocketPackSproto CreateWriterPackSproto(int cmd)
+        {
+            return SocketPack.CreateWriter<SocketPackSproto>(cmd);
+        }
+
+        #endregion
 
         #region ISocketListener
 
@@ -114,19 +132,22 @@ namespace UFramework
             while (!_packQueue.IsEmpty())
             {
                 var pack = _packQueue.Dequeue();
-                switch (_client.packOption)
+                switch (pack.protocal)
                 {
-                    case SocketPackOption.Linear:
-                        LuaCall("onSocketReceive", pack.ToPack<SocketPackLinear>());
+                    case ProtocalType.Binary:
+                        LuaCall("onSocketReceive", pack.ToPack<SocketPackBinary>());
                         break;
-                    case SocketPackOption.Protobuf:
+                    case ProtocalType.LinearBinary:
+                        LuaCall("onSocketReceive", pack.ToPack<SocketPackLinearBinary>());
+                        break;
+                    case ProtocalType.PBC:
+                        LuaCall("onSocketReceive", pack.ToPack<SocketPackPBC>());
+                        break;
+                    case ProtocalType.Protobuf:
                         LuaCall("onSocketReceive", pack.ToPack<SocketPackProtobuf>());
                         break;
-                    case SocketPackOption.Sproto:
+                    case ProtocalType.Sproto:
                         LuaCall("onSocketReceive", pack.ToPack<SocketPackSproto>());
-                        break;
-                    case SocketPackOption.RawByte:
-                        LuaCall("onSocketReceive", pack.ToPack<SocketPackRawByte>());
                         break;
                 }
             }

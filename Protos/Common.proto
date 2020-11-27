@@ -1,0 +1,219 @@
+syntax = "proto3";
+package NBSGame.PB;
+
+option java_package = "com.rhea.pIII.game.core.cmd.protocol";
+option java_outer_classname = "CommonProtocol";
+
+
+message TroopDetail
+{
+	int64 troopId = 1; //部队id
+	int32 officerProId = 2; //部队名称
+	int32 armyClass = 3; //兵种类型
+	int32 armyAmount = 4; //总带数量
+	int32 armyAmountMax = 5; //带兵上限
+	int32 status = 6; //部队状态(0待命，1行军，2停留，3调动，4驻守)
+	int32 marchMission =7;	//行军任务(-1无任务,0停留,1攻占,2攻城,3调动,4驻守,5扫荡,6屯田,7讨伐,8剿灭,9解救,10去撤退,11去回撤)
+	int32 cellId = 8; //部队所处坐标
+	int32 action = 9; //部队行为(-1无行为,0占领,1攻城,2战平,3阻挡,4屯田,5移动)
+	int64 actionFinishTime = 10; //部队行为结束时间点(-1：无行为)
+	int64 speed = 11; //移动一格所用时间(-1：无行军)
+	int64 marchFinishTime = 12; //行军结束时间点(-1:无行军)
+	int32 morale = 13; //士气
+	int32 moraleMax = 14; //士气上限
+	int32 vigor = 15; //体力
+	int32 vigorMax = 16; //体力上限
+	int32 vigorMin = 17; //最少出征体力
+	int32 startCellId = 18; //起点坐标(-1:无行军)
+	int32 startRegion = 19; //起点州(-1:无行军)
+	int32 endCellId = 20; //终点坐标(-1:无行军)
+	int32 endRegion = 21; //终点州(-1:无行军)
+	bool isWound = 22; //是否重伤
+	int64 conscriptFinishTime = 23; //征兵结束时间点(-1为无征兵)
+	int64 belongCityId = 24;//归属城市id
+	int32 woundArmyAmount = 25;//伤兵数
+}
+
+message OtherTroopDetail
+{
+	int64 playerId = 1;
+	string playerName =2;//玩家名称
+	int32 status = 3; //部队状态(0待命，1行军，2停留，3调动，4驻守)
+	int32 marchMission =4;	//行军任务(-1无任务,0停留,1攻占,2攻城,3调动,4驻守,5扫荡,6屯田,7讨伐,8剿灭,9解救,10去撤退,11去回撤)
+	int32 action = 5; //部队行为(-1无行为,0占领,1攻城,2战平,3阻挡,4屯田,5移动)
+	int32 startCellId = 6; //起点坐标(-1:无行军)
+	int32 startRegion = 7; //起点州(-1:无行军)
+	int32 endCellId = 8; //终点坐标(-1:无行军)
+	int32 endRegion = 9; //终点州(-1:无行军)
+	int64 troopId = 10;//部队id
+	int32 cellId = 11;//当前位置
+	int32 relation = 12;//关系
+    int64 actionFinishTime = 13; //部队行为结束时间点(-1：无行为)
+    int64 marchFinishTime = 14; //行军结束时间点(-1:无行军)
+}
+
+message Transfer //跳转对象
+{
+	string target = 1;//跳转目标(-1为无跳转，直接显示内容文字)
+	string tab = 2;//tab页(可以为空)
+	string content = 3;//内容(文字或者具体焦点索引)
+	int64 cityId = 4;//cityId
+}
+
+message CommonReward //通用奖励
+{
+	int32 type = 1;//类型(0-角色;1-道具;2-装备;3-资源;4-军官;5-材料;6-将池)
+	int32 proId = 2;//原型id
+	int32 amount = 3;//数量(数量为-1时不显示数量)
+}
+
+message EquipmentReward //装备奖励
+{
+	int32 proId = 1;//原型id
+	double attack = 2;//无数值为-1
+	double intelligence = 3;//无数值为-1
+	double leadership = 4;//无数值为-1
+	double speed = 5;//无数值为-1
+	double politics = 6;//无数值为-1
+	double charisma = 7;//无数值为-1
+	int32 firstSkillId = 8;//第1技能id,无数值为-1
+	int32 secondSkillId = 9;//第2技能id,无数值为-1
+	int32 thirdSkillId = 10;//第3技能id,无数值为-1
+}
+
+message RewardInfo //奖励信息
+{
+	repeated EquipmentReward equipmentReward = 1;//装备类奖励
+	repeated CommonReward itemReward = 2;//道具类奖励
+	repeated CommonReward messageReward = 3;//文字类奖励
+}
+
+//聊天相关对象---------------------------------------
+message MsgItem
+{
+    ChatPlayerInfo playerInfo = 1;	//玩家信息 当类型为1时没有该信息
+    int64 timestamp = 2;	//时间戳
+    int32	type = 3;	//消息类型 0-普通消息【content】 1-占领消息 2-系统消息 3-战报分享 4-阵容分享
+    string content = 4;	//普通聊天内容 类型为0时直接显示
+    CommonText occupyText = 5;	//占领文字消息，类型为1时有该值
+    ShareTroopInfo shareTroop = 6;	//分享阵容，类型为4时有该值
+    ShareReportInfo shareReport = 7;	//分享战报，类型为3时有该值
+    CommonText systemText = 8;	//系统消息内容，类型为2时有该值
+}
+
+message ShareTroopInfo
+{
+    int64 troopShareId = 1;
+    repeated ShareOfficerInfo officerInfo = 2;	//军团信息，按顺序 主将、副将、副将
+}
+
+message ShareReportInfo
+{
+	int64 reportId = 1;	//战报id
+	int32 side = 2;	//攻守方
+    string leftPlayerName = 3;	//左玩家名
+    ShareOfficerInfo leftOfficerInfo = 4;	//左主将信息
+    string rightPlayerName = 5;	//右玩家名
+    ShareOfficerInfo rightOfficerInfo = 6;	//右主将信息
+}
+
+message ShareOfficerInfo
+{
+	int32 proId = 1; //原型id
+	int32 quality = 2; //品质
+	int32 level = 3; //等级
+	int32 starLevel = 4; //进阶等级
+	int32 position = 5;	//位置
+}
+
+message ChatPlayerInfo
+{
+    int64 playerId = 1;	//玩家id
+    string name = 2;	//玩家名称
+    int32 avatar = 3;	//玩家头像
+    int32 region = 4;	//玩家所在分区
+    string allianceName = 5;	//玩家军团名
+    int32 alliancePosition = 6;	//军团职位
+}
+
+//委任军官信息
+message ViewAppointOfficer
+{
+ 	int64 officerId = 1;//军官id
+	int32 officerProId = 2;//军官原型id
+	double politics  = 3;//政治(没有为0)
+	double charisma = 4;//魅力(没有为0)
+    int32 skillId1 = 5;//加成技能1原型id(没有为0)
+	int32 skillLevel1 =6;//技能等级(没有为0)
+    int32 skillId2 = 7;//加成技能2原型id(没有为0)
+	int32 skillLevel2 =8;//技能等级(没有为0)
+    int32 skillId3 = 9;//加成技能3原型id(没有为0)
+	int32 skillLevel3 =10;//技能等级(没有为0)
+    double additionValue1 = 11;//加成值1(没有为0)
+    double additionValue2 = 12;//加成值2(没有为0)
+    double additionValue3 = 13;//加成值3(没有为0)
+
+}
+
+
+//通用客户端文字对象---------------------------------------
+message CommonText
+{
+	int32 textKey = 1; //文字key
+	repeated CommonTextParam params = 2; //替换参数
+}
+
+message CommonTextParam
+{
+	CommonTextParamType type = 1; //参数类型
+	string value = 2; //参数值 类型为0时直接替换，类型为1时该值为“军官原型id|攻守方|兵种id” 其他类型值直接找对应类型的名称
+}
+
+enum CommonTextParamType //枚举消息类型
+{
+    COMMON = 0; //直接替换文本
+    BATTLE_OFFICER_INFO = 1;	//战斗军官信息，该类型值为“军官原型id|攻守方|兵种id”
+    TECH_ID = 2;	//科技id找名称
+    SKILL_ID = 3;	//技能id找名称
+    FACTION = 4;	//军官阵营
+    ARMY_ID = 5;	//兵种id找名称
+    OFFICER_ATTRIBUTE = 6;	//军官属性 1-武力 2-智力 3-統率 4-速度
+    BUFF_ID = 7;	//buffid找名称
+    TOWN_ID = 8;	//据点id找名称
+    TOWN_TYPE = 9;	//据点类型找类型名称
+    ALLIANCE_POSITION = 10;	//军团职位名称
+    REGION = 11;	//洲名称
+    CELL_ID = 12;  //地图单元id转坐标
+    OFFICER_ID = 13; //军官id转军官名
+    NPC_INFO = 14; //NPC信息 该类型值为“npc类型|npcid|npc等级”
+    ITEM_ID = 15; //道具ID
+    OFFICER_ID_COLOR = 16; //军官id转军官名，按照品质显示不同颜色名字
+    BUFF_ATTRIBUTE_TYPE = 17;	//buff控制军官属性名称 1-統率 2-武力 3-智力 4-速度 5-会心 6-奇谋 7-主动战法几率 8-主动战法造成伤害 9-主动战法承受伤害 10-突击战法几率 11-突击战法造成伤害 12-突击战法受到伤害 13-造成兵刃伤害 14-造成谋略伤害 15-承受兵刃伤害 16-承受兵刃伤害 17-自带战法发动几率 18-战斗获取经验 19-会心效果伤害率 20-奇谋效果伤害率
+    RESOURCE_TYPE = 18;	//资源类型，对应通用奖励里面类型为3的文字对应
+    EQUIPMENT_PRO_ID = 19;	//装备原型id，查找名称
+    GENDER = 20;	//性别(0:男,1:女)
+    BUFF_TYPE = 21;	//buff类型
+    ARMY_CLASS = 22;	//兵种类型找名称
+    MATERIAL_ID = 23;	//材料原型id
+    BUILDING_ID = 24;	//建筑id找名称
+}
+
+message TroopInfoList
+{
+    int64 troopId = 1;//部队id
+    int32 sort = 2;//排序
+    int32 faction = 3;//主将阵营(-1为无主将)
+    int32 proId  =4;//主将原型id(-1为无主将)
+    bool isAwaken = 5; //主将是否觉醒
+    int32 quality = 6;//主将品质(-1为无主将)
+    int32 starLevel = 7;//主将星级(-1为无主将)
+    int32 level =8;//主将等级(-1为无主将)
+    int32 armyClass  = 10;//兵种类型(-1为无主将)
+    int32 armyAmount = 11;//兵种数量(-1为无主将)
+    int32 twoOfficerProId = 14; //副将原型id
+	int32 threeOfficerProId = 15; //副将原型id
+    bool isTroopExp = 16;//部队是否出征在外
+    int64 conscriptFinishTime = 17; //征兵结束时间点(-1为无征兵)
+    int64 woundFinishTime = 18; //重伤结束时间点(-1为无重伤)
+	int64 vigorEnoughTime = 19; //体力恢复足够时间点(-1为无疲劳)
+}

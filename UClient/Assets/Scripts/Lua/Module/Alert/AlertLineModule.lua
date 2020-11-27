@@ -5,43 +5,47 @@ Description:
 --]]
 local AlertLineModule =
     typesys.def.AlertLineModule {
-    _item = typesys.__unmanaged,
+    _view = typesys.__unmanaged,
     _id = 0,
     _recycle = false
 }
 
-function AlertLineModule:__ctor(id, item)
+function AlertLineModule:__ctor(id, view)
     self._id = id
-    self._item = item
+    self._view = view
 end
 
 function AlertLineModule:getId()
     return self._id
 end
 
-function AlertLineModule:born(content)
+function AlertLineModule:show(content, delay)
+    self._view.visible = true
     self._recycle = false
-    self._item._content.text = content
-    local ani = self._item._born
+    self._view._content.text = content
+    local ani = self._view._born
     ani:Play(
+        1,
+        delay,
         function()
-            self:waitDie()
+            self:wait()
         end
     )
 end
 
-function AlertLineModule:waitDie()
-    local ani = self._item._die
+function AlertLineModule:wait()
+    local ani = self._view._die
     ani:Play(
         1,
         1,
         function()
-            self:die()
+            self:hide()
         end
     )
 end
 
-function AlertLineModule:die()
+function AlertLineModule:hide()
+    self._view.visible = false
     self._recycle = true
 end
 

@@ -31,6 +31,17 @@ namespace UFramework.Network
             _cursor = -1;
         }
 
+        public bool Write(byte value)
+        {
+            if (CheckCapacity(1))
+            {
+                _buffer[++_cursor] = value;
+                size += 1;
+                return true;
+            }
+            return false;
+        }
+
         public bool Write(short value)
         {
             if (CheckCapacity(2))
@@ -87,17 +98,22 @@ namespace UFramework.Network
             return false;
         }
 
-        public virtual short ReadInt16()
+        public virtual byte ReadByte()
+        {
+            return (byte)(_buffer[++_cursor]);
+        }
+
+        public virtual short ReadShort()
         {
             return (short)(_buffer[++_cursor] | _buffer[++_cursor] << 8);
         }
 
-        public int ReadInt32()
+        public int ReadInt()
         {
             return (int)(_buffer[++_cursor] | _buffer[++_cursor] << 8 | _buffer[++_cursor] << 16 | _buffer[++_cursor] << 24);
         }
 
-        public virtual long ReadInt64()
+        public virtual long ReadLong()
         {
             uint lo = (uint)(_buffer[++_cursor] | _buffer[++_cursor] << 8 |
                              _buffer[++_cursor] << 16 | _buffer[++_cursor] << 24);
@@ -111,7 +127,7 @@ namespace UFramework.Network
             size = 0;
             _cursor = -1;
         }
-        
+
         private bool CheckCapacity(int len)
         {
             return size + len <= _buffer.Length;

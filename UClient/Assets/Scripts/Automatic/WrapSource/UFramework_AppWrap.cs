@@ -13,12 +13,12 @@ public class UFramework_AppWrap
 		L.RegFunction("LateUpdate", new LuaCSFunction(LateUpdate));
 		L.RegFunction("FixedUpdate", new LuaCSFunction(FixedUpdate));
 		L.RegFunction("Destory", new LuaCSFunction(Destory));
-		L.RegFunction("FindLuaFile", new LuaCSFunction(FindLuaFile));
 		L.RegFunction("New", new LuaCSFunction(_CreateUFramework_App));
 		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
 		L.RegVar("AssetsDirectory", new LuaCSFunction(get_AssetsDirectory), null);
 		L.RegVar("BuildDirectory", new LuaCSFunction(get_BuildDirectory), null);
 		L.RegVar("TempDirectory", new LuaCSFunction(get_TempDirectory), null);
+		L.RegVar("PBDirectory", new LuaCSFunction(get_PBDirectory), null);
 		L.RegVar("Version", new LuaCSFunction(get_Version), null);
 		L.EndClass();
 	}
@@ -141,23 +141,6 @@ public class UFramework_AppWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int FindLuaFile(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 1);
-			string arg0 = ToLua.CheckString(L, 1);
-			string o = UFramework.App.FindLuaFile(arg0);
-			LuaDLL.lua_pushstring(L, o);
-			return 1;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_AssetsDirectory(IntPtr L)
 	{
 		try
@@ -191,6 +174,20 @@ public class UFramework_AppWrap
 		try
 		{
 			LuaDLL.lua_pushstring(L, UFramework.App.TempDirectory);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_PBDirectory(IntPtr L)
+	{
+		try
+		{
+			LuaDLL.lua_pushstring(L, UFramework.App.PBDirectory);
 			return 1;
 		}
 		catch (Exception e)

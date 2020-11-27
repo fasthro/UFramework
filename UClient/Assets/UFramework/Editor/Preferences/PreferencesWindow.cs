@@ -23,20 +23,17 @@ namespace UFramework.Editor.Preferences
 
         protected override void OnInitialize()
         {
+            AddPage(new WelcomePage());
             AddPage(new AssetBundlePage());
             AddPage(new AssetBundlePreferencesPage());
             AddPage(new AssetImporterPage());
             AddPage(new AssetImporterPreferencesPage());
-
             AddPage(new ConfigPage());
-
             AddPage(new LanguagePage());
             AddPage(new LuaPage());
-
             AddPage(new SDKPage());
-
             AddPage(new TablePage());
-
+            AddPage(new ProtoPage());
             AddPage(new ProjrectPage());
         }
     }

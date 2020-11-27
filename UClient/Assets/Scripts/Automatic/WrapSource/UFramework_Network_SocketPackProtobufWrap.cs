@@ -7,9 +7,9 @@ public class UFramework_Network_SocketPackProtobufWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(UFramework.Network.SocketPackProtobuf), typeof(UFramework.Network.SocketPack));
-		L.RegFunction("GetRawLuaData", new LuaCSFunction(GetRawLuaData));
 		L.RegFunction("New", new LuaCSFunction(_CreateUFramework_Network_SocketPackProtobuf));
 		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("protocal", new LuaCSFunction(get_protocal), null);
 		L.EndClass();
 	}
 
@@ -20,24 +20,9 @@ public class UFramework_Network_SocketPackProtobufWrap
 		{
 			int count = LuaDLL.lua_gettop(L);
 
-			if (count == 1 && TypeChecker.CheckTypes<Google.Protobuf.IMessage>(L, 1))
+			if (count == 0)
 			{
-				Google.Protobuf.IMessage arg0 = (Google.Protobuf.IMessage)ToLua.ToObject(L, 1);
-				UFramework.Network.SocketPackProtobuf obj = new UFramework.Network.SocketPackProtobuf(arg0);
-				ToLua.PushObject(L, obj);
-				return 1;
-			}
-			else if (count == 1 && TypeChecker.CheckTypes<byte[]>(L, 1))
-			{
-				byte[] arg0 = ToLua.CheckByteBuffer(L, 1);
-				UFramework.Network.SocketPackProtobuf obj = new UFramework.Network.SocketPackProtobuf(arg0);
-				ToLua.PushObject(L, obj);
-				return 1;
-			}
-			else if (count == 1 && TypeChecker.CheckTypes<LuaInterface.LuaByteBuffer>(L, 1))
-			{
-				LuaByteBuffer arg0 = new LuaByteBuffer(ToLua.CheckByteBuffer(L, 1));
-				UFramework.Network.SocketPackProtobuf obj = new UFramework.Network.SocketPackProtobuf(arg0);
+				UFramework.Network.SocketPackProtobuf obj = new UFramework.Network.SocketPackProtobuf();
 				ToLua.PushObject(L, obj);
 				return 1;
 			}
@@ -53,19 +38,21 @@ public class UFramework_Network_SocketPackProtobufWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetRawLuaData(IntPtr L)
+	static int get_protocal(IntPtr L)
 	{
+		object o = null;
+
 		try
 		{
-			ToLua.CheckArgsCount(L, 1);
-			UFramework.Network.SocketPackProtobuf obj = (UFramework.Network.SocketPackProtobuf)ToLua.CheckObject<UFramework.Network.SocketPackProtobuf>(L, 1);
-			LuaInterface.LuaByteBuffer o = obj.GetRawLuaData();
-			ToLua.Push(L, o);
+			o = ToLua.ToObject(L, 1);
+			UFramework.Network.SocketPackProtobuf obj = (UFramework.Network.SocketPackProtobuf)o;
+			UFramework.Network.ProtocalType ret = obj.protocal;
+			ToLua.Push(L, ret);
 			return 1;
 		}
-		catch (Exception e)
+		catch(Exception e)
 		{
-			return LuaDLL.toluaL_exception(L, e);
+			return LuaDLL.toluaL_exception(L, e, o, "attempt to index protocal on a nil value");
 		}
 	}
 }
