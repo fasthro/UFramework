@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <packageDescription id="i894r9q6">
   <resources>
-    <component id="10ewg0" name="AlertLine.xml" path="/Images/" exported="true"/>
-    <component id="10ewg1" name="LineItem.xml" path="/Components/Line/" exported="true"/>
+    <component id="10ewg0" name="AlertLine.xml" path="/" exported="true"/>
+    <component id="10ewg1" name="Line.xml" path="/Components/Line/" exported="true"/>
     <component id="10ewg2" name="AlertMessageBox.xml" path="/" exported="true"/>
     <component id="10ewg3" name="root.xml" path="/Components/"/>
+    <component id="10ewg4" name="MessageBox-1.xml" path="/Components/MessageBox/" exported="true"/>
+    <component id="10ewg7" name="Center.xml" path="/Components/MessageBox/"/>
+    <image id="10ewg9" name="Dark-Popup-Top.png" path="/Images/MessageBox/" scale="9grid" scale9grid="39,26,78,52"/>
+    <image id="10ewga" name="Alert-Icon-Small.png" path="/Images/MessageBox/"/>
+    <image id="10ewgc" name="Black-Button.png" path="/Images/MessageBox/" scale="9grid" scale9grid="87,25,174,50"/>
+    <image id="10ewge" name="White-Button-Outline.png" path="/Images/MessageBox/" scale="9grid" scale9grid="87,25,174,50"/>
+    <image id="10ewgg" name="Close-Icon-Small.png" path="/Images/MessageBox/"/>
   </resources>
   <publish name=""/>
 </packageDescription>

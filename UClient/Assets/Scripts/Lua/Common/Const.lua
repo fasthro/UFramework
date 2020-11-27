@@ -43,3 +43,8 @@ _G.LOGIN_STATUS = {
     LOGINED = 1, -- 已经登陆
     LOGOUT = 2 -- 离线
 }
+
+-- 提示 MessageBox 类型
+_G.ALERT_MESSAGEBOX_TYPE = {
+    NORMAL = 1
+}

@@ -8,8 +8,11 @@
     <item time="0" type="Alpha" target="n0_10ewg" tween="true" startValue="0" endValue="1" duration="6"/>
     <item time="0" type="XY" target="n0_10ewg" tween="true" startValue="0,0" endValue="0,-200" duration="12" ease="Linear"/>
     <item time="6" type="Alpha" target="n0_10ewg" tween="true" startValue="1" endValue="1" duration="6" ease="Linear"/>
+    <item time="12" type="XY" target="n0_10ewg" value="0,-200"/>
   </transition>
   <transition name="_die">
     <item time="0" type="Alpha" target="n0_10ewg" tween="true" startValue="1" endValue="0" duration="6"/>
+    <item time="0" type="XY" target="n0_10ewg" tween="true" startValue="0,-200" endValue="0,-300" duration="6"/>
+    <item time="6" type="XY" target="n0_10ewg" value="0,-300"/>
   </transition>
 </component>
