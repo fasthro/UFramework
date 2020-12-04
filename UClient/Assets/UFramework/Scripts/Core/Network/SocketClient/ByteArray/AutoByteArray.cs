@@ -10,7 +10,7 @@ namespace UFramework.Network
 {
     public class AutoByteArray
     {
-        private byte[] _buffer;
+        protected byte[] _buffer;
         public int size { get; private set; }
         public int freeSize { get { return _buffer.Length - size; } }
         public bool isEmpty

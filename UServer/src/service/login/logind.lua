@@ -1,4 +1,4 @@
-local login = require "loginserver"
+local login = require "snax.loginserver"
 local crypt = require "skynet.crypt"
 local skynet = require "skynet"
 local cluster = require "skynet.cluster"
@@ -29,7 +29,7 @@ function server.auth_handler(token)
     return server, user
 end
 
-function server.login_handler(server, uid, secret, addr)
+function server.login_handler(server, uid, secret)
     logger.debug(string.format("%s@%s is login, secret is %s", uid, server, crypt.hexencode(secret)))
     local gameserver = assert(server_list[server], "Unknown server")
     -- only one can login, because disallow multilogin
@@ -41,7 +41,7 @@ function server.login_handler(server, uid, secret, addr)
         error(string.format("user %s is already online", uid))
     end
     
-    local subid = tostring(cluster.call(gameserver.harborname, gameserver.addr, "login", uid, secret, addr))
+    local subid = tostring(cluster.call(gameserver.harborname, gameserver.addr, "login", uid, secret))
     user_online[uid] = {address = gameserver, subid = subid, server = server}
     return subid
 end

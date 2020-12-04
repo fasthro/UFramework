@@ -4,37 +4,31 @@
  * @Description: socket pack
  */
 using System.Text;
+using LuaInterface;
+using UFramework.Pool;
 
 namespace UFramework.Network
 {
-    public class SocketPackHeader
+    public class SocketPack : IPoolObject
     {
-        public readonly static int SIZE = 13;
-        static int SESSION = 0;
+        /// <summary>
+        /// 头长度
+        /// byte[] [0-3]:cmd [4-7]:session
+        /// </summary>
+        public readonly static int HEADER_SIZE = 8;
+        private static int SESSION = 0;
 
         /// <summary>
-        /// 数据
+        /// 命令
         /// </summary>
         /// <value></value>
-        public byte[] rawData
-        {
-            get { return _data.data; }
-        }
+        public int cmd { get; protected set; }
 
         /// <summary>
-        /// 数据长度
+        /// session
         /// </summary>
         /// <value></value>
-        public int dataSize
-        {
-            get { return size - SIZE; }
-        }
-
-        /// <summary>
-        /// 包长度
-        /// </summary>
-        /// <value></value>
-        public int size { get; private set; }
+        public int session { get; private set; }
 
         /// <summary>
         /// 协议类型
@@ -43,72 +37,17 @@ namespace UFramework.Network
         public ProtocalType protocal { get; private set; }
 
         /// <summary>
-        /// 协议号
-        /// </summary>
-        /// <value></value>
-        public int cmd { get; private set; }
-
-        /// <summary>
-        /// session
-        /// </summary>
-        /// <value></value>
-        public int session { get; private set; }
-
-        private FixedByteArray _data;
-
-        public SocketPackHeader()
-        {
-            _data = new FixedByteArray(SIZE);
-        }
-
-        /// <summary>
-        /// 打包
-        /// </summary>
-        /// <param name="protocal"></param>
-        /// <param name="cmd"></param>
-        /// <param name="dataSize"></param>
-        public void Pack(ProtocalType protocal, int cmd, int dataSize)
-        {
-            this.size = dataSize + SIZE;
-            this.protocal = protocal;
-            this.cmd = cmd;
-            this.session = SESSION++;
-
-            _data.Clear();
-            _data.Write(size);
-            _data.Write((byte)protocal);
-            _data.Write(cmd);
-            _data.Write(session);
-        }
-
-        /// <summary>
-        /// 解包
-        /// </summary>
-        /// <param name="data"></param>
-        public void Unpack(byte[] value)
-        {
-            _data.Clear();
-            _data.Write(value);
-            this.size = _data.ReadInt();
-            this.protocal = (ProtocalType)_data.ReadByte();
-            this.cmd = _data.ReadInt();
-            this.session = _data.ReadInt();
-        }
-    }
-
-    public abstract class SocketPack : ISocketPack
-    {
-        /// <summary>
-        /// 命令
-        /// </summary>
-        /// <value></value>
-        public int cmd { get; protected set; }
-
-        /// <summary>
         /// 数据
         /// </summary>
         /// <value></value>
+        [NoToLua]
         public byte[] rawData { get; protected set; }
+
+        /// <summary>
+        /// lua 中访问的数据
+        /// </summary>
+        /// <value></value>
+        public LuaByteBuffer luaRawData { get { return new LuaByteBuffer(rawData); } }
 
         /// <summary>
         /// 数据长度
@@ -117,66 +56,99 @@ namespace UFramework.Network
         public int rawDataSize { get { return rawData.Length; } }
 
         /// <summary>
-        /// 协议类型
+        /// header bytes
         /// </summary>
         /// <value></value>
-        public abstract ProtocalType protocal { get; }
+        public FixedByteArray header { get; private set; }
 
-        public static T CreateReader<T>(int cmd, byte[] data) where T : SocketPack, new()
+        #region pool
+
+        public bool isRecycled { get; set; }
+
+        public static SocketPack AllocateReader(ProtocalType protocal, byte[] data)
         {
-            var obj = new T();
-            obj.InitializeReader(cmd, data);
-            return obj;
+            return ObjectPool<SocketPack>.Instance.Allocate().InitializeReader(protocal, null, data);
         }
 
-        public static T CreateWriter<T>(int cmd) where T : SocketPack, new()
+        public static SocketPack AllocateReader(ProtocalType protocal, FixedByteArray header, byte[] data)
         {
-            var obj = new T();
-            obj.InitializeWriter(cmd);
-            return obj;
+            return ObjectPool<SocketPack>.Instance.Allocate().InitializeReader(protocal, header, data);
         }
 
-        protected virtual void InitializeReader(int cmd, byte[] data)
+        public static SocketPack AllocateWriter(ProtocalType protocal, int cmd)
         {
-            this.cmd = cmd;
+            return ObjectPool<SocketPack>.Instance.Allocate().InitializeWriter(protocal, cmd);
+        }
+
+        public void Recycle()
+        {
+            ObjectPool<SocketPack>.Instance.Recycle(this);
+        }
+
+        public void OnRecycle()
+        {
+
+        }
+
+        #endregion
+
+        public SocketPack()
+        {
+            header = new FixedByteArray(HEADER_SIZE);
+        }
+
+        private SocketPack InitializeReader(ProtocalType protocal, FixedByteArray fixHeader, byte[] data)
+        {
+            this.protocal = protocal;
             this.rawData = data;
+            this.header.Clear();
+            if (fixHeader != null)
+            {
+                this.header.Write(fixHeader.buffer);
+            }
+            return this;
         }
 
-        protected virtual void InitializeWriter(int cmd)
+        private SocketPack InitializeWriter(ProtocalType protocal, int cmd)
         {
+            this.protocal = protocal;
             this.cmd = cmd;
+            this.session = SESSION++;
+            return this;
         }
 
-        public void WriteBuffer(byte[] value)
+        [NoToLua]
+        public virtual void WriteBuffer(byte[] value)
         {
             rawData = value;
         }
 
-        public void WriteBuffer(string value, Encoding encoding = null)
+        [NoToLua]
+        public virtual void WriteBuffer(string value, Encoding encoding = null)
         {
             if (encoding == null)
                 encoding = Encoding.UTF8;
             rawData = encoding.GetBytes(value);
         }
 
-        public virtual void Pack()
+        public virtual void WriteBuffer(LuaByteBuffer value)
         {
-
+            rawData = value.buffer;
         }
 
-        public virtual void Unpack()
+        public void PackSendData()
         {
-
+            if (protocal == ProtocalType.SizeHeaderBinary)
+            {
+                header.Clear();
+                header.Write(cmd);
+                header.Write(session);
+            }
         }
 
-        /// <summary>
-        /// 转换对象类型
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public T ToPack<T>() where T : SocketPack
+        public void Unpack()
         {
-            return (T)this;
+
         }
     }
 }

@@ -34,10 +34,10 @@ function panel:__ctor()
     end
 end
 
-function panel:_onAwake()
+function panel:onAwake()
 end
 
-function panel:_onDispose()
+function panel:onDispose()
 end
 
 function panel:onShow()
@@ -47,10 +47,7 @@ end
 function panel:onHide()
 end
 
-function panel:onEventReceive(id)
-end
-
-function panel:onNetworReceive()
+function panel:onNetReceived(pack)
 end
 
 -- 创建提示
@@ -78,9 +75,9 @@ end
 function panel:_createView(_type)
     local com = self:_createObject("MessageBox-" .. _type).asCom
     self.view:AddChild(com)
+    com:MakeFullScreen()
     com.x = 0
     com.y = 0
-    com:MakeFullScreen()
     return com
 end
 

@@ -51,16 +51,6 @@ namespace UFramework.UI
             window.Hide();
         }
 
-        protected override void OnReceiveEvent(int id)
-        {
-            base.OnReceiveEvent(id);
-        }
-
-        protected override void OnReceivePack()
-        {
-            base.OnReceivePack();
-        }
-
         public override void UpdateSortOrder(int order)
         {
             window.sortingOrder = order;

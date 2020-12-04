@@ -3,134 +3,38 @@
  * @Date: 2020-11-09 13:07:59
  * @Description: fixed capacity
  */
+using System;
 using UFramework.Pool;
 using UnityEngine;
 
 namespace UFramework.Network
 {
-    public class FixedByteArray
+    public class FixedByteArray : AutoByteArray
     {
-        private byte[] _buffer;
-        public int size { get; private set; }
-        public int _cursor { get; private set; }
-        public int freeSize { get { return _buffer.Length - size; } }
-        public byte[] data { get { return _buffer; } }
-        public bool isEmpty
+        public byte[] buffer { get { return _buffer; } }
+
+        public FixedByteArray(int capacity) : base(capacity, capacity) { }
+
+        public void Write(ushort value)
         {
-            get { return size == 0; }
+            Write(EndianReverse(BitConverter.GetBytes(value)));
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="capacity">容量</param>
-        public FixedByteArray(int capacity)
+        public void Write(int value)
         {
-            _buffer = new byte[capacity];
-            size = 0;
-            _cursor = -1;
+            Write(EndianReverse(BitConverter.GetBytes(value)));
         }
 
-        public bool Write(byte value)
+        public ushort ReadUInt16()
         {
-            if (CheckCapacity(1))
-            {
-                _buffer[++_cursor] = value;
-                size += 1;
-                return true;
-            }
-            return false;
+            return BitConverter.ToUInt16(EndianReverse(Read(2)), 0);
         }
 
-        public bool Write(short value)
+        static byte[] EndianReverse(byte[] data)
         {
-            if (CheckCapacity(2))
-            {
-                _buffer[++_cursor] = (byte)value;
-                _buffer[++_cursor] = (byte)(value >> 8);
-                size += 2;
-                return true;
-            }
-            return false;
-        }
-
-        public bool Write(byte[] value)
-        {
-            if (CheckCapacity(value.Length))
-            {
-                for (int i = 0; i < value.Length; i++)
-                    _buffer[++_cursor] = value[i];
-                size += value.Length;
-                return true;
-            }
-            return false;
-        }
-
-        public bool Write(int value)
-        {
-            if (CheckCapacity(4))
-            {
-                _buffer[++_cursor] = (byte)value;
-                _buffer[++_cursor] = (byte)(value >> 8);
-                _buffer[++_cursor] = (byte)(value >> 16);
-                _buffer[++_cursor] = (byte)(value >> 24);
-                size += 4;
-                return true;
-            }
-            return false;
-        }
-
-        public bool Write(long value)
-        {
-            if (CheckCapacity(8))
-            {
-                _buffer[++_cursor] = (byte)value;
-                _buffer[++_cursor] = (byte)(value >> 8);
-                _buffer[++_cursor] = (byte)(value >> 16);
-                _buffer[++_cursor] = (byte)(value >> 24);
-                _buffer[++_cursor] = (byte)(value >> 32);
-                _buffer[++_cursor] = (byte)(value >> 40);
-                _buffer[++_cursor] = (byte)(value >> 48);
-                _buffer[++_cursor] = (byte)(value >> 56);
-                size += 8;
-                return true;
-            }
-            return false;
-        }
-
-        public virtual byte ReadByte()
-        {
-            return (byte)(_buffer[++_cursor]);
-        }
-
-        public virtual short ReadShort()
-        {
-            return (short)(_buffer[++_cursor] | _buffer[++_cursor] << 8);
-        }
-
-        public int ReadInt()
-        {
-            return (int)(_buffer[++_cursor] | _buffer[++_cursor] << 8 | _buffer[++_cursor] << 16 | _buffer[++_cursor] << 24);
-        }
-
-        public virtual long ReadLong()
-        {
-            uint lo = (uint)(_buffer[++_cursor] | _buffer[++_cursor] << 8 |
-                             _buffer[++_cursor] << 16 | _buffer[++_cursor] << 24);
-            uint hi = (uint)(_buffer[++_cursor] | _buffer[++_cursor] << 8 |
-                             _buffer[++_cursor] << 16 | _buffer[++_cursor] << 24);
-            return (long)((ulong)hi) << 32 | lo;
-        }
-
-        public void Clear()
-        {
-            size = 0;
-            _cursor = -1;
-        }
-
-        private bool CheckCapacity(int len)
-        {
-            return size + len <= _buffer.Length;
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(data);
+            return data;
         }
     }
 }

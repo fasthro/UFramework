@@ -28,10 +28,10 @@ function panel:__ctor()
     self._recycles = {}
 end
 
-function panel:_onAwake()
+function panel:onAwake()
 end
 
-function panel:_onDispose()
+function panel:onDispose()
 end
 
 function panel:onShow()
@@ -41,10 +41,7 @@ end
 function panel:onHide()
 end
 
-function panel:onEventReceive(id)
-end
-
-function panel:onNetworReceive()
+function panel:onNetReceived(pack)
 end
 
 -- 创建提示
@@ -84,6 +81,7 @@ end
 function panel:_createView()
     local com = self:_createObject("Line").asCom
     self.view:AddChild(com)
+    com:MakeFullScreen()
     com.pivotX = 0.5
     com.pivotY = 0.5
     com.x = self.view._root.x

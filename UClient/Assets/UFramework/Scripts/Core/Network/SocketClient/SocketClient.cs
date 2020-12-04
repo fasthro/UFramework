@@ -16,11 +16,9 @@ namespace UFramework.Network
 {
     public enum ProtocalType
     {
-        Binary,
-        LinearBinary,
-        PBC,
-        Protobuf,
-        Sproto,
+        Binary, // byte[] [...]:data
+        SizeBinary, // byte[] [0-1]:(ushort)size [...]:data
+        SizeHeaderBinary,  // byte[] [0-1]:(ushort)size [2-SocketPackHeader.SIZE]:header [...]:data
     }
 
     public class SocketClient
@@ -50,6 +48,12 @@ namespace UFramework.Network
         public bool isConnecting { get; private set; }
 
         /// <summary>
+        /// 协议类型
+        /// </summary>
+        /// <value></value>
+        public ProtocalType protocal { get; private set; }
+
+        /// <summary>
         /// 连接超时时间
         /// </summary>
         public int connectTimeout
@@ -76,23 +80,6 @@ namespace UFramework.Network
             set { _sendBufferSize = value; }
         }
 
-        /// <summary>
-        /// 二进制协议解析
-        /// </summary>
-        /// <value></value>
-        public bool isProtocalBinary
-        {
-            get { return _isProtocalBinary; }
-            set
-            {
-                _isProtocalBinary = value;
-
-                _sender.Clear();
-                _receiver.Clear();
-                _sendlenQueue.Clear();
-            }
-        }
-
         private Socket _client;
         private Thread _thread;
         private ISocketListener _listener;
@@ -100,19 +87,20 @@ namespace UFramework.Network
         private byte[] _buffer;
 
         private AutoByteArray _sender;
-        private SocketPackHeader _senderHeader;
         private Queue<int> _sendlenQueue;
+        private FixedByteArray _sendPackSizer;
 
         private AutoByteArray _receiver;
-        private bool _isReceiveHeaderReaded;
-        private SocketPackHeader _receiverHeader;
+        private bool _isReceiveSizeReaded;
+        private int _receivePackSize;
+        private FixedByteArray _receivePackHeader;
+        private FixedByteArray _receivePackSizer;
 
         private int _packSize;
         private int _cmd;
         private long _session;
         private short _packType;
 
-        private bool _isProtocalBinary;
         private float _connectDecreaseTime;
         private int _connectTimeout = 5000;
         private int _receiveBufferSize = 4096;
@@ -126,16 +114,18 @@ namespace UFramework.Network
         /// 
         /// </summary>
         /// <param name="listener"></param>
-        public SocketClient(ISocketListener listener)
+        /// <param protocal="listener">初始协议类型</param>
+        public SocketClient(ISocketListener listener, ProtocalType protocal = ProtocalType.Binary)
         {
             _buffer = new byte[receiveBufferSize];
             _listener = listener;
             _sender = new AutoByteArray(128, 128);
             _receiver = new AutoByteArray(128, 128);
-            _senderHeader = new SocketPackHeader();
             _sendlenQueue = new Queue<int>();
-            _receiverHeader = new SocketPackHeader();
-            _isProtocalBinary = true;
+            _sendPackSizer = new FixedByteArray(2);
+            _receivePackHeader = new FixedByteArray(2);
+            _receivePackSizer = new FixedByteArray(2);
+            this.protocal = protocal;
         }
 
         public void OnUpdate()
@@ -224,20 +214,41 @@ namespace UFramework.Network
 
         public void Send(SocketPack pack)
         {
+            if (protocal != pack.protocal)
+            {
+                protocal = pack.protocal;
+
+                _sender.Clear();
+                _receiver.Clear();
+                _sendlenQueue.Clear();
+            }
+
             if (isConnected)
             {
-                pack.Pack();
-                if (pack.protocal != ProtocalType.Binary)
+                _sendPackSizer.Clear();
+                pack.PackSendData();
+                switch (pack.protocal)
                 {
-                    _senderHeader.Pack(pack.protocal, pack.cmd, pack.rawDataSize);
-                    _sender.Write(_senderHeader.rawData);
+                    case ProtocalType.Binary:
+                        _sendlenQueue.Enqueue(pack.rawDataSize);
+                        break;
+                    case ProtocalType.SizeBinary:
+                        _sendPackSizer.Write((ushort)pack.rawDataSize);
+                        break;
+                    case ProtocalType.SizeHeaderBinary:
+                        _sendPackSizer.Write((ushort)(SocketPack.HEADER_SIZE + pack.rawDataSize));
+                        break;
                 }
-                else
-                {
-                    _sendlenQueue.Enqueue(pack.rawDataSize);
-                }
+
+                if (!_sendPackSizer.isEmpty)
+                    _sender.Write(_sendPackSizer.buffer);
+
+                if (!pack.header.isEmpty)
+                    _sender.Write(pack.header.buffer);
+
                 _sender.Write(pack.rawData);
             }
+            pack.Recycle();
         }
 
         private void ProcessSend()
@@ -249,10 +260,12 @@ namespace UFramework.Network
                     if (!_sender.isEmpty)
                     {
                         _isSending = true;
-                        if (isProtocalBinary)
+                        if (protocal == ProtocalType.Binary)
                         {
                             var len = _sendlenQueue.Dequeue();
-                            _client.BeginSend(_sender.Read(len), 0, len, SocketFlags.DontRoute, OnSend, null);
+                            Debug.Log("------------------->> " + len);
+                            var data = _sender.Read(len);
+                            _client.BeginSend(data, 0, len, SocketFlags.DontRoute, OnSend, null);
                         }
                         else
                         {
@@ -263,7 +276,9 @@ namespace UFramework.Network
                             else
                             {
                                 var len = _sender.size;
-                                _client.BeginSend(_sender.ReadAll(), 0, len, SocketFlags.DontRoute, OnSend, null);
+                                Debug.Log("-------------------" + len);
+                                var data = _sender.ReadAll();
+                                _client.BeginSend(data, 0, len, SocketFlags.DontRoute, OnSend, null);
                             }
                         }
                     }
@@ -300,13 +315,13 @@ namespace UFramework.Network
                         {
                             _receiver.Write(_buffer, bSize);
 
-                            SocketPack pack = null;
-                            if (isProtocalBinary)
+                            if (protocal == ProtocalType.Binary)
                             {
-                                _listener.OnSocketReceive(SocketPack.CreateReader<SocketPackBinary>(-1, _receiver.Read(bSize)));
+                                _listener.OnSocketReceive(SocketPack.AllocateReader(protocal, _receiver.Read(bSize)));
                             }
                             else
                             {
+                                SocketPack pack = null;
                                 while ((pack = ParsePack()) != null)
                                 {
                                     _listener.OnSocketReceive(pack);
@@ -315,6 +330,8 @@ namespace UFramework.Network
                         }
                     }
                 }
+                catch (ThreadAbortException e)
+                { }
                 catch (Exception e)
                 {
                     OnException(e);
@@ -324,32 +341,24 @@ namespace UFramework.Network
 
         private SocketPack ParsePack()
         {
-            if (_receiver.size >= SocketPackHeader.SIZE && !_isReceiveHeaderReaded)
+            if (_receiver.size >= 2 && !_isReceiveSizeReaded)
             {
-                _receiverHeader.Unpack(_receiver.Read(SocketPackHeader.SIZE));
-                _isReceiveHeaderReaded = true;
+                _receivePackSizer.Clear();
+                _receivePackSizer.Write(_receiver.Read(2));
+
+                _receivePackSize = _receivePackSizer.ReadUInt16();
+                _isReceiveSizeReaded = true;
             }
-            else if (_isReceiveHeaderReaded && _receiver.size >= _receiverHeader.dataSize)
+            if (_isReceiveSizeReaded && _receiver.size >= _receivePackSize)
             {
-                var data = _receiver.Read(_receiverHeader.dataSize);
-                SocketPack pack = null;
-                switch (_receiverHeader.protocal)
+                _isReceiveSizeReaded = false;
+                if (protocal == ProtocalType.SizeHeaderBinary)
                 {
-                    case ProtocalType.LinearBinary:
-                        pack = SocketPack.CreateReader<SocketPackLinearBinary>(_receiverHeader.cmd, data);
-                        break;
-                    case ProtocalType.PBC:
-                        pack = SocketPack.CreateReader<SocketPackPBC>(_receiverHeader.cmd, data);
-                        break;
-                    case ProtocalType.Protobuf:
-                        pack = SocketPack.CreateReader<SocketPackProtobuf>(_receiverHeader.cmd, data);
-                        break;
-                    case ProtocalType.Sproto:
-                        pack = SocketPack.CreateReader<SocketPackSproto>(_receiverHeader.cmd, data);
-                        break;
+                    _receivePackHeader.Clear();
+                    _receivePackHeader.Write(_receiver.Read(SocketPack.HEADER_SIZE));
+                    return SocketPack.AllocateReader(protocal, _receivePackHeader, _receiver.Read(_receivePackSize - SocketPack.HEADER_SIZE));
                 }
-                _isReceiveHeaderReaded = false;
-                return pack;
+                return SocketPack.AllocateReader(protocal, _receiver.Read(_receivePackSize));
             }
             return null;
         }
@@ -383,7 +392,7 @@ namespace UFramework.Network
 
         private void OnException(Exception e = null)
         {
-            Debug.LogError(string.Format("socket exception: {1}", e != null ? e.ToString() : ""));
+            Debug.LogError("socket exception: " + e.ToString());
 
             _isException = true;
             if (isConnected) OnDisconnected();

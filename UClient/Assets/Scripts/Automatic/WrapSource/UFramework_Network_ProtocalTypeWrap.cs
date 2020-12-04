@@ -8,10 +8,8 @@ public class UFramework_Network_ProtocalTypeWrap
 	{
 		L.BeginEnum(typeof(UFramework.Network.ProtocalType));
 		L.RegVar("Binary", new LuaCSFunction(get_Binary), null);
-		L.RegVar("LinearBinary", new LuaCSFunction(get_LinearBinary), null);
-		L.RegVar("PBC", new LuaCSFunction(get_PBC), null);
-		L.RegVar("Protobuf", new LuaCSFunction(get_Protobuf), null);
-		L.RegVar("Sproto", new LuaCSFunction(get_Sproto), null);
+		L.RegVar("SizeBinary", new LuaCSFunction(get_SizeBinary), null);
+		L.RegVar("SizeHeaderBinary", new LuaCSFunction(get_SizeHeaderBinary), null);
 		L.RegFunction("IntToEnum", new LuaCSFunction(IntToEnum));
 		L.EndEnum();
 		TypeTraits<UFramework.Network.ProtocalType>.Check = CheckType;
@@ -38,30 +36,16 @@ public class UFramework_Network_ProtocalTypeWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_LinearBinary(IntPtr L)
+	static int get_SizeBinary(IntPtr L)
 	{
-		ToLua.Push(L, UFramework.Network.ProtocalType.LinearBinary);
+		ToLua.Push(L, UFramework.Network.ProtocalType.SizeBinary);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_PBC(IntPtr L)
+	static int get_SizeHeaderBinary(IntPtr L)
 	{
-		ToLua.Push(L, UFramework.Network.ProtocalType.PBC);
-		return 1;
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_Protobuf(IntPtr L)
-	{
-		ToLua.Push(L, UFramework.Network.ProtocalType.Protobuf);
-		return 1;
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_Sproto(IntPtr L)
-	{
-		ToLua.Push(L, UFramework.Network.ProtocalType.Sproto);
+		ToLua.Push(L, UFramework.Network.ProtocalType.SizeHeaderBinary);
 		return 1;
 	}
 

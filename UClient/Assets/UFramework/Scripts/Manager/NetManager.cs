@@ -31,16 +31,22 @@ namespace UFramework
         public bool isConnected { get { return _client != null && _client.isConnected; } }
 
         /// <summary>
-        /// 二进制协议解析
+        /// 重定向中
         /// </summary>
-        /// <param name="option"></param>
-        public bool isProtocalBinary
-        {
-            get { return _client.isProtocalBinary; }
-            set { _client.isProtocalBinary = value; }
-        }
+        /// <value></value>
+        public bool isRedirecting { get; private set; }
 
         protected override void OnInitialize()
+        {
+            isRedirecting = false;
+            _packQueue.Clear();
+            CreateSocketClient();
+        }
+
+        /// <summary>
+        /// 创建 socekt client
+        /// </summary>
+        private void CreateSocketClient()
         {
             _client = new SocketClient(this);
             _client.connectTimeout = 15000;
@@ -60,6 +66,35 @@ namespace UFramework
         }
 
         /// <summary>
+        /// 重定向
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <param name="port"></param>
+        public void Redirect(string ip, int port)
+        {
+            isRedirecting = true;
+
+            if (_client != null)
+            {
+                _client.Disconnecte();
+                _client = null;
+            }
+
+            _packQueue.Clear();
+            CreateSocketClient();
+            Connecte(ip, port);
+        }
+
+        /// <summary>
+        /// 断开连接
+        /// </summary>
+        public void Disconnecte()
+        {
+            if (isConnected)
+                _client.Disconnecte();
+        }
+
+        /// <summary>
         /// send pack
         /// </summary>
         /// <param name="value"></param>
@@ -67,35 +102,6 @@ namespace UFramework
         {
             _client.Send(pack);
         }
-
-        #region pack creater
-
-        public SocketPackBinary CreateWriterWPackBinary()
-        {
-            return SocketPack.CreateWriter<SocketPackBinary>(-1);
-        }
-
-        public SocketPackLinearBinary CreateWriterPackLinearBinary(int cmd)
-        {
-            return SocketPack.CreateWriter<SocketPackLinearBinary>(cmd);
-        }
-
-        public SocketPackPBC CreateWriterPackPBC(int cmd)
-        {
-            return SocketPack.CreateWriter<SocketPackPBC>(cmd);
-        }
-
-        public SocketPackProtobuf CreateWriterPackProtobuf(int cmd)
-        {
-            return SocketPack.CreateWriter<SocketPackProtobuf>(cmd);
-        }
-
-        public SocketPackSproto CreateWriterPackSproto(int cmd)
-        {
-            return SocketPack.CreateWriter<SocketPackSproto>(cmd);
-        }
-
-        #endregion
 
         #region ISocketListener
 
@@ -106,6 +112,7 @@ namespace UFramework
 
         private void _OnSocketConnected()
         {
+            isRedirecting = false;
             LuaCall("onSocketConnected");
         }
 
@@ -117,6 +124,7 @@ namespace UFramework
 
         private void _OnSocketDisconnected()
         {
+            if (isRedirecting) return;
             LuaCall("onSocketDisconnected");
         }
 
@@ -131,25 +139,7 @@ namespace UFramework
             _packQueue.Swap();
             while (!_packQueue.IsEmpty())
             {
-                var pack = _packQueue.Dequeue();
-                switch (pack.protocal)
-                {
-                    case ProtocalType.Binary:
-                        LuaCall("onSocketReceive", pack.ToPack<SocketPackBinary>());
-                        break;
-                    case ProtocalType.LinearBinary:
-                        LuaCall("onSocketReceive", pack.ToPack<SocketPackLinearBinary>());
-                        break;
-                    case ProtocalType.PBC:
-                        LuaCall("onSocketReceive", pack.ToPack<SocketPackPBC>());
-                        break;
-                    case ProtocalType.Protobuf:
-                        LuaCall("onSocketReceive", pack.ToPack<SocketPackProtobuf>());
-                        break;
-                    case ProtocalType.Sproto:
-                        LuaCall("onSocketReceive", pack.ToPack<SocketPackSproto>());
-                        break;
-                }
+                LuaCall("onSocketReceive", _packQueue.Dequeue());
             }
         }
 
@@ -161,7 +151,7 @@ namespace UFramework
 
         private void _OnSocketException(object exception)
         {
-            LuaCall("onSocketException", exception.ToString());
+            LuaCall("onSocketException", exception == null ? "" : exception.ToString());
         }
 
         #endregion

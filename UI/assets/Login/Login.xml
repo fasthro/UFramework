@@ -1,14 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="2048,1152">
+  <controller name="_state" pages="0,,1," selected="1">
+    <remark page="0" value="login"/>
+    <remark page="1" value="touch"/>
+    <action type="play_transition" fromPage="" toPage="1" transition="touch" repeat="-1"/>
+  </controller>
   <displayList>
-    <component id="n0_unrx" name="n0" src="unrx1" fileName="Components/Backgound.xml" pkg="h49w8gjg" xy="0,0">
+    <component id="n0_unrx" name="n0" src="unrx1" fileName="Components/Skin-1.xml" pkg="h49w8gjg" xy="0,0">
       <relation target="" sidePair="width-width,height-height"/>
     </component>
     <component id="n1_unrx" name="_username" src="unrx1" fileName="Components/Input/Input_White_Username.xml" pkg="5w14mmk5" xy="660,627" size="727,100" group="n4_unrx"/>
     <component id="n2_unrx" name="_password" src="unrx5" fileName="Components/Input/Input_White_Password.xml" pkg="5w14mmk5" xy="660,758" size="727,100" group="n4_unrx"/>
-    <component id="n3_unrx" name="_login" src="unrx1" fileName="Components/Yellow-Button.xml" pkg="hamedtby" xy="850,909" group="n4_unrx"/>
+    <component id="n3_unrx" name="_login" src="unrx1" fileName="Components/Yellow-Button.xml" pkg="hamedtby" xy="850,909" group="n4_unrx">
+      <Button title="登录"/>
+    </component>
     <group id="n4_unrx" name="opt" xy="660,627" size="727,382" advanced="true">
+      <gearDisplay controller="_state" pages="0"/>
       <relation target="" sidePair="center-center,middle-middle"/>
     </group>
+    <component id="n7_v4x1" name="_touch" src="10ewg2" fileName="Components/Transparent.xml" pkg="h49w8gjg" xy="0,0" group="n6_v4x1">
+      <relation target="" sidePair="width-width,height-height"/>
+    </component>
+    <text id="n5_v4x1" name="n5" xy="815,934" pivot="0.5,0.5" size="417,54" group="n6_v4x1" fontSize="40" color="#f8eee1" align="center" vAlign="middle" text="TOUCH ENTER GAME">
+      <relation target="" sidePair="center-center,bottom-bottom"/>
+    </text>
+    <group id="n6_v4x1" name="touch" xy="0,0" size="2048,1152" advanced="true">
+      <gearDisplay controller="_state" pages="1"/>
+    </group>
   </displayList>
+  <transition name="touch" autoPlayRepeat="0">
+    <item time="0" type="Shake" target="n5_v4x1" value="3,0.5"/>
+    <item time="1" type="Shake" target="n5_v4x1" value="3,0.5"/>
+    <item time="48" type="Shake" target="n5_v4x1" value="3,0.5"/>
+  </transition>
 </component>

@@ -27,27 +27,27 @@ function panel:__ctor()
         end
     end
 
-    self:_onAwake()
+    self:onAwake()
 end
 
 function panel:__dtor()
-    self:_onDispose()
+    self:onDispose()
 end
 
 function panel:show()
+    EventManager:add(EVENT_NAMES.NET_RECEIVED, self.onNetReceived, self)
     self._cpanel:Show()
 end
 
 function panel:hide()
+    EventManager:remove(EVENT_NAMES.NET_RECEIVED, self.onNetReceived)
+    self._cpanel:Hide()
 end
 
-function panel:broadcastEvent(id)
+function panel:onAwake()
 end
 
-function panel:_onAwake()
-end
-
-function panel:_onDispose()
+function panel:onDispose()
 end
 
 function panel:onShow()
@@ -57,10 +57,7 @@ end
 function panel:onHide()
 end
 
-function panel:onReceiveEvent(id)
-end
-
-function panel:onReceivePack()
+function panel:onNetReceived(pack)
 end
 
 ------------------------------------

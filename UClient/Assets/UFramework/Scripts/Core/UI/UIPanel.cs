@@ -113,10 +113,6 @@ namespace UFramework.UI
         protected virtual void OnShow()
         {
             isShowed = true;
-
-            UMessenger.AddListener<int>(Global.Event_Panel, OnReceiveEvent);
-            UMessenger.AddListener(Global.Event_Panel_Network, OnReceivePack);
-
             LuaCall("onShow");
         }
 
@@ -148,9 +144,6 @@ namespace UFramework.UI
 
         protected virtual void OnHide()
         {
-            UMessenger.RemoveListener<int>(Global.Event_Panel, OnReceiveEvent);
-            UMessenger.RemoveListener(Global.Event_Panel_Network, OnReceivePack);
-
             LuaCall("onHide");
         }
 
@@ -187,21 +180,6 @@ namespace UFramework.UI
                 }
             }
             return false;
-        }
-
-        public void BroadcastEvent(int id)
-        {
-            UMessenger.Broadcast<int>(Global.Event_Panel, id);
-        }
-
-        protected virtual void OnReceiveEvent(int id)
-        {
-            LuaCall("onReceiveEvent", id);
-        }
-
-        protected virtual void OnReceivePack()
-        {
-            LuaCall("onReceivePack");
         }
 
         /// <summary>

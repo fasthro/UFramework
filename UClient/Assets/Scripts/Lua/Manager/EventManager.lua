@@ -63,7 +63,7 @@ function EventWrap:remove(listener)
     for k = 1, self._listeners:size() do
         local v = self._listeners:get(k)
         if v:equal(listener) then
-            self._listeners:set(k, nil)
+            self._listeners:remove(k)
             break
         end
     end
@@ -119,6 +119,9 @@ function EventManager:remove(eventname, listener)
         logger.error("event manager remove eventname is empty.")
         return
     end
+
+    logger.debug("remove event: " .. eventname)
+
     if listener == nil then
         self._listeners:set(eventname, nil)
     else
@@ -174,6 +177,8 @@ function EventManager:_create(eventname, listener, owner, isonce)
             self._listeners:set(eventname, wrap)
         end
         wrap:add(listener, owner)
+
+        logger.debug("add event: " .. eventname .. " once: " .. tostring(isonce))
     else
         if eventname == nil or eventname == "" or #eventname == 0 then
             logger.error(string.format("eventname is empty.", eventname))

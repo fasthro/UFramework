@@ -3,13 +3,11 @@ Author: fasthro
 Date: 2020-11-25 11:25:50
 Description: 系统常量
 --]]
--- 网络数据包解析选项
+-- 网络数据包类型
 _G.PROTOCAL_TYPE = {
     BINARY = UFramework.Network.ProtocalType.Binary,
-    LINEAR_BINARY = UFramework.Network.ProtocalType.LinearBinary,
-    PBC = UFramework.Network.ProtocalType.PBC,
-    PROTOBUF = UFramework.Network.ProtocalType.Protobuf,
-    SPROTO = UFramework.Network.ProtocalType.Sproto
+    SIZE_BINARY = UFramework.Network.ProtocalType.SizeBinary,
+    SIZE_HEADER_BINARY = UFramework.Network.ProtocalType.SizeHeaderBinary
 }
 
 -- UI面板层
@@ -28,7 +26,9 @@ _G.PANEL_LAYER = {
 _G.LOGIN_AUTHOR_STATUS = {
     CHALLENGE = 0,
     HANDSHAKE_KEY = 1,
-    AUTH_RESULT = 2
+    AUTH_RESULT = 2,
+    CONNECT_GAME_SERVER = 3, -- 连接游戏服
+    AUTH_GAME_SERVER = 4 -- 授权握手验证游戏服
 }
 
 -- 登录授权结果

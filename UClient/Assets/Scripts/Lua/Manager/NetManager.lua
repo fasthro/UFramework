@@ -31,22 +31,13 @@ function NetManager:connect(ip, port)
     self._ext:Connecte(ip, port)
 end
 
-function NetManager:setProtocalBinary(isBinary)
-    self._ext.isProtocalBinary = isBinary
+function NetManager:redirect(ip, port)
+    self._ext:Redirect(ip, port)
 end
 
 function NetManager:createPack(protocal, cmd)
-    if protocal == PROTOCAL_TYPE.BINARY then
-        return self._ext:CreateWriterWPackBinary()
-    elseif protocal == PROTOCAL_TYPE.LINEAR_BINARY then
-        return self._ext:CreateWriterPackLinearBinary()
-    elseif protocal == PROTOCAL_TYPE.PBC then
-        return self._ext:CreateWriterPackPBC()
-    elseif protocal == PROTOCAL_TYPE.PROTOBUF then
-        return self._ext:CreateWriterPackProtobuf()
-    elseif protocal == PROTOCAL_TYPE.SPROTO then
-        return self._ext:CreateWriterPackSproto()
-    end
+    cmd = cmd or -1
+    return UFramework.Network.SocketPack.AllocateWriter(protocal, cmd)
 end
 
 function NetManager:sendPack(pack)

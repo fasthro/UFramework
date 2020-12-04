@@ -300,11 +300,6 @@ namespace UFramework.Editor.Preferences
 
             bindTypes.Add(_GT(typeof(UFramework.Network.ProtocalType)));
             bindTypes.Add(_GT(typeof(UFramework.Network.SocketPack)));
-            bindTypes.Add(_GT(typeof(UFramework.Network.SocketPackBinary)));
-            bindTypes.Add(_GT(typeof(UFramework.Network.SocketPackLinearBinary)));
-            bindTypes.Add(_GT(typeof(UFramework.Network.SocketPackPBC)));
-            bindTypes.Add(_GT(typeof(UFramework.Network.SocketPackProtobuf)));
-            bindTypes.Add(_GT(typeof(UFramework.Network.SocketPackSproto)));
 
             bindTypes.Add(_GT(typeof(UFramework.App)));
             bindTypes.Add(_GT(typeof(UFramework.IOPath)));

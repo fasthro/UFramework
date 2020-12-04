@@ -57,7 +57,7 @@ namespace UFramework
             lua.AddPreLoadLib("lpeg", new LuaCSFunction(LuaDLL.luaopen_lpeg));
             lua.AddPreLoadLib("cjson", new LuaCSFunction(LuaDLL.luaopen_cjson));
             lua.AddPreLoadLib("cjson.safe", new LuaCSFunction(LuaDLL.luaopen_cjson_safe));
-            lua.AddPreLoadLib("crypt", new LuaCSFunction(LuaDLL.luaopen_client_crypt));
+            lua.AddPreLoadLib("crypt", new LuaCSFunction(LuaDLL.luaopen_crypt));
             lua.AddPreLoadLib("protobuf.c", new LuaCSFunction(LuaDLL.luaopen_protobuf_c));
 #if (UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX) && !LUAC_5_3
             lua.AddPreLoadLib("bit", new LuaCSFunction(LuaDLL.luaopen_bit));

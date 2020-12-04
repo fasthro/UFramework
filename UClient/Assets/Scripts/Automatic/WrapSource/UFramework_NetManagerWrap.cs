@@ -8,12 +8,9 @@ public class UFramework_NetManagerWrap
 	{
 		L.BeginClass(typeof(UFramework.NetManager), typeof(UFramework.BaseManager));
 		L.RegFunction("Connecte", new LuaCSFunction(Connecte));
+		L.RegFunction("Redirect", new LuaCSFunction(Redirect));
+		L.RegFunction("Disconnecte", new LuaCSFunction(Disconnecte));
 		L.RegFunction("Send", new LuaCSFunction(Send));
-		L.RegFunction("CreateWriterWPackBinary", new LuaCSFunction(CreateWriterWPackBinary));
-		L.RegFunction("CreateWriterPackLinearBinary", new LuaCSFunction(CreateWriterPackLinearBinary));
-		L.RegFunction("CreateWriterPackPBC", new LuaCSFunction(CreateWriterPackPBC));
-		L.RegFunction("CreateWriterPackProtobuf", new LuaCSFunction(CreateWriterPackProtobuf));
-		L.RegFunction("CreateWriterPackSproto", new LuaCSFunction(CreateWriterPackSproto));
 		L.RegFunction("OnSocketConnected", new LuaCSFunction(OnSocketConnected));
 		L.RegFunction("OnSocketDisconnected", new LuaCSFunction(OnSocketDisconnected));
 		L.RegFunction("OnSocketReceive", new LuaCSFunction(OnSocketReceive));
@@ -21,7 +18,7 @@ public class UFramework_NetManagerWrap
 		L.RegFunction("New", new LuaCSFunction(_CreateUFramework_NetManager));
 		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
 		L.RegVar("isConnected", new LuaCSFunction(get_isConnected), null);
-		L.RegVar("isProtocalBinary", new LuaCSFunction(get_isProtocalBinary), new LuaCSFunction(set_isProtocalBinary));
+		L.RegVar("isRedirecting", new LuaCSFunction(get_isRedirecting), null);
 		L.EndClass();
 	}
 
@@ -68,14 +65,15 @@ public class UFramework_NetManagerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Send(IntPtr L)
+	static int Redirect(IntPtr L)
 	{
 		try
 		{
-			ToLua.CheckArgsCount(L, 2);
+			ToLua.CheckArgsCount(L, 3);
 			UFramework.NetManager obj = (UFramework.NetManager)ToLua.CheckObject<UFramework.NetManager>(L, 1);
-			UFramework.Network.SocketPack arg0 = (UFramework.Network.SocketPack)ToLua.CheckObject<UFramework.Network.SocketPack>(L, 2);
-			obj.Send(arg0);
+			string arg0 = ToLua.CheckString(L, 2);
+			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 3);
+			obj.Redirect(arg0, arg1);
 			return 0;
 		}
 		catch (Exception e)
@@ -85,15 +83,14 @@ public class UFramework_NetManagerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int CreateWriterWPackBinary(IntPtr L)
+	static int Disconnecte(IntPtr L)
 	{
 		try
 		{
 			ToLua.CheckArgsCount(L, 1);
 			UFramework.NetManager obj = (UFramework.NetManager)ToLua.CheckObject<UFramework.NetManager>(L, 1);
-			UFramework.Network.SocketPackBinary o = obj.CreateWriterWPackBinary();
-			ToLua.PushObject(L, o);
-			return 1;
+			obj.Disconnecte();
+			return 0;
 		}
 		catch (Exception e)
 		{
@@ -102,70 +99,15 @@ public class UFramework_NetManagerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int CreateWriterPackLinearBinary(IntPtr L)
+	static int Send(IntPtr L)
 	{
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
 			UFramework.NetManager obj = (UFramework.NetManager)ToLua.CheckObject<UFramework.NetManager>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
-			UFramework.Network.SocketPackLinearBinary o = obj.CreateWriterPackLinearBinary(arg0);
-			ToLua.PushObject(L, o);
-			return 1;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int CreateWriterPackPBC(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 2);
-			UFramework.NetManager obj = (UFramework.NetManager)ToLua.CheckObject<UFramework.NetManager>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
-			UFramework.Network.SocketPackPBC o = obj.CreateWriterPackPBC(arg0);
-			ToLua.PushObject(L, o);
-			return 1;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int CreateWriterPackProtobuf(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 2);
-			UFramework.NetManager obj = (UFramework.NetManager)ToLua.CheckObject<UFramework.NetManager>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
-			UFramework.Network.SocketPackProtobuf o = obj.CreateWriterPackProtobuf(arg0);
-			ToLua.PushObject(L, o);
-			return 1;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int CreateWriterPackSproto(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 2);
-			UFramework.NetManager obj = (UFramework.NetManager)ToLua.CheckObject<UFramework.NetManager>(L, 1);
-			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
-			UFramework.Network.SocketPackSproto o = obj.CreateWriterPackSproto(arg0);
-			ToLua.PushObject(L, o);
-			return 1;
+			UFramework.Network.SocketPack arg0 = (UFramework.Network.SocketPack)ToLua.CheckObject<UFramework.Network.SocketPack>(L, 2);
+			obj.Send(arg0);
+			return 0;
 		}
 		catch (Exception e)
 		{
@@ -259,7 +201,7 @@ public class UFramework_NetManagerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_isProtocalBinary(IntPtr L)
+	static int get_isRedirecting(IntPtr L)
 	{
 		object o = null;
 
@@ -267,32 +209,13 @@ public class UFramework_NetManagerWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			UFramework.NetManager obj = (UFramework.NetManager)o;
-			bool ret = obj.isProtocalBinary;
+			bool ret = obj.isRedirecting;
 			LuaDLL.lua_pushboolean(L, ret);
 			return 1;
 		}
 		catch(Exception e)
 		{
-			return LuaDLL.toluaL_exception(L, e, o, "attempt to index isProtocalBinary on a nil value");
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int set_isProtocalBinary(IntPtr L)
-	{
-		object o = null;
-
-		try
-		{
-			o = ToLua.ToObject(L, 1);
-			UFramework.NetManager obj = (UFramework.NetManager)o;
-			bool arg0 = LuaDLL.luaL_checkboolean(L, 2);
-			obj.isProtocalBinary = arg0;
-			return 0;
-		}
-		catch(Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e, o, "attempt to index isProtocalBinary on a nil value");
+			return LuaDLL.toluaL_exception(L, e, o, "attempt to index isRedirecting on a nil value");
 		}
 	}
 }

@@ -181,11 +181,6 @@ public static class LuaBinder
 		L.BeginModule("Network");
 		UFramework_Network_ProtocalTypeWrap.Register(L);
 		UFramework_Network_SocketPackWrap.Register(L);
-		UFramework_Network_SocketPackBinaryWrap.Register(L);
-		UFramework_Network_SocketPackLinearBinaryWrap.Register(L);
-		UFramework_Network_SocketPackPBCWrap.Register(L);
-		UFramework_Network_SocketPackProtobufWrap.Register(L);
-		UFramework_Network_SocketPackSprotoWrap.Register(L);
 		L.EndModule();
 		L.BeginModule("Messenger");
 		L.RegFunction("UCallback_UFramework_Assets_AssetRequest", new LuaCSFunction(UFramework_Messenger_UCallback_UFramework_Assets_AssetRequest));
