@@ -176,7 +176,8 @@ public class UFramework_Network_SocketPackWrap
 		{
 			ToLua.CheckArgsCount(L, 1);
 			UFramework.Network.SocketPack obj = (UFramework.Network.SocketPack)ToLua.CheckObject<UFramework.Network.SocketPack>(L, 1);
-			obj.Unpack();
+			LuaByteBuffer arg0 = new LuaByteBuffer(ToLua.CheckByteBuffer(L, 2));
+			obj.WriteBuffer(arg0);
 			return 0;
 		}
 		catch (Exception e)
