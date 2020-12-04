@@ -254,11 +254,11 @@ function runner:_genPanelCode(info)
     writer:writeln("end")
     writer:writeln()
 
-    writer:writeln("function panel:_onAwake()")
+    writer:writeln("function panel:onAwake()")
     writer:writeln("end")
     writer:writeln()
 
-    writer:writeln("function panel:_onDispose()")
+    writer:writeln("function panel:onDispose()")
     writer:writeln("end")
     writer:writeln()
 
@@ -271,11 +271,7 @@ function runner:_genPanelCode(info)
     writer:writeln("end")
     writer:writeln()
 
-    writer:writeln("function panel:onEventReceive(id)")
-    writer:writeln("end")
-    writer:writeln()
-
-    writer:writeln("function panel:onNetworReceive()")
+    writer:writeln("function panel:onNetReceived(pack)")
     writer:writeln("end")
     writer:writeln()
 

@@ -6,7 +6,7 @@ local harborname = skynet.getenv("harborname")
 local nodeconf = runconfig[harborname]
 
 skynet.start(function()
-	-- 打开集群
+    -- 打开集群
     cluster.open(harborname)
     
     -- 启动控制台
@@ -18,14 +18,15 @@ skynet.start(function()
     
     -- 启动agent池
     skynet.uniqueservice("agentpool", nodeconf.agentpool.name, nodeconf.agentpool.maxnum, nodeconf.agentpool.recyremove, runconfig.brokecachelen)
+    
+    -- 启动gate
     for _, conf in pairs(nodeconf.gate_list) do
         local gate = skynet.newservice("gated")
         skynet.call(gate, "lua", "open", conf)
     end
     
-    -- proto
-    local protoloader = skynet.uniqueservice("protoloader")
-    skynet.call(protoloader, "lua", "load", nodeconf.proto_list)
-
+    -- 启动 pbc
+    skynet.uniqueservice("pbc")
+    
     skynet.exit()
 end)

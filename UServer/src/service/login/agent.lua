@@ -59,6 +59,7 @@ skynet.start(function()
     end)
     
     skynet.dispatch("client", function(_, _, msg)
+        logger.debug(">>>>>>>>>>>>>>>>>>>. ")
         -- the simple echo service
         skynet.sleep(10)-- sleep a while
         skynet.ret(msg)

@@ -6,7 +6,7 @@ public class UFramework_Network_SocketPackPBCWrap
 {
 	public static void Register(LuaState L)
 	{
-		L.BeginClass(typeof(UFramework.Network.SocketPackPBC), typeof(UFramework.Network.SocketPackLinearBinary));
+		L.BeginClass(typeof(UFramework.Network.SocketPackPBC), typeof(UFramework.Network.SocketPack));
 		L.RegFunction("New", new LuaCSFunction(_CreateUFramework_Network_SocketPackPBC));
 		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
 		L.RegVar("protocal", new LuaCSFunction(get_protocal), null);

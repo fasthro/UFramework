@@ -1,6 +1,11 @@
 
 return {
     
+    -- pb 协议
+    protocols = {
+        "addressbook.pb",
+    },
+    
     brokecachelen = 5, -- 玩家链接断开之后保持agent多长时间，超过则清楚agent缓存数据, 单位为秒
     
     -- 数据库服务配置
@@ -64,12 +69,6 @@ return {
             },
         },
         
-        -- proto
-        proto_list = {
-            "proto/rpc/c2s",
-            "proto/rpc/s2c",
-        },
-        
         consoleport = 8801, -- 当前节点控制台侦听端口
     },
     
@@ -97,12 +96,6 @@ return {
                 port = 9004,
                 maxclient = 2048,
             },
-        },
-        
-        -- proto
-        proto_list = {
-            "proto/rpc/c2s",
-            "proto/rpc/s2c",
         },
         
         consoleport = 8802,

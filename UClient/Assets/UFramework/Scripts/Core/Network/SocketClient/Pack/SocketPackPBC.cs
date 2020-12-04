@@ -8,7 +8,7 @@ using System.Text;
 
 namespace UFramework.Network
 {
-    public class SocketPackPBC : SocketPackLinearBinary
+    public class SocketPackPBC : SocketPack
     {
         public override ProtocalType protocal { get { return ProtocalType.PBC; } }
     }

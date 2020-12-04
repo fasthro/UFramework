@@ -31,13 +31,11 @@ namespace UFramework.Network
             _reader = new BinaryReader(_stream);
         }
 
-        // public override void Pack()
-        // {
-        //     _stream.Flush();
-        //     rawData = _stream.ToArray();
-
-        //     base.Pack();
-        // }
+        public override void Pack()
+        {
+            _stream.Flush();
+            rawData = _stream.ToArray();
+        }
 
         public void WriteByte(byte data)
         {

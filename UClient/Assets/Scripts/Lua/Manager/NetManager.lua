@@ -31,21 +31,21 @@ function NetManager:connect(ip, port)
     self._ext:Connecte(ip, port)
 end
 
-function NetManager:setProtocalBinary(isBinary)
-    self._ext.isProtocalBinary = isBinary
+function NetManager:redirect(ip, port)
+    self._ext:Redirect(ip, port)
 end
 
 function NetManager:createPack(protocal, cmd)
     if protocal == PROTOCAL_TYPE.BINARY then
         return self._ext:CreateWriterWPackBinary()
     elseif protocal == PROTOCAL_TYPE.LINEAR_BINARY then
-        return self._ext:CreateWriterPackLinearBinary()
+        return self._ext:CreateWriterPackLinearBinary(cmd)
     elseif protocal == PROTOCAL_TYPE.PBC then
-        return self._ext:CreateWriterPackPBC()
+        return self._ext:CreateWriterPackPBC(cmd)
     elseif protocal == PROTOCAL_TYPE.PROTOBUF then
-        return self._ext:CreateWriterPackProtobuf()
+        return self._ext:CreateWriterPackProtobuf(cmd)
     elseif protocal == PROTOCAL_TYPE.SPROTO then
-        return self._ext:CreateWriterPackSproto()
+        return self._ext:CreateWriterPackSproto(cmd)
     end
 end
 

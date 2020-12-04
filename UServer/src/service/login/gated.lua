@@ -1,9 +1,9 @@
 -- @Author: fasthro
 -- @Date:   2020-11-25 15:13:22
 -- @Last Modified by:   fasthro
--- @Last Modified time: 2020-11-26 14:28:07
+-- @Last Modified time: 2020-12-03 16:12:50
 
-local msgserver = require "msgserver"
+local msgserver = require "snax.msgserver"
 local crypt = require "skynet.crypt"
 local skynet = require "skynet"
 local cluster = require "skynet.cluster"
@@ -96,6 +96,11 @@ function server.register_handler(name)
     servername = name
     loginservice = cluster.query(harborname, nodeconf.conf.name)
     skynet.call(loginservice, "lua", "register_gate", servername, skynet.self(), harborname)
+end
+
+function server.auth_handler(username, fd, addr)
+    local u = username_map[username]
+    pcall(skynet.call, u.agent, "lua", "cbk", fd, addr)
 end
 
 msgserver.start(server)

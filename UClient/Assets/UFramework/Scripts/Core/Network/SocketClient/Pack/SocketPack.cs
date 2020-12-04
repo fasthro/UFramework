@@ -4,6 +4,7 @@
  * @Description: socket pack
  */
 using System.Text;
+using LuaInterface;
 
 namespace UFramework.Network
 {
@@ -108,7 +109,14 @@ namespace UFramework.Network
         /// 数据
         /// </summary>
         /// <value></value>
+        [NoToLua]
         public byte[] rawData { get; protected set; }
+
+        /// <summary>
+        /// lua 中访问的数据
+        /// </summary>
+        /// <value></value>
+        public LuaByteBuffer luaRawData { get { return new LuaByteBuffer(rawData); } }
 
         /// <summary>
         /// 数据长度
@@ -147,23 +155,32 @@ namespace UFramework.Network
             this.cmd = cmd;
         }
 
-        public void WriteBuffer(byte[] value)
+        [NoToLua]
+        public virtual void WriteBuffer(byte[] value)
         {
             rawData = value;
         }
 
-        public void WriteBuffer(string value, Encoding encoding = null)
+        [NoToLua]
+        public virtual void WriteBuffer(string value, Encoding encoding = null)
         {
             if (encoding == null)
                 encoding = Encoding.UTF8;
             rawData = encoding.GetBytes(value);
         }
 
+        public virtual void WriteBuffer(LuaByteBuffer value)
+        {
+            rawData = value.buffer;
+        }
+
+        [NoToLua]
         public virtual void Pack()
         {
 
         }
 
+        [NoToLua]
         public virtual void Unpack()
         {
 

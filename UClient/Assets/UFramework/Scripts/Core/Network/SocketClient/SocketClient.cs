@@ -50,6 +50,12 @@ namespace UFramework.Network
         public bool isConnecting { get; private set; }
 
         /// <summary>
+        /// 协议类型
+        /// </summary>
+        /// <value></value>
+        public ProtocalType protocal { get; private set; }
+
+        /// <summary>
         /// 连接超时时间
         /// </summary>
         public int connectTimeout
@@ -76,23 +82,6 @@ namespace UFramework.Network
             set { _sendBufferSize = value; }
         }
 
-        /// <summary>
-        /// 二进制协议解析
-        /// </summary>
-        /// <value></value>
-        public bool isProtocalBinary
-        {
-            get { return _isProtocalBinary; }
-            set
-            {
-                _isProtocalBinary = value;
-
-                _sender.Clear();
-                _receiver.Clear();
-                _sendlenQueue.Clear();
-            }
-        }
-
         private Socket _client;
         private Thread _thread;
         private ISocketListener _listener;
@@ -112,7 +101,6 @@ namespace UFramework.Network
         private long _session;
         private short _packType;
 
-        private bool _isProtocalBinary;
         private float _connectDecreaseTime;
         private int _connectTimeout = 5000;
         private int _receiveBufferSize = 4096;
@@ -126,7 +114,8 @@ namespace UFramework.Network
         /// 
         /// </summary>
         /// <param name="listener"></param>
-        public SocketClient(ISocketListener listener)
+        /// <param protocal="listener">初始协议类型</param>
+        public SocketClient(ISocketListener listener, ProtocalType protocal = ProtocalType.Binary)
         {
             _buffer = new byte[receiveBufferSize];
             _listener = listener;
@@ -135,7 +124,7 @@ namespace UFramework.Network
             _senderHeader = new SocketPackHeader();
             _sendlenQueue = new Queue<int>();
             _receiverHeader = new SocketPackHeader();
-            _isProtocalBinary = true;
+            this.protocal = protocal;
         }
 
         public void OnUpdate()
@@ -224,6 +213,15 @@ namespace UFramework.Network
 
         public void Send(SocketPack pack)
         {
+            if (protocal != pack.protocal)
+            {
+                protocal = pack.protocal;
+
+                _sender.Clear();
+                _receiver.Clear();
+                _sendlenQueue.Clear();
+            }
+
             if (isConnected)
             {
                 pack.Pack();
@@ -249,7 +247,7 @@ namespace UFramework.Network
                     if (!_sender.isEmpty)
                     {
                         _isSending = true;
-                        if (isProtocalBinary)
+                        if (protocal == ProtocalType.Binary)
                         {
                             var len = _sendlenQueue.Dequeue();
                             _client.BeginSend(_sender.Read(len), 0, len, SocketFlags.DontRoute, OnSend, null);
@@ -301,7 +299,7 @@ namespace UFramework.Network
                             _receiver.Write(_buffer, bSize);
 
                             SocketPack pack = null;
-                            if (isProtocalBinary)
+                            if (protocal == ProtocalType.Binary)
                             {
                                 _listener.OnSocketReceive(SocketPack.CreateReader<SocketPackBinary>(-1, _receiver.Read(bSize)));
                             }
@@ -315,6 +313,8 @@ namespace UFramework.Network
                         }
                     }
                 }
+                catch (ThreadAbortException e)
+                { }
                 catch (Exception e)
                 {
                     OnException(e);
@@ -383,7 +383,7 @@ namespace UFramework.Network
 
         private void OnException(Exception e = null)
         {
-            Debug.LogError(string.Format("socket exception: {1}", e != null ? e.ToString() : ""));
+            Debug.LogError("socket exception: " + e.ToString());
 
             _isException = true;
             if (isConnected) OnDisconnected();

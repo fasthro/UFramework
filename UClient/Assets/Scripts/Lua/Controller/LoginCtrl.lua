@@ -28,6 +28,13 @@ Error Code:
 Success:
 200 base64(subid)
 ]]
+--[[
+    登录流程
+    1.连接登陆服务器进行握手授权验证
+    2.登陆服务器授权登录成功之后连接游戏服务器
+    3.游戏服务器连接成功之后要进行一次握手验证
+    4.成功之后才可进行协议正常收发
+]]
 local crypt = UFramework.Crypt
 
 local LoginCtrl =
@@ -36,6 +43,7 @@ local LoginCtrl =
     _username = "",
     _password = "",
     _serverid = "",
+    _subid = typesys.__unmanaged,
     _status = 0, -- 登录状态
     _authStatus = 0, -- 授权状态
     _challenge = typesys.__unmanaged,
@@ -55,12 +63,8 @@ function LoginCtrl:initialize()
     PanelManager:showPanel(typesys.LoginPanel)
 end
 
-function LoginCtrl:login(username, password, serverid)
-    if self._status == LOGIN_STATUS.LOGINED then
-        logger.warning("账号已经登录.")
-        return
-    end
-
+-- 连接登录服务器
+function LoginCtrl:connectLoginServer(ip, port, username, password, serverid)
     EventManager:once(EVENT_NAMES.NET_DISCONNECTED, self.onDisconnected, self)
     EventManager:once(EVENT_NAMES.NET_EXCEPTION, self.onDisconnected, self)
     EventManager:add(EVENT_NAMES.NET_RECEIVED, self.onReceived, self)
@@ -68,8 +72,34 @@ function LoginCtrl:login(username, password, serverid)
     self._password = password
     self._serverid = serverid
     self._authStatus = LOGIN_AUTHOR_STATUS.CHALLENGE
-    NetManager:connect("192.168.1.171", 8001)
-    NetManager:setProtocalBinary(true)
+    NetManager:connect(ip, port)
+end
+
+-- 连接游戏服务器
+function LoginCtrl:connectGameServer(ip, port)
+    if self._status == LOGIN_STATUS.LOGINED then
+        self._authStatus = LOGIN_AUTHOR_STATUS.CONNECT_GAME_SERVER
+
+        EventManager:once(EVENT_NAMES.NET_CONNECTED, self.onConnected, self)
+        NetManager:redirect(ip, port)
+    end
+end
+
+function LoginCtrl:onConnected()
+    -- logger.info("游戏服连接成功")
+    -- PanelManager:hidePanel(typesys.LoginPanel)
+    -- PanelManager:showPanel(typesys.MainPanel)
+
+    if self._authStatus == LOGIN_AUTHOR_STATUS.CONNECT_GAME_SERVER then
+        self._authStatus = LOGIN_AUTHOR_STATUS.AUTH_GAME_SERVER
+        local handshake = string.format("%s@%s#%s:%d", crypt.Base64Encode(self._username), crypt.Base64Encode(self._serverid), crypt.Base64Encode(self._subid), 1)
+        local hmac = crypt.HMAC64(crypt.HashKey(handshake), self._secret)
+
+        local pack = NetManager:createPack(PROTOCAL_TYPE.BINARY)
+        local value = string.format("%s:%s", handshake, crypt.Base64Encode(hmac))
+        pack:WriteBuffer(string.pack(">I2", #value) .. value)
+        NetManager:sendPack(pack)
+    end
 end
 
 function LoginCtrl:onDisconnected()
@@ -77,43 +107,64 @@ function LoginCtrl:onDisconnected()
 end
 
 function LoginCtrl:onReceived(pack)
-    local code = pack:ReadString()
-
+    local code = tostring(pack.luaRawData)
     if self._authStatus == LOGIN_AUTHOR_STATUS.CHALLENGE then
         -- challenge
         self._challenge = crypt.Base64Decode(code)
         self._clientkey = crypt.RandomKey()
-        self:sendCode(crypt.Base64Encode(crypt.DHExchange(self._clientkey)))
+        self:sendPack(crypt.Base64Encode(crypt.DHExchange(self._clientkey)) .. "\n")
         self._authStatus = LOGIN_AUTHOR_STATUS.HANDSHAKE_KEY
     elseif self._authStatus == LOGIN_AUTHOR_STATUS.HANDSHAKE_KEY then
         -- handshakeKey
         self._secret = crypt.DHSecret(crypt.Base64Decode(code), self._clientkey)
-        self:sendCode(crypt.Base64Encode(crypt.HMAC64(self._challenge, self._secret)))
+        self:sendPack(crypt.Base64Encode(crypt.HMAC64(self._challenge, self._secret)) .. "\n")
 
         -- token
         local token = string.format("%s@%s:%s", crypt.Base64Encode(self._username), crypt.Base64Encode(self._serverid), crypt.Base64Encode(self._password))
-        self:sendCode(crypt.Base64Encode(crypt.DesEncode(self._secret, token)))
+        self:sendPack(crypt.Base64Encode(crypt.DesEncode(self._secret, token)) .. "\n")
 
         self._authStatus = LOGIN_AUTHOR_STATUS.AUTH_RESULT
     elseif self._authStatus == LOGIN_AUTHOR_STATUS.AUTH_RESULT then
         -- auth result
         local result = tonumber(string.sub(code, 1, 3))
         if result == LOGIN_AUTHOR_CODE.SUCCEED then
-            AlertCtrl:createLine("账号登录成功")
+            logger.info("登录服务器授权验证成功")
+
             self._status = LOGIN_STATUS.LOGINED
-            NetManager:setProtocalBinary(false)
+            self._subid = crypt.Base64Decode(string.sub(code, 5))
+
             EventManager:broadcast(EVENT_NAMES.LOGIN_SUCCEED)
         else
-            AlertCtrl:createLine(string.format("账号登录失败.[%s]", result))
+            logger.info("登录服务器授权验证失败 ERROR: " .. result)
             EventManager:broadcast(EVENT_NAMES.LOGIN_FAILED, result)
         end
-        self:removeEvent()
+    elseif self._authStatus == LOGIN_AUTHOR_STATUS.AUTH_GAME_SERVER then
+        code = self:_unpack_package(code)
+        -- auth game server
+        local result = tonumber(string.sub(code, 1, 3))
+        if result == LOGIN_AUTHOR_CODE.SUCCEED then
+            logger.info("游戏服务器授权验证成功，可以正常收发协议")
+        else
+            logger.info("游戏服务器授权验证失败 ERROR: " .. result)
+        end
     end
 end
 
-function LoginCtrl:sendCode(code)
+function LoginCtrl:_unpack_package(text)
+    local size = #text
+    if size < 2 then
+        return nil, text
+    end
+    local s = text:byte(1) * 256 + text:byte(2)
+    if size < s + 2 then
+        return nil, text
+    end
+    return text:sub(3, 2 + s), text:sub(3 + s)
+end
+
+function LoginCtrl:sendPack(data)
     local pack = NetManager:createPack(PROTOCAL_TYPE.BINARY)
-    pack:WriteBuffer(code .. "\n")
+    pack:WriteBuffer(data)
     NetManager:sendPack(pack)
 end
 

@@ -31,16 +31,22 @@ namespace UFramework
         public bool isConnected { get { return _client != null && _client.isConnected; } }
 
         /// <summary>
-        /// 二进制协议解析
+        /// 重定向中
         /// </summary>
-        /// <param name="option"></param>
-        public bool isProtocalBinary
-        {
-            get { return _client.isProtocalBinary; }
-            set { _client.isProtocalBinary = value; }
-        }
+        /// <value></value>
+        public bool isRedirecting { get; private set; }
 
         protected override void OnInitialize()
+        {
+            isRedirecting = false;
+            _packQueue.Clear();
+            CreateSocketClient();
+        }
+
+        /// <summary>
+        /// 创建 socekt client
+        /// </summary>
+        private void CreateSocketClient()
         {
             _client = new SocketClient(this);
             _client.connectTimeout = 15000;
@@ -58,6 +64,37 @@ namespace UFramework
             if (!isConnected)
                 _client.Connect(ip, port);
         }
+
+        /// <summary>
+        /// 重定向
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <param name="port"></param>
+        public void Redirect(string ip, int port)
+        {
+            isRedirecting = true;
+
+            if (_client != null)
+            {
+                _client.Disconnecte();
+                _client = null;
+            }
+
+            _packQueue.Clear();
+            CreateSocketClient();
+            Connecte(ip, port);
+        }
+
+        /// <summary>
+        /// 断开连接
+        /// </summary>
+        public void Disconnecte()
+        {
+            if (isConnected)
+                _client.Disconnecte();
+        }
+
+
 
         /// <summary>
         /// send pack
@@ -106,6 +143,7 @@ namespace UFramework
 
         private void _OnSocketConnected()
         {
+            isRedirecting = false;
             LuaCall("onSocketConnected");
         }
 
@@ -117,6 +155,7 @@ namespace UFramework
 
         private void _OnSocketDisconnected()
         {
+            if (isRedirecting) return;
             LuaCall("onSocketDisconnected");
         }
 

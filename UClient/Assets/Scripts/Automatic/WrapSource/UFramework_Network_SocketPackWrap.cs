@@ -8,11 +8,9 @@ public class UFramework_Network_SocketPackWrap
 	{
 		L.BeginClass(typeof(UFramework.Network.SocketPack), typeof(System.Object));
 		L.RegFunction("WriteBuffer", new LuaCSFunction(WriteBuffer));
-		L.RegFunction("Pack", new LuaCSFunction(Pack));
-		L.RegFunction("Unpack", new LuaCSFunction(Unpack));
 		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
 		L.RegVar("cmd", new LuaCSFunction(get_cmd), null);
-		L.RegVar("rawData", new LuaCSFunction(get_rawData), null);
+		L.RegVar("luaRawData", new LuaCSFunction(get_luaRawData), null);
 		L.RegVar("rawDataSize", new LuaCSFunction(get_rawDataSize), null);
 		L.RegVar("protocal", new LuaCSFunction(get_protocal), null);
 		L.EndClass();
@@ -23,65 +21,10 @@ public class UFramework_Network_SocketPackWrap
 	{
 		try
 		{
-			int count = LuaDLL.lua_gettop(L);
-
-			if (count == 2 && TypeChecker.CheckTypes<byte[]>(L, 2))
-			{
-				UFramework.Network.SocketPack obj = (UFramework.Network.SocketPack)ToLua.CheckObject<UFramework.Network.SocketPack>(L, 1);
-				byte[] arg0 = ToLua.CheckByteBuffer(L, 2);
-				obj.WriteBuffer(arg0);
-				return 0;
-			}
-			else if (count == 2 && TypeChecker.CheckTypes<string>(L, 2))
-			{
-				UFramework.Network.SocketPack obj = (UFramework.Network.SocketPack)ToLua.CheckObject<UFramework.Network.SocketPack>(L, 1);
-				string arg0 = ToLua.ToString(L, 2);
-				obj.WriteBuffer(arg0);
-				return 0;
-			}
-			else if (count == 3)
-			{
-				UFramework.Network.SocketPack obj = (UFramework.Network.SocketPack)ToLua.CheckObject<UFramework.Network.SocketPack>(L, 1);
-				string arg0 = ToLua.CheckString(L, 2);
-				System.Text.Encoding arg1 = (System.Text.Encoding)ToLua.CheckObject<System.Text.Encoding>(L, 3);
-				obj.WriteBuffer(arg0, arg1);
-				return 0;
-			}
-			else
-			{
-				return LuaDLL.luaL_throw(L, "invalid arguments to method: UFramework.Network.SocketPack.WriteBuffer");
-			}
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Pack(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 1);
+			ToLua.CheckArgsCount(L, 2);
 			UFramework.Network.SocketPack obj = (UFramework.Network.SocketPack)ToLua.CheckObject<UFramework.Network.SocketPack>(L, 1);
-			obj.Pack();
-			return 0;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Unpack(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 1);
-			UFramework.Network.SocketPack obj = (UFramework.Network.SocketPack)ToLua.CheckObject<UFramework.Network.SocketPack>(L, 1);
-			obj.Unpack();
+			LuaByteBuffer arg0 = new LuaByteBuffer(ToLua.CheckByteBuffer(L, 2));
+			obj.WriteBuffer(arg0);
 			return 0;
 		}
 		catch (Exception e)
@@ -110,7 +53,7 @@ public class UFramework_Network_SocketPackWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_rawData(IntPtr L)
+	static int get_luaRawData(IntPtr L)
 	{
 		object o = null;
 
@@ -118,13 +61,13 @@ public class UFramework_Network_SocketPackWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			UFramework.Network.SocketPack obj = (UFramework.Network.SocketPack)o;
-			byte[] ret = obj.rawData;
+			LuaInterface.LuaByteBuffer ret = obj.luaRawData;
 			ToLua.Push(L, ret);
 			return 1;
 		}
 		catch(Exception e)
 		{
-			return LuaDLL.toluaL_exception(L, e, o, "attempt to index rawData on a nil value");
+			return LuaDLL.toluaL_exception(L, e, o, "attempt to index luaRawData on a nil value");
 		}
 	}
 

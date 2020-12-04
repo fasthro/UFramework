@@ -28,7 +28,9 @@ _G.PANEL_LAYER = {
 _G.LOGIN_AUTHOR_STATUS = {
     CHALLENGE = 0,
     HANDSHAKE_KEY = 1,
-    AUTH_RESULT = 2
+    AUTH_RESULT = 2,
+    CONNECT_GAME_SERVER = 3, -- 连接游戏服
+    AUTH_GAME_SERVER = 4 -- 授权握手验证游戏服
 }
 
 -- 登录授权结果
