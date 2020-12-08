@@ -1,6 +1,10 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:UClient/Assets/UFramework/Scripts/Lua/Logger.meta
 guid: 4c82d9b47f1c01a4c870012e9699ace9
 folderAsset: yes
+=======
+guid: 179649aa1e7b82542a0d4bfb1bc99cf7
+>>>>>>> 7d63f742fb997b585f745daad4029401f72070ea:UClient/Assets/Scripts/Automatic/Lua/PB/c2s.lua.meta
 DefaultImporter:
   externalObjects: {}
   userData: 

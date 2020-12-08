@@ -20,7 +20,7 @@ end
 
 function panel:onShow()
     panel.__super.onShow(self)
-
+    
     local on_click_pbc = function()
         local protobuf = require("3rd.pbc.protobuf")
 
