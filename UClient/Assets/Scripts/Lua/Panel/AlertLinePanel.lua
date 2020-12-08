@@ -41,7 +41,7 @@ end
 function panel:onHide()
 end
 
-function panel:onNetReceived(pack)
+function panel:onNetReceived(cmd, pack)
 end
 
 -- 创建提示

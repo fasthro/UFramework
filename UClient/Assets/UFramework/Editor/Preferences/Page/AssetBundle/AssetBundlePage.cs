@@ -764,7 +764,7 @@ namespace UFramework.Editor.Preferences.Assets
                 }
                 else
                 {
-                    Debug.LogError(path + " file not exsit.");
+                    Logger.Error(path + " file not exsit.");
                 }
             }
 
@@ -781,7 +781,7 @@ namespace UFramework.Editor.Preferences.Assets
                     index = dirs.Count;
                     dirs.Add(dir);
                 }
-                Debug.Log(">> bundle: " + item.bundleName + "-> " + GetBuildBundleName(item.bundleName));
+                Logger.Debug(">> bundle: " + item.bundleName + "-> " + GetBuildBundleName(item.bundleName));
                 var asset = new AssetRef { bundle = bundle2Ids[GetBuildBundleName(item.bundleName)], dirIndex = index, name = Path.GetFileName(path) };
                 assetRefs.Add(asset);
             }

@@ -487,8 +487,8 @@ namespace UFramework.VersionControl
                 _value++;
             }
 
-            Debug.Log("download res file count: " + downloadFiles.Count);
-            Debug.Log("download script file count: " + downloadSFiles.Count);
+            Logger.Debug("download res file count: " + downloadFiles.Count);
+            Logger.Debug("download script file count: " + downloadSFiles.Count);
 
             Dictionary<string, VPatch> map = new Dictionary<string, VPatch>();
             for (int i = 0; i < downloadFiles.Count; i++)
@@ -553,7 +553,7 @@ namespace UFramework.VersionControl
                     dpVersions.Add(item.Value.key);
                     _downloader.AddPatch(item.Value);
 
-                    Debug.Log("download patch: " + item.Value.fileName);
+                    Logger.Debug("download patch: " + item.Value.fileName);
                 }
             }
 

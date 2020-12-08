@@ -117,7 +117,7 @@ namespace UFramework.Editor.Preferences
 
                 tableConfig.tableDictionary.ForEach((System.Action<KeyValuePair<string, DataFormatOptions>>)((item) =>
                 {
-                    Debug.Log("Table Export: " + item.Key);
+                    Logger.Debug("Table Export: " + item.Key);
                     var options = new ExcelReaderOptions();
                     options.tableName = item.Key;
                     options.outFormatOptions = tableConfig.outFormatOptions;
@@ -142,7 +142,7 @@ namespace UFramework.Editor.Preferences
                 }));
 
                 UnityEditor.AssetDatabase.Refresh();
-                Debug.Log("Table Export Completed!");
+                Logger.Debug("Table Export Completed!");
             }
         }
 

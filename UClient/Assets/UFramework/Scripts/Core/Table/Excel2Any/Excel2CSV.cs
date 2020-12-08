@@ -97,12 +97,12 @@ namespace UFramework.Table
                 }
                 else
                 {
-                    Debug.LogError("[" + m_reader.options.tableName + "] table not find language: " + datas[0] + ":" + datas[1]);
+                    Logger.Error("[" + m_reader.options.tableName + "] table not find language: " + datas[0] + ":" + datas[1]);
                 }
             }
             else
             {
-                Debug.LogError("[" + m_reader.options.tableName + "] table language format error!");
+                Logger.Error("[" + m_reader.options.tableName + "] table language format error!");
             }
 
             return "0:0";

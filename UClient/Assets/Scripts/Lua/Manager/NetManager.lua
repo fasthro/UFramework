@@ -5,6 +5,8 @@ Description: 网络管理
 --]]
 local protobuf = require("3rd.pbc.protobuf")
 local pb = require("PB.pb")
+local c2s = require("PB.c2s")
+local s2c = require("PB.s2c")
 
 local NetManager =
     typesys.def.NetManager {
@@ -27,6 +29,24 @@ function NetManager:registerPB()
     end
 end
 
+function NetManager:pbcEncode(cmd, session, message)
+    assert(c2s[cmd], string.format("pbc c2s %d undefine", cmd))
+    local message = protobuf.encode(c2s[cmd], message)
+    if message ~= nil then
+        return message .. string.pack(">I4", session)
+    end
+    return nil
+end
+
+function NetManager:pbcDecode(cmd, buffer)
+    assert(s2c[cmd], string.format("pbc s2c %d undefine", cmd))
+    local message = protobuf.decode(s2c[cmd], buffer:sub(1, -6))
+    if message ~= nil then
+        return message
+    end
+    return nil
+end
+
 function NetManager:connect(ip, port)
     self._ext:Connecte(ip, port)
 end
@@ -44,37 +64,46 @@ function NetManager:sendPack(pack)
     self._ext:Send(pack)
 end
 
--- function NetManager:sendSproto(reqname, arg)
---     local code, tag = self.sproto_c2s:request_encode(reqname, arg)
---     local pack_str = string.pack(">I4", tag) .. string.pack("c" .. #code, code) .. string.pack(">I4", self.session)
--- end
-
-function NetManager:sendPBC(msgname, cmd, data)
-    local value = protobuf.encode(msgname, data)
-    if value ~= nil then
-        local pack = self:createPack(PROTOCAL_TYPE.PBC, cmd)
-        pack:WriteBuffer(value)
+function NetManager:sendPBC(cmd, message)
+    local pack = self:createPack(PROTOCAL_TYPE.SIZE_HEADER_BINARY, cmd)
+    message = self:pbcEncode(cmd, pack.session, message)
+    if message ~= nil then
+        pack:WriteBuffer(message)
         self:sendPack(pack)
+    else
+        pack:Recycle()
+        logger.error("netmanager send pack error. cmd: " .. cmd)
     end
 end
 
 function NetManager:onSocketConnected()
-    print("onSocketConnected.")
+    logger.debug("onSocketConnected.")
     EventManager:broadcast(EVENT_NAMES.NET_CONNECTED)
 end
 
 function NetManager:onSocketDisconnected()
-    print("onSocketDisconnected.")
+    logger.debug("onSocketDisconnected.")
     EventManager:broadcast(EVENT_NAMES.NET_DISCONNECTED)
 end
 
 function NetManager:onSocketException(exception)
-    print("onSocketException.[" .. exception .. "]")
+    logger.debug("onSocketException.[" .. exception .. "]")
     EventManager:broadcast(EVENT_NAMES.NET_EXCEPTION)
 end
 
 function NetManager:onSocketReceive(pack)
-    EventManager:broadcast(EVENT_NAMES.NET_RECEIVED, pack)
+    logger.debug("onSocketReceive.[" .. pack.cmd .. "]")
+    if pack.cmd > 0 then
+        local message = self:pbcDecode(pack.cmd, pack.luaRawData)
+        if message ~= nil then
+            EventManager:broadcast(EVENT_NAMES.NET_RECEIVED, pack.cmd, message)
+        else
+            logger.error("netmanager receive pack error. cmd: " .. pack.cmd)
+        end
+        pack:Recycle()
+    else
+        EventManager:broadcast(EVENT_NAMES.NET_RECEIVED, -1, pack)
+    end
 end
 
 return NetManager

@@ -46,7 +46,7 @@ namespace UFramework.Network
             }
             catch (Exception e)
             {
-                Debug.Log("GetIPv6 error:" + e);
+                Logger.Error("GetIPv6 error:" + e);
             }
 
         }

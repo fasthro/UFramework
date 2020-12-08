@@ -39,7 +39,7 @@ namespace UFramework.Editor.Preferences
         {
             get
             {
-                Debug.Log(path + " >>> " + utils.Str2MD5(path));
+                Logger.Debug(path + " >>> " + utils.Str2MD5(path));
                 return utils.Str2MD5(path);
             }
         }

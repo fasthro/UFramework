@@ -173,7 +173,7 @@ namespace UFramework.UI
                     }
                     catch (Exception err)
                     {
-                        Debug.LogError(err);
+                        Logger.Error(err);
                     }
                     ctor.Dispose();
                     return true;

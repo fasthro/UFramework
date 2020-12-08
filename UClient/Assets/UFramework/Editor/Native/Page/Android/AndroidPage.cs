@@ -91,11 +91,11 @@ namespace UFramework.Editor.Native
             {
                 IOPath.FileDelete(IOPath.PathCombine(destRoot, "uframework-" + moduleName + ".aar"));
                 IOPath.FileCopy(sourceFile, destFile);
-                Debug.Log("Android Native Update [" + moduleName + "] AAR Succeed.");
+                Logger.Debug("Android Native Update [" + moduleName + "] AAR Succeed.");
             }
             else
             {
-                Debug.LogError("Android Native Update AAR Failled. [" + moduleName + "] Module AAR File Not Exist.");
+                Logger.Error("Android Native Update AAR Failled. [" + moduleName + "] Module AAR File Not Exist.");
             }
         }
     }

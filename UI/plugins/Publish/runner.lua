@@ -271,7 +271,7 @@ function runner:_genPanelCode(info)
     writer:writeln("end")
     writer:writeln()
 
-    writer:writeln("function panel:onNetReceived(pack)")
+    writer:writeln("function panel:onNetReceived(cmd, pack)")
     writer:writeln("end")
     writer:writeln()
 

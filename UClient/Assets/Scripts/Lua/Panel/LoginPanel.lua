@@ -42,18 +42,25 @@ function panel:onShow()
     self:_bindClick(self.view._touch, on_click_touch)
 
     -- register login succeed
-    EventManager:once(EVENT_NAMES.LOGIN_SUCCEED, self.onLoginSucceed, self)
+    EventManager:once(EVENT_NAMES.LOGIN_SERVER_AUTH_SUCCEED, self.onLoginServerAuthSucceed, self)
+    EventManager:once(EVENT_NAMES.GAME_SERVER_AUTH_SUCCEED, self.onGameServerAuthSucceed, self)
 end
 
 function panel:onHide()
-    EventManager:remove(EVENT_NAMES.LOGIN_SUCCEED, self.onLoginSucceed)
+    EventManager:remove(EVENT_NAMES.LOGIN_SERVER_AUTH_SUCCEED, self.onLoginServerAuthSucceed)
+    EventManager:remove(EVENT_NAMES.LOGIN_SERVER_AUTH_SUCCEED, self.onGameServerAuthSucceed)
 end
 
-function panel:onNetReceived(pack)
+function panel:onNetReceived(cmd, pack)
 end
 
-function panel:onLoginSucceed()
+function panel:onLoginServerAuthSucceed()
     self.view._state:SetSelectedIndex(1)
+end
+
+function panel:onGameServerAuthSucceed()
+    self:hide()
+    PanelManager:showPanel(typesys.MainPanel)
 end
 
 return panel

@@ -476,7 +476,7 @@ namespace UFramework.Editor.Preferences
 
             Utils.HideProgress();
 
-            Debug.Log("build luascript finished. buildFileCount: " + nFiles.Count);
+            Logger.Debug("build luascript finished. buildFileCount: " + nFiles.Count);
         }
 
         /// <summary>

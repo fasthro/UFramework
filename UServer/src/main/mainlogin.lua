@@ -25,8 +25,8 @@ skynet.start(function()
         skynet.call(gate, "lua", "open", conf)
     end
     
-    -- 启动 pbc
-    skynet.uniqueservice("pbc")
+    -- 启动 pbcloader
+    skynet.uniqueservice("pbcloader")
     
     skynet.exit()
 end)

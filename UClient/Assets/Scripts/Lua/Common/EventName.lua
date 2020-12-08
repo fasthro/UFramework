@@ -10,6 +10,8 @@ _G.EVENT_NAMES = {
     NET_RECEIVED = "NetReceived", -- 接受网络协议数据
     NET_EXCEPTION = "NetException", -- 网络异常
     ------------>> login event << ------------
-    LOGIN_SUCCEED = "LoginSucceed", -- 登录成功
-    LOGIN_FAILED = "LoginFailed" -- 登录失败
+    LOGIN_SERVER_AUTH_SUCCEED = "LoginServerAuthSucceed", -- 登录服务器授权成功
+    LOGIN_SERVER_AUTH_FAILED = "LoginServerAuthFailed", -- 登录服务器授权失败
+    GAME_SERVER_AUTH_SUCCEED = "GameServerAuthSucceed", -- 游戏服授权成功
+    GAME_SERVER_AUTH_FAILED = "GameServerAuthFailed" -- 游戏服授权失败
 }

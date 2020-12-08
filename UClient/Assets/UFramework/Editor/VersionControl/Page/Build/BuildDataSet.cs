@@ -410,7 +410,7 @@ namespace UFramework.Editor.VersionControl
             totalProgress++;
 
             yield return new EditorWaitForSeconds(1);
-            Debug.Log("build application finished! [" + targetName + "]");
+            Logger.Debug("build application finished! [" + targetName + "]");
             _isBuild = false;
             EditorUtility.RevealInFinder(outPath);
         }
@@ -442,7 +442,7 @@ namespace UFramework.Editor.VersionControl
                     return "";
                 // Add more build targets for your own.
                 default:
-                    Debug.Log(target.ToString() + " not implemented.");
+                    Logger.Debug(target.ToString() + " not implemented.");
                     return null;
             }
         }
@@ -543,10 +543,10 @@ namespace UFramework.Editor.VersionControl
             if (nPatchFiles.Count > 0 || nPatchSFiles.Count > 0)
             {
                 foreach (var file in nPatchFiles)
-                    Debug.Log(">> patch file: " + file.name);
+                    Logger.Debug(">> patch file: " + file.name);
 
                 foreach (var file in nPatchSFiles)
-                    Debug.Log(">> patch script file: " + file.name);
+                    Logger.Debug(">> patch script file: " + file.name);
             }
             else
             {
@@ -608,7 +608,7 @@ namespace UFramework.Editor.VersionControl
 
             _isBuild = false;
             EditorUtility.RevealInFinder(nPatchPath);
-            Debug.Log("build patch finished! [" + newPatch.displayName + "]");
+            Logger.Debug("build patch finished! [" + newPatch.displayName + "]");
         }
 
         #endregion

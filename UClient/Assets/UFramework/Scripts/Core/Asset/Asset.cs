@@ -99,7 +99,7 @@ namespace UFramework.Assets
                 }
                 else
                 {
-                    Debug.LogError(string.Format("{0} bundle {1} not exist.", path, asset.bundle));
+                    Logger.Error(string.Format("{0} bundle {1} not exist.", path, asset.bundle));
                 }
             }
 
@@ -193,7 +193,7 @@ namespace UFramework.Assets
         /// <param name="request"></param>
         public void RecycleAsset(AssetRequest request)
         {
-            Debug.Log("recycle asset: " + request.name);
+            Logger.Debug("recycle asset: " + request.name);
             if (request.isAsset)
             {
                 if (assetDictionary.ContainsKey(request.name))
@@ -216,7 +216,7 @@ namespace UFramework.Assets
             string bundle;
             if (asset2BundleDictionary.TryGetValue(asset, out bundle))
                 return bundle;
-            Debug.LogError(string.Format("{0} not exist.", asset));
+            Logger.Error(string.Format("{0} not exist.", asset));
             return null;
         }
 

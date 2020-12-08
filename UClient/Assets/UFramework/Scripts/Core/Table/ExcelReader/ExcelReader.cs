@@ -23,7 +23,7 @@ namespace UFramework.Table
 
         public ExcelReader(string filePath, ExcelReaderOptions options)
         {
-            Debug.Log(filePath);
+            Logger.Debug(filePath);
             this.m_filePath = filePath;
             this.options = options;
             this.descriptions = new List<string>();

@@ -169,7 +169,7 @@ namespace UFramework.Network
                 IPv6SupportMidleware.getIPType(ip, port.ToString(), out newIp, out newAddressFamily);
                 if (!string.IsNullOrEmpty(newIp)) { connetIp = newIp; }
 
-                Debug.Log("socket connect to server. " + ip + ":" + port + (string.IsNullOrEmpty(newIp) ? " ipv4" : " ipv6"));
+                Logger.Debug("socket connect to server. " + ip + ":" + port + (string.IsNullOrEmpty(newIp) ? " ipv4" : " ipv6"));
 
                 // 解析IP地址
                 IPAddress ipAddress = IPAddress.Parse(connetIp);
@@ -195,7 +195,7 @@ namespace UFramework.Network
 
             try
             {
-                Debug.Log("socket connect to server succeed.");
+                Logger.Debug("socket connect to server succeed.");
                 ((Socket)iar.AsyncState).EndConnect(iar);
                 isConnected = true;
                 isConnecting = false;
@@ -263,9 +263,7 @@ namespace UFramework.Network
                         if (protocal == ProtocalType.Binary)
                         {
                             var len = _sendlenQueue.Dequeue();
-                            Debug.Log("------------------->> " + len);
-                            var data = _sender.Read(len);
-                            _client.BeginSend(data, 0, len, SocketFlags.DontRoute, OnSend, null);
+                            _client.BeginSend(_sender.Read(len), 0, len, SocketFlags.DontRoute, OnSend, null);
                         }
                         else
                         {
@@ -275,10 +273,8 @@ namespace UFramework.Network
                             }
                             else
                             {
-                                var len = _sender.size;
-                                Debug.Log("-------------------" + len);
                                 var data = _sender.ReadAll();
-                                _client.BeginSend(data, 0, len, SocketFlags.DontRoute, OnSend, null);
+                                _client.BeginSend(data, 0, data.Length, SocketFlags.DontRoute, OnSend, null);
                             }
                         }
                     }
@@ -373,7 +369,7 @@ namespace UFramework.Network
 
         private void OnDisconnected()
         {
-            Debug.Log("socket disconnected && closed.");
+            Logger.Debug("socket disconnected && closed.");
 
             isConnected = false;
             isConnecting = false;
@@ -392,7 +388,7 @@ namespace UFramework.Network
 
         private void OnException(Exception e = null)
         {
-            Debug.LogError("socket exception: " + e.ToString());
+            Logger.Error("socket exception: " + e.ToString());
 
             _isException = true;
             if (isConnected) OnDisconnected();

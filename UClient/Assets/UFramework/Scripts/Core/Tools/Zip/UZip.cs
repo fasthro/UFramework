@@ -136,7 +136,7 @@ namespace UFramework.Tools
             }
             catch (System.Exception _e)
             {
-                Debug.LogError("[ZipUtility.UnzipFile]: " + _e.ToString());
+                Logger.Error("[ZipUtility.UnzipFile]: " + _e.ToString());
 
                 if (null != _unzipCallback)
                     _unzipCallback.OnUnzipFinished(false);
@@ -242,7 +242,7 @@ namespace UFramework.Tools
                     }
                     catch (System.Exception _e)
                     {
-                        Debug.LogError("[ZipUtility.UnzipFile]: " + _e.ToString());
+                        Logger.Error("[ZipUtility.UnzipFile]: " + _e.ToString());
 
                         if (null != _unzipCallback)
                             _unzipCallback.OnUnzipFinished(false);
@@ -296,8 +296,8 @@ namespace UFramework.Tools
             }
             catch (System.Exception _e)
             {
-                Debug.LogError("[ZipUtility.ZipFile]: Failled File: " + _filePathName);
-                Debug.LogError("[ZipUtility.ZipFile]: " + _e.ToString());
+                Logger.Error("[ZipUtility.ZipFile]: Failled File: " + _filePathName);
+                Logger.Error("[ZipUtility.ZipFile]: " + _e.ToString());
                 return false;
             }
             finally
@@ -345,7 +345,7 @@ namespace UFramework.Tools
             }
             catch (System.Exception _e)
             {
-                Debug.LogError("[ZipUtility.ZipDirectory]: " + _e.ToString());
+                Logger.Error("[ZipUtility.ZipDirectory]: " + _e.ToString());
                 return false;
             }
 

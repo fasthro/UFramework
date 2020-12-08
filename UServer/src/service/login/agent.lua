@@ -1,6 +1,6 @@
 local skynet = require "skynet"
 
-local playerclass = require "player"
+local playerclass = require "player.player"
 
 skynet.register_protocol {
     name = "client",
@@ -59,9 +59,13 @@ skynet.start(function()
     end)
     
     skynet.dispatch("client", function(_, _, msg)
-        logger.debug(">>>>>>>>>>>>>>>>>>>. ")
-        -- the simple echo service
-        skynet.sleep(10)-- sleep a while
-        skynet.ret(msg)
+        local pbcloader = skynet.uniqueservice("pbcloader")
+        local msgid, session, message = skynet.call(pbcloader, "lua", "decode", msg)
+        local respmessage = player:onreceive(msgid, session, message)
+        local response = skynet.call(pbcloader, "lua", "encode", msgid, session, respmessage)
+
+        logger.debug(logger.buffer_tostring(response))
+
+        skynet.ret(response)
     end)
 end)

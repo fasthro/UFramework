@@ -19,7 +19,7 @@ namespace UFramework
             {
                 if (isDestory)
                 {
-                    Debug.LogError(string.Format("Try To Call [MonoSingleton] Instance {0} When The Application Already Quit, return null inside", typeof(T)));
+                    Logger.Error(string.Format("Try To Call [MonoSingleton] Instance {0} When The Application Already Quit, return null inside", typeof(T)));
                     return null;
                 }
                 lock (obj)

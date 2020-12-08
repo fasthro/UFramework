@@ -98,7 +98,7 @@ namespace UFramework.Editor
         /// <param name="workdir"></param>
         public static void ExecuteProcess(string proc, string args, string workdir)
         {
-            Debug.Log(string.Format("execute process > {0}:{1}", proc, args));
+            Logger.Debug(string.Format("execute process > {0}:{1}", proc, args));
 
             System.Diagnostics.ProcessStartInfo info = new System.Diagnostics.ProcessStartInfo();
             info.FileName = proc;
@@ -114,7 +114,7 @@ namespace UFramework.Editor
             string msg = pro.StandardError.ReadToEnd();
             if (!string.IsNullOrEmpty(msg))
             {
-                Debug.Log(msg);
+                Logger.Debug(msg);
             }
         }
     }

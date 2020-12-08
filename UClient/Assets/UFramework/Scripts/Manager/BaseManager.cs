@@ -77,7 +77,7 @@ namespace UFramework
                     }
                     catch (Exception err)
                     {
-                        Debug.LogError(err);
+                        Logger.Error(err);
                     }
                     ctor.Dispose();
                     return true;
@@ -90,12 +90,12 @@ namespace UFramework
 
         protected virtual void Log(object message)
         {
-            Debug.Log(message);
+            Logger.Debug(message);
         }
 
         protected virtual void LogError(object message)
         {
-            Debug.LogError(message);
+            Logger.Error(message);
         }
     }
 }

@@ -22,22 +22,17 @@ function panel:onShow()
     panel.__super.onShow(self)
 
     local on_click_pbc = function()
-        -- local addressbook = {
-        --     name = "Alice",
-        --     id = 12345,
-        --     phones = {
-        --         {number = "1301234567"},
-        --         {number = "87654321", type = "WORK"}
-        --     }
-        -- }
-        -- NetManager:sendPBC("tutorial.Person", 1, addressbook)
+        local protobuf = require("3rd.pbc.protobuf")
 
-        local pack = NetManager:createPack(PROTOCAL_TYPE.BINARY)
-        local v = "echo"
-        local size = #v
-        local package = string.pack(">I2", size) .. v
-        pack:WriteBuffer(package)
-        NetManager:sendPack(pack)
+        local addressbook = {
+            name = "Client",
+            id = 12345,
+            phones = {
+                {number = "1301234567"},
+                {number = "87654321", type = "WORK"}
+            }
+        }
+        NetManager:sendPBC(1001, addressbook)
     end
     self:_bindClick(self.view._sendpbc, on_click_pbc)
 end
@@ -45,7 +40,10 @@ end
 function panel:onHide()
 end
 
-function panel:onNetReceived(pack)
+function panel:onNetReceived(cmd, pack)
+    if cmd == 1001 then
+        logger.debug("收到了1001测试协议")
+    end
 end
 
 return panel
