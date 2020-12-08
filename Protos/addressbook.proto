@@ -1,6 +1,7 @@
 syntax = "proto3";
 package tutorial;
 
+//#[C2S][1001]#
 message Person {
   string name = 1;
   int32 id = 2;  // Unique ID number for this person.
@@ -20,7 +21,26 @@ message Person {
   repeated PhoneNumber phones = 4;
 }
 
-// Our address book file is just one of these.
+//#[S2C][1001]#
+message Person1 {
+  string name = 1;
+}
+
+//#[C2S][S2C][1002]#
+message Person2 {
+  string name = 1;
+}
+
+//#[S2C][C2S][1003]#
+message Person3 {
+  string name = 1;
+}
+
+//#[C2C][S2C][1004]#
+message Person4 {
+  string name = 1;
+}
+
 message AddressBook {
   repeated Person people = 1;
 }

@@ -24,11 +24,11 @@ _G.PANEL_LAYER = {
 
 -- 登录授权状态
 _G.LOGIN_AUTHOR_STATUS = {
-    CHALLENGE = 0,
-    HANDSHAKE_KEY = 1,
-    AUTH_RESULT = 2,
-    CONNECT_GAME_SERVER = 3, -- 连接游戏服
-    AUTH_GAME_SERVER = 4 -- 授权握手验证游戏服
+    LOGIN_SERVER_CHALLENGE = 0, -- 登陆服务器
+    LOGIN_SERVER_HANDSHAKE_KEY = 1, -- 登陆服务器
+    LOGIN_SERVER_AUTH_RESULT = 2, -- 登陆服务器
+    GAME_SERVER_CONNECT = 3, -- 游戏服务器
+    GAME_SERVER_AUTH = 4 -- 游戏服务器
 }
 
 -- 登录授权结果

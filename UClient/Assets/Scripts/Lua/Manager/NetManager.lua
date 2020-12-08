@@ -5,6 +5,8 @@ Description: 网络管理
 --]]
 local protobuf = require("3rd.pbc.protobuf")
 local pb = require("PB.pb")
+local c2s = require("PB.c2s")
+local s2c = require("PB.s2c")
 
 local NetManager =
     typesys.def.NetManager {
@@ -44,16 +46,11 @@ function NetManager:sendPack(pack)
     self._ext:Send(pack)
 end
 
--- function NetManager:sendSproto(reqname, arg)
---     local code, tag = self.sproto_c2s:request_encode(reqname, arg)
---     local pack_str = string.pack(">I4", tag) .. string.pack("c" .. #code, code) .. string.pack(">I4", self.session)
--- end
-
-function NetManager:sendPBC(msgname, cmd, data)
-    local value = protobuf.encode(msgname, data)
-    if value ~= nil then
-        local pack = self:createPack(PROTOCAL_TYPE.PBC, cmd)
-        pack:WriteBuffer(value)
+function NetManager:sendPBC(cmd, data)
+    local msg = protobuf.encode(c2s[cmd], data)
+    if msg ~= nil then
+        local pack = self:createPack(PROTOCAL_TYPE.SIZE_HEADER_BINARY, cmd)
+        pack:WriteBuffer(msg .. string.pack(">I4", pack.session))
         self:sendPack(pack)
     end
 end

@@ -1,11 +1,5 @@
 
 return {
-    
-    -- pb 协议
-    protocols = {
-        "addressbook.pb",
-    },
-    
     brokecachelen = 5, -- 玩家链接断开之后保持agent多长时间，超过则清楚agent缓存数据, 单位为秒
     
     -- 数据库服务配置
@@ -71,34 +65,4 @@ return {
         
         consoleport = 8801, -- 当前节点控制台侦听端口
     },
-    
-    -- node1 节点配置
-    node1 = {
-        
-        -- agent池配置, 同上
-        agentpool = {
-            name = "agent",
-            maxnum = 10,
-            recyremove = 0,
-        },
-        
-        -- 服务器网关配置，同上
-        gate_list = {
-            {
-                servername = "gate_name3",
-                address = "0.0.0.0",
-                port = 9003,
-                maxclient = 2048,
-            },
-            {
-                servername = "gate_name4",
-                address = "0.0.0.0",
-                port = 9004,
-                maxclient = 2048,
-            },
-        },
-        
-        consoleport = 8802,
-    },
-    
 }

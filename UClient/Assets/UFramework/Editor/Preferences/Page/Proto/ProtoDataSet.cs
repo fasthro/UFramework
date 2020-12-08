@@ -60,7 +60,7 @@ namespace UFramework.Editor.Preferences
         {
             _page?.Compile(this);
             _page?.CreateLuaPBFile();
-            
+
             AssetDatabase.Refresh();
         }
 
@@ -85,6 +85,24 @@ namespace UFramework.Editor.Preferences
         {
             _page = page;
         }
+    }
+
+    public enum ProtoCMDType
+    {
+        C2S,
+        S2C,
+        All,
+    }
+
+    /// <summary>
+    /// 命令
+    /// </summary>
+    public class ProtoCMD
+    {
+        public string package;
+        public int cmd;
+        public string name;
+        public ProtoCMDType cmdType;
     }
 
     /// <summary>

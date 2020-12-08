@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
 using UFramework.Config;
@@ -23,6 +24,7 @@ namespace UFramework.Editor.Preferences
         static string PBOutpath;
         static string ProtoDir;
         static string Protogen;
+        static string PBServerOutpath;
         static ProtoConfig describeObject;
 
         [ShowInInspector]
@@ -42,6 +44,7 @@ namespace UFramework.Editor.Preferences
             var rootDir = IOPath.PathParent(Environment.CurrentDirectory);
             ProtoDir = IOPath.PathCombine(rootDir, "Protos");
             Protogen = IOPath.PathCombine(rootDir, "Tools", "protoc.exe");
+            PBServerOutpath = IOPath.PathCombine(rootDir, "UServer/src/proto/pbc");
 
             describeObject = UConfig.Read<ProtoConfig>();
 
@@ -102,12 +105,14 @@ namespace UFramework.Editor.Preferences
             {
                 IOPath.DirectoryClear(CSOutpath);
                 IOPath.DirectoryClear(PBOutpath);
+                IOPath.DirectoryClear(PBServerOutpath);
 
                 foreach (var proto in protos)
                 {
                     Compile(proto);
                 }
                 CreateLuaPBFile();
+                CreateProtoCMDFile();
                 AssetDatabase.Refresh();
             }
         }
@@ -127,6 +132,7 @@ namespace UFramework.Editor.Preferences
         public void CreateLuaPBFile()
         {
             StringBuilder sb = new StringBuilder();
+            sb.AppendLine("-- uframework automatically generated");
             sb.Append("local pb = {\n");
             foreach (var proto in protos)
             {
@@ -138,6 +144,137 @@ namespace UFramework.Editor.Preferences
             sb.Append("return pb\n");
 
             IOPath.FileCreateText(IOPath.PathCombine(PBOutpath, "pb.lua"), sb.ToString(), null);
+            // to server
+            IOPath.FileCreateText(IOPath.PathCombine(PBServerOutpath, "pb.lua"), sb.ToString(), null);
+        }
+
+        public void CreateProtoCMDFile()
+        {
+            List<ProtoCMD> cmds = new List<ProtoCMD>();
+            foreach (var proto in protos)
+            {
+                if (proto.genType == ProtoGenerateType.All || proto.genType == ProtoGenerateType.PB)
+                {
+                    string packName = "";
+                    var lines = File.ReadAllLines(proto.path);
+                    int lineIndex = 0;
+                    while (lineIndex < lines.Length)
+                    {
+                        var line = lines[lineIndex];
+                        if (string.IsNullOrEmpty(packName))
+                        {
+                            packName = ParseProtoPackage(line);
+                        }
+                        else
+                        {
+                            var matchIndex = MatchProtoCMDLine(line);
+                            if (matchIndex != -1)
+                            {
+                                lineIndex++;
+                                var protoCMD = ParseProtoCMDLine(line, lines[lineIndex], matchIndex);
+                                if (protoCMD != null)
+                                {
+                                    protoCMD.package = packName;
+                                    cmds.Add(protoCMD);
+                                }
+                            }
+                        }
+                        lineIndex++;
+                    }
+                }
+            }
+
+            WriteProtoCMDSFile(cmds, ProtoCMDType.C2S);
+            WriteProtoCMDSFile(cmds, ProtoCMDType.S2C);
+        }
+
+        private string ParseProtoPackage(string line)
+        {
+            var match = Regex.Match(line, @"^package (?<name>.*);$");
+            if (match.Success)
+            {
+                return match.Groups["name"].Value;
+            }
+            return null;
+        }
+
+        private int MatchProtoCMDLine(string line)
+        {
+            string[] patterns = new string[] {
+                @"^//#\[C2S\]\[\d+\]#$",
+                @"^//#\[S2C\]\[\d+\]#$",
+                @"^//#\[C2S\]\[S2C\]\[\d+\]#$",
+                @"^//#\[S2C\]\[C2S\]\[\d+\]#$" };
+
+            for (int i = 0; i < patterns.Length; i++)
+            {
+                var match = Regex.Match(line, patterns[i]);
+                if (match.Success)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        private ProtoCMD ParseProtoCMDLine(string cmdStr, string nameStr, int matchIndex)
+        {
+            var nameMatch = Regex.Match(nameStr, @"^message (?<name>.*) \{");
+            if (nameMatch.Success)
+            {
+                ProtoCMD protoCMD = new ProtoCMD();
+                Match match = null;
+                if (matchIndex == 0)
+                {
+                    match = Regex.Match(cmdStr, @"^//#\[C2S\]\[(?<cmd>\d+)\]#$");
+                    protoCMD.cmdType = ProtoCMDType.C2S;
+                }
+                else if (matchIndex == 1)
+                {
+                    match = Regex.Match(cmdStr, @"^//#\[S2C\]\[(?<cmd>\d+)\]#$");
+                    protoCMD.cmdType = ProtoCMDType.S2C;
+                }
+                else if (matchIndex == 2)
+                {
+                    match = Regex.Match(cmdStr, @"^//#\[C2S\]\[S2C\]\[(?<cmd>\d+)\]#$");
+                    protoCMD.cmdType = ProtoCMDType.All;
+                }
+                else if (matchIndex == 3)
+                {
+                    match = Regex.Match(cmdStr, @"^//#\[S2C\]\[C2S\]\[(?<cmd>\d+)\]#$");
+                    protoCMD.cmdType = ProtoCMDType.All;
+                }
+                protoCMD.name = nameMatch.Groups["name"].Value;
+                if (match != null && match.Success)
+                {
+                    protoCMD.cmd = int.Parse(match.Groups["cmd"].Value);
+                }
+                return protoCMD;
+            }
+            return null;
+        }
+
+        private void WriteProtoCMDSFile(List<ProtoCMD> cmds, ProtoCMDType cmdType)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("-- uframework automatically generated");
+            sb.Append("local cmds = {\n");
+
+            for (int i = 0; i < cmds.Count; i++)
+            {
+                var cmd = cmds[i];
+                if (cmd.cmdType == cmdType || cmd.cmdType == ProtoCMDType.All)
+                {
+                    sb.Append(string.Format("\t[{0}] = \"{1}.{2}\",\n", cmd.cmd, cmd.package, cmd.name));
+                }
+            }
+            sb.Append("}\n");
+            sb.Append("return cmds\n");
+
+            var filename = cmdType.ToString().ToLower() + ".lua";
+            IOPath.FileCreateText(IOPath.PathCombine(PBOutpath, filename), sb.ToString(), null);
+            // to server
+            IOPath.FileCreateText(IOPath.PathCombine(PBServerOutpath, filename), sb.ToString(), null);
         }
 
         public void UpOrder(ProtoFile proto)
@@ -201,6 +338,8 @@ namespace UFramework.Editor.Preferences
 
             IOPath.FileDelete(outpath);
             Utils.ExecuteProcess(Protogen, " -o " + outpath + " " + proto.path + " -I=" + ProtoDir, ProtoDir);
+            // to server
+            IOPath.FileCopy(outpath, IOPath.PathCombine(PBServerOutpath, proto.name + ".pb"));
         }
     }
 }

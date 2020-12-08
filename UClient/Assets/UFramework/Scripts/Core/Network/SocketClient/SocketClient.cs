@@ -263,9 +263,7 @@ namespace UFramework.Network
                         if (protocal == ProtocalType.Binary)
                         {
                             var len = _sendlenQueue.Dequeue();
-                            Debug.Log("------------------->> " + len);
-                            var data = _sender.Read(len);
-                            _client.BeginSend(data, 0, len, SocketFlags.DontRoute, OnSend, null);
+                            _client.BeginSend(_sender.Read(len), 0, len, SocketFlags.DontRoute, OnSend, null);
                         }
                         else
                         {
@@ -275,10 +273,8 @@ namespace UFramework.Network
                             }
                             else
                             {
-                                var len = _sender.size;
-                                Debug.Log("-------------------" + len);
                                 var data = _sender.ReadAll();
-                                _client.BeginSend(data, 0, len, SocketFlags.DontRoute, OnSend, null);
+                                _client.BeginSend(data, 0, data.Length, SocketFlags.DontRoute, OnSend, null);
                             }
                         }
                     }
