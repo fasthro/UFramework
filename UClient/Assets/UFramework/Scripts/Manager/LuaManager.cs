@@ -43,7 +43,7 @@ namespace UFramework
             luaAppUpdateFunc = luaEngine.GetLuaFunction("update");
             luaAppLateUpdateFunc = luaEngine.GetLuaFunction("lateUpdate");
             luaAppFixedUpdateFunc = luaEngine.GetLuaFunction("fixedUpdate");
-            luaEngine.Call("launch");
+            luaEngine.Call("launch", Logger.GetLevel());
         }
 
         #region lib

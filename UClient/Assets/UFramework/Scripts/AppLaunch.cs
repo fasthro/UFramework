@@ -29,14 +29,17 @@ namespace UFramework
         {
             _initialized = false;
 
-            var config = UConfig.Read<AppConfig>();
+            var app = UConfig.Read<AppConfig>();
+
             // FairyGUI
             UIPackage.unloadBundleByFGUI = false;
-            GRoot.inst.SetContentScaleFactor(config.designResolutionX, config.designResolutionY, UIContentScaler.ScreenMatchMode.MatchWidthOrHeight);
+            GRoot.inst.SetContentScaleFactor(app.designResolutionX, app.designResolutionY, UIContentScaler.ScreenMatchMode.MatchWidthOrHeight);
 
             // launch panel
             launch = Launch.Create();
 
+            // 日志等级
+            Logger.SetLevel(app.logLevel);
             // 线程队列
             ThreadQueue.Instance.Default();
             // Native

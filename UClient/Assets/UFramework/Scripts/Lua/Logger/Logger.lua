@@ -48,28 +48,62 @@ local _logwarning =
     end
 )
 
+-- 日志等级(与C#日志等级同步)
+local LEVEL_DEBUG = 0
+local LEVEL_INFO = 1
+local LEVEL_WARN = 2
+local LEVEL_ERROR = 3
+local LEVEL_FATAL = 4
+
+-- 当前日志等级
+local CUR_LOG_LEVEL = 0
+
+-- 日志等级检查
+local checklevel = function(level)
+    return level >= CUR_LOG_LEVEL
+end
+
 local logger = {}
 
+-- log
 function logger.debug(...)
-    _logdebug:debug(...)
+    if checklevel(LEVEL_DEBUG) then
+        _logdebug:debug(...)
+    end
 end
 
+-- info
 function logger.info(...)
-    _loginfo:info(...)
+    if checklevel(LEVEL_INFO) then
+        _loginfo:info(...)
+    end
 end
 
+-- error
 function logger.error(...)
-    _logerror:error(...)
+    if checklevel(LEVEL_ERROR) then
+        _logerror:error(...)
+    end
 end
 
+-- warning
 function logger.warning(...)
-    _logwarning:warn(...)
+    if checklevel(LEVEL_WARN) then
+        _logwarning:warn(...)
+    end
 end
 
+-- set level
+function logger.setlevel(level)
+    CUR_LOG_LEVEL = level
+end
+
+-- tostring
 function logger.tostring(value)
     return logging.tostring(value)
 end
 
+-- buffer tostring
 function logger.buffer_tostring(buffer)
     local res = "["
     local len = #buffer

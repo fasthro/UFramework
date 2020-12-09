@@ -32,20 +32,20 @@ namespace UFramework.Editor.VersionControl
         public AppEnvironmentType appEnvironmentType;
 
         /// <summary>
+        /// 日志等级
+        /// </summary>
+        [BoxGroup("General Settings")]
+        [LabelText("    Log Level")]
+        [OnValueChanged("OnSaveDescribe")]
+        public LogLevel logLevel;
+
+        /// <summary>
         /// 版本远程URL
         /// </summary>
         [BoxGroup("URL Settings")]
         [LabelText("    Version Base Remote URL")]
         [OnValueChanged("OnSaveDescribe")]
         public string versionBaseURL;
-
-        /// <summary>
-        /// 日志
-        /// </summary>
-        [BoxGroup("Debug Settings")]
-        [LabelText("    LogEnable")]
-        [OnValueChanged("OnSaveDescribe")]
-        public bool isLogEnable;
 
         public object GetInstance()
         {
@@ -58,7 +58,7 @@ namespace UFramework.Editor.VersionControl
             isDevelopmentVersion = describeObject.isDevelopmentVersion;
             appEnvironmentType = describeObject.appEnvironmentType;
             versionBaseURL = describeObject.versionBaseURL;
-            isLogEnable = describeObject.isLogEnable;
+            logLevel = describeObject.logLevel;
         }
 
         public void OnPageBarDraw()
@@ -76,7 +76,7 @@ namespace UFramework.Editor.VersionControl
             describeObject.versionBaseURL = versionBaseURL;
 
             // Debug
-            describeObject.isLogEnable = isLogEnable;
+            describeObject.logLevel = logLevel;
 
             describeObject.Save();
         }

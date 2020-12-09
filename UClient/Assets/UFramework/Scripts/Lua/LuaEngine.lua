@@ -32,7 +32,11 @@ function LuaEngine:__dtor()
 end
 
 -- static
-function LuaEngine.launch()
+function LuaEngine.launch(loglevel)
+    -- 日志等级
+    logger.setlevel(loglevel)
+
+    -- 启动LuaEngine
     _setRootObject(_new(LuaEngine))
 end
 

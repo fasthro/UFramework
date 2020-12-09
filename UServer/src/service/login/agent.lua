@@ -63,9 +63,6 @@ skynet.start(function()
         local msgid, session, message = skynet.call(pbcloader, "lua", "decode", msg)
         local respmessage = player:onreceive(msgid, session, message)
         local response = skynet.call(pbcloader, "lua", "encode", msgid, session, respmessage)
-
-        logger.debug(logger.buffer_tostring(response))
-
         skynet.ret(response)
     end)
 end)

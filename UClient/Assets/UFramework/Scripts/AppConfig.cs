@@ -57,9 +57,9 @@ namespace UFramework
         public string versionBaseURL;
 
         /// <summary>
-        /// 日志
+        /// 日志等级
         /// </summary>
-        public bool isLogEnable = true;
+        public LogLevel logLevel = LogLevel.Debug;
 
         #endregion
 
