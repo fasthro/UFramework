@@ -23,50 +23,51 @@ namespace UFramework.UI
     public class LayerGroup
     {
         // 层级间隔
-        readonly static int LAYER_INTERVAL = 1000000;
-
-        private HashSet<UIPanel> m_panels = new HashSet<UIPanel>();
+        const int LAYER_INTERVAL = 1000000;
 
         public Layer layer { get; private set; }
-        private int m_layerIndex;
+
+        private HashSet<UIPanel> _panels;
+        private int _layerIndex;
 
         public LayerGroup(Layer layer)
         {
             this.layer = layer;
-            this.m_layerIndex = (int)layer + LAYER_INTERVAL;
+            this._layerIndex = (int)layer + LAYER_INTERVAL;
+            this._panels = new HashSet<UIPanel>();
         }
 
         public int Register(UIPanel panel)
         {
-            if (!m_panels.Contains(panel))
+            if (!_panels.Contains(panel))
             {
-                m_panels.Add(panel);
+                _panels.Add(panel);
             }
             Update();
-            return m_layerIndex + m_panels.Count;
+            return _layerIndex + _panels.Count;
         }
 
         public void Remove(UIPanel panel)
         {
-            if (m_panels.Contains(panel))
+            if (_panels.Contains(panel))
             {
-                m_panels.Remove(panel);
+                _panels.Remove(panel);
             }
         }
 
         public void Update()
         {
             int index = 0;
-            foreach (var panel in m_panels)
+            foreach (var panel in _panels)
             {
                 index++;
-                panel.UpdateSortOrder(m_layerIndex + index);
+                panel.UpdateSortOrder(_layerIndex + index);
             }
         }
 
         public void Release()
         {
-            m_panels.Clear();
+            _panels.Clear();
         }
     }
 
@@ -75,15 +76,15 @@ namespace UFramework.UI
     /// </summary>
     public static class LayerAgents
     {
-        readonly static Dictionary<Layer, LayerGroup> layerDictionary = new Dictionary<Layer, LayerGroup>();
+        readonly static Dictionary<Layer, LayerGroup> layerDict = new Dictionary<Layer, LayerGroup>();
 
         public static int Register(UIPanel panel)
         {
             LayerGroup group;
-            if (!layerDictionary.TryGetValue(panel.layer, out group))
+            if (!layerDict.TryGetValue(panel.layer, out group))
             {
                 group = new LayerGroup(panel.layer);
-                layerDictionary.Add(panel.layer, group);
+                layerDict.Add(panel.layer, group);
             }
             return group.Register(panel);
         }
@@ -91,7 +92,7 @@ namespace UFramework.UI
         public static void Remove(UIPanel panel)
         {
             LayerGroup group;
-            if (layerDictionary.TryGetValue(panel.layer, out group))
+            if (layerDict.TryGetValue(panel.layer, out group))
             {
                 group.Remove(panel);
             }
@@ -99,7 +100,7 @@ namespace UFramework.UI
 
         public static void Update()
         {
-            foreach (KeyValuePair<Layer, LayerGroup> item in layerDictionary)
+            foreach (KeyValuePair<Layer, LayerGroup> item in layerDict)
             {
                 item.Value.Update();
             }
@@ -107,7 +108,7 @@ namespace UFramework.UI
 
         public static void Release()
         {
-            foreach (KeyValuePair<Layer, LayerGroup> item in layerDictionary)
+            foreach (KeyValuePair<Layer, LayerGroup> item in layerDict)
             {
                 item.Value.Release();
             }

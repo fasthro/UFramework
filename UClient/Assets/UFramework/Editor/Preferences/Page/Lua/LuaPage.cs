@@ -12,7 +12,6 @@ using FairyGUI;
 using LuaInterface;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
-using UFramework.Config;
 using UFramework.Lua;
 using UFramework.Tools;
 using UnityEditor;
@@ -25,8 +24,8 @@ namespace UFramework.Editor.Preferences
     public class LuaPage : IPage, IPageBar
     {
         public string menuName { get { return "Lua"; } }
-        static LuaConfig describeObject;
-        static AppConfig app;
+        static LuaSerdata Serdata { get { return Serialize.Serializable<LuaSerdata>.Instance; } }
+        static LuaBuildSerdata BuildSerdata { get { return Serialize.Serializable<LuaBuildSerdata>.Instance; } }
 
         [ShowInInspector]
         [BoxGroup("General Setting")]
@@ -68,9 +67,6 @@ namespace UFramework.Editor.Preferences
 
         public void OnRenderBefore()
         {
-            app = UConfig.Read<AppConfig>();
-            describeObject = UConfig.Read<LuaConfig>();
-
             InitGeneralSetting();
             InitBuiltInSearchPathItemList();
             InitWrap();
@@ -101,13 +97,11 @@ namespace UFramework.Editor.Preferences
 
         public void OnSaveDescribe()
         {
-            if (describeObject == null) return;
-
             SearchPathItemDescribeSave();
             WrapDescribeSave();
             GeneralSettingSave();
 
-            describeObject.Save();
+            Serdata.Serialization();
         }
 
         #region General Setting
@@ -117,12 +111,12 @@ namespace UFramework.Editor.Preferences
         /// </summary>
         private void InitGeneralSetting()
         {
-            byteEncode = describeObject.byteEncode;
+            byteEncode = Serdata.byteEncode;
         }
 
         private void GeneralSettingSave()
         {
-            describeObject.byteEncode = byteEncode;
+            Serdata.byteEncode = byteEncode;
         }
 
         #endregion
@@ -135,12 +129,12 @@ namespace UFramework.Editor.Preferences
         private void InitBuiltInSearchPathItemList()
         {
             searchPaths.Clear();
-            if (describeObject.searchPaths != null)
+            if (Serdata.searchPaths != null)
             {
-                for (int i = 0; i < describeObject.searchPaths.Length; i++)
+                for (int i = 0; i < Serdata.searchPaths.Length; i++)
                 {
                     var item = new LuaSearchPathItem();
-                    item.path = describeObject.searchPaths[i];
+                    item.path = Serdata.searchPaths[i];
                     searchPaths.Add(item);
                 }
             }
@@ -189,10 +183,10 @@ namespace UFramework.Editor.Preferences
         private void SearchPathItemDescribeSave()
         {
             var count = searchPaths.Count;
-            describeObject.searchPaths = new string[count];
+            Serdata.searchPaths = new string[count];
             for (int i = 0; i < count; i++)
             {
-                describeObject.searchPaths[i] = searchPaths[i].path;
+                Serdata.searchPaths[i] = searchPaths[i].path;
             }
         }
 
@@ -223,12 +217,12 @@ namespace UFramework.Editor.Preferences
             }
 
             wrapBindTypes.Clear();
-            if (describeObject.wrapClassNames != null)
+            if (Serdata.wrapClassNames != null)
             {
-                for (int i = 0; i < describeObject.wrapClassNames.Length; i++)
+                for (int i = 0; i < Serdata.wrapClassNames.Length; i++)
                 {
                     var item = new LuaWrapBindTypeItem();
-                    item.className = describeObject.wrapClassNames[i];
+                    item.className = Serdata.wrapClassNames[i];
                     wrapBindTypes.Add(item);
                 }
 
@@ -251,7 +245,7 @@ namespace UFramework.Editor.Preferences
                 bindTypes.Add(wrapBindTypes[i].bindType);
             }
             // fairyGUI
-            if (UConfig.Read<AppConfig>().useFairyGUI)
+            if (Serialize.Serializable<AppSerdata>.Instance.useFairyGUI)
             {
                 bindTypes.Add(_GT(typeof(EventContext)));
                 bindTypes.Add(_GT(typeof(EventDispatcher)));
@@ -371,11 +365,11 @@ namespace UFramework.Editor.Preferences
                 }
             }
 
-            describeObject.wrapClassNames = new string[num];
+            Serdata.wrapClassNames = new string[num];
             foreach (var className in tbs)
             {
                 num--;
-                describeObject.wrapClassNames[num] = className;
+                Serdata.wrapClassNames[num] = className;
             }
         }
 
@@ -390,15 +384,14 @@ namespace UFramework.Editor.Preferences
         {
             string[] patterns = new string[] { "*.lua", "*.pb" };
             var outPath = IOPath.PathCombine(App.TempDirectory, "Lua");
-            var bc = UConfig.Read<LuaBuildConfig>();
             if (clean)
             {
                 IOPath.DirectoryClear(outPath);
-                bc.files.Clear();
+                BuildSerdata.files.Clear();
             }
 
             Dictionary<string, LuaBuildFile> fileMap = new Dictionary<string, LuaBuildFile>();
-            foreach (var item in bc.files)
+            foreach (var item in BuildSerdata.files)
             {
                 if (!fileMap.ContainsKey(item.sourcePath))
                     fileMap.Add(item.sourcePath, item);
@@ -460,16 +453,16 @@ namespace UFramework.Editor.Preferences
                 else fileMap.Add(file.sourcePath, file);
             }
 
-            bc.files.Clear();
+            BuildSerdata.files.Clear();
             foreach (var item in fileMap)
             {
                 var file = item.Value;
                 if (nFileMap.Contains(file.sourcePath))
-                    bc.files.Add(file);
+                    BuildSerdata.files.Add(file);
                 else
                     IOPath.FileDelete(IOPath.PathCombine(outPath, file.destPath));
             }
-            bc.Save();
+            BuildSerdata.Serialization();
 
             fileMap.Clear();
             nFileMap.Clear();

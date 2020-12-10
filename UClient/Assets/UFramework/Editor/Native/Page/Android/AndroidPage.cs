@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.IO;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
-using UFramework.Config;
 using UnityEngine;
 
 namespace UFramework.Editor.Native
@@ -16,7 +15,7 @@ namespace UFramework.Editor.Native
     public class AndroidPage : IPage
     {
         public string menuName { get { return "Android"; } }
-        static AndroidNativeConfig describeObject;
+        static AndroidNativeSerdata DescribeObject { get { return Serialize.Serializable<AndroidNativeSerdata>.Instance; } }
 
         // 工程路径
         [HideInInspector]
@@ -39,16 +38,15 @@ namespace UFramework.Editor.Native
         {
             ProjectPath = IOPath.PathCombine(Environment.CurrentDirectory, "Native", "Android");
 
-            describeObject = UConfig.Read<AndroidNativeConfig>();
             modules.Clear();
-            for (int i = 0; i < describeObject.modules.Length; i++) { }
-            modules.AddRange(describeObject.modules);
+            for (int i = 0; i < DescribeObject.modules.Length; i++) { }
+            modules.AddRange(DescribeObject.modules);
         }
 
         public void OnSaveDescribe()
         {
-            describeObject.modules = modules.ToArray();
-            describeObject.Save();
+            DescribeObject.modules = modules.ToArray();
+            DescribeObject.Serialization();
         }
 
         private void OnUpdateAllAARTitleBarGUI()

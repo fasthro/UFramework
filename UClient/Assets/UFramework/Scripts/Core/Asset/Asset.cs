@@ -15,9 +15,21 @@ namespace UFramework.Assets
     [MonoSingletonPath("UFramework/Asset")]
     public class Asset : MonoSingleton<Asset>
     {
+        /// <summary>
+        /// AssetBundle 后缀
+        /// </summary>
         readonly public static string Extension = ".unity3d";
 
-        readonly string[] _dependencies = new string[0];
+        /// <summary>
+        /// 开发模式
+        /// </summary>
+        /// <value></value>
+        public static bool Develop { get; private set; }
+
+        /// <summary>
+        /// AssetBundlePath
+        /// </summary>
+        private static string AssetBundlePath;
 
         /// <summary>
         /// asset to bundle mapping
@@ -25,7 +37,7 @@ namespace UFramework.Assets
         /// <typeparam name="string">asset</typeparam>
         /// <typeparam name="string">bundle</typeparam>
         /// <returns></returns>
-        private static Dictionary<string, string> asset2BundleDictionary = new Dictionary<string, string>();
+        private static Dictionary<string, string> Asset2BundleDict = new Dictionary<string, string>();
 
         /// <summary>
         /// bundle to dependencies mapping
@@ -33,7 +45,7 @@ namespace UFramework.Assets
         /// <typeparam name="string">bundle</typeparam>
         /// <typeparam name="string[]">dependencies bundle</typeparam>
         /// <returns></returns>
-        private static Dictionary<string, string[]> bundle2DependencieDictionary = new Dictionary<string, string[]>();
+        private static Dictionary<string, string[]> Bundle2DependencieDict = new Dictionary<string, string[]>();
 
         /// <summary>
         /// assets
@@ -41,7 +53,7 @@ namespace UFramework.Assets
         /// <typeparam name="string"></typeparam>
         /// <typeparam name="AssetObject"></typeparam>
         /// <returns></returns>
-        private Dictionary<string, AssetRequest> assetDictionary = new Dictionary<string, AssetRequest>();
+        private Dictionary<string, AssetRequest> _assetDict = new Dictionary<string, AssetRequest>();
 
         /// <summary>
         /// bundles
@@ -49,24 +61,21 @@ namespace UFramework.Assets
         /// <typeparam name="string"></typeparam>
         /// <typeparam name="BundleRequest"></typeparam>
         /// <returns></returns>
-        private Dictionary<string, AssetRequest> bundleDictionary = new Dictionary<string, AssetRequest>();
+        private Dictionary<string, AssetRequest> _bundleDict = new Dictionary<string, AssetRequest>();
 
-        /// <summary>
-        /// 初始化完成事件
-        /// </summary>
-        private Action<bool> onInitializeCompleted;
-
-        // assetBundlePath
-        static string assetBundlePath;
+        private Action<bool> _onInitializeCompleted;
+        private string[] _dependencies = new string[0];
 
         /// <summary>
         /// 初始化
         /// </summary>
+        /// <param name="develop"></param>
         /// <param name="onCompleted"></param>
         public void Initialize(Action<bool> onCompleted)
         {
-            assetBundlePath = IOPath.PathCombine(Application.persistentDataPath, Platform.RuntimePlatformCurrentName);
-            onInitializeCompleted = onCompleted;
+            Develop = Serialize.Serializable<AppSerdata>.Instance.isDevelopmentVersion;
+            AssetBundlePath = IOPath.PathCombine(Application.persistentDataPath, Platform.RuntimePlatformCurrentName);
+            _onInitializeCompleted = onCompleted;
             ManifestRequest.Allocate().AddCallback(OnInitialize).Load();
         }
 
@@ -74,7 +83,7 @@ namespace UFramework.Assets
         {
             if (!request.isDone)
             {
-                onInitializeCompleted(false);
+                _onInitializeCompleted(false);
                 return;
             }
 
@@ -86,7 +95,7 @@ namespace UFramework.Assets
             for (int i = 0; i < bundles.Length; i++)
             {
                 var bundle = bundles[i];
-                bundle2DependencieDictionary[bundle.name] = Array.ConvertAll(bundle.dependencies, id => bundles[id].name);
+                Bundle2DependencieDict[bundle.name] = Array.ConvertAll(bundle.dependencies, id => bundles[id].name);
             }
 
             for (int i = 0; i < assets.Length; i++)
@@ -95,7 +104,7 @@ namespace UFramework.Assets
                 var path = string.Format("{0}/{1}", directorys[asset.dirIndex], asset.name);
                 if (asset.bundle >= 0 && asset.bundle < bundles.Length)
                 {
-                    asset2BundleDictionary[path] = bundles[asset.bundle].name;
+                    Asset2BundleDict[path] = bundles[asset.bundle].name;
                 }
                 else
                 {
@@ -105,7 +114,7 @@ namespace UFramework.Assets
 
             request.Unload();
 
-            onInitializeCompleted(true);
+            _onInitializeCompleted(true);
         }
 
         /// <summary>
@@ -118,7 +127,7 @@ namespace UFramework.Assets
         {
             string bundleUrl = bundleName;
             AssetRequest bundle;
-            if (bundleDictionary.TryGetValue(bundleName, out bundle))
+            if (_bundleDict.TryGetValue(bundleName, out bundle))
             {
                 return bundle as T;
             }
@@ -134,11 +143,11 @@ namespace UFramework.Assets
             {
                 if (async) bundle = BundleAsyncRequest.Allocate();
                 else bundle = BundleRequest.Allocate();
-                bundle.url = IOPath.PathCombine(assetBundlePath, bundleName);
+                bundle.url = IOPath.PathCombine(AssetBundlePath, bundleName);
             }
 
             bundle.name = bundleName;
-            bundleDictionary.Add(bundleName, bundle);
+            _bundleDict.Add(bundleName, bundle);
 
             return bundle as T;
         }
@@ -154,12 +163,12 @@ namespace UFramework.Assets
         public T GetAsset<T>(string url, Type type, bool async) where T : AssetRequest
         {
             AssetRequest asset;
-            if (assetDictionary.TryGetValue(url, out asset))
+            if (_assetDict.TryGetValue(url, out asset))
             {
                 return asset as T;
             }
             // bundle asset
-            if (asset2BundleDictionary.ContainsKey(url))
+            if (Asset2BundleDict.ContainsKey(url))
             {
                 if (async) asset = BundleAssetAsyncRequest.Allocate();
                 else asset = BundleAssetRequest.Allocate();
@@ -182,7 +191,7 @@ namespace UFramework.Assets
             asset.name = name;
             asset.url = url;
             asset.assetType = type;
-            assetDictionary.Add(url, asset);
+            _assetDict.Add(url, asset);
 
             return asset as T;
         }
@@ -196,13 +205,13 @@ namespace UFramework.Assets
             Logger.Debug("recycle asset: " + request.name);
             if (request.isAsset)
             {
-                if (assetDictionary.ContainsKey(request.name))
-                    assetDictionary.Remove(request.name);
+                if (_assetDict.ContainsKey(request.name))
+                    _assetDict.Remove(request.name);
             }
             else
             {
-                if (bundleDictionary.ContainsKey(request.name))
-                    bundleDictionary.Remove(request.name);
+                if (_bundleDict.ContainsKey(request.name))
+                    _bundleDict.Remove(request.name);
             }
         }
 
@@ -214,7 +223,7 @@ namespace UFramework.Assets
         public string GetBundleNameWithAssetName(string asset)
         {
             string bundle;
-            if (asset2BundleDictionary.TryGetValue(asset, out bundle))
+            if (Asset2BundleDict.TryGetValue(asset, out bundle))
                 return bundle;
             Logger.Error(string.Format("{0} not exist.", asset));
             return null;
@@ -228,7 +237,7 @@ namespace UFramework.Assets
         public string[] GetDependencies(string bundle)
         {
             string[] dependencies;
-            if (bundle2DependencieDictionary.TryGetValue(bundle, out dependencies))
+            if (Bundle2DependencieDict.TryGetValue(bundle, out dependencies))
             {
                 return dependencies;
             }

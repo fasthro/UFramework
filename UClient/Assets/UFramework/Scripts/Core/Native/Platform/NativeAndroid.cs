@@ -14,7 +14,7 @@ namespace UFramework.Natives
         /// </summary>
         public readonly static string MAIN_PACKAGE = "com.futureruler.uframework";
 
-        private static AndroidJavaObject _context;
+        static AndroidJavaObject _Context;
 
         /// <summary>
         /// context
@@ -23,15 +23,15 @@ namespace UFramework.Natives
         {
             get
             {
-                if (_context == null)
+                if (_Context == null)
                 {
-                    _context = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
+                    _Context = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
                 }
-                return _context;
+                return _Context;
             }
         }
 
-        private static string _packageName;
+        static string _PackageName;
 
         /// <summary>
         /// package name
@@ -41,15 +41,15 @@ namespace UFramework.Natives
         {
             get
             {
-                if (string.IsNullOrEmpty(_packageName))
+                if (string.IsNullOrEmpty(_PackageName))
                 {
-                    _packageName = Context.Call<string>("getPackageName");
+                    _PackageName = Context.Call<string>("getPackageName");
                 }
-                return _packageName;
+                return _PackageName;
             }
         }
 
-        private static AndroidJavaObject _packageInfo;
+        static AndroidJavaObject _PackageInfo;
 
         /// <summary>
         /// package info
@@ -59,15 +59,15 @@ namespace UFramework.Natives
         {
             get
             {
-                if (_packageInfo == null)
+                if (_PackageInfo == null)
                 {
-                    _packageInfo = Context.Call<AndroidJavaObject>("getPackageManager").Call<AndroidJavaObject>("getPackageInfo", PackageName, 0);
+                    _PackageInfo = Context.Call<AndroidJavaObject>("getPackageManager").Call<AndroidJavaObject>("getPackageInfo", PackageName, 0);
                 }
-                return _packageInfo;
+                return _PackageInfo;
             }
         }
 
-        private static int _versionCode = -1;
+        static int _VersionCode = -1;
 
         /// <summary>
         /// version code
@@ -77,24 +77,24 @@ namespace UFramework.Natives
         {
             get
             {
-                if (_versionCode == -1)
+                if (_VersionCode == -1)
                 {
-                    _versionCode = PackageInfo.Get<int>("versionCode");
+                    _VersionCode = PackageInfo.Get<int>("versionCode");
                 }
-                return _versionCode;
+                return _VersionCode;
             }
         }
 
-        private static AndroidJavaClass _native;
-        public static AndroidJavaClass native
+        private static AndroidJavaClass _NativeClass;
+        public static AndroidJavaClass NativeClass
         {
             get
             {
-                if (_native == null)
+                if (_NativeClass == null)
                 {
-                    _native = new AndroidJavaClass(MAIN_PACKAGE + ".App");
+                    _NativeClass = new AndroidJavaClass(MAIN_PACKAGE + ".App");
                 }
-                return _native;
+                return _NativeClass;
             }
         }
 
@@ -103,7 +103,7 @@ namespace UFramework.Natives
         /// </summary>
         public static void Initialize()
         {
-            native.CallStatic("initialize", Context);
+            NativeClass.CallStatic("initialize", Context);
             ObbDownloader.Initialize();
         }
     }

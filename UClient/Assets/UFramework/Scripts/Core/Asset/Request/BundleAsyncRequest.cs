@@ -12,11 +12,11 @@ namespace UFramework.Assets
 {
     public class BundleAsyncRequest : AssetRequest
     {
-        private AssetBundleCreateRequest request;
         public AssetBundle assetBundle { get { return asset as AssetBundle; } }
-        private List<BundleAsyncRequest> dependencies = new List<BundleAsyncRequest>();
-
         public override bool isAsset { get { return false; } }
+
+        private AssetBundleCreateRequest _request;
+        private List<BundleAsyncRequest> _dependencies = new List<BundleAsyncRequest>();
 
         public static BundleAsyncRequest Allocate()
         {
@@ -27,12 +27,12 @@ namespace UFramework.Assets
         {
             loadState = LoadState.LoadBundle;
 
-            request = AssetBundle.LoadFromFileAsync(url);
-            yield return request;
+            _request = AssetBundle.LoadFromFileAsync(url);
+            yield return _request;
 
-            if (loadState == LoadState.LoadBundle && request.isDone)
+            if (loadState == LoadState.LoadBundle && _request.isDone)
             {
-                asset = request.assetBundle;
+                asset = _request.assetBundle;
                 loadState = LoadState.Loaded;
                 OnAsyncCallback();
             }
@@ -54,7 +54,7 @@ namespace UFramework.Assets
                 var bundle = Asset.Instance.GetBundle<BundleAsyncRequest>(url, true);
                 bundle.AddCallback(OnBundleDone);
                 bundle.Load();
-                dependencies.Add(bundle);
+                _dependencies.Add(bundle);
             }
             StartCoroutine();
         }
@@ -69,19 +69,19 @@ namespace UFramework.Assets
         public override void Unload()
         {
             base.Unload();
-            for (int i = 0; i < dependencies.Count; i++)
-                dependencies[i].Unload();
+            for (int i = 0; i < _dependencies.Count; i++)
+                _dependencies[i].Unload();
         }
 
         protected override void OnReferenceEmpty()
         {
-            dependencies.Clear();
+            _dependencies.Clear();
             if (assetBundle != null)
             {
                 assetBundle.Unload(true);
                 asset = null;
             }
-            request = null;
+            _request = null;
             loadState = LoadState.Unload;
             base.OnReferenceEmpty();
         }

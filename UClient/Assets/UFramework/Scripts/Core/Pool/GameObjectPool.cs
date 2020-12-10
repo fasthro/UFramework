@@ -15,11 +15,29 @@ namespace UFramework.Pool
     public class GammeObjectPoolIdentity : MonoBehaviour, IPoolObject
     {
         // 回收后60s内没有被唤醒使用，直接通知Unit销毁处理
-        readonly static float DISPOSE_SLEEP_TIME = 60f;
+        const float DISPOSE_SLEEP_TIME = 60f;
 
         public string id;
         public float sleepTime { get; set; }
         public bool isRecycled { get; set; }
+
+        public bool isDispose
+        {
+            get
+            {
+                if (isRecycled)
+                {
+                    if (sleepTime > 0)
+                    {
+                        if (Time.time - sleepTime > DISPOSE_SLEEP_TIME)
+                        {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+        }
 
         public void OnAllocate()
         {
@@ -45,24 +63,6 @@ namespace UFramework.Pool
                 sleepTime = time;
             }
         }
-
-        public bool IsDispose
-        {
-            get
-            {
-                if (isRecycled)
-                {
-                    if (sleepTime > 0)
-                    {
-                        if (Time.time - sleepTime > DISPOSE_SLEEP_TIME)
-                        {
-                            return true;
-                        }
-                    }
-                }
-                return false;
-            }
-        }
     }
 
     /// <summary>
@@ -73,16 +73,19 @@ namespace UFramework.Pool
         public string id { get; private set; }
         public GameObject prefab { get; private set; }
 
-        private Transform m_parent;
-
-        // 激活与回收的平衡数量（当平衡数量为0时，说明外界没有使用对象池中的对象）
-        private int m_balanceCount;
-
-        // 是否处于空闲状态
+        /// <summary>
+        /// 是否处于空闲状态
+        /// </summary>
+        /// <value></value>
         public bool isFree
         {
-            get { return m_stacks.Count > 0 && m_balanceCount <= 0; }
+            get { return _stacks.Count > 0 && _balanceCount <= 0; }
         }
+
+        private Transform _parentTrans;
+
+        // 激活与回收的平衡数量（当平衡数量为0时，说明外界没有使用对象池中的对象）
+        private int _balanceCount;
 
         /// <summary>
         /// Pool Unit
@@ -94,7 +97,7 @@ namespace UFramework.Pool
         {
             this.id = id;
             this.prefab = prefab;
-            this.m_parent = root;
+            this._parentTrans = root;
         }
 
         /// <summary>
@@ -104,21 +107,21 @@ namespace UFramework.Pool
         public override GammeObjectPoolIdentity Allocate()
         {
             GammeObjectPoolIdentity poolIdentity = null;
-            if (m_stacks.Count > 0)
+            if (_stacks.Count > 0)
             {
-                poolIdentity = m_stacks.Pop();
-                poolIdentity.gameObject.transform.SetParent(m_parent);
+                poolIdentity = _stacks.Pop();
+                poolIdentity.gameObject.transform.SetParent(_parentTrans);
             }
             else
             {
                 var newGo = GameObject.Instantiate<GameObject>(prefab);
-                newGo.transform.SetParent(m_parent);
+                newGo.transform.SetParent(_parentTrans);
                 poolIdentity = newGo.AddComponent<GammeObjectPoolIdentity>();
                 poolIdentity.id = id;
             }
             poolIdentity.OnAllocate();
             poolIdentity.gameObject.SetActive(true);
-            m_balanceCount++;
+            _balanceCount++;
             return poolIdentity;
         }
 
@@ -143,9 +146,9 @@ namespace UFramework.Pool
 
             poolIdentity.OnRecycle();
             poolIdentity.gameObject.SetActive(false);
-            poolIdentity.gameObject.transform.SetParent(m_parent);
-            m_stacks.Push(poolIdentity);
-            m_balanceCount--;
+            poolIdentity.gameObject.transform.SetParent(_parentTrans);
+            _stacks.Push(poolIdentity);
+            _balanceCount--;
             return true;
         }
 
@@ -155,7 +158,7 @@ namespace UFramework.Pool
         /// <param name="poolIdentity"></param>
         public void DisposeSleepGameObject(GammeObjectPoolIdentity poolIdentity)
         {
-            var newPoolIdentity = m_stacks.Pop();
+            var newPoolIdentity = _stacks.Pop();
             poolIdentity.ResetSleepTime(newPoolIdentity.sleepTime);
             newPoolIdentity.gameObject.transform.SetParent(null);
             GameObject.Destroy(newPoolIdentity.gameObject);

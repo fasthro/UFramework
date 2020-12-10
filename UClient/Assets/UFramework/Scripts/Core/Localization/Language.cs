@@ -5,50 +5,35 @@
  */
 using System.Collections.Generic;
 using UFramework.Assets;
-using UFramework.Config;
 using UnityEngine;
 
 namespace UFramework.Localization
 {
     public class Language : Singleton<Language>
     {
-        /// <summary>
-        /// 语言类型
-        /// </summary>
-        /// <value></value>
-        private SystemLanguage m_languageType;
+        static string DataPath;
 
-        /// <summary>
-        /// 语言类型文本
-        /// </summary>
-        private string m_languageTypeString;
+        private SystemLanguage _langType;
+        private string _langTypeStr;
 
-        /// <summary>
-        /// 语言缓存
-        /// </summary>
-        /// <typeparam name="int"></typeparam>
-        /// <typeparam name="string[]"></typeparam>
-        /// <returns></returns>
-        private Dictionary<int, string[]> m_modelDictonary = new Dictionary<int, string[]>();
-
-        static string dataPath;
+        private Dictionary<int, string[]> _modelDict = new Dictionary<int, string[]>();
 
         protected override void OnSingletonAwake()
         {
-            dataPath = IOPath.PathCombine(App.AssetsDirectory, "Language", "Data");
+            DataPath = IOPath.PathCombine(App.AssetsDirectory, "Language", "Data");
 
-            var app = UConfig.Read<AppConfig>();
+            var app = Serialize.Serializable<AppSerdata>.Instance;
             if (app.useSystemLanguage)
             {
-                m_languageType = Application.systemLanguage;
+                _langType = Application.systemLanguage;
             }
 
-            if (!app.supportedLanguages.Contains(m_languageType))
+            if (!app.supportedLanguages.Contains(_langType))
             {
-                m_languageType = app.defaultLanguage;
+                _langType = app.defaultLanguage;
             }
 
-            m_languageTypeString = m_languageType.ToString();
+            _langTypeStr = _langType.ToString();
         }
 
         /// <summary>
@@ -60,7 +45,7 @@ namespace UFramework.Localization
         private string _Get(int model, int key)
         {
             string[] ls = null;
-            if (m_modelDictonary.TryGetValue(model, out ls))
+            if (_modelDict.TryGetValue(model, out ls))
             {
                 if (key >= 0 && key < ls.Length)
                 {
@@ -70,7 +55,7 @@ namespace UFramework.Localization
             else
             {
                 _Load(model);
-                if (m_modelDictonary.TryGetValue(model, out ls))
+                if (_modelDict.TryGetValue(model, out ls))
                 {
                     if (key >= 0 && key < ls.Length)
                     {
@@ -88,10 +73,10 @@ namespace UFramework.Localization
         /// <param name="model"></param>
         void _Load(int model)
         {
-            if (m_modelDictonary.ContainsKey(model)) return;
+            if (_modelDict.ContainsKey(model)) return;
 
             string text = "";
-            string filePath = IOPath.PathCombine(dataPath, m_languageTypeString, model + ".txt");
+            string filePath = IOPath.PathCombine(DataPath, _langTypeStr, model + ".txt");
 #if UNITY_EDITOR
             text = IOPath.FileReadText(filePath);
 #else
@@ -99,7 +84,7 @@ namespace UFramework.Localization
             text = asset.GetAsset<TextAsset>().text;
             asset.Unload();
 #endif
-            m_modelDictonary.Add(model, text.Split('\n'));
+            _modelDict.Add(model, text.Split('\n'));
         }
 
         /// <summary>

@@ -16,7 +16,7 @@ namespace UFramework.Network
         /// byte[] [0-3]:cmd [4-7]:session
         /// </summary>
         public readonly static int HEADER_SIZE = 8;
-        private static int SESSION = 0;
+        static int SESSION = 0;
 
         /// <summary>
         /// 命令

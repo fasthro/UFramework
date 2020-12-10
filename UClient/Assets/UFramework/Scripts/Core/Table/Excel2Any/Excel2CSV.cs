@@ -12,22 +12,21 @@ namespace UFramework.Table
 {
     public class Excel2CSV : Excel2Any
     {
-        private StringBuilder m_stringBuilder = new StringBuilder();
-        private ExcelReader m_reader;
+        private StringBuilder _sb = new StringBuilder();
 
         public Excel2CSV(ExcelReader reader) : base(reader)
         {
-            m_reader = reader;
-            m_stringBuilder.Clear();
+            _reader = reader;
+            _sb.Clear();
 
             // fields
-            m_stringBuilder.Clear();
+            _sb.Clear();
             for (int i = 0; i < reader.fields.Count; i++)
             {
-                if (i == reader.fields.Count - 1) { m_stringBuilder.Append(reader.fields[i]); }
-                else { m_stringBuilder.Append(reader.fields[i] + ","); }
+                if (i == reader.fields.Count - 1) { _sb.Append(reader.fields[i]); }
+                else { _sb.Append(reader.fields[i] + ","); }
             }
-            m_stringBuilder.Append("\r\n");
+            _sb.Append("\r\n");
 
             // data
             for (int i = 0; i < reader.rows.Count; i++)
@@ -35,12 +34,12 @@ namespace UFramework.Table
                 Dictionary<string, object> data = new Dictionary<string, object>();
                 for (int k = 0; k < reader.fields.Count; k++)
                 {
-                    if (k == reader.fields.Count - 1) { m_stringBuilder.Append(WrapContext(reader.rows[i].datas[k], reader.types[k])); }
-                    else { m_stringBuilder.Append(WrapContext(reader.rows[i].datas[k], reader.types[k]) + ","); }
+                    if (k == reader.fields.Count - 1) { _sb.Append(WrapContext(reader.rows[i].datas[k], reader.types[k])); }
+                    else { _sb.Append(WrapContext(reader.rows[i].datas[k], reader.types[k]) + ","); }
                 }
-                m_stringBuilder.Append("\r\n");
+                _sb.Append("\r\n");
             }
-            IOPath.FileCreateText(reader.options.dataOutFilePath, m_stringBuilder.ToString());
+            IOPath.FileCreateText(reader.options.dataOutFilePath, _sb.ToString());
         }
 
         private string WrapContext(string content, FieldType type)
@@ -97,12 +96,12 @@ namespace UFramework.Table
                 }
                 else
                 {
-                    Logger.Error("[" + m_reader.options.tableName + "] table not find language: " + datas[0] + ":" + datas[1]);
+                    Logger.Error("[" + _reader.options.tableName + "] table not find language: " + datas[0] + ":" + datas[1]);
                 }
             }
             else
             {
-                Logger.Error("[" + m_reader.options.tableName + "] table language format error!");
+                Logger.Error("[" + _reader.options.tableName + "] table language format error!");
             }
 
             return "0:0";

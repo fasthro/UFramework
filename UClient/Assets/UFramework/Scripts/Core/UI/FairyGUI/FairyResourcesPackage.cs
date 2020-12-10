@@ -16,7 +16,10 @@ namespace UFramework.UI
     {
         public UIPackage package { get; private set; }
 
-        public FairyResourcesPackage(string packageName) : base(packageName) { }
+        public FairyResourcesPackage(string packageName) : base(packageName)
+        {
+
+        }
 
         protected override void LoadMain()
         {
@@ -34,25 +37,25 @@ namespace UFramework.UI
                     {
                         if (item.Key == "name")
                         {
-                            if (!dependences.Contains(item.Value) && !packageName.Equals(item.Value))
+                            if (!_dependences.Contains(item.Value) && !packageName.Equals(item.Value))
                             {
-                                dependences.Add(item.Value);
+                                _dependences.Add(item.Value);
                             }
                         }
                     }
                 }
 
-                dependenCount = dependences.Count;
-                foreach (var item in dependences)
+                _dependenCount = _dependences.Count;
+                foreach (var item in _dependences)
                     PackageAgents.LoadFairyResource(item, OnDependen);
-                if (dependenCount == 0) LoadCompleted();
+                if (_dependenCount == 0) LoadCompleted();
             }
         }
 
         private void OnDependen()
         {
-            dependenCount--;
-            if (dependenCount <= 0)
+            _dependenCount--;
+            if (_dependenCount <= 0)
             {
                 LoadCompleted();
             }
@@ -60,7 +63,7 @@ namespace UFramework.UI
 
         protected override void OnReferenceEmpty()
         {
-            if (isStandby) return;
+            if (_isStandby) return;
 
             base.OnReferenceEmpty();
 
@@ -68,9 +71,9 @@ namespace UFramework.UI
                 UIPackage.RemovePackage(package.id);
             package = null;
 
-            foreach (var item in dependences)
+            foreach (var item in _dependences)
                 PackageAgents.Unload(item);
-            dependences.Clear();
+            _dependences.Clear();
         }
     }
 }

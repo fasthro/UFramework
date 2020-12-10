@@ -7,7 +7,6 @@
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
-using UFramework.Config;
 using UnityEditor;
 using UnityEngine;
 
@@ -16,21 +15,15 @@ namespace UFramework.Editor.VersionControl
     public class BuilderPage : IPage, IPageBar
     {
         public string menuName { get { return "Build"; } }
-        static VersionControl_BuildConfig describeObject;
+        static VersionBuildSerdata Serdata { get { return Serialize.Serializable<VersionBuildSerdata>.Instance; } }
 
         /// <summary>
         /// 版本
         /// </summary>
-        [OnValueChanged("OnValueChanged_appVersion")]
+        [OnValueChanged("OnSaveDescribe")]
         [DisableIf("_isBuild")]
         [LabelText("App Version (Only Display)")]
         public string appVersion;
-
-        private void OnValueChanged_appVersion()
-        {
-            describeObject.appVersion = appVersion;
-            describeObject.Save();
-        }
 
         [ShowInInspector, HideLabel]
         public BuildPageBuildTable buildTable = new BuildPageBuildTable();
@@ -44,8 +37,7 @@ namespace UFramework.Editor.VersionControl
 
         public void OnRenderBefore()
         {
-            describeObject = UConfig.Read<VersionControl_BuildConfig>();
-            appVersion = describeObject.appVersion;
+            appVersion = Serdata.appVersion;
             if (string.IsNullOrEmpty(appVersion))
                 appVersion = "1.0.0";
 
@@ -54,8 +46,8 @@ namespace UFramework.Editor.VersionControl
 
         public void OnSaveDescribe()
         {
-            describeObject.appVersion = appVersion;
-            describeObject.Save();
+            Serdata.appVersion = appVersion;
+            Serdata.Serialization();
         }
 
         public void OnPageBarDraw()
@@ -65,22 +57,22 @@ namespace UFramework.Editor.VersionControl
 
         private void ApplySetting()
         {
-            PlayerSettings.Android.useAPKExpansionFiles = describeObject.packageType == PACKAGE_TYPE.GOOGLE_PLAY_OBB;
-            EditorUserBuildSettings.buildAppBundle = describeObject.packageType == PACKAGE_TYPE.GOOGLE_PLAY_APPBUNDLE;
+            PlayerSettings.Android.useAPKExpansionFiles = Serdata.packageType == PACKAGE_TYPE.GOOGLE_PLAY_OBB;
+            EditorUserBuildSettings.buildAppBundle = Serdata.packageType == PACKAGE_TYPE.GOOGLE_PLAY_APPBUNDLE;
 
-            PlayerSettings.SetScriptingBackend(BuildTargetGroup.iOS, describeObject.scripting);
-            PlayerSettings.SetScriptingBackend(BuildTargetGroup.Android, describeObject.scripting);
-            PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, describeObject.scripting);
+            PlayerSettings.SetScriptingBackend(BuildTargetGroup.iOS, Serdata.scripting);
+            PlayerSettings.SetScriptingBackend(BuildTargetGroup.Android, Serdata.scripting);
+            PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, Serdata.scripting);
 
             // arm64
-            var _googlePlaySupportARM64 = describeObject.scripting == ScriptingImplementation.IL2CPP && (describeObject.packageType == PACKAGE_TYPE.GOOGLE_PLAY_APPBUNDLE || describeObject.packageType == PACKAGE_TYPE.GOOGLE_PLAY_OBB);
+            var _googlePlaySupportARM64 = Serdata.scripting == ScriptingImplementation.IL2CPP && (Serdata.packageType == PACKAGE_TYPE.GOOGLE_PLAY_APPBUNDLE || Serdata.packageType == PACKAGE_TYPE.GOOGLE_PLAY_OBB);
             if (_googlePlaySupportARM64)
             {
                 PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64 | AndroidArchitecture.ARMv7;
             }
             else
             {
-                if (describeObject.supportARM64)
+                if (Serdata.supportARM64)
                     PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64 | AndroidArchitecture.ARMv7;
                 else
                     PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARMv7;

@@ -15,7 +15,7 @@ namespace UFramework.Pool
 
         protected ObjectPool()
         {
-            m_factory = new ObjectFactory<T>();
+            _factory = new ObjectFactory<T>();
         }
 
         public static ObjectPool<T> Instance
@@ -32,21 +32,21 @@ namespace UFramework.Pool
         // 池最大数量,如果池中数量大于最大数，就移除多余的对象
         public int maxCount
         {
-            get { return m_maxCount; }
+            get { return _maxCount; }
             set
             {
-                m_maxCount = value;
+                _maxCount = value;
 
-                if (m_stacks != null)
+                if (_stacks != null)
                 {
-                    if (m_maxCount > 0)
+                    if (_maxCount > 0)
                     {
-                        if (m_maxCount < m_stacks.Count)
+                        if (_maxCount < _stacks.Count)
                         {
-                            int removeCount = m_stacks.Count - m_maxCount;
+                            int removeCount = _stacks.Count - _maxCount;
                             while (removeCount > 0)
                             {
-                                m_stacks.Pop();
+                                _stacks.Pop();
                                 --removeCount;
                             }
                         }
@@ -73,7 +73,7 @@ namespace UFramework.Pool
             {
                 for (var i = count; i < initCount; ++i)
                 {
-                    Recycle(m_factory.Create());
+                    Recycle(_factory.Create());
                 }
             }
         }
@@ -100,9 +100,9 @@ namespace UFramework.Pool
                 return false;
             }
 
-            if (m_maxCount > 0)
+            if (_maxCount > 0)
             {
-                if (m_stacks.Count >= m_maxCount)
+                if (_stacks.Count >= _maxCount)
                 {
                     return false;
                 }
@@ -110,7 +110,7 @@ namespace UFramework.Pool
 
             obj.isRecycled = true;
             obj.OnRecycle();
-            m_stacks.Push(obj);
+            _stacks.Push(obj);
 
             return true;
         }

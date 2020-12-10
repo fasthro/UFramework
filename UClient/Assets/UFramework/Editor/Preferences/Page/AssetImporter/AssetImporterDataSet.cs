@@ -6,7 +6,7 @@
 
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
-using UFramework.Config;
+using UFramework.Serialize;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
@@ -239,11 +239,11 @@ namespace UFramework.Editor.Preferences.Assets
     }
 
     /// <summary>
-    /// config
+    /// serdata
     /// </summary>
-    public class AssetImporterConfig : IConfigObject
+    public class AssetImporterSerdata : ISerializable
     {
-        public FileAddress address { get { return FileAddress.Editor; } }
+        public SerializableType serializableType { get { return SerializableType.Editor; } }
 
         public string texturePattern = "*.png,*.tga";
         public string modePattern = "*.fbx";
@@ -262,9 +262,9 @@ namespace UFramework.Editor.Preferences.Assets
         public List<TextureItem> modes = new List<TextureItem>();
         public List<TextureItem> audios = new List<TextureItem>();
 
-        public void Save()
+        public void Serialization()
         {
-            UConfig.Write<AssetImporterConfig>(this);
+            Serializable<AssetImporterSerdata>.Serialization(this);
         }
     }
 }

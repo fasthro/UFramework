@@ -5,7 +5,7 @@
  */
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
-using UFramework.Config;
+using UFramework.Serialize;
 using UnityEditor;
 using UnityEngine;
 
@@ -106,17 +106,17 @@ namespace UFramework.Editor.Preferences
     }
 
     /// <summary>
-    /// proto config
+    /// proto serdata
     /// </summary>
-    public class ProtoConfig : IConfigObject
+    public class ProtoSerdata : ISerializable
     {
-        public FileAddress address { get { return FileAddress.Editor; } }
+        public SerializableType serializableType { get { return SerializableType.Editor; } }
 
         public List<ProtoFile> protos = new List<ProtoFile>();
 
-        public void Save()
+        public void Serialization()
         {
-            UConfig.Write<ProtoConfig>(this);
+            Serializable<ProtoSerdata>.Serialization(this);
         }
     }
 }

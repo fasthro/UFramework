@@ -12,9 +12,9 @@ namespace UFramework.Assets
 {
     public class WebAssetRequest : AssetRequest
     {
-        private UnityWebRequest request;
-
         public override bool isAsset { get { return true; } }
+
+        private UnityWebRequest _request;
 
         public static WebAssetRequest Allocate()
         {
@@ -30,37 +30,37 @@ namespace UFramework.Assets
         {
             if (assetType == typeof(AudioClip))
             {
-                request = UnityWebRequestMultimedia.GetAudioClip(url, AudioType.WAV);
+                _request = UnityWebRequestMultimedia.GetAudioClip(url, AudioType.WAV);
             }
             else if (assetType == typeof(Texture2D))
             {
-                request = UnityWebRequestTexture.GetTexture(url);
+                _request = UnityWebRequestTexture.GetTexture(url);
             }
             else
             {
-                request = new UnityWebRequest(url);
-                request.downloadHandler = new DownloadHandlerBuffer();
+                _request = new UnityWebRequest(url);
+                _request.downloadHandler = new DownloadHandlerBuffer();
             }
-            yield return request.SendWebRequest();
-            if (loadState == LoadState.LoadBundle && request.isDone)
+            yield return _request.SendWebRequest();
+            if (loadState == LoadState.LoadBundle && _request.isDone)
             {
                 if (assetType != typeof(Texture2D))
                 {
                     if (assetType != typeof(TextAsset))
                     {
                         if (assetType != typeof(AudioClip))
-                            bytes = request.downloadHandler.data;
+                            bytes = _request.downloadHandler.data;
                         else
-                            asset = DownloadHandlerAudioClip.GetContent(request);
+                            asset = DownloadHandlerAudioClip.GetContent(_request);
                     }
                     else
                     {
-                        text = request.downloadHandler.text;
+                        text = _request.downloadHandler.text;
                     }
                 }
                 else
                 {
-                    asset = DownloadHandlerTexture.GetContent(request);
+                    asset = DownloadHandlerTexture.GetContent(_request);
                 }
                 loadState = LoadState.Loaded;
                 OnAsyncCallback();
@@ -82,10 +82,10 @@ namespace UFramework.Assets
                 Object.Destroy(asset);
                 asset = null;
             }
-            if (request != null)
+            if (_request != null)
             {
-                request.Dispose();
-                request = null;
+                _request.Dispose();
+                _request = null;
             }
             loadState = LoadState.Unload;
             base.OnReferenceEmpty();

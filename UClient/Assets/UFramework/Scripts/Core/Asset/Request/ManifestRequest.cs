@@ -6,16 +6,19 @@
 using System.Collections;
 using UFramework.Pool;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace UFramework.Assets
 {
     public class ManifestRequest : AssetRequest
     {
-        public AssetBundleRequest request { get; private set; }
-        public BundleAsyncRequest bundle { get; private set; }
         public AssetManifest manifest { get; private set; }
-
         public override bool isAsset { get { return true; } }
+
+        private AssetBundleRequest _request;
+        private BundleAsyncRequest _bundle;
 
         public static ManifestRequest Allocate()
         {
@@ -35,11 +38,11 @@ namespace UFramework.Assets
         public override IEnumerator OnCoroutineTaskRun()
         {
             loadState = LoadState.LoadAsset;
-            request = bundle.assetBundle.LoadAssetAsync(AssetManifest.AssetPath, typeof(AssetManifest));
-            yield return request;
-            if (loadState == LoadState.LoadAsset && request.isDone)
+            _request = _bundle.assetBundle.LoadAssetAsync(AssetManifest.AssetPath, typeof(AssetManifest));
+            yield return _request;
+            if (loadState == LoadState.LoadAsset && _request.isDone)
             {
-                asset = request.asset;
+                asset = _request.asset;
                 manifest = asset as AssetManifest;
                 loadState = LoadState.Loaded;
             }
@@ -48,16 +51,26 @@ namespace UFramework.Assets
 
         public override void Load()
         {
-            base.Load();
-            if (loadState != LoadState.Init) return;
-            bundle = Asset.Instance.GetBundle<BundleAsyncRequest>(AssetManifest.AssetBundleFileName, true);
-            if (bundle.isDone)
-                StartCoroutine();
+            if (Asset.Develop)
+            {
+#if UNITY_EDITOR
+                manifest = AssetDatabase.LoadAssetAtPath<AssetManifest>(AssetManifest.AssetPath);
+                OnCallback();
+#endif
+            }
             else
             {
-                loadState = LoadState.LoadBundle;
-                bundle.AddCallback(OnBundleDone);
-                bundle.Load();
+                base.Load();
+                if (loadState != LoadState.Init) return;
+                _bundle = Asset.Instance.GetBundle<BundleAsyncRequest>(AssetManifest.AssetBundleFileName, true);
+                if (_bundle.isDone)
+                    StartCoroutine();
+                else
+                {
+                    loadState = LoadState.LoadBundle;
+                    _bundle.AddCallback(OnBundleDone);
+                    _bundle.Load();
+                }
             }
         }
 
@@ -70,11 +83,12 @@ namespace UFramework.Assets
         protected override void OnReferenceEmpty()
         {
             loadState = LoadState.Unload;
-            if (bundle != null)
-                bundle.Unload();
-            bundle = null;
+            if (_bundle != null)
+                _bundle.Unload();
+            _bundle = null;
             asset = null;
-            request = null;
+            _request = null;
+            manifest = null;
             base.OnReferenceEmpty();
         }
     }

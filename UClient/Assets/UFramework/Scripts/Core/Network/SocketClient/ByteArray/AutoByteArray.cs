@@ -10,14 +10,28 @@ namespace UFramework.Network
 {
     public class AutoByteArray
     {
-        protected byte[] _buffer;
+        /// <summary>
+        /// 数据长度
+        /// </summary>
+        /// <value></value>
         public int size { get; private set; }
+
+        /// <summary>
+        /// 空闲长度
+        /// </summary>
+        /// <value></value>
         public int freeSize { get { return _buffer.Length - size; } }
+
+        /// <summary>
+        /// 是否为空
+        /// </summary>
+        /// <value></value>
         public bool isEmpty
         {
             get { return size == 0; }
         }
 
+        protected byte[] _buffer;
         private int _minCapacity;
 
         /// <summary>

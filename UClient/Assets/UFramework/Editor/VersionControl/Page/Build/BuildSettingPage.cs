@@ -7,7 +7,6 @@
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
-using UFramework.Config;
 using UnityEditor;
 using UnityEngine;
 
@@ -16,7 +15,7 @@ namespace UFramework.Editor.VersionControl
     public class BuildSettingPage : IPage, IPageBar
     {
         public string menuName { get { return "Build/Build Setting"; } }
-        static VersionControl_BuildConfig describeObject;
+        static VersionBuildSerdata Serdata { get { return Serialize.Serializable<VersionBuildSerdata>.Instance; } }
 
         [ShowInInspector, HideLabel]
         [TabGroup("Android")]
@@ -33,28 +32,26 @@ namespace UFramework.Editor.VersionControl
 
         public void OnRenderBefore()
         {
-            describeObject = UConfig.Read<VersionControl_BuildConfig>();
+            androidTable.useCustomKeystore = Serdata.useCustomKeystore;
+            androidTable.keystoreName = Serdata.keystoreName;
+            androidTable.keystorePass = Serdata.keystorePass;
+            androidTable.keyaliasName = Serdata.keyaliasName;
+            androidTable.keyaliasPass = Serdata.keyaliasPass;
 
-            androidTable.useCustomKeystore = describeObject.useCustomKeystore;
-            androidTable.keystoreName = describeObject.keystoreName;
-            androidTable.keystorePass = describeObject.keystorePass;
-            androidTable.keyaliasName = describeObject.keyaliasName;
-            androidTable.keyaliasPass = describeObject.keyaliasPass;
-
-            iosTable.signingTeamID = describeObject.signingTeamID;
+            iosTable.signingTeamID = Serdata.signingTeamID;
         }
 
         public void OnSaveDescribe()
         {
-            describeObject.useCustomKeystore = androidTable.useCustomKeystore;
-            describeObject.keystoreName = androidTable.keystoreName;
-            describeObject.keystorePass = androidTable.keystorePass;
-            describeObject.keyaliasName = androidTable.keyaliasName;
-            describeObject.keyaliasPass = androidTable.keyaliasPass;
+            Serdata.useCustomKeystore = androidTable.useCustomKeystore;
+            Serdata.keystoreName = androidTable.keystoreName;
+            Serdata.keystorePass = androidTable.keystorePass;
+            Serdata.keyaliasName = androidTable.keyaliasName;
+            Serdata.keyaliasPass = androidTable.keyaliasPass;
 
-            describeObject.signingTeamID = iosTable.signingTeamID;
+            Serdata.signingTeamID = iosTable.signingTeamID;
 
-            describeObject.Save();
+            Serdata.Serialization();
         }
 
         public void OnPageBarDraw()

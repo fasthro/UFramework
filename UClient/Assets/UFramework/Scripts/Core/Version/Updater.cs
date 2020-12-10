@@ -6,7 +6,6 @@
 using System.Collections;
 using System.IO;
 using ICSharpCode.SharpZipLib.Zip;
-using UFramework.Config;
 using UFramework.Panel.FairyGUI;
 using UFramework.Coroutine;
 using UFramework.Tools;
@@ -62,6 +61,18 @@ namespace UFramework.VersionControl
     [MonoSingletonPath("UFramework/Updater")]
     public class Updater : MonoSingleton<Updater>
     {
+
+        const string LUA_DIR_NAME = "Lua";
+
+        static string StreamingAssetsPath;
+        static string AssetBundlePath;
+        static string VersionPath;
+        static string VersionOriginalPath;
+        static string VersionStreamingPath;
+        static string LuaPath;
+
+        static string BaseURL;
+
         public float progress
         {
             get { return ((float)_value / (float)_maxValue); }
@@ -73,7 +84,7 @@ namespace UFramework.VersionControl
             {
                 if (_newVersion != null) return _newVersion.version;
                 else if (_appVersion != null) return _appVersion.version;
-                else return UConfig.Read<AppConfig>().version;
+                else return Serialize.Serializable<AppSerdata>.Instance.version;
             }
         }
 
@@ -96,7 +107,7 @@ namespace UFramework.VersionControl
         private Action _onCompleted;
         private UpdaterStep _step;
 
-        private AppConfig _app;
+        private AppSerdata _app;
 
         private int _maxValue;
         private int _value;
@@ -109,38 +120,23 @@ namespace UFramework.VersionControl
 
         private PatchDownloader _downloader;
 
-        #region path
-
-        static string streamingAssetsPath;
-        static string assetBundlePath;
-        static string versionPath;
-        static string versionOriginalPath;
-        static string versionStreamingPath;
-        static string luaPath;
-
-        static string baseURL;
-
-        const string LUA_DIR_NAME = "Lua";
-
-        #endregion
-
         protected override void OnSingletonAwake()
         {
-            _app = UConfig.Read<AppConfig>();
+            _app = Serialize.Serializable<AppSerdata>.Instance;
 
             if (_app.isDevelopmentVersion)
                 return;
 
-            baseURL = _app.versionBaseURL;
+            BaseURL = _app.versionBaseURL;
 
-            streamingAssetsPath = GetStreamingAssetsPath();
-            assetBundlePath = IOPath.PathCombine(Application.persistentDataPath, Platform.RuntimePlatformCurrentName);
-            versionPath = IOPath.PathCombine(Application.persistentDataPath, Version.FileName);
-            versionOriginalPath = versionPath + ".original";
-            versionStreamingPath = IOPath.PathCombine(streamingAssetsPath, Version.FileName, false);
-            luaPath = IOPath.PathCombine(Application.persistentDataPath, LUA_DIR_NAME);
+            StreamingAssetsPath = GetStreamingAssetsPath();
+            AssetBundlePath = IOPath.PathCombine(Application.persistentDataPath, Platform.RuntimePlatformCurrentName);
+            VersionPath = IOPath.PathCombine(Application.persistentDataPath, Version.FileName);
+            VersionOriginalPath = VersionPath + ".original";
+            VersionStreamingPath = IOPath.PathCombine(StreamingAssetsPath, Version.FileName, false);
+            LuaPath = IOPath.PathCombine(Application.persistentDataPath, LUA_DIR_NAME);
 
-            _downloader = new PatchDownloader(baseURL, Application.persistentDataPath, OnCompleted, OnPatchDownloadFailed);
+            _downloader = new PatchDownloader(BaseURL, Application.persistentDataPath, OnCompleted, OnPatchDownloadFailed);
         }
 
         protected override void OnSingletonUpdate(float deltaTime)
@@ -180,8 +176,8 @@ namespace UFramework.VersionControl
             switch (_step)
             {
                 case UpdaterStep.Init:
-                    if (!IOPath.DirectoryExists(assetBundlePath))
-                        IOPath.DirectoryCreate(assetBundlePath);
+                    if (!IOPath.DirectoryExists(AssetBundlePath))
+                        IOPath.DirectoryCreate(AssetBundlePath);
                     break;
                 case UpdaterStep.CheckVersionCopy:
                     UFactoryCoroutine.CreateRun(CheckVersionCopy());
@@ -211,12 +207,12 @@ namespace UFramework.VersionControl
         {
             LoadNewVersion(true);
 
-            var request = UnityWebRequest.Get(versionStreamingPath);
-            request.downloadHandler = new DownloadHandlerFile(versionOriginalPath);
+            var request = UnityWebRequest.Get(VersionStreamingPath);
+            request.downloadHandler = new DownloadHandlerFile(VersionOriginalPath);
             yield return request.SendWebRequest();
             if (request.isDone && string.IsNullOrEmpty(request.error))
             {
-                var version = Version.LoadVersion(versionOriginalPath);
+                var version = Version.LoadVersion(VersionOriginalPath);
                 _maxValue = version.files.Length + version.sFiles.Length;
                 _value = 0;
                 _step = UpdaterStep.Copy;
@@ -250,7 +246,7 @@ namespace UFramework.VersionControl
             for (var index = 0; index < _appVersion.files.Length; index++)
             {
                 var item = _appVersion.files[index];
-                var file = IOPath.PathCombine(IOPath.PathCombine(assetBundlePath, item.name));
+                var file = IOPath.PathCombine(IOPath.PathCombine(AssetBundlePath, item.name));
                 if (!IOPath.FileExists(file))
                     _repairFiles.Add(item);
                 yield return null;
@@ -260,7 +256,7 @@ namespace UFramework.VersionControl
             for (var index = 0; index < _appVersion.sFiles.Length; index++)
             {
                 var item = _appVersion.sFiles[index];
-                var file = IOPath.PathCombine(luaPath, _appVersion.sDirs[item.dirIndex], item.name);
+                var file = IOPath.PathCombine(LuaPath, _appVersion.sDirs[item.dirIndex], item.name);
                 if (!IOPath.FileExists(file))
                     _repairSFiles.Add(item);
                 yield return null;
@@ -289,8 +285,8 @@ namespace UFramework.VersionControl
             for (var index = 0; index < _repairFiles.Count; index++)
             {
                 var item = _repairFiles[index];
-                var request = UnityWebRequest.Get(IOPath.PathCombine(streamingAssetsPath, Platform.RuntimePlatformCurrentName, item.name, false));
-                request.downloadHandler = new DownloadHandlerFile(IOPath.PathCombine(assetBundlePath, item.name));
+                var request = UnityWebRequest.Get(IOPath.PathCombine(StreamingAssetsPath, Platform.RuntimePlatformCurrentName, item.name, false));
+                request.downloadHandler = new DownloadHandlerFile(IOPath.PathCombine(AssetBundlePath, item.name));
                 yield return request.SendWebRequest();
                 request.Dispose();
                 _value++;
@@ -300,8 +296,8 @@ namespace UFramework.VersionControl
             {
                 var item = _repairSFiles[index];
                 var filePath = IOPath.PathCombine(_appVersion.sDirs[item.dirIndex], item.name);
-                var request = UnityWebRequest.Get(IOPath.PathCombine(streamingAssetsPath, LUA_DIR_NAME, filePath, false));
-                request.downloadHandler = new DownloadHandlerFile(IOPath.PathCombine(luaPath, filePath));
+                var request = UnityWebRequest.Get(IOPath.PathCombine(StreamingAssetsPath, LUA_DIR_NAME, filePath, false));
+                request.downloadHandler = new DownloadHandlerFile(IOPath.PathCombine(LuaPath, filePath));
                 yield return request.SendWebRequest();
                 request.Dispose();
                 _value++;
@@ -331,8 +327,8 @@ namespace UFramework.VersionControl
                 yield break;
             }
 
-            var tp = versionPath + ".utemp";
-            var request = UnityWebRequest.Get(baseURL + Version.FileName);
+            var tp = VersionPath + ".utemp";
+            var request = UnityWebRequest.Get(BaseURL + Version.FileName);
             request.downloadHandler = new DownloadHandlerFile(tp);
             yield return request.SendWebRequest();
             var error = request.error;
@@ -391,8 +387,8 @@ namespace UFramework.VersionControl
 
             if (_appVersion == null)
             {
-                var request = UnityWebRequest.Get(versionStreamingPath);
-                request.downloadHandler = new DownloadHandlerFile(versionOriginalPath);
+                var request = UnityWebRequest.Get(VersionStreamingPath);
+                request.downloadHandler = new DownloadHandlerFile(VersionOriginalPath);
                 yield return request.SendWebRequest();
                 if (request.isDone && string.IsNullOrEmpty(request.error))
                     LoadAppVersion(true);
@@ -426,7 +422,7 @@ namespace UFramework.VersionControl
         {
             LoadNewVersion();
 
-            var versionInfo = _newVersion.GetVersionInfo(UConfig.Read<AppConfig>().version);
+            var versionInfo = _newVersion.GetVersionInfo(_app.version);
 
             _maxValue = _newVersion.files.Length + _newVersion.sFiles.Length;
             _value = 0;
@@ -436,7 +432,7 @@ namespace UFramework.VersionControl
             for (int i = 0; i < _newVersion.files.Length; i++)
             {
                 var file = _newVersion.files[i];
-                var fp = IOPath.PathCombine(assetBundlePath, file.name);
+                var fp = IOPath.PathCombine(AssetBundlePath, file.name);
                 if (!IOPath.FileExists(fp))
                 {
                     downloadFiles.Add(file);
@@ -464,7 +460,7 @@ namespace UFramework.VersionControl
             for (int i = 0; i < _newVersion.sFiles.Length; i++)
             {
                 var file = _newVersion.sFiles[i];
-                var fp = IOPath.PathCombine(luaPath, _newVersion.sDirs[file.dirIndex], file.name);
+                var fp = IOPath.PathCombine(LuaPath, _newVersion.sDirs[file.dirIndex], file.name);
                 if (!IOPath.FileExists(fp))
                 {
                     downloadSFiles.Add(file);
@@ -625,13 +621,13 @@ namespace UFramework.VersionControl
         private void LoadNewVersion(bool force = false)
         {
             if (force || _newVersion == null)
-                _newVersion = Version.LoadVersion(versionPath);
+                _newVersion = Version.LoadVersion(VersionPath);
         }
 
         private void LoadAppVersion(bool force = false)
         {
             if (force || _appVersion == null)
-                _appVersion = Version.LoadVersion(versionOriginalPath);
+                _appVersion = Version.LoadVersion(VersionOriginalPath);
         }
 
         private string GetStreamingAssetsPath()

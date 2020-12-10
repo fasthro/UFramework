@@ -3,7 +3,7 @@
  * @Date: 2020-10-23 12:05:09
  * @Description: MenuItems
  */
-using UFramework.Config;
+using UFramework.Serialize;
 using UnityEditor;
 using UnityEngine;
 
@@ -16,10 +16,12 @@ namespace UFramework.Editor
         [MenuItem(Root + "Cleanup -> Project", false, 2000)]
         static void Cleanup()
         {
-            // Config
-            IOPath.DirectoryClear(IOPath.PathCombine(App.AssetsDirectory, "Config", FileAddress.Editor.ToString()));
-            IOPath.DirectoryClear(IOPath.PathCombine(App.AssetsDirectory, "Config", FileAddress.Resources.ToString()));
-            IOPath.DirectoryClear(IOPath.PathCombine(App.AssetsDirectory, "Config", FileAddress.Data.ToString()));
+            // Serdata
+            IOPath.DirectoryClear(IOPath.PathCombine(App.AssetsDirectory, "Serdata", SerializableType.Editor.ToString()));
+            IOPath.DirectoryClear(IOPath.PathCombine(App.AssetsDirectory, "Serdata", SerializableType.AssetBundle.ToString()));
+            IOPath.DirectoryClear(IOPath.PathCombine(App.AssetsDirectory, "Serdata", SerializableType.Resources.ToString()));
+            IOPath.DirectoryClear(IOPath.PathCombine(App.AssetsDirectory, "Serdata", SerializableType.Persistent.ToString()));
+            IOPath.DirectoryClear(IOPath.PathCombine(App.AssetsDirectory, "Serdata", SerializableType.User.ToString()));
         }
 
         [MenuItem(Root + "Cleanup -> UTemp Path", false, 2001)]

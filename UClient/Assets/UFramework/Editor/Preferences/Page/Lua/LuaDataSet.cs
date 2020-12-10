@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Sirenix.OdinInspector;
-using UFramework.Config;
+using UFramework.Serialize;
 using UnityEngine;
 using static ToLuaMenu;
 using utils = UFramework.Utils;
@@ -157,9 +157,9 @@ namespace UFramework.Editor.Preferences
         public string hash;
     }
 
-    public class LuaBuildConfig : IConfigObject
+    public class LuaBuildSerdata : ISerializable
     {
-        public FileAddress address { get { return FileAddress.Editor; } }
+        public SerializableType serializableType { get { return SerializableType.Editor; } }
 
         /// <summary>
         /// 文件列表
@@ -168,9 +168,9 @@ namespace UFramework.Editor.Preferences
         /// <returns></returns>
         public List<LuaBuildFile> files = new List<LuaBuildFile>();
 
-        public void Save()
+        public void Serialization()
         {
-            UConfig.Write<LuaBuildConfig>(this);
+            Serializable<LuaBuildSerdata>.Serialization(this);
         }
     }
 }

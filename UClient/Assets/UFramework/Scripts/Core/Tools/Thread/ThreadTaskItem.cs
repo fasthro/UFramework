@@ -10,14 +10,14 @@ namespace UFramework.Tools
 {
     public class ThreadTaskItem : IPoolObject
     {
-        private Action m_callback0;
-        private Action<object> m_callback1;
-        private Action<object, object> m_callback2;
-        private Action<object, object, object> m_callback3;
+        private Action _callback0;
+        private Action<object> _callback1;
+        private Action<object, object> _callback2;
+        private Action<object, object, object> _callback3;
 
-        private object m_object1;
-        private object m_object2;
-        private object m_object3;
+        private object _object1;
+        private object _object2;
+        private object _object3;
 
         /// <summary>
         /// 
@@ -76,44 +76,44 @@ namespace UFramework.Tools
 
         public void OnRecycle()
         {
-            m_callback0 = null;
-            m_callback1 = null;
-            m_callback2 = null;
-            m_callback3 = null;
+            _callback0 = null;
+            _callback1 = null;
+            _callback2 = null;
+            _callback3 = null;
         }
 
         #endregion
 
         private ThreadTaskItem Builder(Action callback)
         {
-            m_callback0 = callback;
+            _callback0 = callback;
             return this;
         }
 
         private ThreadTaskItem Builder(Action<object> callback, object param)
         {
-            m_callback1 = callback;
+            _callback1 = callback;
             return this;
         }
 
         private ThreadTaskItem Builder(Action<object, object> callback, object param, object param2)
         {
-            m_callback2 = callback;
+            _callback2 = callback;
             return this;
         }
 
         private ThreadTaskItem Builder(Action<object, object, object> callback, object param1, object param2, object param3)
         {
-            m_callback3 = callback;
+            _callback3 = callback;
             return this;
         }
 
         public ThreadTaskItem Execute()
         {
-            m_callback0.InvokeGracefully();
-            m_callback1.InvokeGracefully(m_object1);
-            m_callback2.InvokeGracefully(m_object1, m_object2);
-            m_callback3.InvokeGracefully(m_object2, m_object2, m_object3);
+            _callback0.InvokeGracefully();
+            _callback1.InvokeGracefully(_object1);
+            _callback2.InvokeGracefully(_object1, _object2);
+            _callback3.InvokeGracefully(_object2, _object2, _object3);
             return this;
         }
     }

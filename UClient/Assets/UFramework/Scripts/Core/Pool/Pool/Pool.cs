@@ -11,23 +11,23 @@ namespace UFramework.Pool
     public abstract class Pool<T> : IPool<T>
     {
         // 对象池数量
-        public int count { get { return m_stacks.Count; } }
+        public int count { get { return _stacks.Count; } }
 
         // 对象工厂
-        protected IObjectFactory<T> m_factory;
+        protected IObjectFactory<T> _factory;
 
         // 池数据
-        protected readonly Stack<T> m_stacks = new Stack<T>();
+        protected readonly Stack<T> _stacks = new Stack<T>();
 
         // 池默认最大数量
-        protected int m_maxCount = 12;
+        protected int _maxCount = 12;
 
         /// <summary>
         /// 分配对象
         /// </summary>
         public virtual T Allocate()
         {
-            return m_stacks.Count == 0 ? m_factory.Create() : m_stacks.Pop();
+            return _stacks.Count == 0 ? _factory.Create() : _stacks.Pop();
         }
 
         /// <summary>

@@ -9,53 +9,53 @@ namespace UFramework.Language
 {
     public class Excel2Index
     {
-        static StringBuilder builder = new StringBuilder();
-        static StringBuilder funBuilder = new StringBuilder();
+        static StringBuilder Builder = new StringBuilder();
+        static StringBuilder FunBuilder = new StringBuilder();
 
-        static string funcTemplate = @"        public static string $model1$(int key)
+        static string FuncTemplate = @"        public static string $model1$(int key)
         {
             return sys.Get($model2$, key);
         }";
 
         public Excel2Index(ExcelReader reader)
         {
-            builder.Clear();
-            funBuilder.Clear();
+            Builder.Clear();
+            FunBuilder.Clear();
 
             // model
-            builder.AppendLine("// UFramework Automatic.");
-            builder.AppendLine("using sys = UFramework.Localization.Language;");
-            builder.AppendLine("");
-            builder.AppendLine("namespace UFramework.Automatic {");
-            builder.AppendLine("\tpublic class Language");
-            builder.AppendLine("\t{");
+            Builder.AppendLine("// UFramework Automatic.");
+            Builder.AppendLine("using sys = UFramework.Localization.Language;");
+            Builder.AppendLine("");
+            Builder.AppendLine("namespace UFramework.Automatic {");
+            Builder.AppendLine("\tpublic class Language");
+            Builder.AppendLine("\t{");
 
             for (int i = 0; i < reader.sheets.Count; i++)
             {
                 var modelName = reader.sheets[i].name;
-                builder.AppendLine(string.Format("\t\tpublic static int {0} = {1};", modelName, i));
+                Builder.AppendLine(string.Format("\t\tpublic static int {0} = {1};", modelName, i));
 
-                var template = string.Copy(funcTemplate);
+                var template = string.Copy(FuncTemplate);
                 template = template.Replace("$model1$", "Get" + modelName.FirstCharToUpper());
                 template = template.Replace("$model2$", modelName);
-                funBuilder.AppendLine(template);
-                funBuilder.AppendLine("");
+                FunBuilder.AppendLine(template);
+                FunBuilder.AppendLine("");
             }
 
             // key
-            builder.AppendLine("");
+            Builder.AppendLine("");
 
             for (int i = 0; i < reader.sheets.Count; i++)
             {
-                builder.AppendLine(reader.sheets[i].ToCSharpKeyString());
+                Builder.AppendLine(reader.sheets[i].ToCSharpKeyString());
             }
 
-            builder.AppendLine("");
-            builder.AppendLine(funBuilder.ToString());
-            builder.AppendLine("\t}");
-            builder.AppendLine("}");
+            Builder.AppendLine("");
+            Builder.AppendLine(FunBuilder.ToString());
+            Builder.AppendLine("\t}");
+            Builder.AppendLine("}");
 
-            IOPath.FileCreateText("Assets/Scripts/Automatic/Localization/Language.cs", builder.ToString());
+            IOPath.FileCreateText("Assets/Scripts/Automatic/Localization/Language.cs", Builder.ToString());
         }
     }
 }

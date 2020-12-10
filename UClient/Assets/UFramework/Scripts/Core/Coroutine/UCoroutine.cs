@@ -12,15 +12,14 @@ namespace UFramework.Coroutine
 {
     public class UCoroutine
     {
+        static UCoroutineHelper Helper;
+
         public bool running { get; private set; }
         public bool paused { get; private set; }
         public bool stopped { get; private set; }
 
-        private UCallback<bool> m_completeCallback;
-        private IEnumerator m_routine;
-
-        static UCoroutineHelper helper;
-
+        private UCallback<bool> _completeCallback;
+        private IEnumerator _routine;
 
         /// <summary>
         /// 
@@ -30,8 +29,8 @@ namespace UFramework.Coroutine
         /// <param name="completeCallback"></param>
         public UCoroutine(IEnumerator routine, bool autoStart, UCallback<bool> completeCallback = null)
         {
-            this.m_routine = routine;
-            this.m_completeCallback = completeCallback;
+            this._routine = routine;
+            this._completeCallback = completeCallback;
             if (autoStart)
             {
                 Start();
@@ -41,11 +40,11 @@ namespace UFramework.Coroutine
         public void Start()
         {
             running = true;
-            if (helper == null)
+            if (Helper == null)
             {
-                helper = (new GameObject("UCoroutineHelper")).AddComponent<UCoroutineHelper>();
+                Helper = (new GameObject("UCoroutineHelper")).AddComponent<UCoroutineHelper>();
             }
-            helper.StartCoroutine(CallWrapper());
+            Helper.StartCoroutine(CallWrapper());
         }
 
         public void Pause() { paused = true; }
@@ -61,7 +60,7 @@ namespace UFramework.Coroutine
         IEnumerator CallWrapper()
         {
             yield return null;
-            IEnumerator e = this.m_routine;
+            IEnumerator e = this._routine;
             while (running)
             {
                 if (paused)
@@ -72,7 +71,7 @@ namespace UFramework.Coroutine
                     else running = false;
                 }
             }
-            m_completeCallback.InvokeGracefully(stopped);
+            _completeCallback.InvokeGracefully(stopped);
         }
     }
 }

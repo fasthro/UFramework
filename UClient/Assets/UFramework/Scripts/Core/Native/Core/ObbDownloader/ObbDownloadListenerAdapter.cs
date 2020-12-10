@@ -20,41 +20,41 @@ namespace UFramework.Natives
 
     public class ObbDownloadListenerAdapter : AndroidJavaProxy
     {
-        readonly IObbDownloadListener listener;
+        readonly IObbDownloadListener _listener;
 
         public ObbDownloadListenerAdapter(IObbDownloadListener listener) : base(NativeAndroid.MAIN_PACKAGE + ".obbdownloader.core.download.ObbDownloadListener")
         {
-            this.listener = listener;
+            this._listener = listener;
         }
 
         void onProgress(int progress)
         {
-            listener.OnProgress(progress);
+            _listener.OnProgress(progress);
         }
 
         void onSuccess()
         {
-            listener.OnSuccess();
+            _listener.OnSuccess();
         }
 
         void onFailed()
         {
-            listener.OnFailed();
+            _listener.OnFailed();
         }
 
         void onPause(bool pause)
         {
-            listener.OnPause(pause);
+            _listener.OnPause(pause);
         }
 
         void onAbort()
         {
-            listener.OnAbort();
+            _listener.OnAbort();
         }
 
         void onError(int errorCode)
         {
-            listener.OnError(errorCode);
+            _listener.OnError(errorCode);
         }
     }
 }

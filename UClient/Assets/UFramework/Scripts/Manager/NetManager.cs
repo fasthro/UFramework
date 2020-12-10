@@ -13,18 +13,6 @@ namespace UFramework
     public class NetManager : BaseManager, ISocketListener
     {
         /// <summary>
-        /// Socket Client
-        /// </summary>
-        private SocketClient _client;
-
-        /// <summary>
-        /// 消息处理队列
-        /// </summary>
-        /// <typeparam name="SocketPack"></typeparam>
-        /// <returns></returns>
-        private DoubleQueue<SocketPack> _packQueue = new DoubleQueue<SocketPack>();
-
-        /// <summary>
         /// connected
         /// </summary>、
         /// <value></value>
@@ -35,6 +23,18 @@ namespace UFramework
         /// </summary>
         /// <value></value>
         public bool isRedirecting { get; private set; }
+
+        /// <summary>
+        /// Socket Client
+        /// </summary>
+        private SocketClient _client;
+
+        /// <summary>
+        /// 消息处理队列
+        /// </summary>
+        /// <typeparam name="SocketPack"></typeparam>
+        /// <returns></returns>
+        private DoubleQueue<SocketPack> _packQueue = new DoubleQueue<SocketPack>();
 
         protected override void OnInitialize()
         {

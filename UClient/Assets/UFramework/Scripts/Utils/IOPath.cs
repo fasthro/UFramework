@@ -14,7 +14,7 @@ namespace UFramework
     public static class IOPath
     {
         // 字符串操作使用
-        static StringBuilder stringBuilder = new StringBuilder();
+        static StringBuilder SB = new StringBuilder();
 
         #region Directory
 
@@ -209,13 +209,13 @@ namespace UFramework
 
             if (ps.Length >= index)
             {
-                stringBuilder.Clear();
+                SB.Clear();
                 for (int i = 0; i < ps.Length - index; i++)
                 {
-                    stringBuilder.Append(ps[i]);
-                    stringBuilder.Append(Path.AltDirectorySeparatorChar);
+                    SB.Append(ps[i]);
+                    SB.Append(Path.AltDirectorySeparatorChar);
                 }
-                return stringBuilder.ToString();
+                return SB.ToString();
             }
             return null;
         }

@@ -7,7 +7,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using Sirenix.OdinInspector;
-using UFramework.Config;
+using UFramework.Serialize;
 using UnityEditor;
 using UnityEngine;
 using Unity.EditorCoroutines.Editor;
@@ -30,9 +30,9 @@ namespace UFramework.Editor.VersionControl
         GOOGLE_PLAY_OBB,
     }
 
-    public class VersionControl_BuildConfig : IConfigObject
+    public class VersionBuildSerdata : ISerializable
     {
-        public FileAddress address { get { return FileAddress.Editor; } }
+        public SerializableType serializableType { get { return SerializableType.Editor; } }
 
         /// <summary>
         /// 应用版本
@@ -75,9 +75,9 @@ namespace UFramework.Editor.VersionControl
 
         #endregion
 
-        public void Save()
+        public void Serialization()
         {
-            UConfig.Write<VersionControl_BuildConfig>(this);
+            Serializable<VersionBuildSerdata>.Serialization(this);
         }
     }
 
@@ -96,11 +96,11 @@ namespace UFramework.Editor.VersionControl
 
         private void OnValueChanged_PackageType()
         {
-            UConfig.Read<VersionControl_BuildConfig>().packageType = packageType;
+            Serializable<VersionBuildSerdata>.Instance.packageType = packageType;
+            Serializable<VersionBuildSerdata>.Instance.Serialization();
 
-            var app = UConfig.Read<AppConfig>();
-            app.useAPKExpansionFiles = packageType == PACKAGE_TYPE.GOOGLE_PLAY_OBB;
-            app.Save();
+            Serialize.Serializable<AppSerdata>.Instance.useAPKExpansionFiles = packageType == PACKAGE_TYPE.GOOGLE_PLAY_OBB;
+            Serialize.Serializable<AppSerdata>.Instance.Serialization();
 
             PlayerSettings.Android.useAPKExpansionFiles = packageType == PACKAGE_TYPE.GOOGLE_PLAY_OBB;
             EditorUserBuildSettings.buildAppBundle = packageType == PACKAGE_TYPE.GOOGLE_PLAY_APPBUNDLE;
@@ -263,7 +263,7 @@ namespace UFramework.Editor.VersionControl
         {
             var page = new LuaPage();
             page.OnRenderBefore();
-            page.BuildScripts(UConfig.Read<LuaConfig>().byteEncode, false);
+            page.BuildScripts(Serialize.Serializable<LuaSerdata>.Instance.byteEncode, false);
         }
 
         [ShowInInspector, Button, HorizontalGroup]
@@ -302,7 +302,7 @@ namespace UFramework.Editor.VersionControl
         {
             if (_isBuild) return;
 
-            if (UConfig.Read<AppConfig>().isDevelopmentVersion)
+            if (Serialize.Serializable<AppSerdata>.Instance.isDevelopmentVersion)
             {
                 EditorUtility.DisplayDialog("Build", "当前为开发环境, 无法构建应用. 请切换到 Version Contorl -> Application 页进行环境切换.", "确定");
                 return;
@@ -359,20 +359,20 @@ namespace UFramework.Editor.VersionControl
 
             // setting
             progress = 0;
-            var build = UConfig.Read<VersionControl_BuildConfig>();
-            build.versionCode++;
-            build.Save();
+            var buildSerdata = Serializable<VersionBuildSerdata>.Instance;
+            buildSerdata.versionCode++;
+            buildSerdata.Serialization();
 
             switch (EditorUserBuildSettings.activeBuildTarget)
             {
                 case BuildTarget.Android:
-                    PlayerSettings.Android.bundleVersionCode = build.versionCode;
+                    PlayerSettings.Android.bundleVersionCode = buildSerdata.versionCode;
                     break;
                 case BuildTarget.iOS:
-                    PlayerSettings.iOS.buildNumber = build.versionCode.ToString();
+                    PlayerSettings.iOS.buildNumber = buildSerdata.versionCode.ToString();
                     break;
             }
-            PlayerSettings.bundleVersion = build.appVersion;
+            PlayerSettings.bundleVersion = buildSerdata.appVersion;
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
@@ -400,9 +400,7 @@ namespace UFramework.Editor.VersionControl
             totalProgress++;
 
             // 构建版本目录
-            var bc = UConfig.Read<VersionControl_BuildConfig>();
-            var ver = UConfig.Read<VersionControl_VersionConfig>();
-            var dn = "data-v" + ver.version;
+            var dn = "data-v" + Serialize.Serializable<VersionSerdata>.Instance.version;
             var documentPath = IOPath.PathCombine(outPath, dn);
             IOPath.DirectoryClear(documentPath);
             IOPath.FileCopy(versionFilePath, IOPath.PathCombine(documentPath, Version.FileName));
@@ -424,7 +422,7 @@ namespace UFramework.Editor.VersionControl
         {
             var time = DateTime.Now.ToString("yyyyMMdd-HHmmss");
             var name = "app-" + PlayerSettings.bundleVersion + "-v";
-            var version = UConfig.Read<VersionControl_VersionConfig>().version;
+            var version = Serialize.Serializable<VersionSerdata>.Instance.version;
             switch (target)
             {
                 case BuildTarget.Android:
@@ -465,8 +463,8 @@ namespace UFramework.Editor.VersionControl
             totalProgress = 0;
             progress = 0;
 
-            var versionConfig = UConfig.Read<VersionControl_VersionConfig>();
-            var version = versionConfig.GetPV();
+            var versionConfig = Serialize.Serializable<VersionSerdata>.Instance;
+            var version = versionConfig.GetPlatformVersion();
 
             if (!version.HasNewPatchVersionWaitBuild())
             {
@@ -603,7 +601,7 @@ namespace UFramework.Editor.VersionControl
             // 生成版本信息文件
             newPatch.len = IOPath.FileSize(zipPath);
             newPatch = version.UpdatePatch(newPatch);
-            versionConfig.Save();
+            versionConfig.Serialization();
             VersionPage.BuildVersion(IOPath.PathCombine(nPathDir, Version.FileName));
 
             _isBuild = false;

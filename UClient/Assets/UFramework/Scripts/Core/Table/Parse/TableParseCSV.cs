@@ -14,12 +14,12 @@ namespace UFramework.Table
 {
     public class TableParseCSV : TableParse
     {
-        static char[] lineSeparator = new char[] { '\r', '\n' };
-        static char[] separator = new char[] { ',' };
+        static char[] LineSeparator = new char[] { '\r', '\n' };
+        static char[] Separator = new char[] { ',' };
 
         private Type _modelType;
-        private string[] m_lines;
-        private FieldInfo[] m_fields;
+        private string[] _lines;
+        private FieldInfo[] _fields;
 
         public TableParseCSV(string tableName) : base(tableName, FormatOptions.CSV) { LoadAsset(); }
 
@@ -31,13 +31,13 @@ namespace UFramework.Table
         {
             _modelType = typeof(T);
             // read lines
-            m_lines = m_content.Split(lineSeparator, StringSplitOptions.RemoveEmptyEntries);
+            _lines = _content.Split(LineSeparator, StringSplitOptions.RemoveEmptyEntries);
 
             // create field info
-            var _fiedls = m_lines[0].Split(separator, StringSplitOptions.RemoveEmptyEntries);
-            m_fields = new FieldInfo[_fiedls.Length];
+            var _fiedls = _lines[0].Split(Separator, StringSplitOptions.RemoveEmptyEntries);
+            _fields = new FieldInfo[_fiedls.Length];
             for (int i = 0; i < _fiedls.Length; i++)
-                m_fields[i] = _modelType.GetField(_fiedls[i]);
+                _fields[i] = _modelType.GetField(_fiedls[i]);
 
         }
 
@@ -49,9 +49,9 @@ namespace UFramework.Table
         public override T[] ParseArray<T>()
         {
             BuildData<T>();
-            T[] array = new T[m_lines.Length - 1];
-            for (int i = 1; i < m_lines.Length; i++)
-                array[i - 1] = CreateInstance<T>(ParseCSVLine(m_lines[i]));
+            T[] array = new T[_lines.Length - 1];
+            for (int i = 1; i < _lines.Length; i++)
+                array[i - 1] = CreateInstance<T>(ParseCSVLine(_lines[i]));
 
             return array;
         }
@@ -67,9 +67,9 @@ namespace UFramework.Table
             BuildData<T>();
             Dictionary<string, T> dictionary = new Dictionary<string, T>();
             string[] lc = null;
-            for (int i = 1; i < m_lines.Length; i++)
+            for (int i = 1; i < _lines.Length; i++)
             {
-                lc = ParseCSVLine(m_lines[i]);
+                lc = ParseCSVLine(_lines[i]);
                 dictionary.Add(lc[0], CreateInstance<T>(lc));
             }
             return dictionary;
@@ -86,9 +86,9 @@ namespace UFramework.Table
             BuildData<T>();
             Dictionary<int, T> dictionary = new Dictionary<int, T>();
             string[] lc = null;
-            for (int i = 1; i < m_lines.Length; i++)
+            for (int i = 1; i < _lines.Length; i++)
             {
-                lc = ParseCSVLine(m_lines[i]);
+                lc = ParseCSVLine(_lines[i]);
                 dictionary.Add(int.Parse(lc[0]), CreateInstance<T>(lc));
             }
             return dictionary;
@@ -104,9 +104,9 @@ namespace UFramework.Table
             BuildData<T>();
             Dictionary<int, Dictionary<int, T>> dictionary = new Dictionary<int, Dictionary<int, T>>();
             string[] lc = null;
-            for (int i = 1; i < m_lines.Length; i++)
+            for (int i = 1; i < _lines.Length; i++)
             {
-                lc = ParseCSVLine(m_lines[i]);
+                lc = ParseCSVLine(_lines[i]);
                 var k = int.Parse(lc[0]);
                 var l = int.Parse(lc[1]);
                 if (!dictionary.ContainsKey(k))
@@ -126,8 +126,8 @@ namespace UFramework.Table
         private T CreateInstance<T>(string[] line)
         {
             T obj = Activator.CreateInstance<T>();
-            for (int i = 0; i < m_fields.Length; i++)
-                SetValue(obj, m_fields[i], line[i]);
+            for (int i = 0; i < _fields.Length; i++)
+                SetValue(obj, _fields[i], line[i]);
             return obj;
         }
 

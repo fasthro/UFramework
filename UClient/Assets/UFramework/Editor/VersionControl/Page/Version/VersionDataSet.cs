@@ -5,7 +5,7 @@
  */
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
-using UFramework.Config;
+using UFramework.Serialize;
 using UFramework.VersionControl;
 using UnityEditor;
 using UnityEngine;
@@ -48,9 +48,9 @@ namespace UFramework.Editor.VersionControl
         {
             if (EditorUtility.DisplayDialog("Patch", "确定发布补丁?", "发布", "取消"))
             {
-                var versionConfig = UConfig.Read<VersionControl_VersionConfig>();
-                var pv = versionConfig.GetPV();
-                var dataPath = IOPath.PathCombine(App.BuildDirectory, Platform.BuildTargetCurrentName, "data-v" + versionConfig.version);
+                var serdata = Serializable<VersionSerdata>.Instance;
+                var pv = serdata.GetPlatformVersion();
+                var dataPath = IOPath.PathCombine(App.BuildDirectory, Platform.BuildTargetCurrentName, "data-v" + serdata.version);
 
                 var patchFilePath = IOPath.PathCombine(dataPath, displayName, displayName + ".zip");
                 var versionFilePath = IOPath.PathCombine(dataPath, displayName, Version.FileName);
@@ -236,9 +236,9 @@ namespace UFramework.Editor.VersionControl
         }
     }
 
-    public class VersionControl_VersionConfig : IConfigObject
+    public class VersionSerdata : ISerializable
     {
-        public FileAddress address { get { return FileAddress.Editor; } }
+        public SerializableType serializableType { get { return SerializableType.Editor; } }
 
         /// <summary>
         /// 当前版本
@@ -262,7 +262,7 @@ namespace UFramework.Editor.VersionControl
         /// 
         /// </summary>
         /// <returns></returns>
-        public PlatformVersion GetPV()
+        public PlatformVersion GetPlatformVersion()
         {
             PlatformVersion pv = null;
             int platform = Platform.BuildTargetCurrent;
@@ -283,9 +283,9 @@ namespace UFramework.Editor.VersionControl
             return pv;
         }
 
-        public void Save()
+        public void Serialization()
         {
-            UConfig.Write<VersionControl_VersionConfig>(this);
+            Serializable<VersionSerdata>.Serialization(this);
         }
     }
 }

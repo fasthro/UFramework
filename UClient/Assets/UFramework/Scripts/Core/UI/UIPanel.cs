@@ -49,7 +49,7 @@ namespace UFramework.UI
         #region protected
 
         // 包列表
-        protected HashSet<string> packages = new HashSet<string>();
+        protected HashSet<string> _packages = new HashSet<string>();
 
         #endregion
 
@@ -58,6 +58,7 @@ namespace UFramework.UI
         private int _packageCount;
         private bool _inited;
         private LuaTable _lua;
+        
         #endregion
 
         /// <summary>
@@ -75,8 +76,8 @@ namespace UFramework.UI
         /// <param name="packageName"></param>
         public void AddPackage(string packageName)
         {
-            if (!packages.Contains(packageName))
-                packages.Add(packageName);
+            if (!_packages.Contains(packageName))
+                _packages.Add(packageName);
         }
 
         public void Show()
@@ -85,8 +86,8 @@ namespace UFramework.UI
             if (!isLoaded && !isLoading)
             {
                 isLoading = true;
-                _packageCount = packages.Count;
-                foreach (var package in packages)
+                _packageCount = _packages.Count;
+                foreach (var package in _packages)
                 {
                     PackageAgents.Load(package, OnPackageLoaded);
                 }

@@ -11,9 +11,9 @@ namespace UFramework.Assets
 {
     public class ResourceAssetAsyncRequest : AssetRequest
     {
-        private ResourceRequest request;
-
         public override bool isAsset { get { return true; } }
+
+        private ResourceRequest _request;
 
         public static ResourceAssetAsyncRequest Allocate()
         {
@@ -29,12 +29,12 @@ namespace UFramework.Assets
         {
             loadState = LoadState.LoadAsset;
 
-            request = Resources.LoadAsync(url, assetType);
-            yield return request;
+            _request = Resources.LoadAsync(url, assetType);
+            yield return _request;
 
-            if (loadState == LoadState.LoadAsset && request.isDone)
+            if (loadState == LoadState.LoadAsset && _request.isDone)
             {
-                asset = request.asset;
+                asset = _request.asset;
                 loadState = LoadState.Loaded;
                 OnAsyncCallback();
             }
@@ -52,7 +52,7 @@ namespace UFramework.Assets
             if (asset != null)
                 Resources.UnloadAsset(asset);
             asset = null;
-            request = null;
+            _request = null;
             loadState = LoadState.Unload;
             base.OnReferenceEmpty();
         }

@@ -20,17 +20,17 @@ namespace UFramework.Tools
     public class ThreadQueue : MonoSingleton<ThreadQueue>
     {
         // 主线程ID
-        public static int mainThreadId { get; private set; }
+        public static int MainThreadId { get; private set; }
 
         /// <summary>
         /// 是否为主线程
         /// </summary>
         /// <returns></returns>
-        public static bool isMainThread
+        public static bool IsMainThread
         {
             get
             {
-                return GetCurrentThreadId() == mainThreadId;
+                return GetCurrentThreadId() == MainThreadId;
             }
         }
 
@@ -39,11 +39,11 @@ namespace UFramework.Tools
         /// </summary>
         /// <typeparam name="MainTaskItem"></typeparam>
         /// <returns></returns>
-        private static DoubleQueue<ThreadTaskItem> mainTaskQueue = new DoubleQueue<ThreadTaskItem>(16);
+        static DoubleQueue<ThreadTaskItem> MainTaskQueue = new DoubleQueue<ThreadTaskItem>(16);
 
         protected override void OnSingletonAwake()
         {
-            mainThreadId = GetCurrentThreadId();
+            MainThreadId = GetCurrentThreadId();
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace UFramework.Tools
         /// <param name="taskFunc"></param>
         public static void EnqueueMain(Action taskFunc)
         {
-            mainTaskQueue.Enqueue(ThreadTaskItem.Allocate(taskFunc));
+            MainTaskQueue.Enqueue(ThreadTaskItem.Allocate(taskFunc));
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace UFramework.Tools
         /// <param name="param"></param>
         public static void EnqueueMain(Action<object> taskFunc, object param)
         {
-            mainTaskQueue.Enqueue(ThreadTaskItem.Allocate(taskFunc, param));
+            MainTaskQueue.Enqueue(ThreadTaskItem.Allocate(taskFunc, param));
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace UFramework.Tools
         /// <param name="param2"></param>
         public static void EnqueueMain(Action<object, object> taskFunc, object param1, object param2)
         {
-            mainTaskQueue.Enqueue(ThreadTaskItem.Allocate(taskFunc, param1, param2));
+            MainTaskQueue.Enqueue(ThreadTaskItem.Allocate(taskFunc, param1, param2));
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace UFramework.Tools
         /// <param name="param3"></param>
         public static void EnqueueMain(Action<object, object, object> taskFunc, object param1, object param2, object param3)
         {
-            mainTaskQueue.Enqueue(ThreadTaskItem.Allocate(taskFunc, param1, param2, param3));
+            MainTaskQueue.Enqueue(ThreadTaskItem.Allocate(taskFunc, param1, param2, param3));
         }
 
         /// <summary>
@@ -137,19 +137,19 @@ namespace UFramework.Tools
         /// <param name="deltaTime"></param>
         protected override void OnSingletonUpdate(float deltaTime)
         {
-            if (mainTaskQueue.IsEmpty())
+            if (MainTaskQueue.IsEmpty())
             {
-                mainTaskQueue.Swap();
+                MainTaskQueue.Swap();
             }
-            while (!mainTaskQueue.IsEmpty())
+            while (!MainTaskQueue.IsEmpty())
             {
-                mainTaskQueue.Dequeue().Execute().Recycle();
+                MainTaskQueue.Dequeue().Execute().Recycle();
             }
         }
 
         protected override void OnSingletonDestory()
         {
-            mainTaskQueue.Clear();
+            MainTaskQueue.Clear();
         }
 
         #endregion

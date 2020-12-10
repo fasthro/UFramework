@@ -5,7 +5,6 @@
  */
 using FairyGUI;
 using UFramework.Assets;
-using UFramework.Config;
 using UFramework.Natives;
 using UFramework.Panel.FairyGUI;
 using UFramework.Timers;
@@ -18,28 +17,27 @@ namespace UFramework
     [MonoSingletonPath("UFramework")]
     public class AppLaunch : MonoSingleton<AppLaunch>
     {
-        public static AppLaunch main { get { return AppLaunch.Instance; } }
-        public static GameObject mainGameObject { get { return AppLaunch.Instance.gameObject; } }
+        public static AppLaunch Main { get { return AppLaunch.Instance; } }
+        public static GameObject MainGameObject { get { return AppLaunch.Instance.gameObject; } }
+        public static bool Develop { get; private set; }
 
-        public static Launch launch { get; private set; }
-
-        private bool _initialized = false;
+        private Launch _launch;
+        private bool _initialized;
 
         protected override void OnSingletonAwake()
         {
             _initialized = false;
-
-            var app = UConfig.Read<AppConfig>();
+            var serdata = Serialize.Serializable<AppSerdata>.Instance;
 
             // FairyGUI
             UIPackage.unloadBundleByFGUI = false;
-            GRoot.inst.SetContentScaleFactor(app.designResolutionX, app.designResolutionY, UIContentScaler.ScreenMatchMode.MatchWidthOrHeight);
+            GRoot.inst.SetContentScaleFactor(serdata.designResolutionX, serdata.designResolutionY, UIContentScaler.ScreenMatchMode.MatchWidthOrHeight);
 
             // launch panel
-            launch = Launch.Create();
+            _launch = Launch.Create();
 
             // 日志等级
-            Logger.SetLevel(app.logLevel);
+            Logger.SetLevel(serdata.logLevel);
             // 线程队列
             ThreadQueue.Instance.Default();
             // Native
@@ -49,7 +47,7 @@ namespace UFramework
             // 下载器
             Download.Instance.Default();
             // 版本器
-            Updater.Instance.StartUpdate(launch, OnUpdaterCompleted);
+            Updater.Instance.StartUpdate(_launch, OnUpdaterCompleted);
         }
 
         private void OnUpdaterCompleted()
@@ -62,13 +60,13 @@ namespace UFramework
         {
             _initialized = true;
             App.Initialize();
-            launch.ShowTouchBeginOperation(OnRunner);
+            _launch.ShowTouchBeginOperation(OnRunner);
         }
 
         private void OnRunner()
         {
-            launch.Dispose();
-            launch = null;
+            _launch.Dispose();
+            _launch = null;
 
             App.GetManager<LuaManager>().luaEngine.Call("runner");
         }

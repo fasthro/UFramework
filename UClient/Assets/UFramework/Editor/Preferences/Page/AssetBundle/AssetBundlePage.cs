@@ -9,7 +9,6 @@ using System.IO;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
 using UFramework.Assets;
-using UFramework.Config;
 using UFramework.Editor.VersionControl;
 using UFramework.Tools;
 using UFramework.VersionControl;
@@ -21,8 +20,8 @@ namespace UFramework.Editor.Preferences.Assets
     public class AssetBundlePage : IPage, IPageBar
     {
         public string menuName { get { return "AssetBundle"; } }
-        static AssetBundle_AssetConfig describeObject;
-        static AppConfig app;
+        static ABAssetSerdata AssetSerdata { get { return Serialize.Serializable<ABAssetSerdata>.Instance; } }
+        static ABAssetSearchPathSerdata AssetSearchPathSerdata { get { return Serialize.Serializable<ABAssetSearchPathSerdata>.Instance; } }
 
         [BoxGroup("General Setting")]
         public bool buildNameHash = true;
@@ -111,12 +110,10 @@ namespace UFramework.Editor.Preferences.Assets
             dependenciesAssetSortRuler = new SortRuler(dependencieAssets);
             builtInAssetSortRuler = new SortRuler(builtInAssets);
 
-            app = UConfig.Read<AppConfig>();
-            describeObject = UConfig.Read<AssetBundle_AssetConfig>();
-            bundles = describeObject.bundles;
-            assets = describeObject.assets;
-            dependencieAssets = describeObject.dependencieAssets;
-            builtInAssets = describeObject.builtInAssets;
+            bundles = AssetSerdata.bundles;
+            assets = AssetSerdata.assets;
+            dependencieAssets = AssetSerdata.dependencieAssets;
+            builtInAssets = AssetSerdata.builtInAssets;
 
             if (bundles.Count <= 0
                 || (assets.Count > 0 && assets[0].GetTarget() == null)
@@ -146,13 +143,13 @@ namespace UFramework.Editor.Preferences.Assets
 
         public void OnSaveDescribe()
         {
-            if (describeObject == null) return;
+            if (AssetSerdata == null) return;
 
-            describeObject.bundles = bundles;
-            describeObject.assets = assets;
-            describeObject.dependencieAssets = dependencieAssets;
-            describeObject.builtInAssets = builtInAssets;
-            describeObject.Save();
+            AssetSerdata.bundles = bundles;
+            AssetSerdata.assets = assets;
+            AssetSerdata.dependencieAssets = dependencieAssets;
+            AssetSerdata.builtInAssets = builtInAssets;
+            AssetSerdata.Serialization();
         }
 
         private void OnBundlesTitleBarGUI()
@@ -225,10 +222,10 @@ namespace UFramework.Editor.Preferences.Assets
             // analysis search path
             assets.Clear();
             assetTracker.Clear();
-            var pathConfig = UConfig.Read<AssetBundle_AssetSearchPathConfig>();
-            for (int i = 0; i < pathConfig.assetPathItems.Count; i++)
+
+            for (int i = 0; i < AssetSearchPathSerdata.assetPathItems.Count; i++)
             {
-                var items = ParsePathItem(pathConfig.assetPathItems[i]);
+                var items = ParsePathItem(AssetSearchPathSerdata.assetPathItems[i]);
                 for (int k = 0; k < items.Count; k++)
                 {
                     var item = items[k];
@@ -248,9 +245,9 @@ namespace UFramework.Editor.Preferences.Assets
                 }
             }
 
-            for (int i = 0; i < pathConfig.assetFileItems.Count; i++)
+            for (int i = 0; i < AssetSearchPathSerdata.assetFileItems.Count; i++)
             {
-                var fileItem = pathConfig.assetFileItems[i];
+                var fileItem = AssetSearchPathSerdata.assetFileItems[i];
                 if (ValidateAssetPath(fileItem.path))
                 {
                     var pathItem = new AssetSearchItem();
@@ -272,14 +269,14 @@ namespace UFramework.Editor.Preferences.Assets
                 progressTitle = "analysis file path";
                 progress = i;
                 progressDes = fileItem.path;
-                Utils.UpdateProgress(progressTitle, progressDes, progress, pathConfig.assetFileItems.Count);
+                Utils.UpdateProgress(progressTitle, progressDes, progress, AssetSearchPathSerdata.assetFileItems.Count);
             }
 
             // analysis built-in
             builtInAssets.Clear();
-            for (int i = 0; i < pathConfig.builtInAssetPathItems.Count; i++)
+            for (int i = 0; i < AssetSearchPathSerdata.builtInAssetPathItems.Count; i++)
             {
-                var items = ParsePathItem(pathConfig.builtInAssetPathItems[i]);
+                var items = ParsePathItem(AssetSearchPathSerdata.builtInAssetPathItems[i]);
                 for (int k = 0; k < items.Count; k++)
                 {
                     var item = items[k];
@@ -295,9 +292,9 @@ namespace UFramework.Editor.Preferences.Assets
             }
 
             // analysis built-in file
-            for (int i = 0; i < pathConfig.builtInAssetFileItems.Count; i++)
+            for (int i = 0; i < AssetSearchPathSerdata.builtInAssetFileItems.Count; i++)
             {
-                var fileItem = pathConfig.builtInAssetFileItems[i];
+                var fileItem = AssetSearchPathSerdata.builtInAssetFileItems[i];
                 if (ValidateAssetPath(fileItem.path))
                 {
                     var pathItem = new AssetSearchItem();
@@ -315,7 +312,7 @@ namespace UFramework.Editor.Preferences.Assets
                 progressTitle = "analysis built-in file path";
                 progress = i;
                 progressDes = fileItem.path;
-                Utils.UpdateProgress(progressTitle, progressDes, progress, pathConfig.assetFileItems.Count);
+                Utils.UpdateProgress(progressTitle, progressDes, progress, AssetSearchPathSerdata.assetFileItems.Count);
             }
 
             // analysis bundles

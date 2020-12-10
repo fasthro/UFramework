@@ -28,32 +28,32 @@ namespace UFramework.Natives
 
     public class AndroidUtils : IUtils
     {
-        static AndroidJavaClass _native;
-        public static AndroidJavaClass native
+        static AndroidJavaClass _NativeClass;
+        public static AndroidJavaClass Native
         {
             get
             {
-                if (_native == null)
+                if (_NativeClass == null)
                 {
-                    _native = new AndroidJavaClass(NativeAndroid.MAIN_PACKAGE + ".core.Utils");
+                    _NativeClass = new AndroidJavaClass(NativeAndroid.MAIN_PACKAGE + ".core.Utils");
                 }
-                return _native;
+                return _NativeClass;
             }
         }
 
         public void Restart()
         {
-            native.CallStatic("restart");
+            Native.CallStatic("restart");
         }
 
         public void SetClipBoard(string text)
         {
-            native.CallStatic("setClipBoard", text);
+            Native.CallStatic("setClipBoard", text);
         }
 
         public string GetClipBoard()
         {
-            return native.CallStatic<string>("getClipBoard");
+            return Native.CallStatic<string>("getClipBoard");
         }
     }
 
@@ -95,9 +95,9 @@ namespace UFramework.Natives
 
     public class Utils : IUtils
     {
-        private UnknownUtils unknown = new UnknownUtils();
-        private AndroidUtils android = new AndroidUtils();
-        private IOSUtils ios = new IOSUtils();
+        private UnknownUtils _unknown = new UnknownUtils();
+        private AndroidUtils _android = new AndroidUtils();
+        private IOSUtils _ios = new IOSUtils();
 
         /// <summary>
         /// 重启应用
@@ -128,11 +128,11 @@ namespace UFramework.Natives
         IUtils GetChannel()
         {
 #if !UNITY_EDITOR && UNITY_ANDROID
-            return android;
+            return _android;
 #elif !UNITY_EDITOR && UNITY_IOS
-            return ios;
+            return _ios;
 #else
-            return unknown;
+            return _unknown;
 #endif
         }
     }

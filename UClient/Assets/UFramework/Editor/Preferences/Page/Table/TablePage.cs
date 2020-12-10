@@ -7,40 +7,27 @@ using System.Collections.Generic;
 using System.IO;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
-using UFramework.Config;
+using UFramework.Serialize;
 using UFramework.Table;
 using UnityEngine;
 
 namespace UFramework.Editor.Preferences
 {
-    [System.Serializable]
-    public class TableItem
-    {
-        [ShowInInspector, HideLabel, ReadOnly]
-        [HorizontalGroup("Table Name")]
-        public string name;
-
-        [ShowInInspector, HideLabel]
-        [HorizontalGroup("Format")]
-        public DataFormatOptions format;
-    }
-
-
     public class TablePage : IPage, IPageBar
     {
         public string menuName { get { return "Table"; } }
 
-        static TableConfig describeObject;
+        static string RootPath;
+        static string DataPath;
+        static string ExcelPath;
 
-        static string rootPath;
-        static string dataPath;
-        static string excelPath;
+        static TableSerdata Serdata { get { return Serializable<TableSerdata>.Instance; } }
 
         [ShowInInspector]
         [TableList(IsReadOnly = true, AlwaysExpanded = true, HideToolbar = true)]
         public List<TableItem> tables = new List<TableItem>();
 
-        private Dictionary<string, DataFormatOptions> tableDictionary = new Dictionary<string, DataFormatOptions>();
+        private Dictionary<string, DataFormatOptions> _tableDict = new Dictionary<string, DataFormatOptions>();
 
         public object GetInstance()
         {
@@ -49,30 +36,28 @@ namespace UFramework.Editor.Preferences
 
         public void OnRenderBefore()
         {
-            rootPath = IOPath.PathCombine(App.AssetsDirectory, "Table");
-            dataPath = IOPath.PathCombine(rootPath, "Data");
-            excelPath = IOPath.PathCombine(rootPath, "Excel");
-
-            describeObject = UConfig.Read<TableConfig>();
+            RootPath = IOPath.PathCombine(App.AssetsDirectory, "Table");
+            DataPath = IOPath.PathCombine(RootPath, "Data");
+            ExcelPath = IOPath.PathCombine(RootPath, "Excel");
 
             bool hasNew = false;
-            if (Directory.Exists(excelPath))
+            if (Directory.Exists(ExcelPath))
             {
-                var files = Directory.GetFiles(excelPath, "*.xlsx", SearchOption.AllDirectories);
+                var files = Directory.GetFiles(ExcelPath, "*.xlsx", SearchOption.AllDirectories);
                 HashSet<string> fileHashSet = new HashSet<string>();
                 for (int i = 0; i < files.Length; i++)
                 {
                     var fileName = IOPath.FileName(files[i], false);
                     fileHashSet.Add(fileName);
-                    if (!describeObject.tableDictionary.ContainsKey(fileName))
+                    if (!Serdata.tableDict.ContainsKey(fileName))
                     {
                         hasNew = true;
-                        describeObject.tableDictionary.Add(fileName, DataFormatOptions.Array);
+                        Serdata.tableDict.Add(fileName, DataFormatOptions.Array);
                     }
                 }
 
                 List<string> removes = new List<string>();
-                describeObject.tableDictionary.ForEach((item) =>
+                Serdata.tableDict.ForEach((item) =>
                 {
                     if (!fileHashSet.Contains(item.Key))
                     {
@@ -83,18 +68,18 @@ namespace UFramework.Editor.Preferences
                 for (int i = 0; i < removes.Count; i++)
                 {
                     hasNew = true;
-                    describeObject.tableDictionary.Remove(removes[i]);
+                    Serdata.tableDict.Remove(removes[i]);
                 }
             }
             if (hasNew)
             {
-                describeObject.Save();
+                Serdata.Serialization();
             }
 
-            tableDictionary = describeObject.tableDictionary;
+            _tableDict = Serdata.tableDict;
 
             tables.Clear();
-            foreach (KeyValuePair<string, DataFormatOptions> item in tableDictionary)
+            foreach (KeyValuePair<string, DataFormatOptions> item in _tableDict)
             {
                 var tItem = new TableItem();
                 tItem.name = item.Key;
@@ -109,24 +94,22 @@ namespace UFramework.Editor.Preferences
             // 生成数据按钮
             if (SirenixEditorGUI.ToolbarButton(new GUIContent("Generate")))
             {
-                TableConfig tableConfig = UConfig.Read<TableConfig>();
-
                 var modePath = "Assets/Scripts/Automatic/Table";
                 IOPath.DirectoryClear(modePath);
-                IOPath.DirectoryClear(dataPath);
+                IOPath.DirectoryClear(DataPath);
 
-                tableConfig.tableDictionary.ForEach((System.Action<KeyValuePair<string, DataFormatOptions>>)((item) =>
+                Serdata.tableDict.ForEach((System.Action<KeyValuePair<string, DataFormatOptions>>)((item) =>
                 {
                     Logger.Debug("Table Export: " + item.Key);
                     var options = new ExcelReaderOptions();
                     options.tableName = item.Key;
-                    options.outFormatOptions = tableConfig.outFormatOptions;
+                    options.outFormatOptions = Serdata.outFormatOptions;
                     options.dataFormatOptions = item.Value;
-                    options.dataOutDirectory = dataPath;
+                    options.dataOutDirectory = DataPath;
                     options.tableModelOutDirectory = modePath;
-                    var reader = new ExcelReader(string.Format("{0}/{1}.xlsx", excelPath, item.Key), options);
+                    var reader = new ExcelReader(string.Format("{0}/{1}.xlsx", ExcelPath, item.Key), options);
                     reader.Read();
-                    switch (tableConfig.outFormatOptions)
+                    switch (Serdata.outFormatOptions)
                     {
                         case FormatOptions.CSV:
                             new Excel2CSV(reader);
@@ -148,14 +131,12 @@ namespace UFramework.Editor.Preferences
 
         public void OnSaveDescribe()
         {
-            if (describeObject == null) return;
-
             foreach (var item in tables)
             {
-                tableDictionary[item.name] = item.format;
+                _tableDict[item.name] = item.format;
             }
-            describeObject.tableDictionary = tableDictionary;
-            describeObject.Save();
+            Serdata.tableDict = _tableDict;
+            Serdata.Serialization();
         }
     }
 }

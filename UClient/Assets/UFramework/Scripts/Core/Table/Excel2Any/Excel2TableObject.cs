@@ -11,7 +11,7 @@ namespace UFramework.Table
 {
     public class Excel2TableObject : Excel2Any
     {
-        private string template = @"// UFramework Automatic.
+        private string Template = @"// UFramework Automatic.
 
 using System.Collections;
 using System.Collections.Generic;
@@ -123,31 +123,31 @@ $variable$
     }
 }";
 
-        private StringBuilder m_stringBuilder = new StringBuilder();
+        private StringBuilder _sb = new StringBuilder();
 
         public Excel2TableObject(ExcelReader reader) : base(reader)
         {
-            template = template.Replace("$tableName$", reader.options.tableName);
-            template = template.Replace("$tableNameStr$", string.Format("\"{0}\"", reader.options.tableName));
-            template = template.Replace("$dataFormat$", reader.options.dataFormatOptions.ToString());
-            template = template.Replace("$GetIndexDataError$", string.Format("Debug.LogError(\"[{0}Table] DataFormatOptions: {1}. Please use the GetKeyData(index)\");", reader.options.tableName, DataFormatOptions.Array.ToString()));
-            template = template.Replace("$GetIntKeyDataError$", string.Format("Debug.LogError(\"[{0}Table] DataFormatOptions: {1}. Please use the GetKeyData(int-key)\");", reader.options.tableName, DataFormatOptions.IntDictionary.ToString()));
-            template = template.Replace("$GetStringKeyDataError$", string.Format("Debug.LogError(\"[{0}Table] DataFormatOptions: {1}. Please use the GetKeyData(string-key)\");", reader.options.tableName, DataFormatOptions.StringDictionary.ToString()));
-            template = template.Replace("$GetInt2IntKeyDataError$", string.Format("Debug.LogError(\"[{0}Table] DataFormatOptions: {1}. Please use the GetKeyData(int-key, int-key)\");", reader.options.tableName, DataFormatOptions.Int2IntDictionary.ToString()));
+            Template = Template.Replace("$tableName$", reader.options.tableName);
+            Template = Template.Replace("$tableNameStr$", string.Format("\"{0}\"", reader.options.tableName));
+            Template = Template.Replace("$dataFormat$", reader.options.dataFormatOptions.ToString());
+            Template = Template.Replace("$GetIndexDataError$", string.Format("Debug.LogError(\"[{0}Table] DataFormatOptions: {1}. Please use the GetKeyData(index)\");", reader.options.tableName, DataFormatOptions.Array.ToString()));
+            Template = Template.Replace("$GetIntKeyDataError$", string.Format("Debug.LogError(\"[{0}Table] DataFormatOptions: {1}. Please use the GetKeyData(int-key)\");", reader.options.tableName, DataFormatOptions.IntDictionary.ToString()));
+            Template = Template.Replace("$GetStringKeyDataError$", string.Format("Debug.LogError(\"[{0}Table] DataFormatOptions: {1}. Please use the GetKeyData(string-key)\");", reader.options.tableName, DataFormatOptions.StringDictionary.ToString()));
+            Template = Template.Replace("$GetInt2IntKeyDataError$", string.Format("Debug.LogError(\"[{0}Table] DataFormatOptions: {1}. Please use the GetKeyData(int-key, int-key)\");", reader.options.tableName, DataFormatOptions.Int2IntDictionary.ToString()));
 
             for (int i = 0; i < reader.fields.Count; i++)
             {
-                m_stringBuilder.AppendLine("        // " + reader.descriptions[i]);
-                m_stringBuilder.AppendLine(string.Format("        public {0} {1};", TypeUtils.FieldTypeToTypeContent(reader.types[i]), reader.fields[i]));
+                _sb.AppendLine("        // " + reader.descriptions[i]);
+                _sb.AppendLine(string.Format("        public {0} {1};", TypeUtils.FieldTypeToTypeContent(reader.types[i]), reader.fields[i]));
                 // 方便国家化字段调用,为国际化添加字段
                 if (reader.types[i] == FieldType.Language)
                 {
-                    m_stringBuilder.AppendLine(string.Format("        public string {0}_language {{ get {{ return {1} != null ? {2}.ToString() : string.Empty; }} }}", reader.fields[i], reader.fields[i], reader.fields[i]));
+                    _sb.AppendLine(string.Format("        public string {0}_language {{ get {{ return {1} != null ? {2}.ToString() : string.Empty; }} }}", reader.fields[i], reader.fields[i], reader.fields[i]));
                 }
             }
-            template = template.Replace("$variable$", m_stringBuilder.ToString());
+            Template = Template.Replace("$variable$", _sb.ToString());
 
-            IOPath.FileCreateText(reader.options.tableModelOutFilePath, template);
+            IOPath.FileCreateText(reader.options.tableModelOutFilePath, Template);
         }
     }
 }

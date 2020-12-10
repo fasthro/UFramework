@@ -11,7 +11,7 @@ namespace UFramework.Table
 {
     public class Excel2Lua : Excel2Any
     {
-        static string template = @"-- FastEngine
+        static string Template = @"-- FastEngine
 -- excel2table auto generate
 -- $descriptions$
 local datas = {
@@ -19,33 +19,33 @@ $line$
 }
 return datas
 ";
-        private StringBuilder m_stringBuilder = new StringBuilder();
-        private StringBuilder m_wrapStringBuilder = new StringBuilder();
+        private StringBuilder _sb = new StringBuilder();
+        private StringBuilder _wsb = new StringBuilder();
         public Excel2Lua(ExcelReader reader) : base(reader)
         {
             // descriptions
-            m_stringBuilder.Clear();
+            _sb.Clear();
             for (int i = 0; i < reader.descriptions.Count; i++)
             {
-                m_stringBuilder.Append(reader.descriptions[i] + ",");
+                _sb.Append(reader.descriptions[i] + ",");
             }
-            template = template.Replace("$descriptions$", m_stringBuilder.ToString());
+            Template = Template.Replace("$descriptions$", _sb.ToString());
 
             // data0
-            m_stringBuilder.Clear();
+            _sb.Clear();
             for (int i = 0; i < reader.rows.Count; i++)
             {
-                m_stringBuilder.Append("\t[" + i + "] = {");
+                _sb.Append("\t[" + i + "] = {");
                 for (int k = 0; k < reader.fields.Count; k++)
                 {
-                    if (k == reader.fields.Count - 1) { m_stringBuilder.Append(string.Format("{0} = {1} ", reader.fields[k], WrapContext(reader.rows[i].datas[k], reader.types[k]))); }
-                    else { m_stringBuilder.Append(string.Format("{0} = {1}, ", reader.fields[k], WrapContext(reader.rows[i].datas[k], reader.types[k]))); }
+                    if (k == reader.fields.Count - 1) { _sb.Append(string.Format("{0} = {1} ", reader.fields[k], WrapContext(reader.rows[i].datas[k], reader.types[k]))); }
+                    else { _sb.Append(string.Format("{0} = {1}, ", reader.fields[k], WrapContext(reader.rows[i].datas[k], reader.types[k]))); }
                 }
-                if (i == reader.rows.Count - 1) { m_stringBuilder.Append("}\r\n"); }
-                else { m_stringBuilder.Append("},\r\n"); }
+                if (i == reader.rows.Count - 1) { _sb.Append("}\r\n"); }
+                else { _sb.Append("},\r\n"); }
             }
-            template = template.Replace("$line$", m_stringBuilder.ToString());
-            IOPath.FileCreateText(reader.options.luaOutFilePath, template);
+            Template = Template.Replace("$line$", _sb.ToString());
+            IOPath.FileCreateText(reader.options.luaOutFilePath, Template);
         }
 
         private string WrapContext(string context, FieldType type)
@@ -74,55 +74,55 @@ return datas
                     return "{" + context + "}";
 
                 case FieldType.ArrayBoolean:
-                    m_wrapStringBuilder.Clear();
-                    m_wrapStringBuilder.Append("{");
+                    _wsb.Clear();
+                    _wsb.Append("{");
                     bool[] bools = TypeUtils.ContentToArrayBooleanValue(context);
                     for (int i = 0; i < bools.Length; i++)
                     {
                         var bs = bools[i] ? "true" : "false";
-                        if (i == bools.Length - 1) { m_wrapStringBuilder.Append(bs); }
-                        else { m_wrapStringBuilder.Append(bs + ", "); }
+                        if (i == bools.Length - 1) { _wsb.Append(bs); }
+                        else { _wsb.Append(bs + ", "); }
                     }
-                    m_wrapStringBuilder.Append("}");
-                    return m_wrapStringBuilder.ToString();
+                    _wsb.Append("}");
+                    return _wsb.ToString();
                 case FieldType.ArrayString:
-                    m_wrapStringBuilder.Clear();
-                    m_wrapStringBuilder.Append("{");
+                    _wsb.Clear();
+                    _wsb.Append("{");
                     string[] strs = TypeUtils.ContentToArrayStringValue(context);
                     for (int i = 0; i < strs.Length; i++)
                     {
                         var str = string.Format("\"{0}\"", strs[i]);
-                        if (i == strs.Length - 1) { m_wrapStringBuilder.Append(str); }
-                        else { m_wrapStringBuilder.Append(str + ", "); }
+                        if (i == strs.Length - 1) { _wsb.Append(str); }
+                        else { _wsb.Append(str + ", "); }
                     }
-                    m_wrapStringBuilder.Append("}");
-                    return m_wrapStringBuilder.ToString();
+                    _wsb.Append("}");
+                    return _wsb.ToString();
 
                 case FieldType.ArrayVector2:
-                    m_wrapStringBuilder.Clear();
-                    m_wrapStringBuilder.Append("{");
+                    _wsb.Clear();
+                    _wsb.Append("{");
                     Vector2[] v2s = TypeUtils.ContentToArrayVector2Value(context);
                     for (int i = 0; i < v2s.Length; i++)
                     {
                         var v2str = string.Format("Vector2.New({0}, {1})", v2s[i].x, v2s[i].y);
-                        if (i == v2s.Length - 1) { m_wrapStringBuilder.Append(v2str); }
-                        else { m_wrapStringBuilder.Append(v2str + ", "); }
+                        if (i == v2s.Length - 1) { _wsb.Append(v2str); }
+                        else { _wsb.Append(v2str + ", "); }
                     }
-                    m_wrapStringBuilder.Append("}");
-                    return m_wrapStringBuilder.ToString();
+                    _wsb.Append("}");
+                    return _wsb.ToString();
 
                 case FieldType.ArrayVector3:
-                    m_wrapStringBuilder.Clear();
-                    m_wrapStringBuilder.Append("{");
+                    _wsb.Clear();
+                    _wsb.Append("{");
                     Vector3[] v3s = TypeUtils.ContentToArrayVector3Value(context);
                     for (int i = 0; i < v3s.Length; i++)
                     {
                         var v3str = string.Format("Vector3.New({0}, {1}, {2})", v3s[i].x, v3s[i].y, v3s[i].z);
-                        if (i == v3s.Length - 1) { m_wrapStringBuilder.Append(v3str); }
-                        else { m_wrapStringBuilder.Append(v3str + ", "); }
+                        if (i == v3s.Length - 1) { _wsb.Append(v3str); }
+                        else { _wsb.Append(v3str + ", "); }
                     }
-                    m_wrapStringBuilder.Append("}");
-                    return m_wrapStringBuilder.ToString();
+                    _wsb.Append("}");
+                    return _wsb.ToString();
 
                 default:
                     return context;

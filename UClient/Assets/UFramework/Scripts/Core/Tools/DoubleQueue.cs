@@ -9,59 +9,53 @@ namespace UFramework.Tools
 {
     public class DoubleQueue<T> where T : class
     {
-        // 消费者
-        private Queue m_consume;
-        // 生产者
-        private Queue m_produce;
+        private Queue _consume;
+        private Queue _produce;
 
-        /// <summary>
-        /// 双队列
-        /// </summary>
-        /// <param name="capcity"></param>
         public DoubleQueue(int capcity = 16)
         {
-            m_consume = new Queue(capcity);
-            m_produce = new Queue(capcity);
+            _consume = new Queue(capcity);
+            _produce = new Queue(capcity);
         }
 
         public void Enqueue(T arg)
         {
-            lock (m_produce)
+            lock (_produce)
             {
-                m_produce.Enqueue(arg);
+                _produce.Enqueue(arg);
             }
         }
 
         public T Dequeue()
         {
-            return m_consume.Dequeue() as T;
+            return _consume.Dequeue() as T;
         }
 
         public void Swap()
         {
-            lock (m_produce)
+            lock (_produce)
             {
-                if (m_produce.Count > 0)
+                if (_produce.Count > 0)
                 {
-                    Queue temp = m_consume;
-                    m_consume = m_produce;
-                    m_produce = temp;
+                    Queue temp = _consume;
+                    _consume = _produce;
+                    _produce = temp;
                 }
             }
         }
 
         public void Clear()
         {
-            lock (m_produce)
+            lock (_produce)
             {
-                m_produce.Clear();
-                m_consume.Clear();
+                _produce.Clear();
+                _consume.Clear();
             }
         }
 
         public bool IsEmpty()
         {
-            return m_consume.Count == 0;
+            return _consume.Count == 0;
         }
     }
 }

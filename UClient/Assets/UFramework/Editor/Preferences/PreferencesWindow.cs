@@ -28,7 +28,7 @@ namespace UFramework.Editor.Preferences
             AddPage(new AssetBundlePreferencesPage());
             AddPage(new AssetImporterPage());
             AddPage(new AssetImporterPreferencesPage());
-            AddPage(new ConfigPage());
+            AddPage(new SerializePage());
             AddPage(new LanguagePage());
             AddPage(new LuaPage());
             AddPage(new SDKPage());

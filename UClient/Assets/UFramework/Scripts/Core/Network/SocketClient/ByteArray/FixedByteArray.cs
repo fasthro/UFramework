@@ -11,7 +11,10 @@ namespace UFramework.Network
 {
     public class FixedByteArray : AutoByteArray
     {
-        public byte[] buffer { get { return _buffer; } }
+        public byte[] buffer
+        {
+            get { return _buffer; }
+        }
 
         public FixedByteArray(int capacity) : base(capacity, capacity) { }
 

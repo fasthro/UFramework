@@ -9,7 +9,6 @@ using System.IO;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
 using UFramework.Assets;
-using UFramework.Config;
 using UFramework.VersionControl;
 using UnityEditor;
 using UnityEngine;
@@ -19,8 +18,7 @@ namespace UFramework.Editor.VersionControl
     public class VersionPage : IPage, IPageBar
     {
         public string menuName { get { return "Version"; } }
-
-        static VersionControl_VersionConfig describeObject;
+        static VersionSerdata Serdata { get { return Serialize.Serializable<VersionSerdata>.Instance; } }
 
         /// <summary>
         /// 当前版本
@@ -50,18 +48,18 @@ namespace UFramework.Editor.VersionControl
                 if (!item.isRelease) return;
 
             var patch = new VEditorPatch();
-            patch.aVersion = describeObject.version;
+            patch.aVersion = Serdata.version;
             patch.pVersion = patchs.Count;
             patch.timestamp = TimeUtils.UTCTimeStamps();
             patch.UpdateDisplay();
             patchs.Add(patch);
             patchs.Sort((a, b) => b.pVersion.CompareTo(a.pVersion));
 
-            var pv = describeObject.GetPV();
+            var pv = Serdata.GetPlatformVersion();
             foreach (var item in pv.supports)
             {
                 var _patch = new VEditorPatch();
-                _patch.aVersion = describeObject.version;
+                _patch.aVersion = Serdata.version;
                 _patch.pVersion = item.patchs.Count;
                 _patch.timestamp = TimeUtils.UTCTimeStamps();
                 _patch.UpdateDisplay();
@@ -98,11 +96,10 @@ namespace UFramework.Editor.VersionControl
 
         public void OnRenderBefore()
         {
-            describeObject = UConfig.Read<VersionControl_VersionConfig>();
-            var pv = describeObject.GetPV();
+            var pv = Serdata.GetPlatformVersion();
 
-            version = describeObject.version;
-            minVersion = describeObject.minVersion;
+            version = Serdata.version;
+            minVersion = Serdata.minVersion;
             patchs = pv.patchs;
             patchs.Sort((a, b) => b.pVersion.CompareTo(a.pVersion));
 
@@ -117,10 +114,10 @@ namespace UFramework.Editor.VersionControl
 
         public void OnSaveDescribe()
         {
-            var pv = describeObject.GetPV();
+            var pv = Serdata.GetPlatformVersion();
 
-            describeObject.version = version;
-            describeObject.minVersion = minVersion;
+            Serdata.version = version;
+            Serdata.minVersion = minVersion;
             pv.patchs = patchs;
 
             pv.supports.Clear();
@@ -131,7 +128,7 @@ namespace UFramework.Editor.VersionControl
             foreach (var item in historyDictionary)
                 pv.historys.Add(item.Value);
 
-            describeObject.Save();
+            Serdata.Serialization();
         }
 
         public void OnPageBarDraw()
@@ -222,8 +219,8 @@ namespace UFramework.Editor.VersionControl
             supportDictionary.Clear();
             historyDictionary.Clear();
 
-            describeObject.GetPV().releaseVersionCodes.Clear();
-            describeObject.Save();
+            Serdata.GetPlatformVersion().releaseVersionCodes.Clear();
+            Serdata.Serialization();
         }
 
         private void OnMinVersionChange()
@@ -264,23 +261,18 @@ namespace UFramework.Editor.VersionControl
         /// <param name="path"></param>
         public static void BuildVersion(string path)
         {
-            if (describeObject == null)
-                describeObject = UConfig.Read<VersionControl_VersionConfig>();
-
-            var pv = describeObject.GetPV();
-
-            describeObject.Save();
+            var pv = Serdata.GetPlatformVersion();
 
             var ver = new Version();
-            ver.version = describeObject.version;
-            ver.minVersion = describeObject.minVersion;
+            ver.version = Serdata.version;
+            ver.minVersion = Serdata.minVersion;
             ver.timestamp = TimeUtils.UTCTimeStamps();
             CheckVersionFiles(out ver.files);
             CheckVersionScripts(out ver.sDirs, out ver.sFiles);
-            ver.versions.Clear();
+            ver.versionDict.Clear();
 
             var vInfo = new VInfo();
-            vInfo.version = describeObject.version;
+            vInfo.version = Serdata.version;
             vInfo.patchs = new VPatch[pv.patchs.Count];
             for (int i = 0; i < pv.patchs.Count; i++)
             {
@@ -294,7 +286,7 @@ namespace UFramework.Editor.VersionControl
                 patch.len = item.len;
                 vInfo.patchs[i] = patch;
             }
-            ver.versions.Add(vInfo.version, vInfo);
+            ver.versionDict.Add(vInfo.version, vInfo);
 
             foreach (var item in pv.supports)
             {
@@ -313,7 +305,7 @@ namespace UFramework.Editor.VersionControl
                     patch.len = itemPatch.len;
                     info.patchs[i] = patch;
                 }
-                ver.versions.Add(item.version, info);
+                ver.versionDict.Add(item.version, info);
             }
 
             Version.VersionWrite(path, ver);
@@ -324,22 +316,21 @@ namespace UFramework.Editor.VersionControl
         /// </summary>
         public static void BuildReleaseRecords()
         {
-            describeObject = UConfig.Read<VersionControl_VersionConfig>();
-            var pv = describeObject.GetPV();
+            var pv = Serdata.GetPlatformVersion();
 
             bool _create = true;
             foreach (var item in pv.releaseVersionCodes)
             {
-                if (item == describeObject.version)
+                if (item == Serdata.version)
                 {
                     _create = false;
                     break;
                 }
             }
             if (_create)
-                pv.releaseVersionCodes.Add(describeObject.version);
+                pv.releaseVersionCodes.Add(Serdata.version);
 
-            describeObject.Save();
+            Serdata.Serialization();
         }
 
         /// <summary>
@@ -349,10 +340,7 @@ namespace UFramework.Editor.VersionControl
         /// <returns></returns>
         public static bool IsPublishVersion(int version)
         {
-            if (describeObject == null)
-                describeObject = UConfig.Read<VersionControl_VersionConfig>();
-
-            var pv = describeObject.GetPV();
+            var pv = Serdata.GetPlatformVersion();
             foreach (var item in pv.releaseVersionCodes)
                 return item == version;
             return false;
@@ -364,7 +352,7 @@ namespace UFramework.Editor.VersionControl
         /// <returns></returns>
         public static bool IsPublishVersion()
         {
-            return IsPublishVersion(UConfig.Read<VersionControl_VersionConfig>().version);
+            return IsPublishVersion(Serdata.version);
         }
 
         /// <summary>

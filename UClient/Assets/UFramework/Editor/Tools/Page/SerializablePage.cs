@@ -9,7 +9,6 @@ using System.IO;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
 using UFramework.Assets;
-using UFramework.Config;
 using UFramework.VersionControl;
 using UnityEditor;
 using UnityEngine;

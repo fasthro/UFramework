@@ -7,7 +7,6 @@
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
-using UFramework.Config;
 using UnityEditor;
 using UnityEngine;
 

@@ -5,13 +5,12 @@
  */
 using UnityEngine;
 using UnityEditor;
-using UFramework.Config;
 
 namespace UFramework.Editor.Preferences.Assets
 {
     public class TexturePreImporter
     {
-        static AssetImporterConfig importerConfig;
+        static AssetImporterSerdata ImportSerdata { get { return Serialize.Serializable<AssetImporterSerdata>.Instance; } }
 
         public static void Execute(TextureItem item)
         {
@@ -64,16 +63,11 @@ namespace UFramework.Editor.Preferences.Assets
             TextureItem texure = new TextureItem();
             if (searchItem == null)
             {
-                if (importerConfig == null)
-                {
-                    importerConfig = UConfig.Read<AssetImporterConfig>();
-                }
-
                 texure.path = path;
-                texure.textureType = importerConfig.defaultTextureType;
-                texure.androidFormat = importerConfig.defaultAndroidFormat;
-                texure.iosFormat = importerConfig.defaultIOSFormat;
-                texure.maxSize = importerConfig.defaultTextureMaxSize;
+                texure.textureType = ImportSerdata.defaultTextureType;
+                texure.androidFormat = ImportSerdata.defaultAndroidFormat;
+                texure.iosFormat = ImportSerdata.defaultIOSFormat;
+                texure.maxSize = ImportSerdata.defaultTextureMaxSize;
             }
             else
             {

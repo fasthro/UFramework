@@ -24,12 +24,12 @@ namespace UFramework.Natives
     {
         public string DeviceId()
         {
-            return NativeAndroid.native.CallStatic<string>("getDeviceId");
+            return NativeAndroid.NativeClass.CallStatic<string>("getDeviceId");
         }
 
         public string DeviceCountryISO()
         {
-            return NativeAndroid.native.CallStatic<string>("getDeviceCountry");
+            return NativeAndroid.NativeClass.CallStatic<string>("getDeviceCountry");
         }
     }
 
@@ -64,9 +64,9 @@ namespace UFramework.Natives
     /// </summary>
     public class Device : IDevice
     {
-        private UnknownDevice unknown = new UnknownDevice();
-        private AndroidDevice android = new AndroidDevice();
-        private IOSDevice ios = new IOSDevice();
+        private UnknownDevice _unknown = new UnknownDevice();
+        private AndroidDevice _android = new AndroidDevice();
+        private IOSDevice _ios = new IOSDevice();
 
         /// <summary>
         /// 设备唯一标识
@@ -89,11 +89,11 @@ namespace UFramework.Natives
         IDevice GetChannel()
         {
 #if !UNITY_EDITOR && UNITY_ANDROID
-            return android;
+            return _android;
 #elif !UNITY_EDITOR && UNITY_IOS
-            return ios;
+            return _ios;
 #else
-            return unknown;
+            return _unknown;
 #endif
         }
     }

@@ -32,7 +32,7 @@ namespace UFramework.Assets
         {
             loadState = LoadState.Init;
             asset = null;
-            callback = null;
+            _callback = null;
             Asset.Instance.RecycleAsset(this);
         }
 
@@ -47,15 +47,10 @@ namespace UFramework.Assets
         public string name;
         public string url;
         public LoadState loadState { get; protected set; }
-        protected event UCallback<AssetRequest> callback;
+        protected event UCallback<AssetRequest> _callback;
         public virtual bool isAsset
         {
             get { return true; }
-        }
-
-        protected bool isNeedLoad
-        {
-            get { return loadState == LoadState.Init; }
         }
 
         public virtual bool isDone
@@ -75,6 +70,11 @@ namespace UFramework.Assets
         public byte[] bytes { get; protected set; }
 
         public UnityEngine.Object asset { get; internal set; }
+
+        protected bool _isNeedLoad
+        {
+            get { return loadState == LoadState.Init; }
+        }
 
         public virtual void Load()
         {
@@ -99,15 +99,15 @@ namespace UFramework.Assets
 
         protected void OnCallback()
         {
-            this.callback.InvokeGracefully(this);
-            this.callback = null;
+            this._callback.InvokeGracefully(this);
+            this._callback = null;
         }
 
         protected void OnAsyncCallback()
         {
             UCoroutineTask.TaskComplete();
-            this.callback.InvokeGracefully(this);
-            this.callback = null;
+            this._callback.InvokeGracefully(this);
+            this._callback = null;
         }
 
         protected void StartCoroutine()
@@ -118,14 +118,14 @@ namespace UFramework.Assets
         public AssetRequest AddCallback(UCallback<AssetRequest> callback)
         {
             if (callback != null)
-                this.callback += callback;
+                this._callback += callback;
             return this;
         }
 
         public AssetRequest RemoveCallback(UCallback<AssetRequest> callback)
         {
             if (callback != null)
-                this.callback -= callback;
+                this._callback -= callback;
             return this;
         }
 

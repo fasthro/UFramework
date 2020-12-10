@@ -12,7 +12,6 @@ namespace UFramework.Table
 {
     public class ExcelReader
     {
-        private string m_filePath;
         public ExcelReaderOptions options { get; private set; }
 
         public List<string> descriptions { get; private set; }
@@ -21,10 +20,12 @@ namespace UFramework.Table
         public List<int> ignoreIndexs { get; private set; }
         public List<ExcelReaderRow> rows { get; private set; }
 
+        private string _filePath;
+
         public ExcelReader(string filePath, ExcelReaderOptions options)
         {
             Logger.Debug(filePath);
-            this.m_filePath = filePath;
+            this._filePath = filePath;
             this.options = options;
             this.descriptions = new List<string>();
             this.fields = new List<string>();
@@ -44,7 +45,7 @@ namespace UFramework.Table
             FieldType fieldType;
             bool removeIgnore = false;
 
-            using (var stream = File.Open(m_filePath, FileMode.Open, FileAccess.Read))
+            using (var stream = File.Open(_filePath, FileMode.Open, FileAccess.Read))
             {
                 var reader = ExcelReaderFactory.CreateReader(stream);
                 var result = reader.AsDataSet();

@@ -7,7 +7,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using LuaInterface;
-using UFramework.Config;
 using UFramework.VersionControl;
 using UnityEngine;
 
@@ -78,8 +77,7 @@ namespace UFramework
         {
             get
             {
-                var appConfig = UConfig.Read<AppConfig>();
-                if (appConfig.isDevelopmentVersion)
+                if (Serialize.Serializable<AppSerdata>.Instance.isDevelopmentVersion)
                     return IOPath.PathCombine(Application.dataPath, "Scripts/Automatic/Lua/PB");
                 else return IOPath.PathCombine(Application.persistentDataPath, "Lua/9eb42865081803c085ef7ce653312ab8/PB");
             }

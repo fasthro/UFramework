@@ -6,7 +6,6 @@
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
-using UFramework.Config;
 using UFramework.Language;
 using UnityEditor;
 using UnityEngine;
@@ -17,7 +16,7 @@ namespace UFramework.Editor.Preferences
     {
         public string menuName { get { return "Language"; } }
 
-        static AppConfig describeObject;
+        static AppSerdata Serdata { get { return Serialize.Serializable<AppSerdata>.Instance; } }
 
         /// <summary>
         /// 是否使用系统语言
@@ -47,20 +46,19 @@ namespace UFramework.Editor.Preferences
         public void OnRenderBefore()
         {
             bool hasNew = false;
-            describeObject = UConfig.Read<AppConfig>();
-            if (describeObject.supportedLanguages.Count == 0)
+            if (Serdata.supportedLanguages.Count == 0)
             {
                 hasNew = true;
-                describeObject.supportedLanguages.Add(describeObject.defaultLanguage);
+                Serdata.supportedLanguages.Add(Serdata.defaultLanguage);
             }
 
-            useSystemLanguage = describeObject.useSystemLanguage;
-            defaultLanguage = describeObject.defaultLanguage;
-            supportedLanguages = describeObject.supportedLanguages;
+            useSystemLanguage = Serdata.useSystemLanguage;
+            defaultLanguage = Serdata.defaultLanguage;
+            supportedLanguages = Serdata.supportedLanguages;
 
             if (hasNew)
             {
-                describeObject.Save();
+                Serdata.Serialization();
             }
         }
 
@@ -69,7 +67,7 @@ namespace UFramework.Editor.Preferences
             if (SirenixEditorGUI.ToolbarButton(new GUIContent("Generate")))
             {
                 var opt = new ExcelReaderOptions();
-                opt.languages = describeObject.supportedLanguages;
+                opt.languages = Serdata.supportedLanguages;
                 var reader = new ExcelReader(opt);
                 reader.Read();
 
@@ -84,11 +82,11 @@ namespace UFramework.Editor.Preferences
 
         public void OnSaveDescribe()
         {
-            if (describeObject == null) return;
-            describeObject.useSystemLanguage = useSystemLanguage;
-            describeObject.defaultLanguage = defaultLanguage;
-            describeObject.supportedLanguages = supportedLanguages;
-            describeObject.Save();
+            if (Serdata == null) return;
+            Serdata.useSystemLanguage = useSystemLanguage;
+            Serdata.defaultLanguage = defaultLanguage;
+            Serdata.supportedLanguages = supportedLanguages;
+            Serdata.Serialization();
         }
     }
 }

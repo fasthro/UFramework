@@ -30,20 +30,20 @@ namespace UFramework.Natives
 
     public class ObbDownloader
     {
-        private static AndroidJavaClass _obbDownloaderNative;
+        static AndroidJavaClass _ObbDownloaderNativeClass;
 
         /// <summary>
         /// obb downloader
         /// </summary>
-        public static AndroidJavaClass obbDownloaderNative
+        public static AndroidJavaClass ObbDownloaderNativeClass
         {
             get
             {
-                if (_obbDownloaderNative == null)
+                if (_ObbDownloaderNativeClass == null)
                 {
-                    _obbDownloaderNative = new AndroidJavaClass(NativeAndroid.MAIN_PACKAGE + ".obbdownloader.ObbDownloader");
+                    _ObbDownloaderNativeClass = new AndroidJavaClass(NativeAndroid.MAIN_PACKAGE + ".obbdownloader.ObbDownloader");
                 }
-                return _obbDownloaderNative;
+                return _ObbDownloaderNativeClass;
             }
         }
 
@@ -51,9 +51,9 @@ namespace UFramework.Natives
         /// android.os.Environment
         /// </summary>
         /// <returns></returns>
-        private static AndroidJavaClass environmentClass = new AndroidJavaClass("android.os.Environment");
+        static AndroidJavaClass EnvironmentClass = new AndroidJavaClass("android.os.Environment");
 
-        private static string _expansionFileDirectory;
+        static string _ExpansionFileDirectory;
 
         /// <summary>
         /// 扩展文件目录
@@ -63,24 +63,24 @@ namespace UFramework.Natives
         {
             get
             {
-                if (environmentClass.CallStatic<string>("getExternalStorageState") != "mounted")
+                if (EnvironmentClass.CallStatic<string>("getExternalStorageState") != "mounted")
                 {
-                    _expansionFileDirectory = null;
+                    _ExpansionFileDirectory = null;
                 }
-                else if (string.IsNullOrEmpty(_expansionFileDirectory))
+                else if (string.IsNullOrEmpty(_ExpansionFileDirectory))
                 {
                     const string obbPath = "Android/obb";
-                    using (var externalStorageDirectory = environmentClass.CallStatic<AndroidJavaObject>("getExternalStorageDirectory"))
+                    using (var externalStorageDirectory = EnvironmentClass.CallStatic<AndroidJavaObject>("getExternalStorageDirectory"))
                     {
                         var externalRoot = externalStorageDirectory.Call<string>("getPath");
-                        _expansionFileDirectory = string.Format("{0}/{1}/{2}", externalRoot, obbPath, NativeAndroid.PackageName);
+                        _ExpansionFileDirectory = string.Format("{0}/{1}/{2}", externalRoot, obbPath, NativeAndroid.PackageName);
                     }
                 }
-                return _expansionFileDirectory;
+                return _ExpansionFileDirectory;
             }
         }
 
-        private static string _mainObbPath;
+        static string _MainObbPath;
 
         /// <summary>
         /// main obb path
@@ -90,15 +90,15 @@ namespace UFramework.Natives
         {
             get
             {
-                if (string.IsNullOrEmpty(_mainObbPath))
+                if (string.IsNullOrEmpty(_MainObbPath))
                 {
-                    _mainObbPath = GetOBBPath("main");
+                    _MainObbPath = GetOBBPath("main");
                 }
-                return _mainObbPath;
+                return _MainObbPath;
             }
         }
 
-        private static string _patchObbPath;
+        static string _PatchObbPath;
 
         /// <summary>
         /// patch obb path
@@ -108,28 +108,28 @@ namespace UFramework.Natives
         {
             get
             {
-                if (string.IsNullOrEmpty(_patchObbPath))
+                if (string.IsNullOrEmpty(_PatchObbPath))
                 {
-                    _patchObbPath = GetOBBPath("patch");
+                    _PatchObbPath = GetOBBPath("patch");
                 }
-                return _patchObbPath;
+                return _PatchObbPath;
             }
         }
 
         /// <summary>
         /// 扩展文件下载回调适配器
         /// </summary>
-        private static ObbDownloadListenerAdapter obbDownloadListenerAdapter;
+        static ObbDownloadListenerAdapter Adapter;
 
         /// <summary>
         /// 初始化
         /// </summary>
         public static void Initialize()
         {
-            obbDownloaderNative.CallStatic("initialize", NativeAndroid.Context, false);
-            obbDownloaderNative.SetStatic("PUBLIC_KEY", "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwINnSEZSgRJL+ASiU/iF/a2RSC/hzDG/PB2bQrxFWN0BURjhZH2UV6ysT7sjIv57CHulOq31VHyBjE5kQyivhcK2sOiHByyH8z3aLn2lxnAXAA38Cb0QbL3PV6Gifl29lyxtrGcAlO/fI5GxqLvwT312g/SeOncXroLQwVxFW/EPWjz9PrJ6R4BL5ivs1Us2/NW1eWh89d+aWp0LSbBXq0YUoiqV5Nju1k9toqOYH1Ztxp308RmhNx31iPowiwOlTU0WRUZzVifmz27BbjSW/ufWPYPWhBKafQCDIt5UdkZ82zsbkrf7/T8k+FSJxLMJBdq7muruXvF/QXBh8MpHkwIDAQAB");
-            obbDownloaderNative.SetStatic("SALT", new byte[] { 1, 43, 256 - 12, 256 - 1, 54, 98, 256 - 100, 256 - 12, 43, 2, 256 - 8, 256 - 4, 9, 5, 256 - 106, 256 - 108, 256 - 33, 45, 256 - 1, 84 });
-            obbDownloaderNative.SetStatic("MAIN_OBB_VERSION", NativeAndroid.VersionCode);
+            ObbDownloaderNativeClass.CallStatic("initialize", NativeAndroid.Context, false);
+            ObbDownloaderNativeClass.SetStatic("PUBLIC_KEY", "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwINnSEZSgRJL+ASiU/iF/a2RSC/hzDG/PB2bQrxFWN0BURjhZH2UV6ysT7sjIv57CHulOq31VHyBjE5kQyivhcK2sOiHByyH8z3aLn2lxnAXAA38Cb0QbL3PV6Gifl29lyxtrGcAlO/fI5GxqLvwT312g/SeOncXroLQwVxFW/EPWjz9PrJ6R4BL5ivs1Us2/NW1eWh89d+aWp0LSbBXq0YUoiqV5Nju1k9toqOYH1Ztxp308RmhNx31iPowiwOlTU0WRUZzVifmz27BbjSW/ufWPYPWhBKafQCDIt5UdkZ82zsbkrf7/T8k+FSJxLMJBdq7muruXvF/QXBh8MpHkwIDAQAB");
+            ObbDownloaderNativeClass.SetStatic("SALT", new byte[] { 1, 43, 256 - 12, 256 - 1, 54, 98, 256 - 100, 256 - 12, 43, 2, 256 - 8, 256 - 4, 9, 5, 256 - 106, 256 - 108, 256 - 33, 45, 256 - 1, 84 });
+            ObbDownloaderNativeClass.SetStatic("MAIN_OBB_VERSION", NativeAndroid.VersionCode);
             // TODO Patch Obb
             // obbDownloaderNative.SetStatic("PATCH_OBB_VERSION", NativeAndroid.VersionCode);
         }
@@ -139,7 +139,7 @@ namespace UFramework.Natives
         /// </summary>
         public static void Connect()
         {
-            obbDownloaderNative.CallStatic("connect");
+            ObbDownloaderNativeClass.CallStatic("connect");
         }
 
         /// <summary>
@@ -147,7 +147,7 @@ namespace UFramework.Natives
         /// </summary>
         public static void Disconnect()
         {
-            obbDownloaderNative.CallStatic("disconnect");
+            ObbDownloaderNativeClass.CallStatic("disconnect");
         }
 
         /// <summary>
@@ -180,8 +180,8 @@ namespace UFramework.Natives
         {
             if (listener != null)
             {
-                obbDownloadListenerAdapter = new ObbDownloadListenerAdapter(listener);
-                obbDownloaderNative.CallStatic("setDownloadListener", obbDownloadListenerAdapter);
+                Adapter = new ObbDownloadListenerAdapter(listener);
+                ObbDownloaderNativeClass.CallStatic("setDownloadListener", Adapter);
             }
         }
 
@@ -191,7 +191,7 @@ namespace UFramework.Natives
         /// <param name="listener"></param>
         public static void DownloadExpansion()
         {
-            obbDownloaderNative.CallStatic("downloadExpansion");
+            ObbDownloaderNativeClass.CallStatic("downloadExpansion");
         }
 
         /// <summary>
@@ -199,7 +199,7 @@ namespace UFramework.Natives
         /// </summary>
         public static void ContinueDownload()
         {
-            obbDownloaderNative.CallStatic("continueDownload");
+            ObbDownloaderNativeClass.CallStatic("continueDownload");
         }
 
         /// <summary>
@@ -207,7 +207,7 @@ namespace UFramework.Natives
         /// </summary>
         public static void PauseDownload()
         {
-            obbDownloaderNative.CallStatic("pauseDownload");
+            ObbDownloaderNativeClass.CallStatic("pauseDownload");
         }
 
         /// <summary>
@@ -215,7 +215,7 @@ namespace UFramework.Natives
         /// </summary>
         public static void AbortDownload()
         {
-            obbDownloaderNative.CallStatic("abortDownload");
+            ObbDownloaderNativeClass.CallStatic("abortDownload");
         }
 
         #endregion

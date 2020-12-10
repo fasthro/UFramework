@@ -25,19 +25,19 @@ namespace UFramework.Coroutine
         /// <summary>
         /// 任务最大执行数量
         /// </summary>
-        private const int maxRunCount = 8;
+        const int MAX_RUN_COUNT = 8;
 
         /// <summary>
         /// 当前任务数量
         /// </summary>
-        private static int runCount;
+        static int RunCount;
 
         /// <summary>
         /// 任务执行者列表
         /// </summary>
         /// <typeparam name="ICoroutineTaskRunner"></typeparam>
         /// <returns></returns>
-        private static LinkedList<IUCoroutineTaskRunner> runners = new LinkedList<IUCoroutineTaskRunner>();
+        static LinkedList<IUCoroutineTaskRunner> Runners = new LinkedList<IUCoroutineTaskRunner>();
 
         /// <summary>
         /// Add Task Runner
@@ -45,7 +45,7 @@ namespace UFramework.Coroutine
         /// <param name="runner"></param>
         public static void AddTaskRunner(IUCoroutineTaskRunner runner)
         {
-            runners.AddLast(runner);
+            Runners.AddLast(runner);
             TryRun();
         }
 
@@ -54,13 +54,13 @@ namespace UFramework.Coroutine
         /// </summary>
         private static void TryRun()
         {
-            if (runners.Count == 0) return;
-            if (runCount >= maxRunCount) return;
+            if (Runners.Count == 0) return;
+            if (RunCount >= MAX_RUN_COUNT) return;
 
-            var runner = runners.First.Value;
-            runners.RemoveFirst();
+            var runner = Runners.First.Value;
+            Runners.RemoveFirst();
 
-            ++runCount;
+            ++RunCount;
             UFactoryCoroutine.CreateRun(runner.OnCoroutineTaskRun());
         }
 
@@ -69,7 +69,7 @@ namespace UFramework.Coroutine
         /// </summary>
         private static void TryNextRun()
         {
-            --runCount;
+            --RunCount;
             TryRun();
         }
 

@@ -7,11 +7,11 @@ namespace UFramework.Table
 {
     public abstract class Excel2Any
     {
-        protected ExcelReader reader;
+        protected ExcelReader _reader;
         
         public Excel2Any(ExcelReader reader)
         {
-            this.reader = reader;
+            this._reader = reader;
         }
     }
 }

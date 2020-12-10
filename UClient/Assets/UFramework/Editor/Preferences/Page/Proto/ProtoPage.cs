@@ -11,7 +11,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
-using UFramework.Config;
+using UFramework.Serialize;
 using UnityEditor;
 using UnityEngine;
 
@@ -20,12 +20,14 @@ namespace UFramework.Editor.Preferences
     public class ProtoPage : IPage, IPageBar
     {
         public string menuName { get { return "Proto"; } }
+
         static string CSOutpath;
         static string PBOutpath;
         static string ProtoDir;
         static string Protogen;
         static string PBServerOutpath;
-        static ProtoConfig describeObject;
+
+        static ProtoSerdata Serdata { get { return Serializable<ProtoSerdata>.Instance; } }
 
         [ShowInInspector]
         [ListDrawerSettings(Expanded = true, HideRemoveButton = true, HideAddButton = true)]
@@ -46,8 +48,6 @@ namespace UFramework.Editor.Preferences
             Protogen = IOPath.PathCombine(rootDir, "Tools", "protoc.exe");
             PBServerOutpath = IOPath.PathCombine(rootDir, "UServer/src/proto/pbc");
 
-            describeObject = UConfig.Read<ProtoConfig>();
-
             protos.Clear();
             var files = IOPath.DirectoryGetFiles(ProtoDir, "*.proto", SearchOption.AllDirectories);
             for (int i = 0; i < files.Length; i++)
@@ -63,9 +63,9 @@ namespace UFramework.Editor.Preferences
             }
 
             Dictionary<string, ProtoFile> protoDic = new Dictionary<string, ProtoFile>();
-            for (int i = 0; i < describeObject.protos.Count; i++)
+            for (int i = 0; i < Serdata.protos.Count; i++)
             {
-                var proto = describeObject.protos[i];
+                var proto = Serdata.protos[i];
                 protoDic.Add(proto.path, proto);
             }
 
@@ -119,9 +119,9 @@ namespace UFramework.Editor.Preferences
 
         public void OnSaveDescribe()
         {
-            describeObject.protos.Clear();
-            describeObject.protos.AddRange(protos);
-            describeObject.Save();
+            Serdata.protos.Clear();
+            Serdata.protos.AddRange(protos);
+            Serdata.Serialization();
         }
 
         private void Sort()

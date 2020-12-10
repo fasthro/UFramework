@@ -79,7 +79,7 @@ namespace UFramework.Sample
 
             if (GUILayout.Button("Restart App", GUILayout.Width(300), GUILayout.Height(100)))
             {
-                Native.utils.Restart();
+                Native.Util.Restart();
             }
         }
 

@@ -6,7 +6,6 @@
 using System.Collections.Generic;
 using FairyGUI;
 using UFramework.Assets;
-using UFramework.Config;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -18,14 +17,17 @@ namespace UFramework.UI
     {
         public UIPackage package { get; private set; }
 
-        private AssetRequest m_bundleRequest;
+        private AssetRequest _bundleRequest;
 
-        public FairyPackage(string packageName) : base(packageName) { }
+        public FairyPackage(string packageName) : base(packageName)
+        {
+
+        }
 
         protected override void LoadMain()
         {
 #if UNITY_EDITOR
-            package = UIPackage.AddPackage(IOPath.PathCombine(UConfig.Read<AppConfig>().uiDirectory, string.Format("{0}/{1}", packageName, packageName)),
+            package = UIPackage.AddPackage(IOPath.PathCombine(Serialize.Serializable<AppSerdata>.Instance.uiDirectory, string.Format("{0}/{1}", packageName, packageName)),
                 (string name, string extension, System.Type type, out DestroyMethod destroyMethod) =>
                 {
                     destroyMethod = DestroyMethod.Unload;
@@ -34,7 +36,7 @@ namespace UFramework.UI
             );
             LoadDependen();
 #else
-            m_bundleRequest = Asset.LoadBundleAsync(IOPath.PathCombine(UConfig.Read<AppConfig>().uiDirectory, packageName), (request) =>
+            _bundleRequest = Asset.LoadBundleAsync(IOPath.PathCombine(UConfig.Read<AppConfig>().uiDirectory, packageName), (request) =>
             {
                 if (!isStandby)
                 {
@@ -56,25 +58,25 @@ namespace UFramework.UI
                     {
                         if (item.Key == "name")
                         {
-                            if (!dependences.Contains(item.Value) && !packageName.Equals(item.Value))
+                            if (!_dependences.Contains(item.Value) && !packageName.Equals(item.Value))
                             {
-                                dependences.Add(item.Value);
+                                _dependences.Add(item.Value);
                             }
                         }
                     }
                 }
 
-                dependenCount = dependences.Count;
-                foreach (var item in dependences)
+                _dependenCount = _dependences.Count;
+                foreach (var item in _dependences)
                     PackageAgents.Load(item, OnDependen);
-                if (dependenCount == 0) LoadCompleted();
+                if (_dependenCount == 0) LoadCompleted();
             }
         }
 
         private void OnDependen()
         {
-            dependenCount--;
-            if (dependenCount <= 0)
+            _dependenCount--;
+            if (_dependenCount <= 0)
             {
                 LoadCompleted();
             }
@@ -82,14 +84,14 @@ namespace UFramework.UI
 
         protected override void LoadCompleted()
         {
-            if (!isStandby)
+            if (!_isStandby)
                 LuaManager.Call<string>("fgui.load_component_package", packageName);
             base.LoadCompleted();
         }
 
         protected override void OnReferenceEmpty()
         {
-            if (isStandby) return;
+            if (_isStandby) return;
 
             base.OnReferenceEmpty();
 
@@ -97,13 +99,13 @@ namespace UFramework.UI
                 UIPackage.RemovePackage(package.id);
             package = null;
 
-            foreach (var item in dependences)
+            foreach (var item in _dependences)
                 PackageAgents.Unload(item);
-            dependences.Clear();
+            _dependences.Clear();
 
-            if (m_bundleRequest != null)
-                m_bundleRequest.Unload();
-            m_bundleRequest = null;
+            if (_bundleRequest != null)
+                _bundleRequest.Unload();
+            _bundleRequest = null;
         }
     }
 }

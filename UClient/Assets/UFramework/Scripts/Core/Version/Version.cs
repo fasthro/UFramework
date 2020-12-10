@@ -6,7 +6,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using UFramework.Config;
 using UnityEngine;
 
 namespace UFramework.VersionControl
@@ -138,7 +137,7 @@ namespace UFramework.VersionControl
         /// 版本信息列表
         /// </summary>
         /// <value></value>
-        public Dictionary<int, VInfo> versions = new Dictionary<int, VInfo>();
+        public Dictionary<int, VInfo> versionDict = new Dictionary<int, VInfo>();
 
         /// <summary>
         /// 
@@ -148,7 +147,7 @@ namespace UFramework.VersionControl
         public VInfo GetVersionInfo(int _version)
         {
             VInfo info = null;
-            versions.TryGetValue(_version, out info);
+            versionDict.TryGetValue(_version, out info);
             return info;
         }
 
@@ -239,7 +238,7 @@ namespace UFramework.VersionControl
                         }
                         info.patchs[k] = patch;
                     }
-                    ver.versions.Add(info.version, info);
+                    ver.versionDict.Add(info.version, info);
                 }
             }
             return ver;
@@ -281,8 +280,8 @@ namespace UFramework.VersionControl
                 }
 
                 // versions
-                writer.Write(ver.versions.Count);
-                foreach (var item in ver.versions)
+                writer.Write(ver.versionDict.Count);
+                foreach (var item in ver.versionDict)
                 {
                     var info = item.Value;
                     writer.Write(info.version);

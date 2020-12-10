@@ -13,9 +13,9 @@ namespace UFramework.Assets
     public class BundleRequest : AssetRequest
     {
         public AssetBundle assetBundle { get { return asset as AssetBundle; } }
-        private List<BundleRequest> dependencies = new List<BundleRequest>();
-
         public override bool isAsset { get { return false; } }
+
+        private List<BundleRequest> _dependencies = new List<BundleRequest>();
 
         public static BundleRequest Allocate()
         {
@@ -37,7 +37,7 @@ namespace UFramework.Assets
             {
                 var bundle = Asset.Instance.GetBundle<BundleRequest>(bundles[i], false);
                 bundle.Load();
-                dependencies.Add(bundle);
+                _dependencies.Add(bundle);
             }
             asset = AssetBundle.LoadFromFile(url);
             loadState = LoadState.Loaded;
@@ -47,13 +47,13 @@ namespace UFramework.Assets
         public override void Unload()
         {
             base.Unload();
-            for (int i = 0; i < dependencies.Count; i++)
-                dependencies[i].Unload();
+            for (int i = 0; i < _dependencies.Count; i++)
+                _dependencies[i].Unload();
         }
 
         protected override void OnReferenceEmpty()
         {
-            dependencies.Clear();
+            _dependencies.Clear();
             if (assetBundle != null)
             {
                 assetBundle.Unload(true);

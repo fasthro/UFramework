@@ -5,7 +5,6 @@
  */
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
-using UFramework.Config;
 using UnityEngine;
 
 namespace UFramework.Editor.VersionControl
@@ -13,7 +12,7 @@ namespace UFramework.Editor.VersionControl
     public class AppPage : IPage, IPageBar
     {
         public string menuName { get { return "Application"; } }
-        static AppConfig describeObject;
+        static AppSerdata Serdata { get { return Serialize.Serializable<AppSerdata>.Instance; } }
 
         /// <summary>
         /// 开发版本
@@ -54,11 +53,10 @@ namespace UFramework.Editor.VersionControl
 
         public void OnRenderBefore()
         {
-            describeObject = UConfig.Read<AppConfig>();
-            isDevelopmentVersion = describeObject.isDevelopmentVersion;
-            appEnvironmentType = describeObject.appEnvironmentType;
-            versionBaseURL = describeObject.versionBaseURL;
-            logLevel = describeObject.logLevel;
+            isDevelopmentVersion = Serdata.isDevelopmentVersion;
+            appEnvironmentType = Serdata.appEnvironmentType;
+            versionBaseURL = Serdata.versionBaseURL;
+            logLevel = Serdata.logLevel;
         }
 
         public void OnPageBarDraw()
@@ -68,17 +66,17 @@ namespace UFramework.Editor.VersionControl
 
         public void OnSaveDescribe()
         {
-            if (describeObject == null) return;
+            if (Serdata == null) return;
 
             // General
-            describeObject.isDevelopmentVersion = isDevelopmentVersion;
-            describeObject.appEnvironmentType = appEnvironmentType;
-            describeObject.versionBaseURL = versionBaseURL;
+            Serdata.isDevelopmentVersion = isDevelopmentVersion;
+            Serdata.appEnvironmentType = appEnvironmentType;
+            Serdata.versionBaseURL = versionBaseURL;
 
             // Debug
-            describeObject.logLevel = logLevel;
+            Serdata.logLevel = logLevel;
 
-            describeObject.Save();
+            Serdata.Serialization();
         }
     }
 }

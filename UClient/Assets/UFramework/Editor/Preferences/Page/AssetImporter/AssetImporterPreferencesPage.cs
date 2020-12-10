@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Sirenix.OdinInspector;
-using UFramework.Config;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -17,7 +16,7 @@ namespace UFramework.Editor.Preferences.Assets
     public class AssetImporterPreferencesPage : IPage, IPageBar
     {
         public string menuName { get { return "AssetImporter/Preferences"; } }
-        static AssetImporterConfig describeObject;
+        static AssetImporterSerdata Serdata { get { return Serialize.Serializable<AssetImporterSerdata>.Instance; } }
 
         /// <summary>
         /// texture pattern
@@ -83,35 +82,33 @@ namespace UFramework.Editor.Preferences.Assets
 
         public void OnRenderBefore()
         {
-            describeObject = UConfig.Read<AssetImporterConfig>();
+            texturePattern = Serdata.texturePattern;
+            modePattern = Serdata.modePattern;
+            audioPattern = Serdata.audioPattern;
 
-            texturePattern = describeObject.texturePattern;
-            modePattern = describeObject.modePattern;
-            audioPattern = describeObject.audioPattern;
+            textures = Serdata.texturePaths;
+            modes = Serdata.modePaths;
+            audios = Serdata.audioPaths;
 
-            textures = describeObject.texturePaths;
-            modes = describeObject.modePaths;
-            audios = describeObject.audioPaths;
-
-            defaultTextureType = describeObject.defaultTextureType;
-            defaultAndroidFormat = describeObject.defaultAndroidFormat;
-            defaultIOSFormat = describeObject.defaultIOSFormat;
-            defaultTextureMaxSize = describeObject.defaultTextureMaxSize;
+            defaultTextureType = Serdata.defaultTextureType;
+            defaultAndroidFormat = Serdata.defaultAndroidFormat;
+            defaultIOSFormat = Serdata.defaultIOSFormat;
+            defaultTextureMaxSize = Serdata.defaultTextureMaxSize;
         }
 
         public void OnSaveDescribe()
         {
-            if (describeObject == null) return;
-            describeObject.texturePaths = textures;
-            describeObject.modePaths = modes;
-            describeObject.audioPaths = audios;
+            if (Serdata == null) return;
+            Serdata.texturePaths = textures;
+            Serdata.modePaths = modes;
+            Serdata.audioPaths = audios;
 
-            describeObject.defaultTextureType = defaultTextureType;
-            describeObject.defaultAndroidFormat = defaultAndroidFormat;
-            describeObject.defaultIOSFormat = defaultIOSFormat;
-            describeObject.defaultTextureMaxSize = defaultTextureMaxSize;
+            Serdata.defaultTextureType = defaultTextureType;
+            Serdata.defaultAndroidFormat = defaultAndroidFormat;
+            Serdata.defaultIOSFormat = defaultIOSFormat;
+            Serdata.defaultTextureMaxSize = defaultTextureMaxSize;
 
-            describeObject.Save();
+            Serdata.Serialization();
         }
 
         public void OnPageBarDraw()
@@ -128,16 +125,9 @@ namespace UFramework.Editor.Preferences.Assets
             path = IOPath.PathUnitySeparator(path);
             string[] parts = path.Split(Path.AltDirectorySeparatorChar);
 
-            List<TextureSearchPathItem> searchPaths = new List<TextureSearchPathItem>();
-            if (describeObject == null)
-            {
-                describeObject = UConfig.Read<AssetImporterConfig>();
-            }
-            searchPaths = describeObject.texturePaths;
-
             Dictionary<int, int> results = new Dictionary<int, int>();
             int index = 0;
-            foreach (var item in searchPaths)
+            foreach (var item in Serdata.texturePaths)
             {
                 string[] cparts = item.path.Split(Path.AltDirectorySeparatorChar);
                 var count = Mathf.Max(parts.Length, cparts.Length);
@@ -173,7 +163,7 @@ namespace UFramework.Editor.Preferences.Assets
             }
 
             if (index == -1) return null;
-            else return searchPaths[index];
+            else return Serdata.texturePaths[index];
         }
     }
 }

@@ -14,8 +14,9 @@ namespace UFramework.Assets
     public class WebBundleRequest : AssetRequest
     {
         public AssetBundle assetBundle { get { return asset as AssetBundle; } }
-        private List<WebBundleRequest> dependencies = new List<WebBundleRequest>();
-        private UnityWebRequest request;
+
+        private List<WebBundleRequest> _dependencies = new List<WebBundleRequest>();
+        private UnityWebRequest _request;
 
         public override bool isAsset { get { return false; } }
 
@@ -32,11 +33,11 @@ namespace UFramework.Assets
         public override IEnumerator OnCoroutineTaskRun()
         {
             loadState = LoadState.LoadBundle;
-            request = UnityWebRequestAssetBundle.GetAssetBundle(url);
-            yield return request.SendWebRequest();
-            if (loadState == LoadState.LoadBundle && request.isDone)
+            _request = UnityWebRequestAssetBundle.GetAssetBundle(url);
+            yield return _request.SendWebRequest();
+            if (loadState == LoadState.LoadBundle && _request.isDone)
             {
-                asset = DownloadHandlerAssetBundle.GetContent(request);
+                asset = DownloadHandlerAssetBundle.GetContent(_request);
                 loadState = LoadState.Loaded;
                 OnAsyncCallback();
             }
@@ -53,7 +54,7 @@ namespace UFramework.Assets
                 var bundle = Asset.Instance.GetBundle<WebBundleRequest>(bundles[i], true);
                 bundle.AddCallback(OnBundleDone);
                 bundle.Load();
-                dependencies.Add(bundle);
+                _dependencies.Add(bundle);
             }
         }
 
@@ -66,17 +67,17 @@ namespace UFramework.Assets
         public override void Unload()
         {
             base.Unload();
-            for (int i = 0; i < dependencies.Count; i++)
-                dependencies[i].Unload();
+            for (int i = 0; i < _dependencies.Count; i++)
+                _dependencies[i].Unload();
         }
 
         protected override void OnReferenceEmpty()
         {
-            dependencies.Clear();
-            if (request != null)
+            _dependencies.Clear();
+            if (_request != null)
             {
-                request.Dispose();
-                request = null;
+                _request.Dispose();
+                _request = null;
             }
             if (assetBundle != null)
             {

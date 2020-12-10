@@ -11,18 +11,18 @@ namespace UFramework.Table
 {
     public abstract class TableParse
     {
-        protected string m_tableName;
-        protected FormatOptions m_format;
-        protected string m_content;
+        protected string _tableName;
+        protected FormatOptions _format;
+        protected string _content;
 
-        public TableParse(string tableName, FormatOptions format) { m_tableName = tableName; }
+        public TableParse(string tableName, FormatOptions format) { _tableName = tableName; }
 
         protected void LoadAsset()
         {
-            if (!string.IsNullOrEmpty(m_content)) return;
-            var filePath = IOPath.PathCombine(App.AssetsDirectory, "Table", "Data", m_tableName + ".csv");
+            if (!string.IsNullOrEmpty(_content)) return;
+            var filePath = IOPath.PathCombine(App.AssetsDirectory, "Table", "Data", _tableName + ".csv");
 #if UNITY_EDITOR
-            m_content = IOPath.FileReadText(filePath);
+            _content = IOPath.FileReadText(filePath);
 #else
             var asset = Asset.LoadAsset(filePath, typeof(TextAsset));
             m_content = asset.GetAsset<TextAsset>().text;

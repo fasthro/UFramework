@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Sirenix.OdinInspector;
-using UFramework.Config;
+using UFramework.Serialize;
 using UnityEditor;
 using UnityEngine;
 
@@ -203,12 +203,12 @@ namespace UFramework.Editor.Preferences.Assets
         public string pattern = "*";
 
         #region 路径验证
-        private string validateInputPathMsg;
+        private string _validateInputPathMsg;
         private bool ValidateInputPath(string value)
         {
             if (string.IsNullOrEmpty(value) || !IOPath.DirectoryExists(value))
             {
-                validateInputPathMsg = "error: directory not exists.";
+                _validateInputPathMsg = "error: directory not exists.";
                 return false;
             }
             return true;
@@ -247,12 +247,12 @@ namespace UFramework.Editor.Preferences.Assets
         public string pattern = "*";
 
         #region 路径验证
-        private string validateInputPathMsg;
+        private string _validateInputPathMsg;
         private bool ValidateInputPath(string value)
         {
             if (string.IsNullOrEmpty(value) || !IOPath.FileExists(value))
             {
-                validateInputPathMsg = "error: file path not exists.";
+                _validateInputPathMsg = "error: file path not exists.";
                 return false;
             }
             return true;
@@ -453,38 +453,38 @@ namespace UFramework.Editor.Preferences.Assets
     }
 
     /// <summary>
-    /// asset search path config
+    /// asset search path serdata
     /// </summary>
-    public class AssetBundle_AssetSearchPathConfig : IConfigObject
+    public class ABAssetSearchPathSerdata : ISerializable
     {
-        public FileAddress address { get { return FileAddress.Editor; } }
+        public SerializableType serializableType { get { return SerializableType.Editor; } }
 
         public List<AssetSearchItem> assetPathItems = new List<AssetSearchItem>();
         public List<AssetSearchFileItem> assetFileItems = new List<AssetSearchFileItem>();
         public List<AssetSearchItem> builtInAssetPathItems = new List<AssetSearchItem>();
         public List<AssetSearchFileItem> builtInAssetFileItems = new List<AssetSearchFileItem>();
 
-        public void Save()
+        public void Serialization()
         {
-            UConfig.Write<AssetBundle_AssetSearchPathConfig>(this);
+            Serializable<ABAssetSearchPathSerdata>.Serialization(this);
         }
     }
 
     /// <summary>
-    /// assets config
+    /// assets serdata
     /// </summary>
-    public class AssetBundle_AssetConfig : IConfigObject
+    public class ABAssetSerdata : ISerializable
     {
-        public FileAddress address { get { return FileAddress.Editor; } }
+        public SerializableType serializableType { get { return SerializableType.Editor; } }
 
         public List<BundleItem> bundles = new List<BundleItem>();
         public List<BundleAssetItem> assets = new List<BundleAssetItem>();
         public List<BundleAssetItem> dependencieAssets = new List<BundleAssetItem>();
         public List<BundleAssetItem> builtInAssets = new List<BundleAssetItem>();
 
-        public void Save()
+        public void Serialization()
         {
-            UConfig.Write<AssetBundle_AssetConfig>(this);
+            Serializable<ABAssetSerdata>.Serialization(this);
         }
     }
 }

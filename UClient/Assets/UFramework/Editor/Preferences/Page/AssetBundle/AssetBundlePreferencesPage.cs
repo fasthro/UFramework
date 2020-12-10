@@ -9,7 +9,6 @@ using System.Text;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
 using UFramework.Assets;
-using UFramework.Config;
 using UnityEditor;
 using UnityEngine;
 
@@ -21,7 +20,7 @@ namespace UFramework.Editor.Preferences.Assets
     public class AssetBundlePreferencesPage : IPage, IPageBar
     {
         public string menuName { get { return "AssetBundle/Preferences"; } }
-        static AssetBundle_AssetSearchPathConfig describeObject;
+        static ABAssetSearchPathSerdata Serdata { get { return Serialize.Serializable<ABAssetSearchPathSerdata>.Instance; } }
 
         #region search pattern
         [BoxGroup("Pattern")]
@@ -108,9 +107,8 @@ namespace UFramework.Editor.Preferences.Assets
                 AssetDatabase.SaveAssets();
             }
 
-            describeObject = UConfig.Read<AssetBundle_AssetSearchPathConfig>();
-            assetPathItems = describeObject.assetPathItems;
-            assetFileItems = describeObject.assetFileItems;
+            assetPathItems = Serdata.assetPathItems;
+            assetFileItems = Serdata.assetFileItems;
             BuildBuiltInPathItems();
         }
 
@@ -129,13 +127,13 @@ namespace UFramework.Editor.Preferences.Assets
 
         public void OnSaveDescribe()
         {
-            if (describeObject == null) return;
+            if (Serdata == null) return;
 
-            describeObject.assetPathItems = assetPathItems;
-            describeObject.assetFileItems = assetFileItems;
-            describeObject.builtInAssetPathItems = builtInAssetPathItems;
-            describeObject.builtInAssetFileItems = builtInAssetFileItems;
-            describeObject.Save();
+            Serdata.assetPathItems = assetPathItems;
+            Serdata.assetFileItems = assetFileItems;
+            Serdata.builtInAssetPathItems = builtInAssetPathItems;
+            Serdata.builtInAssetFileItems = builtInAssetFileItems;
+            Serdata.Serialization();
         }
 
         /// <summary>
@@ -284,7 +282,7 @@ namespace UFramework.Editor.Preferences.Assets
 
             // config
             var config = new AssetSearchItem();
-            config.path = IOPath.PathRelativeAsset(IOPath.PathCombine(App.AssetsDirectory, "Config", FileAddress.Data.ToString()));
+            config.path = IOPath.PathRelativeAsset(IOPath.PathCombine(App.AssetsDirectory, "Serdata", Serialize.SerializableType.AssetBundle.ToString()));
             config.nameType = NameType.Path;
             config.pattern = "*.json";
             builtInAssetPathItems.Add(config);

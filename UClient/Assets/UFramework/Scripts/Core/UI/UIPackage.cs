@@ -4,7 +4,6 @@
  * @Description: package
  */
 using System.Collections.Generic;
-using UFramework.Config;
 using UFramework.Messenger;
 using UFramework.Ref;
 using UnityEngine;
@@ -38,10 +37,10 @@ namespace UFramework.UI
         /// </summary>
         public LoadState loadState { get; protected set; }
 
-        protected HashSet<string> dependences = new HashSet<string>();
-        protected int dependenCount;
-        protected event UCallback onCompleted;
-        protected bool isStandby;
+        protected HashSet<string> _dependences = new HashSet<string>();
+        protected int _dependenCount;
+        protected event UCallback _onCompleted;
+        protected bool _isStandby;
 
         /// <summary>
         /// 
@@ -51,7 +50,7 @@ namespace UFramework.UI
         {
             this.packageName = packageName;
             this.loadState = LoadState.Init;
-            this.isStandby = false;
+            this._isStandby = false;
         }
 
         /// <summary>
@@ -64,8 +63,8 @@ namespace UFramework.UI
                 return;
 
             Retain();
-            isStandby = false;
-            this.onCompleted += onCompleted;
+            _isStandby = false;
+            this._onCompleted += onCompleted;
 
             if (loadState == LoadState.Loaded) LoadCompleted();
             else if (loadState != LoadState.Loading && loadState != LoadState.Loaded)
@@ -91,12 +90,12 @@ namespace UFramework.UI
         /// </summary>
         protected virtual void LoadCompleted()
         {
-            if (isStandby) OnReferenceEmpty();
+            if (_isStandby) OnReferenceEmpty();
             else
             {
                 loadState = LoadState.Loaded;
-                onCompleted.InvokeGracefully();
-                onCompleted = null;
+                _onCompleted.InvokeGracefully();
+                _onCompleted = null;
             }
         }
 
@@ -114,7 +113,7 @@ namespace UFramework.UI
         protected override void OnReferenceEmpty()
         {
             loadState = LoadState.Unloaded;
-            onCompleted = null;
+            _onCompleted = null;
         }
 
         /// <summary>
@@ -122,7 +121,7 @@ namespace UFramework.UI
         /// </summary>
         public void Standby()
         {
-            isStandby = true;
+            _isStandby = true;
         }
     }
 
@@ -192,7 +191,7 @@ namespace UFramework.UI
             {
                 if (!packageDictonary.TryGetValue(packageName, out package))
                 {
-                    if (UConfig.Read<AppConfig>().useFairyGUI)
+                    if (Serialize.Serializable<AppSerdata>.Instance.useFairyGUI)
                     {
                         if (isResourcesPackage) package = new FairyResourcesPackage(packageName);
                         else package = new FairyPackage(packageName);
