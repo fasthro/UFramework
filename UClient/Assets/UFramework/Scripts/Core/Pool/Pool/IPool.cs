@@ -4,7 +4,7 @@
  * @Description: 池接口
  */
 
-namespace UFramework.Pool
+namespace UFramework.Core.Pool
 {
     public interface IPool<T>
     {

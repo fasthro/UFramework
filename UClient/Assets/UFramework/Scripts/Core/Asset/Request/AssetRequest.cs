@@ -5,12 +5,12 @@
  */
 using System;
 using System.Collections;
-using UFramework.Coroutine;
-using UFramework.Messenger;
-using UFramework.Pool;
-using UFramework.Ref;
+using UFramework.Core;
+using UFramework.Core;
+using UFramework.Core;
+using UFramework.Core;
 
-namespace UFramework.Assets
+namespace UFramework.Core
 {
     public enum LoadState
     {
@@ -21,7 +21,7 @@ namespace UFramework.Assets
         Unload,
     }
 
-    public abstract class AssetRequest : ReferenceObject, IPoolObject, IUCoroutineTaskRunner
+    public abstract class AssetRequest : ReferenceObject, IPoolBehaviour, ICoroutineWork
     {
         #region interface
 
@@ -33,10 +33,10 @@ namespace UFramework.Assets
             loadState = LoadState.Init;
             asset = null;
             _callback = null;
-            Asset.Instance.RecycleAsset(this);
+            Assets.Instance.RecycleAsset(this);
         }
 
-        public virtual IEnumerator OnCoroutineTaskRun()
+        public virtual IEnumerator DoCoroutineWork()
         {
             yield return null;
         }
@@ -81,7 +81,7 @@ namespace UFramework.Assets
             Retain();
             if (loadState == LoadState.Loaded)
             {
-                OnCallback();
+                Completed();
             }
         }
 
@@ -97,22 +97,15 @@ namespace UFramework.Assets
             Recycle();
         }
 
-        protected void OnCallback()
+        protected void Completed()
         {
-            this._callback.InvokeGracefully(this);
-            this._callback = null;
-        }
-
-        protected void OnAsyncCallback()
-        {
-            UCoroutineTask.TaskComplete();
             this._callback.InvokeGracefully(this);
             this._callback = null;
         }
 
         protected void StartCoroutine()
         {
-            UCoroutineTask.AddTaskRunner(this);
+            CoroutineWorker.Push(this);
         }
 
         public AssetRequest AddCallback(UCallback<AssetRequest> callback)

@@ -6,11 +6,11 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace UFramework.Editor.Preferences.Assets
+namespace UFramework.Editor.Preferences.AssetImporter
 {
     public class TexturePreImporter
     {
-        static AssetImporterSerdata ImportSerdata { get { return Serialize.Serializable<AssetImporterSerdata>.Instance; } }
+        static Preferences_AssetImporter_Config Config { get { return Core.Serializer<Preferences_AssetImporter_Config>.Instance; } }
 
         public static void Execute(TextureItem item)
         {
@@ -64,10 +64,10 @@ namespace UFramework.Editor.Preferences.Assets
             if (searchItem == null)
             {
                 texure.path = path;
-                texure.textureType = ImportSerdata.defaultTextureType;
-                texure.androidFormat = ImportSerdata.defaultAndroidFormat;
-                texure.iosFormat = ImportSerdata.defaultIOSFormat;
-                texure.maxSize = ImportSerdata.defaultTextureMaxSize;
+                texure.textureType = Config.defaultTextureType;
+                texure.androidFormat = Config.defaultAndroidFormat;
+                texure.iosFormat = Config.defaultIOSFormat;
+                texure.maxSize = Config.defaultTextureMaxSize;
             }
             else
             {

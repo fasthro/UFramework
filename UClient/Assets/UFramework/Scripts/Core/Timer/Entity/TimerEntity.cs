@@ -3,13 +3,11 @@
  * @Date: 2020-09-22 16:07:15
  * @Description: timer entity
  */
-using UFramework.Messenger;
-using UFramework.Pool;
 using UnityEngine;
 
-namespace UFramework.Timers
+namespace UFramework.Core
 {
-    public class TimerEntity : IPoolObject
+    public class TimerEntity : IPoolBehaviour
     {
         #region public
         /// <summary>

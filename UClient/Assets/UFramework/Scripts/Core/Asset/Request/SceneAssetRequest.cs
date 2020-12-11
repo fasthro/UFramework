@@ -3,9 +3,9 @@
  * @Date: 2020-09-21 11:04:42
  * @Description: scene asset
  */
-using UFramework.Pool;
+using UFramework.Core;
 
-namespace UFramework.Assets
+namespace UFramework.Core
 {
     public class SceneAssetRequest : AssetRequest
     {
@@ -25,7 +25,7 @@ namespace UFramework.Assets
         {
             base.Load();
             if (loadState != LoadState.Init) return;
-            OnCallback();
+            Completed();
         }
 
         protected override void OnReferenceEmpty()

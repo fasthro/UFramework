@@ -4,7 +4,7 @@
  * @Description: 标准对象工厂
  */
 
-namespace UFramework.Pool
+namespace UFramework.Core.Pool
 {
     public class ObjectFactory<T> : IObjectFactory<T> where T : new()
     {

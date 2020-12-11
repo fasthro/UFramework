@@ -3,9 +3,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UFramework;
-using UFramework.Table;
-using UFramework.Localization;
+using UFramework.Core;
 
 namespace UFramework.Automatic
 {
@@ -32,7 +30,7 @@ namespace UFramework.Automatic
         // 描述9
         public Vector3 Vector3;
         // 多语言
-        public LanguageItem language;
+        public LocalizationText language;
         public string language_language { get { return language != null ? language.ToString() : string.Empty; } }
         // 描述10
         public byte[] ArrayByte;
@@ -53,16 +51,16 @@ namespace UFramework.Automatic
         // 描述18
         public Vector3[] ArrayVector3;
         // 多语言数组
-        public LanguageItem[] languages;
+        public LocalizationText[] languages;
 
     }
 
-    public class TemplateTable : Singleton<TemplateTable>, ITableObject
+    public class TemplateTable : Singleton<TemplateTable>, ITableBehaviour
     {
         public string tableName { get { return "Template"; } }
         public int maxCount { get { return m_tableDatas.Length; } }
         
-        public DataFormatOptions dataFormatOptions = DataFormatOptions.Array;
+        public TableDataIndexFormat dataFormatOptions = TableDataIndexFormat.Array;
         private TemplateTableData[] m_tableDatas;
         private Dictionary<int, TemplateTableData> m_tableDataIntDictionary;
         private Dictionary<string, TemplateTableData> m_tableDataStringDictionary;
@@ -72,16 +70,16 @@ namespace UFramework.Automatic
         {
             switch (dataFormatOptions)
             {
-                case DataFormatOptions.Array:
+                case TableDataIndexFormat.Array:
                     m_tableDatas = new TableParseCSV(tableName).ParseArray<TemplateTableData>();
                     break;
-                case DataFormatOptions.IntDictionary:
+                case TableDataIndexFormat.IntDictionary:
                     m_tableDataIntDictionary = new TableParseCSV(tableName).ParseIntDictionary<TemplateTableData>();
                     break;
-                case DataFormatOptions.StringDictionary:
+                case TableDataIndexFormat.StringDictionary:
                     m_tableDataStringDictionary = new TableParseCSV(tableName).ParseStringDictionary<TemplateTableData>();
                     break;
-                case DataFormatOptions.Int2IntDictionary:
+                case TableDataIndexFormat.Int2IntDictionary:
                     m_tableDataInt2IntDictionary = new TableParseCSV(tableName).ParseInt2IntDictionary<TemplateTableData>();
                     break;
             }
@@ -89,20 +87,20 @@ namespace UFramework.Automatic
 
         private TemplateTableData _GetIndexData(int index)
         {
-            if (dataFormatOptions == DataFormatOptions.Array)
+            if (dataFormatOptions == TableDataIndexFormat.Array)
             {
                 if (index >= 0 && index < m_tableDatas.Length)
                 {
                     return m_tableDatas[index];
                 }
             }
-            else Debug.LogError("[TemplateTable] DataFormatOptions: Array. Please use the GetKeyData(index)");
+            else Debug.LogError("[TemplateTable] TableDataIndexFormat: Array. Please use the GetKeyData(index)");
             return null;
         }
 
         private TemplateTableData _GetKeyData(int key)
         {
-            if (dataFormatOptions == DataFormatOptions.IntDictionary)
+            if (dataFormatOptions == TableDataIndexFormat.IntDictionary)
             {
                 TemplateTableData data = null;
                 if (m_tableDataIntDictionary.TryGetValue(key, out data))
@@ -110,13 +108,13 @@ namespace UFramework.Automatic
                     return data;
                 }
             }
-            else Debug.LogError("[TemplateTable] DataFormatOptions: IntDictionary. Please use the GetKeyData(int-key)");
+            else Debug.LogError("[TemplateTable] TableDataIndexFormat: IntDictionary. Please use the GetKeyData(int-key)");
             return null;
         }
 
         private TemplateTableData _GetKeyData(string key)
         {
-            if (dataFormatOptions == DataFormatOptions.StringDictionary)
+            if (dataFormatOptions == TableDataIndexFormat.StringDictionary)
             {
                 TemplateTableData data = null;
                 if (m_tableDataStringDictionary.TryGetValue(key, out data))
@@ -124,13 +122,13 @@ namespace UFramework.Automatic
                     return data;
                 }
             }
-            else Debug.LogError("[TemplateTable] DataFormatOptions: StringDictionary. Please use the GetKeyData(string-key)");
+            else Debug.LogError("[TemplateTable] TableDataIndexFormat: StringDictionary. Please use the GetKeyData(string-key)");
             return null;
         }
 
         private TemplateTableData _GetKeyData(int key1, int key2)
         {
-            if (dataFormatOptions == DataFormatOptions.Int2IntDictionary)
+            if (dataFormatOptions == TableDataIndexFormat.Int2IntDictionary)
             {
                 Dictionary<int, TemplateTableData> dictionary = null;
                 if (m_tableDataInt2IntDictionary.TryGetValue(key1, out dictionary))
@@ -142,7 +140,7 @@ namespace UFramework.Automatic
                     }
                 }
             }
-            else Debug.LogError("[TemplateTable] DataFormatOptions: Int2IntDictionary. Please use the GetKeyData(int-key, int-key)");
+            else Debug.LogError("[TemplateTable] TableDataIndexFormat: Int2IntDictionary. Please use the GetKeyData(int-key, int-key)");
             return null;
         }
 

@@ -6,7 +6,7 @@
 using System;
 using System.IO;
 using LuaInterface;
-using UFramework.Lua;
+using UFramework.Core;
 using UnityEngine;
 
 namespace UFramework
@@ -23,7 +23,7 @@ namespace UFramework
 
         private LuaLooper _loop;
 
-        protected override void OnInitialize()
+        public override void OnAwake()
         {
             Lua = new LuaState();
             OpenLibs();
@@ -31,20 +31,24 @@ namespace UFramework
 
             LuaBinder.Bind(Lua);
             DelegateFactory.Init();
-            LuaCoroutine.Register(Lua, AppLaunch.Main);
+            LuaCoroutine.Register(Lua, Launcher.Main);
 
             AddSearchPath();
             Lua.Start();
 
-            _loop = AppLaunch.MainGameObject.AddComponent<LuaLooper>();
+            _loop = Launcher.MainGameObject.AddComponent<LuaLooper>();
             _loop.luaState = Lua;
+        }
 
+        public void LaunchEngine()
+        {
             DoFile("LuaEngine");
             luaEngine = Lua.GetTable("LuaEngine");
             _luaEngineUpdateFunc = luaEngine.GetLuaFunction("update");
             _luaEngineLateUpdateFunc = luaEngine.GetLuaFunction("lateUpdate");
             _luaEngineFixedUpdateFunc = luaEngine.GetLuaFunction("fixedUpdate");
-            luaEngine.Call("launch", Logger.GetLevel());
+            luaEngine.Call("initialize", Logger.GetLevel());
+            luaEngine.Call("launch");
         }
 
         #region lib
@@ -93,9 +97,9 @@ namespace UFramework
 
         private void AddSearchPath()
         {
-            if (Serialize.Serializable<AppSerdata>.Instance.isDevelopmentVersion)
+            if (Core.Serializer<AppConfig>.Instance.isDevelopmentVersion)
             {
-                var serdata = Serialize.Serializable<LuaSerdata>.Instance;
+                var serdata = Core.Serializer<LuaConfig>.Instance;
                 if (serdata.searchPaths != null)
                 {
                     for (int i = 0; i < serdata.searchPaths.Length; i++)
@@ -258,22 +262,22 @@ namespace UFramework
 
         #endregion
 
-        protected override void OnUpdate(float deltaTime)
+        public override void OnUpdate(float deltaTime)
         {
             _luaEngineUpdateFunc.Call();
         }
 
-        protected override void OnLateUpdate()
+        public override void OnLateUpdate()
         {
             _luaEngineLateUpdateFunc.Call();
         }
 
-        protected override void OnFixedUpdate()
+        public override void OnFixedUpdate()
         {
             _luaEngineFixedUpdateFunc.Call();
         }
 
-        protected override void OnDispose()
+        public override void OnDestroy()
         {
             if (_luaEngineUpdateFunc != null)
             {

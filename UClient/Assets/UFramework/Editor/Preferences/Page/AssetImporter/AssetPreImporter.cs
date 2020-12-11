@@ -6,7 +6,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace UFramework.Editor.Preferences.Assets
+namespace UFramework.Editor.Preferences.AssetImporter
 {
     public class AssetPreImporter : AssetPostprocessor
     {

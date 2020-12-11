@@ -5,11 +5,11 @@
  */
 using System.Collections.Generic;
 
-namespace UFramework.Table
+namespace UFramework.Core
 {
     public class TableParseJSON : TableParse
     {
-        public TableParseJSON(string tableName, FormatOptions format) : base(tableName, format)
+        public TableParseJSON(string tableName, TableFormat format) : base(tableName, format)
         {
         }
 

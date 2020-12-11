@@ -11,11 +11,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
-using UFramework.Serialize;
+using UFramework.Core;
 using UnityEditor;
-using UnityEngine;
 
-namespace UFramework.Editor.Preferences
+namespace UFramework.Editor.Preferences.Proto
 {
     public class ProtoPage : IPage, IPageBar
     {
@@ -27,7 +26,7 @@ namespace UFramework.Editor.Preferences
         static string Protogen;
         static string PBServerOutpath;
 
-        static ProtoSerdata Serdata { get { return Serializable<ProtoSerdata>.Instance; } }
+        static Preferences_Proto_Config Config { get { return Serializer<Preferences_Proto_Config>.Instance; } }
 
         [ShowInInspector]
         [ListDrawerSettings(Expanded = true, HideRemoveButton = true, HideAddButton = true)]
@@ -63,9 +62,9 @@ namespace UFramework.Editor.Preferences
             }
 
             Dictionary<string, ProtoFile> protoDic = new Dictionary<string, ProtoFile>();
-            for (int i = 0; i < Serdata.protos.Count; i++)
+            for (int i = 0; i < Config.protos.Count; i++)
             {
-                var proto = Serdata.protos[i];
+                var proto = Config.protos[i];
                 protoDic.Add(proto.path, proto);
             }
 
@@ -119,9 +118,9 @@ namespace UFramework.Editor.Preferences
 
         public void OnSaveDescribe()
         {
-            Serdata.protos.Clear();
-            Serdata.protos.AddRange(protos);
-            Serdata.Serialization();
+            Config.protos.Clear();
+            Config.protos.AddRange(protos);
+            Config.Serialize();
         }
 
         private void Sort()

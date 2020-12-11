@@ -5,7 +5,7 @@
  */
 using System.Collections;
 using System.Collections.Generic;
-using UFramework.Natives;
+using UFramework.NativePlatform;
 using UnityEngine;
 
 namespace UFramework.Sample
@@ -26,17 +26,17 @@ namespace UFramework.Sample
 
             if (GUILayout.Button("Restart App", GUILayout.Width(300), GUILayout.Height(100)))
             {
-                Native.Util.Restart();
+                Native.Utils.Restart();
             }
 
             if (GUILayout.Button("Set ClipBoard", GUILayout.Width(300), GUILayout.Height(100)))
             {
-                Native.Util.SetClipBoard("UFramework-" + Random.Range(1, 100));
+                Native.Utils.SetClipBoard("UFramework-" + Random.Range(1, 100));
             }
 
             if (GUILayout.Button("Get ClipBoard", GUILayout.Width(300), GUILayout.Height(100)))
             {
-                Debug.Log("ClipBoard Text: " + Native.Util.GetClipBoard());
+                Debug.Log("ClipBoard Text: " + Native.Utils.GetClipBoard());
             }
         }
     }

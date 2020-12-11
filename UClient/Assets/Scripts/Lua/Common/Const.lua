@@ -5,9 +5,9 @@ Description: 系统常量
 --]]
 -- 网络数据包类型
 _G.PROTOCAL_TYPE = {
-    BINARY = UFramework.Network.ProtocalType.Binary,
-    SIZE_BINARY = UFramework.Network.ProtocalType.SizeBinary,
-    SIZE_HEADER_BINARY = UFramework.Network.ProtocalType.SizeHeaderBinary
+    BINARY = UFramework.Core.ProtocalType.Binary,
+    SIZE_BINARY = UFramework.Core.ProtocalType.SizeBinary,
+    SIZE_HEADER_BINARY = UFramework.Core.ProtocalType.SizeHeaderBinary
 }
 
 -- UI面板层

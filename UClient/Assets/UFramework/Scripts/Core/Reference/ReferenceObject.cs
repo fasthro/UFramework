@@ -3,7 +3,7 @@
  * @Date: 2019-10-28 16:36:24
  * @Description: 引用计数对象
  */
-namespace UFramework.Ref
+namespace UFramework.Core
 {
     public abstract class ReferenceObject : IReference
     {

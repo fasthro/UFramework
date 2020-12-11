@@ -5,7 +5,7 @@
  */
 using System.Collections;
 using System.Collections.Generic;
-using UFramework.Assets;
+using UFramework.Core;
 using UnityEngine;
 
 namespace UFramework.Sample
@@ -16,7 +16,7 @@ namespace UFramework.Sample
         {
             if (GUILayout.Button("Load Asset", GUILayout.Width(300), GUILayout.Height(100)))
             {
-                var asset = Asset.LoadAssetAsync("Assets/Art/Cube/Prefab/Cube1.prefab", typeof(GameObject), (request) =>
+                var asset = Assets.LoadAssetAsync("Assets/Art/Cube/Prefab/Cube1.prefab", typeof(GameObject), (request) =>
                 {
                     GameObject.Instantiate(request.asset, Vector3.zero, Quaternion.identity);
                 });

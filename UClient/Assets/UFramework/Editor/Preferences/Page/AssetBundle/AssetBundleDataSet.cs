@@ -7,11 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Sirenix.OdinInspector;
-using UFramework.Serialize;
+using UFramework.Core;
 using UnityEditor;
 using UnityEngine;
 
-namespace UFramework.Editor.Preferences.Assets
+namespace UFramework.Editor.Preferences.AssetBundle
 {
     /// <summary>
     /// AssetBundle 名称类型
@@ -452,39 +452,33 @@ namespace UFramework.Editor.Preferences.Assets
         }
     }
 
-    /// <summary>
-    /// asset search path serdata
-    /// </summary>
-    public class ABAssetSearchPathSerdata : ISerializable
+    public class Preferences_AssetBundle_SearchPathConfig : ISerializable
     {
-        public SerializableType serializableType { get { return SerializableType.Editor; } }
+        public SerializableAssigned assigned { get { return SerializableAssigned.Editor; } }
 
         public List<AssetSearchItem> assetPathItems = new List<AssetSearchItem>();
         public List<AssetSearchFileItem> assetFileItems = new List<AssetSearchFileItem>();
         public List<AssetSearchItem> builtInAssetPathItems = new List<AssetSearchItem>();
         public List<AssetSearchFileItem> builtInAssetFileItems = new List<AssetSearchFileItem>();
 
-        public void Serialization()
+        public void Serialize()
         {
-            Serializable<ABAssetSearchPathSerdata>.Serialization(this);
+            Serializer<Preferences_AssetBundle_SearchPathConfig>.Serialize(this);
         }
     }
 
-    /// <summary>
-    /// assets serdata
-    /// </summary>
-    public class ABAssetSerdata : ISerializable
+    public class Preferences_AssetBundle_AssetConfig : ISerializable
     {
-        public SerializableType serializableType { get { return SerializableType.Editor; } }
+        public SerializableAssigned assigned { get { return SerializableAssigned.Editor; } }
 
         public List<BundleItem> bundles = new List<BundleItem>();
         public List<BundleAssetItem> assets = new List<BundleAssetItem>();
         public List<BundleAssetItem> dependencieAssets = new List<BundleAssetItem>();
         public List<BundleAssetItem> builtInAssets = new List<BundleAssetItem>();
 
-        public void Serialization()
+        public void Serialize()
         {
-            Serializable<ABAssetSerdata>.Serialization(this);
+            Serializer<Preferences_AssetBundle_AssetConfig>.Serialize(this);
         }
     }
 }

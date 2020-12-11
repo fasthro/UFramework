@@ -6,13 +6,14 @@
 
 using System.Collections.Generic;
 using UnityEngine;
+using UFramework.Core.Pool;
 
-namespace UFramework.Pool
+namespace UFramework.Core
 {
     /// <summary>
     /// 对象标识
     /// </summary>
-    public class GammeObjectPoolIdentity : MonoBehaviour, IPoolObject
+    public class GammeObjectPoolIdentity : MonoBehaviour, IPoolBehaviour
     {
         // 回收后60s内没有被唤醒使用，直接通知Unit销毁处理
         const float DISPOSE_SLEEP_TIME = 60f;

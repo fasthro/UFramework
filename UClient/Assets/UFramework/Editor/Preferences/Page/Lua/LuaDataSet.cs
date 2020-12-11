@@ -7,12 +7,12 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Sirenix.OdinInspector;
-using UFramework.Serialize;
+using UFramework.Core;
 using UnityEngine;
 using static ToLuaMenu;
 using utils = UFramework.Utils;
 
-namespace UFramework.Editor.Preferences
+namespace UFramework.Editor.Preferences.Lua
 {
     /// <summary>
     /// Lua搜索路径
@@ -157,9 +157,9 @@ namespace UFramework.Editor.Preferences
         public string hash;
     }
 
-    public class LuaBuildSerdata : ISerializable
+    public class Preferences_Lua_BuildConfig : ISerializable
     {
-        public SerializableType serializableType { get { return SerializableType.Editor; } }
+        public SerializableAssigned assigned { get { return SerializableAssigned.Editor; } }
 
         /// <summary>
         /// 文件列表
@@ -168,9 +168,9 @@ namespace UFramework.Editor.Preferences
         /// <returns></returns>
         public List<LuaBuildFile> files = new List<LuaBuildFile>();
 
-        public void Serialization()
+        public void Serialize()
         {
-            Serializable<LuaBuildSerdata>.Serialization(this);
+            Serializer<Preferences_Lua_BuildConfig>.Serialize(this);
         }
     }
 }

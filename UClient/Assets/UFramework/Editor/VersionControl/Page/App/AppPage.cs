@@ -4,15 +4,13 @@
  * @Description: app page
  */
 using Sirenix.OdinInspector;
-using Sirenix.Utilities.Editor;
-using UnityEngine;
 
-namespace UFramework.Editor.VersionControl
+namespace UFramework.Editor.VersionControl.App
 {
     public class AppPage : IPage, IPageBar
     {
         public string menuName { get { return "Application"; } }
-        static AppSerdata Serdata { get { return Serialize.Serializable<AppSerdata>.Instance; } }
+        static AppConfig Config { get { return Core.Serializer<AppConfig>.Instance; } }
 
         /// <summary>
         /// 开发版本
@@ -53,10 +51,10 @@ namespace UFramework.Editor.VersionControl
 
         public void OnRenderBefore()
         {
-            isDevelopmentVersion = Serdata.isDevelopmentVersion;
-            appEnvironmentType = Serdata.appEnvironmentType;
-            versionBaseURL = Serdata.versionBaseURL;
-            logLevel = Serdata.logLevel;
+            isDevelopmentVersion = Config.isDevelopmentVersion;
+            appEnvironmentType = Config.appEnvironmentType;
+            versionBaseURL = Config.versionBaseURL;
+            logLevel = Config.logLevel;
         }
 
         public void OnPageBarDraw()
@@ -66,17 +64,17 @@ namespace UFramework.Editor.VersionControl
 
         public void OnSaveDescribe()
         {
-            if (Serdata == null) return;
+            if (Config == null) return;
 
             // General
-            Serdata.isDevelopmentVersion = isDevelopmentVersion;
-            Serdata.appEnvironmentType = appEnvironmentType;
-            Serdata.versionBaseURL = versionBaseURL;
+            Config.isDevelopmentVersion = isDevelopmentVersion;
+            Config.appEnvironmentType = appEnvironmentType;
+            Config.versionBaseURL = versionBaseURL;
 
             // Debug
-            Serdata.logLevel = logLevel;
+            Config.logLevel = logLevel;
 
-            Serdata.Serialization();
+            Config.Serialize();
         }
     }
 }

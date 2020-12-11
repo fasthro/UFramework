@@ -7,24 +7,26 @@ public class UFramework_BaseManagerWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(UFramework.BaseManager), typeof(System.Object));
-		L.RegFunction("Initialize", new LuaCSFunction(Initialize));
-		L.RegFunction("Update", new LuaCSFunction(Update));
-		L.RegFunction("LateUpdate", new LuaCSFunction(LateUpdate));
-		L.RegFunction("FixedUpdate", new LuaCSFunction(FixedUpdate));
-		L.RegFunction("Dispose", new LuaCSFunction(Dispose));
+		L.RegFunction("OnAwake", new LuaCSFunction(OnAwake));
+		L.RegFunction("OnStart", new LuaCSFunction(OnStart));
+		L.RegFunction("OnUpdate", new LuaCSFunction(OnUpdate));
+		L.RegFunction("OnLateUpdate", new LuaCSFunction(OnLateUpdate));
+		L.RegFunction("OnFixedUpdate", new LuaCSFunction(OnFixedUpdate));
+		L.RegFunction("OnDestroy", new LuaCSFunction(OnDestroy));
+		L.RegFunction("OnApplicationQuit", new LuaCSFunction(OnApplicationQuit));
 		L.RegFunction("LuaBind", new LuaCSFunction(LuaBind));
 		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
 		L.EndClass();
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Initialize(IntPtr L)
+	static int OnAwake(IntPtr L)
 	{
 		try
 		{
 			ToLua.CheckArgsCount(L, 1);
 			UFramework.BaseManager obj = (UFramework.BaseManager)ToLua.CheckObject<UFramework.BaseManager>(L, 1);
-			obj.Initialize();
+			obj.OnAwake();
 			return 0;
 		}
 		catch (Exception e)
@@ -34,14 +36,30 @@ public class UFramework_BaseManagerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Update(IntPtr L)
+	static int OnStart(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			UFramework.BaseManager obj = (UFramework.BaseManager)ToLua.CheckObject<UFramework.BaseManager>(L, 1);
+			obj.OnStart();
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int OnUpdate(IntPtr L)
 	{
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
 			UFramework.BaseManager obj = (UFramework.BaseManager)ToLua.CheckObject<UFramework.BaseManager>(L, 1);
 			float arg0 = (float)LuaDLL.luaL_checknumber(L, 2);
-			obj.Update(arg0);
+			obj.OnUpdate(arg0);
 			return 0;
 		}
 		catch (Exception e)
@@ -51,13 +69,13 @@ public class UFramework_BaseManagerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int LateUpdate(IntPtr L)
+	static int OnLateUpdate(IntPtr L)
 	{
 		try
 		{
 			ToLua.CheckArgsCount(L, 1);
 			UFramework.BaseManager obj = (UFramework.BaseManager)ToLua.CheckObject<UFramework.BaseManager>(L, 1);
-			obj.LateUpdate();
+			obj.OnLateUpdate();
 			return 0;
 		}
 		catch (Exception e)
@@ -67,13 +85,13 @@ public class UFramework_BaseManagerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int FixedUpdate(IntPtr L)
+	static int OnFixedUpdate(IntPtr L)
 	{
 		try
 		{
 			ToLua.CheckArgsCount(L, 1);
 			UFramework.BaseManager obj = (UFramework.BaseManager)ToLua.CheckObject<UFramework.BaseManager>(L, 1);
-			obj.FixedUpdate();
+			obj.OnFixedUpdate();
 			return 0;
 		}
 		catch (Exception e)
@@ -83,13 +101,29 @@ public class UFramework_BaseManagerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Dispose(IntPtr L)
+	static int OnDestroy(IntPtr L)
 	{
 		try
 		{
 			ToLua.CheckArgsCount(L, 1);
 			UFramework.BaseManager obj = (UFramework.BaseManager)ToLua.CheckObject<UFramework.BaseManager>(L, 1);
-			obj.Dispose();
+			obj.OnDestroy();
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int OnApplicationQuit(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			UFramework.BaseManager obj = (UFramework.BaseManager)ToLua.CheckObject<UFramework.BaseManager>(L, 1);
+			obj.OnApplicationQuit();
 			return 0;
 		}
 		catch (Exception e)

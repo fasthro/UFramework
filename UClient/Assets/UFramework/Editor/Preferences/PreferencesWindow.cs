@@ -5,7 +5,14 @@
  */
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
-using UFramework.Editor.Preferences.Assets;
+using UFramework.Editor.Preferences.AssetBundle;
+using UFramework.Editor.Preferences.AssetImporter;
+using UFramework.Editor.Preferences.Localization;
+using UFramework.Editor.Preferences.Lua;
+using UFramework.Editor.Preferences.Projrect;
+using UFramework.Editor.Preferences.Proto;
+using UFramework.Editor.Preferences.Serializable;
+using UFramework.Editor.Preferences.Table;
 using UnityEditor;
 using UnityEngine;
 
@@ -29,9 +36,8 @@ namespace UFramework.Editor.Preferences
             AddPage(new AssetImporterPage());
             AddPage(new AssetImporterPreferencesPage());
             AddPage(new SerializePage());
-            AddPage(new LanguagePage());
+            AddPage(new LocalizationPage());
             AddPage(new LuaPage());
-            AddPage(new SDKPage());
             AddPage(new TablePage());
             AddPage(new ProtoPage());
             AddPage(new ProjrectPage());

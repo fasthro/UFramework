@@ -4,11 +4,11 @@
  * @Description: web asset
  */
 using System.Collections;
-using UFramework.Pool;
+using UFramework.Core;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace UFramework.Assets
+namespace UFramework.Core
 {
     public class WebAssetRequest : AssetRequest
     {
@@ -26,7 +26,7 @@ namespace UFramework.Assets
             ObjectPool<WebAssetRequest>.Instance.Recycle(this);
         }
 
-        public override IEnumerator OnCoroutineTaskRun()
+        public override IEnumerator DoCoroutineWork()
         {
             if (assetType == typeof(AudioClip))
             {
@@ -63,7 +63,7 @@ namespace UFramework.Assets
                     asset = DownloadHandlerTexture.GetContent(_request);
                 }
                 loadState = LoadState.Loaded;
-                OnAsyncCallback();
+                Completed();
             }
         }
 

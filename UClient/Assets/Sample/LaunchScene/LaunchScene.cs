@@ -1,7 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UFramework.Natives;
-using UFramework.Panel.FairyGUI;
+using UFramework.Core;
+using UFramework.NativePlatform;
+using UFramework.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -79,7 +80,7 @@ namespace UFramework.Sample
 
             if (GUILayout.Button("Restart App", GUILayout.Width(300), GUILayout.Height(100)))
             {
-                Native.Util.Restart();
+                Native.Utils.Restart();
             }
         }
 

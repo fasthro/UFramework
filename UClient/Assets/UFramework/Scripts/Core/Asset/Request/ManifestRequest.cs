@@ -4,13 +4,13 @@
  * @Description: manifest
  */
 using System.Collections;
-using UFramework.Pool;
+using UFramework.Core;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-namespace UFramework.Assets
+namespace UFramework.Core
 {
     public class ManifestRequest : AssetRequest
     {
@@ -35,7 +35,7 @@ namespace UFramework.Assets
             ObjectPool<ManifestRequest>.Instance.Recycle(this);
         }
 
-        public override IEnumerator OnCoroutineTaskRun()
+        public override IEnumerator DoCoroutineWork()
         {
             loadState = LoadState.LoadAsset;
             _request = _bundle.assetBundle.LoadAssetAsync(AssetManifest.AssetPath, typeof(AssetManifest));
@@ -46,23 +46,23 @@ namespace UFramework.Assets
                 manifest = asset as AssetManifest;
                 loadState = LoadState.Loaded;
             }
-            OnAsyncCallback();
+            Completed();
         }
 
         public override void Load()
         {
-            if (Asset.Develop)
+            if (Assets.Develop)
             {
 #if UNITY_EDITOR
                 manifest = AssetDatabase.LoadAssetAtPath<AssetManifest>(AssetManifest.AssetPath);
-                OnCallback();
+                Completed();
 #endif
             }
             else
             {
                 base.Load();
                 if (loadState != LoadState.Init) return;
-                _bundle = Asset.Instance.GetBundle<BundleAsyncRequest>(AssetManifest.AssetBundleFileName, true);
+                _bundle = Assets.Instance.GetBundle<BundleAsyncRequest>(AssetManifest.AssetBundleFileName, true);
                 if (_bundle.isDone)
                     StartCoroutine();
                 else

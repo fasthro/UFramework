@@ -5,11 +5,11 @@
  */
 using System.Collections;
 using System.Collections.Generic;
-using UFramework.Pool;
+using UFramework.Core;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace UFramework.Assets
+namespace UFramework.Core
 {
     public class WebBundleRequest : AssetRequest
     {
@@ -30,7 +30,7 @@ namespace UFramework.Assets
             ObjectPool<WebBundleRequest>.Instance.Recycle(this);
         }
 
-        public override IEnumerator OnCoroutineTaskRun()
+        public override IEnumerator DoCoroutineWork()
         {
             loadState = LoadState.LoadBundle;
             _request = UnityWebRequestAssetBundle.GetAssetBundle(url);
@@ -39,7 +39,7 @@ namespace UFramework.Assets
             {
                 asset = DownloadHandlerAssetBundle.GetContent(_request);
                 loadState = LoadState.Loaded;
-                OnAsyncCallback();
+                Completed();
             }
         }
 
@@ -48,10 +48,10 @@ namespace UFramework.Assets
             base.Load();
             if (loadState != LoadState.Init) return;
 
-            var bundles = Asset.Instance.GetDependencies(url);
+            var bundles = Assets.Instance.GetDependencies(url);
             for (int i = 0; i < bundles.Length; i++)
             {
-                var bundle = Asset.Instance.GetBundle<WebBundleRequest>(bundles[i], true);
+                var bundle = Assets.Instance.GetBundle<WebBundleRequest>(bundles[i], true);
                 bundle.AddCallback(OnBundleDone);
                 bundle.Load();
                 _dependencies.Add(bundle);

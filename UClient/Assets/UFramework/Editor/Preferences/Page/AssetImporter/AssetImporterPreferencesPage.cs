@@ -11,12 +11,12 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace UFramework.Editor.Preferences.Assets
+namespace UFramework.Editor.Preferences.AssetImporter
 {
     public class AssetImporterPreferencesPage : IPage, IPageBar
     {
         public string menuName { get { return "AssetImporter/Preferences"; } }
-        static AssetImporterSerdata Serdata { get { return Serialize.Serializable<AssetImporterSerdata>.Instance; } }
+        static Preferences_AssetImporter_Config Config { get { return Core.Serializer<Preferences_AssetImporter_Config>.Instance; } }
 
         /// <summary>
         /// texture pattern
@@ -82,33 +82,33 @@ namespace UFramework.Editor.Preferences.Assets
 
         public void OnRenderBefore()
         {
-            texturePattern = Serdata.texturePattern;
-            modePattern = Serdata.modePattern;
-            audioPattern = Serdata.audioPattern;
+            texturePattern = Config.texturePattern;
+            modePattern = Config.modePattern;
+            audioPattern = Config.audioPattern;
 
-            textures = Serdata.texturePaths;
-            modes = Serdata.modePaths;
-            audios = Serdata.audioPaths;
+            textures = Config.texturePaths;
+            modes = Config.modePaths;
+            audios = Config.audioPaths;
 
-            defaultTextureType = Serdata.defaultTextureType;
-            defaultAndroidFormat = Serdata.defaultAndroidFormat;
-            defaultIOSFormat = Serdata.defaultIOSFormat;
-            defaultTextureMaxSize = Serdata.defaultTextureMaxSize;
+            defaultTextureType = Config.defaultTextureType;
+            defaultAndroidFormat = Config.defaultAndroidFormat;
+            defaultIOSFormat = Config.defaultIOSFormat;
+            defaultTextureMaxSize = Config.defaultTextureMaxSize;
         }
 
         public void OnSaveDescribe()
         {
-            if (Serdata == null) return;
-            Serdata.texturePaths = textures;
-            Serdata.modePaths = modes;
-            Serdata.audioPaths = audios;
+            if (Config == null) return;
+            Config.texturePaths = textures;
+            Config.modePaths = modes;
+            Config.audioPaths = audios;
 
-            Serdata.defaultTextureType = defaultTextureType;
-            Serdata.defaultAndroidFormat = defaultAndroidFormat;
-            Serdata.defaultIOSFormat = defaultIOSFormat;
-            Serdata.defaultTextureMaxSize = defaultTextureMaxSize;
+            Config.defaultTextureType = defaultTextureType;
+            Config.defaultAndroidFormat = defaultAndroidFormat;
+            Config.defaultIOSFormat = defaultIOSFormat;
+            Config.defaultTextureMaxSize = defaultTextureMaxSize;
 
-            Serdata.Serialization();
+            Config.Serialize();
         }
 
         public void OnPageBarDraw()
@@ -127,7 +127,7 @@ namespace UFramework.Editor.Preferences.Assets
 
             Dictionary<int, int> results = new Dictionary<int, int>();
             int index = 0;
-            foreach (var item in Serdata.texturePaths)
+            foreach (var item in Config.texturePaths)
             {
                 string[] cparts = item.path.Split(Path.AltDirectorySeparatorChar);
                 var count = Mathf.Max(parts.Length, cparts.Length);
@@ -163,7 +163,7 @@ namespace UFramework.Editor.Preferences.Assets
             }
 
             if (index == -1) return null;
-            else return Serdata.texturePaths[index];
+            else return Config.texturePaths[index];
         }
     }
 }

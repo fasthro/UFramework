@@ -3,9 +3,9 @@
  * @Date: 2020-09-18 14:44:45
  * @Description: bundle asset
  */
-using UFramework.Pool;
+using UFramework.Core;
 
-namespace UFramework.Assets
+namespace UFramework.Core
 {
     public class BundleAssetRequest : AssetRequest
     {
@@ -27,13 +27,13 @@ namespace UFramework.Assets
             base.Load();
             if (loadState != LoadState.Init) return;
 
-            bundle = Asset.Instance.GetBundle<BundleRequest>(Asset.Instance.GetBundleNameWithAssetName(url), false);
+            bundle = Assets.Instance.GetBundle<BundleRequest>(Assets.Instance.GetBundleNameWithAssetName(url), false);
             bundle.Load();
 
             asset = bundle.assetBundle.LoadAsset(url, assetType);
 
             loadState = LoadState.Loaded;
-            OnCallback();
+            Completed();
         }
 
         protected override void OnReferenceEmpty()

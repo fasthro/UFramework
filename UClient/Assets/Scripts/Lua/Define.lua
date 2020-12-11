@@ -4,7 +4,8 @@ Date: 2020-10-07 17:21:14
 Description: define
 --]]
 ------------------------------------------- uframework csharp -------------------------------------------
-_G.App = UFramework.App
+_G.UApplication = UFramework.UApplication
+_G.Service = UFramework.Service.Instance
 _G.IOPath = UFramework.IOPath
 
 ------------------------------------------- global -------------------------------------------

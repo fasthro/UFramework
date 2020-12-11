@@ -79,7 +79,7 @@ public class DelegateFactory
 		dict.Add(typeof(FairyGUI.GTweenCallback1), factory.FairyGUI_GTweenCallback1);
 		dict.Add(typeof(FairyGUI.UIObjectFactory.GComponentCreator), factory.FairyGUI_UIObjectFactory_GComponentCreator);
 		dict.Add(typeof(FairyGUI.UIObjectFactory.GLoaderCreator), factory.FairyGUI_UIObjectFactory_GLoaderCreator);
-		dict.Add(typeof(UFramework.Messenger.UCallback<UFramework.Assets.AssetRequest>), factory.UFramework_Messenger_UCallback_UFramework_Assets_AssetRequest);
+		dict.Add(typeof(UFramework.Core.UCallback<UFramework.Core.AssetRequest>), factory.UFramework_Core_UCallback_UFramework_Core_AssetRequest);
 
 		DelegateTraits<System.Action>.Init(factory.System_Action);
 		DelegateTraits<UnityEngine.Events.UnityAction>.Init(factory.UnityEngine_Events_UnityAction);
@@ -143,7 +143,7 @@ public class DelegateFactory
 		DelegateTraits<FairyGUI.GTweenCallback1>.Init(factory.FairyGUI_GTweenCallback1);
 		DelegateTraits<FairyGUI.UIObjectFactory.GComponentCreator>.Init(factory.FairyGUI_UIObjectFactory_GComponentCreator);
 		DelegateTraits<FairyGUI.UIObjectFactory.GLoaderCreator>.Init(factory.FairyGUI_UIObjectFactory_GLoaderCreator);
-		DelegateTraits<UFramework.Messenger.UCallback<UFramework.Assets.AssetRequest>>.Init(factory.UFramework_Messenger_UCallback_UFramework_Assets_AssetRequest);
+		DelegateTraits<UFramework.Core.UCallback<UFramework.Core.AssetRequest>>.Init(factory.UFramework_Core_UCallback_UFramework_Core_AssetRequest);
 
 		TypeTraits<System.Action>.Init(factory.Check_System_Action);
 		TypeTraits<UnityEngine.Events.UnityAction>.Init(factory.Check_UnityEngine_Events_UnityAction);
@@ -207,7 +207,7 @@ public class DelegateFactory
 		TypeTraits<FairyGUI.GTweenCallback1>.Init(factory.Check_FairyGUI_GTweenCallback1);
 		TypeTraits<FairyGUI.UIObjectFactory.GComponentCreator>.Init(factory.Check_FairyGUI_UIObjectFactory_GComponentCreator);
 		TypeTraits<FairyGUI.UIObjectFactory.GLoaderCreator>.Init(factory.Check_FairyGUI_UIObjectFactory_GLoaderCreator);
-		TypeTraits<UFramework.Messenger.UCallback<UFramework.Assets.AssetRequest>>.Init(factory.Check_UFramework_Messenger_UCallback_UFramework_Assets_AssetRequest);
+		TypeTraits<UFramework.Core.UCallback<UFramework.Core.AssetRequest>>.Init(factory.Check_UFramework_Core_UCallback_UFramework_Core_AssetRequest);
 
 		StackTraits<System.Action>.Push = factory.Push_System_Action;
 		StackTraits<UnityEngine.Events.UnityAction>.Push = factory.Push_UnityEngine_Events_UnityAction;
@@ -271,7 +271,7 @@ public class DelegateFactory
 		StackTraits<FairyGUI.GTweenCallback1>.Push = factory.Push_FairyGUI_GTweenCallback1;
 		StackTraits<FairyGUI.UIObjectFactory.GComponentCreator>.Push = factory.Push_FairyGUI_UIObjectFactory_GComponentCreator;
 		StackTraits<FairyGUI.UIObjectFactory.GLoaderCreator>.Push = factory.Push_FairyGUI_UIObjectFactory_GLoaderCreator;
-		StackTraits<UFramework.Messenger.UCallback<UFramework.Assets.AssetRequest>>.Push = factory.Push_UFramework_Messenger_UCallback_UFramework_Assets_AssetRequest;
+		StackTraits<UFramework.Core.UCallback<UFramework.Core.AssetRequest>>.Push = factory.Push_UFramework_Core_UCallback_UFramework_Core_AssetRequest;
 	}
     
     public static Delegate CreateDelegate(Type t, LuaFunction func = null)
@@ -3970,12 +3970,12 @@ public class DelegateFactory
 		ToLua.Push(L, o);
 	}
 
-	class UFramework_Messenger_UCallback_UFramework_Assets_AssetRequest_Event : LuaDelegate
+	class UFramework_Core_UCallback_UFramework_Core_AssetRequest_Event : LuaDelegate
 	{
-		public UFramework_Messenger_UCallback_UFramework_Assets_AssetRequest_Event(LuaFunction func) : base(func) { }
-		public UFramework_Messenger_UCallback_UFramework_Assets_AssetRequest_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+		public UFramework_Core_UCallback_UFramework_Core_AssetRequest_Event(LuaFunction func) : base(func) { }
+		public UFramework_Core_UCallback_UFramework_Core_AssetRequest_Event(LuaFunction func, LuaTable self) : base(func, self) { }
 
-		public void Call(UFramework.Assets.AssetRequest param0)
+		public void Call(UFramework.Core.AssetRequest param0)
 		{
 			func.BeginPCall();
 			func.PushObject(param0);
@@ -3983,7 +3983,7 @@ public class DelegateFactory
 			func.EndPCall();
 		}
 
-		public void CallWithSelf(UFramework.Assets.AssetRequest param0)
+		public void CallWithSelf(UFramework.Core.AssetRequest param0)
 		{
 			func.BeginPCall();
 			func.Push(self);
@@ -3993,36 +3993,36 @@ public class DelegateFactory
 		}
 	}
 
-	public UFramework.Messenger.UCallback<UFramework.Assets.AssetRequest> UFramework_Messenger_UCallback_UFramework_Assets_AssetRequest(LuaFunction func, LuaTable self, bool flag)
+	public UFramework.Core.UCallback<UFramework.Core.AssetRequest> UFramework_Core_UCallback_UFramework_Core_AssetRequest(LuaFunction func, LuaTable self, bool flag)
 	{
 		if (func == null)
 		{
-			UFramework.Messenger.UCallback<UFramework.Assets.AssetRequest> fn = delegate(UFramework.Assets.AssetRequest param0) { };
+			UFramework.Core.UCallback<UFramework.Core.AssetRequest> fn = delegate(UFramework.Core.AssetRequest param0) { };
 			return fn;
 		}
 
 		if(!flag)
 		{
-			UFramework_Messenger_UCallback_UFramework_Assets_AssetRequest_Event target = new UFramework_Messenger_UCallback_UFramework_Assets_AssetRequest_Event(func);
-			UFramework.Messenger.UCallback<UFramework.Assets.AssetRequest> d = target.Call;
+			UFramework_Core_UCallback_UFramework_Core_AssetRequest_Event target = new UFramework_Core_UCallback_UFramework_Core_AssetRequest_Event(func);
+			UFramework.Core.UCallback<UFramework.Core.AssetRequest> d = target.Call;
 			target.method = d.Method;
 			return d;
 		}
 		else
 		{
-			UFramework_Messenger_UCallback_UFramework_Assets_AssetRequest_Event target = new UFramework_Messenger_UCallback_UFramework_Assets_AssetRequest_Event(func, self);
-			UFramework.Messenger.UCallback<UFramework.Assets.AssetRequest> d = target.CallWithSelf;
+			UFramework_Core_UCallback_UFramework_Core_AssetRequest_Event target = new UFramework_Core_UCallback_UFramework_Core_AssetRequest_Event(func, self);
+			UFramework.Core.UCallback<UFramework.Core.AssetRequest> d = target.CallWithSelf;
 			target.method = d.Method;
 			return d;
 		}
 	}
 
-	bool Check_UFramework_Messenger_UCallback_UFramework_Assets_AssetRequest(IntPtr L, int pos)
+	bool Check_UFramework_Core_UCallback_UFramework_Core_AssetRequest(IntPtr L, int pos)
 	{
-		return TypeChecker.CheckDelegateType<UFramework.Messenger.UCallback<UFramework.Assets.AssetRequest>>(L, pos);
+		return TypeChecker.CheckDelegateType<UFramework.Core.UCallback<UFramework.Core.AssetRequest>>(L, pos);
 	}
 
-	void Push_UFramework_Messenger_UCallback_UFramework_Assets_AssetRequest(IntPtr L, UFramework.Messenger.UCallback<UFramework.Assets.AssetRequest> o)
+	void Push_UFramework_Core_UCallback_UFramework_Core_AssetRequest(IntPtr L, UFramework.Core.UCallback<UFramework.Core.AssetRequest> o)
 	{
 		ToLua.Push(L, o);
 	}

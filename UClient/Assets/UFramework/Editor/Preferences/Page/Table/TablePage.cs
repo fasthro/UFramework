@@ -7,11 +7,10 @@ using System.Collections.Generic;
 using System.IO;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
-using UFramework.Serialize;
-using UFramework.Table;
+using UFramework.Core;
 using UnityEngine;
 
-namespace UFramework.Editor.Preferences
+namespace UFramework.Editor.Preferences.Table
 {
     public class TablePage : IPage, IPageBar
     {
@@ -21,13 +20,13 @@ namespace UFramework.Editor.Preferences
         static string DataPath;
         static string ExcelPath;
 
-        static TableSerdata Serdata { get { return Serializable<TableSerdata>.Instance; } }
+        static TableConfig Config { get { return Serializer<TableConfig>.Instance; } }
 
         [ShowInInspector]
         [TableList(IsReadOnly = true, AlwaysExpanded = true, HideToolbar = true)]
         public List<TableItem> tables = new List<TableItem>();
 
-        private Dictionary<string, DataFormatOptions> _tableDict = new Dictionary<string, DataFormatOptions>();
+        private Dictionary<string, TableDataIndexFormat> _tableDict = new Dictionary<string, TableDataIndexFormat>();
 
         public object GetInstance()
         {
@@ -36,7 +35,7 @@ namespace UFramework.Editor.Preferences
 
         public void OnRenderBefore()
         {
-            RootPath = IOPath.PathCombine(App.AssetsDirectory, "Table");
+            RootPath = IOPath.PathCombine(UApplication.AssetsDirectory, "Table");
             DataPath = IOPath.PathCombine(RootPath, "Data");
             ExcelPath = IOPath.PathCombine(RootPath, "Excel");
 
@@ -49,15 +48,15 @@ namespace UFramework.Editor.Preferences
                 {
                     var fileName = IOPath.FileName(files[i], false);
                     fileHashSet.Add(fileName);
-                    if (!Serdata.tableDict.ContainsKey(fileName))
+                    if (!Config.tableDict.ContainsKey(fileName))
                     {
                         hasNew = true;
-                        Serdata.tableDict.Add(fileName, DataFormatOptions.Array);
+                        Config.tableDict.Add(fileName, TableDataIndexFormat.Array);
                     }
                 }
 
                 List<string> removes = new List<string>();
-                Serdata.tableDict.ForEach((item) =>
+                Config.tableDict.ForEach((item) =>
                 {
                     if (!fileHashSet.Contains(item.Key))
                     {
@@ -68,18 +67,18 @@ namespace UFramework.Editor.Preferences
                 for (int i = 0; i < removes.Count; i++)
                 {
                     hasNew = true;
-                    Serdata.tableDict.Remove(removes[i]);
+                    Config.tableDict.Remove(removes[i]);
                 }
             }
             if (hasNew)
             {
-                Serdata.Serialization();
+                Config.Serialize();
             }
 
-            _tableDict = Serdata.tableDict;
+            _tableDict = Config.tableDict;
 
             tables.Clear();
-            foreach (KeyValuePair<string, DataFormatOptions> item in _tableDict)
+            foreach (KeyValuePair<string, TableDataIndexFormat> item in _tableDict)
             {
                 var tItem = new TableItem();
                 tItem.name = item.Key;
@@ -98,26 +97,26 @@ namespace UFramework.Editor.Preferences
                 IOPath.DirectoryClear(modePath);
                 IOPath.DirectoryClear(DataPath);
 
-                Serdata.tableDict.ForEach((System.Action<KeyValuePair<string, DataFormatOptions>>)((item) =>
+                Config.tableDict.ForEach((System.Action<KeyValuePair<string, TableDataIndexFormat>>)((item) =>
                 {
                     Logger.Debug("Table Export: " + item.Key);
                     var options = new ExcelReaderOptions();
                     options.tableName = item.Key;
-                    options.outFormatOptions = Serdata.outFormatOptions;
+                    options.outFormatOptions = Config.outFormatOptions;
                     options.dataFormatOptions = item.Value;
                     options.dataOutDirectory = DataPath;
                     options.tableModelOutDirectory = modePath;
                     var reader = new ExcelReader(string.Format("{0}/{1}.xlsx", ExcelPath, item.Key), options);
                     reader.Read();
-                    switch (Serdata.outFormatOptions)
+                    switch (Config.outFormatOptions)
                     {
-                        case FormatOptions.CSV:
+                        case TableFormat.CSV:
                             new Excel2CSV(reader);
                             break;
-                        case FormatOptions.JSON:
+                        case TableFormat.JSON:
                             new Excel2Json(reader);
                             break;
-                        case FormatOptions.LUA:
+                        case TableFormat.LUA:
                             new Excel2Lua(reader);
                             break;
                     }
@@ -135,8 +134,8 @@ namespace UFramework.Editor.Preferences
             {
                 _tableDict[item.name] = item.format;
             }
-            Serdata.tableDict = _tableDict;
-            Serdata.Serialization();
+            Config.tableDict = _tableDict;
+            Config.Serialize();
         }
     }
 }

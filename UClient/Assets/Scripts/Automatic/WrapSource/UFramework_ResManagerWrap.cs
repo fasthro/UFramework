@@ -51,8 +51,8 @@ public class UFramework_ResManagerWrap
 			UFramework.ResManager obj = (UFramework.ResManager)ToLua.CheckObject<UFramework.ResManager>(L, 1);
 			string arg0 = ToLua.CheckString(L, 2);
 			System.Type arg1 = ToLua.CheckMonoType(L, 3);
-			UFramework.Messenger.UCallback<UFramework.Assets.AssetRequest> arg2 = (UFramework.Messenger.UCallback<UFramework.Assets.AssetRequest>)ToLua.CheckDelegate<UFramework.Messenger.UCallback<UFramework.Assets.AssetRequest>>(L, 4);
-			UFramework.Assets.AssetRequest o = obj.LoadAssetAsync(arg0, arg1, arg2);
+			UFramework.Core.UCallback<UFramework.Core.AssetRequest> arg2 = (UFramework.Core.UCallback<UFramework.Core.AssetRequest>)ToLua.CheckDelegate<UFramework.Core.UCallback<UFramework.Core.AssetRequest>>(L, 4);
+			UFramework.Core.AssetRequest o = obj.LoadAssetAsync(arg0, arg1, arg2);
 			ToLua.PushObject(L, o);
 			return 1;
 		}
@@ -71,7 +71,7 @@ public class UFramework_ResManagerWrap
 			UFramework.ResManager obj = (UFramework.ResManager)ToLua.CheckObject<UFramework.ResManager>(L, 1);
 			string arg0 = ToLua.CheckString(L, 2);
 			System.Type arg1 = ToLua.CheckMonoType(L, 3);
-			UFramework.Assets.AssetRequest o = obj.LoadAsset(arg0, arg1);
+			UFramework.Core.AssetRequest o = obj.LoadAsset(arg0, arg1);
 			ToLua.PushObject(L, o);
 			return 1;
 		}
@@ -90,8 +90,8 @@ public class UFramework_ResManagerWrap
 			UFramework.ResManager obj = (UFramework.ResManager)ToLua.CheckObject<UFramework.ResManager>(L, 1);
 			string arg0 = ToLua.CheckString(L, 2);
 			System.Type arg1 = ToLua.CheckMonoType(L, 3);
-			UFramework.Messenger.UCallback<UFramework.Assets.AssetRequest> arg2 = (UFramework.Messenger.UCallback<UFramework.Assets.AssetRequest>)ToLua.CheckDelegate<UFramework.Messenger.UCallback<UFramework.Assets.AssetRequest>>(L, 4);
-			UFramework.Assets.AssetRequest o = obj.LoadResourceAssetAsync(arg0, arg1, arg2);
+			UFramework.Core.UCallback<UFramework.Core.AssetRequest> arg2 = (UFramework.Core.UCallback<UFramework.Core.AssetRequest>)ToLua.CheckDelegate<UFramework.Core.UCallback<UFramework.Core.AssetRequest>>(L, 4);
+			UFramework.Core.AssetRequest o = obj.LoadResourceAssetAsync(arg0, arg1, arg2);
 			ToLua.PushObject(L, o);
 			return 1;
 		}
@@ -110,7 +110,7 @@ public class UFramework_ResManagerWrap
 			UFramework.ResManager obj = (UFramework.ResManager)ToLua.CheckObject<UFramework.ResManager>(L, 1);
 			string arg0 = ToLua.CheckString(L, 2);
 			System.Type arg1 = ToLua.CheckMonoType(L, 3);
-			UFramework.Assets.AssetRequest o = obj.LoadResourceAsset(arg0, arg1);
+			UFramework.Core.AssetRequest o = obj.LoadResourceAsset(arg0, arg1);
 			ToLua.PushObject(L, o);
 			return 1;
 		}
@@ -129,8 +129,8 @@ public class UFramework_ResManagerWrap
 			UFramework.ResManager obj = (UFramework.ResManager)ToLua.CheckObject<UFramework.ResManager>(L, 1);
 			string arg0 = ToLua.CheckString(L, 2);
 			System.Type arg1 = ToLua.CheckMonoType(L, 3);
-			UFramework.Messenger.UCallback<UFramework.Assets.AssetRequest> arg2 = (UFramework.Messenger.UCallback<UFramework.Assets.AssetRequest>)ToLua.CheckDelegate<UFramework.Messenger.UCallback<UFramework.Assets.AssetRequest>>(L, 4);
-			UFramework.Assets.AssetRequest o = obj.LoadWebAsset(arg0, arg1, arg2);
+			UFramework.Core.UCallback<UFramework.Core.AssetRequest> arg2 = (UFramework.Core.UCallback<UFramework.Core.AssetRequest>)ToLua.CheckDelegate<UFramework.Core.UCallback<UFramework.Core.AssetRequest>>(L, 4);
+			UFramework.Core.AssetRequest o = obj.LoadWebAsset(arg0, arg1, arg2);
 			ToLua.PushObject(L, o);
 			return 1;
 		}
@@ -147,7 +147,7 @@ public class UFramework_ResManagerWrap
 		{
 			ToLua.CheckArgsCount(L, 2);
 			UFramework.ResManager obj = (UFramework.ResManager)ToLua.CheckObject<UFramework.ResManager>(L, 1);
-			UFramework.Assets.AssetRequest arg0 = (UFramework.Assets.AssetRequest)ToLua.CheckObject<UFramework.Assets.AssetRequest>(L, 2);
+			UFramework.Core.AssetRequest arg0 = (UFramework.Core.AssetRequest)ToLua.CheckObject<UFramework.Core.AssetRequest>(L, 2);
 			obj.UnloadAsset(arg0);
 			return 0;
 		}

@@ -5,10 +5,9 @@
  */
 using System.Collections.Generic;
 using LuaInterface;
-using UFramework.Messenger;
 using UnityEngine;
 
-namespace UFramework.Timers
+namespace UFramework.Core
 {
     [MonoSingletonPath("UFramework/Timer")]
     public class Timer : MonoSingleton<Timer>

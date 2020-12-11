@@ -5,10 +5,10 @@
  */
 using System.Collections;
 using System.Collections.Generic;
-using UFramework.Pool;
+using UFramework.Core;
 using UnityEngine;
 
-namespace UFramework.Assets
+namespace UFramework.Core
 {
     public class BundleRequest : AssetRequest
     {
@@ -32,16 +32,16 @@ namespace UFramework.Assets
             base.Load();
             if (loadState != LoadState.Init) return;
 
-            var bundles = Asset.Instance.GetDependencies(url);
+            var bundles = Assets.Instance.GetDependencies(url);
             for (int i = 0; i < bundles.Length; i++)
             {
-                var bundle = Asset.Instance.GetBundle<BundleRequest>(bundles[i], false);
+                var bundle = Assets.Instance.GetBundle<BundleRequest>(bundles[i], false);
                 bundle.Load();
                 _dependencies.Add(bundle);
             }
             asset = AssetBundle.LoadFromFile(url);
             loadState = LoadState.Loaded;
-            OnCallback();
+            Completed();
         }
 
         public override void Unload()

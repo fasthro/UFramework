@@ -4,19 +4,16 @@
  * @Description: 项目
  */
 
-using System.Collections.Generic;
 using Sirenix.OdinInspector;
-using Sirenix.Utilities.Editor;
-using UFramework.Serialize;
+using UFramework.Core;
 using UnityEditor;
-using UnityEngine;
 
-namespace UFramework.Editor.Preferences
+namespace UFramework.Editor.Preferences.Projrect
 {
     public class ProjrectPage : IPage, IPageBar
     {
         public string menuName { get { return "Projrect"; } }
-        static AppSerdata Serdata { get { return Serializable<AppSerdata>.Instance; } }
+        static AppConfig Config { get { return Serializer<AppConfig>.Instance; } }
 
         /// <summary>
         /// 是否使用系统语言
@@ -60,10 +57,10 @@ namespace UFramework.Editor.Preferences
 
         public void OnRenderBefore()
         {
-            useFairyGUI = Serdata.useFairyGUI;
-            designResolutionX = Serdata.designResolutionX;
-            designResolutionY = Serdata.designResolutionY;
-            uiDirectory = Serdata.uiDirectory;
+            useFairyGUI = Config.useFairyGUI;
+            designResolutionX = Config.designResolutionX;
+            designResolutionY = Config.designResolutionY;
+            uiDirectory = Config.uiDirectory;
         }
 
         public void OnPageBarDraw()
@@ -73,12 +70,12 @@ namespace UFramework.Editor.Preferences
 
         public void OnSaveDescribe()
         {
-            if (Serdata == null) return;
-            Serdata.useFairyGUI = useFairyGUI;
-            Serdata.designResolutionX = designResolutionX;
-            Serdata.designResolutionY = designResolutionY;
-            Serdata.uiDirectory = uiDirectory;
-            Serdata.Serialization();
+            if (Config == null) return;
+            Config.useFairyGUI = useFairyGUI;
+            Config.designResolutionX = designResolutionX;
+            Config.designResolutionY = designResolutionY;
+            Config.uiDirectory = uiDirectory;
+            Config.Serialize();
         }
 
         private void UpdateFairyGUISymbols()

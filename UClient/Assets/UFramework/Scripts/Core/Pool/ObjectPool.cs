@@ -5,10 +5,11 @@
  */
 
 using UnityEngine;
+using UFramework.Core.Pool;
 
-namespace UFramework.Pool
+namespace UFramework.Core
 {
-    public class ObjectPool<T> : Pool<T>, ISingleton where T : IPoolObject, new()
+    public class ObjectPool<T> : Pool<T>, ISingleton where T : IPoolBehaviour, new()
     {
         #region Singleton
         public void SingletonAwake() { }

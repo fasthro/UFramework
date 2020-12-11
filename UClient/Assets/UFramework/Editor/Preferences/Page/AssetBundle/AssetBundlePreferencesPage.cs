@@ -5,14 +5,13 @@
  */
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
-using UFramework.Assets;
+using UFramework.Core;
 using UnityEditor;
 using UnityEngine;
 
-namespace UFramework.Editor.Preferences.Assets
+namespace UFramework.Editor.Preferences.AssetBundle
 {
     /// <summary>
     /// Preferences Page
@@ -20,7 +19,10 @@ namespace UFramework.Editor.Preferences.Assets
     public class AssetBundlePreferencesPage : IPage, IPageBar
     {
         public string menuName { get { return "AssetBundle/Preferences"; } }
-        static ABAssetSearchPathSerdata Serdata { get { return Serialize.Serializable<ABAssetSearchPathSerdata>.Instance; } }
+        static Preferences_AssetBundle_SearchPathConfig SearchPathConfig
+        {
+            get { return Core.Serializer<Preferences_AssetBundle_SearchPathConfig>.Instance; }
+        }
 
         #region search pattern
         [BoxGroup("Pattern")]
@@ -107,8 +109,8 @@ namespace UFramework.Editor.Preferences.Assets
                 AssetDatabase.SaveAssets();
             }
 
-            assetPathItems = Serdata.assetPathItems;
-            assetFileItems = Serdata.assetFileItems;
+            assetPathItems = SearchPathConfig.assetPathItems;
+            assetFileItems = SearchPathConfig.assetFileItems;
             BuildBuiltInPathItems();
         }
 
@@ -127,13 +129,13 @@ namespace UFramework.Editor.Preferences.Assets
 
         public void OnSaveDescribe()
         {
-            if (Serdata == null) return;
+            if (SearchPathConfig == null) return;
 
-            Serdata.assetPathItems = assetPathItems;
-            Serdata.assetFileItems = assetFileItems;
-            Serdata.builtInAssetPathItems = builtInAssetPathItems;
-            Serdata.builtInAssetFileItems = builtInAssetFileItems;
-            Serdata.Serialization();
+            SearchPathConfig.assetPathItems = assetPathItems;
+            SearchPathConfig.assetFileItems = assetFileItems;
+            SearchPathConfig.builtInAssetPathItems = builtInAssetPathItems;
+            SearchPathConfig.builtInAssetFileItems = builtInAssetFileItems;
+            SearchPathConfig.Serialize();
         }
 
         /// <summary>
@@ -282,21 +284,21 @@ namespace UFramework.Editor.Preferences.Assets
 
             // config
             var config = new AssetSearchItem();
-            config.path = IOPath.PathRelativeAsset(IOPath.PathCombine(App.AssetsDirectory, "Serdata", Serialize.SerializableType.AssetBundle.ToString()));
+            config.path = IOPath.PathRelativeAsset(IOPath.PathCombine(UApplication.AssetsDirectory, "Serializable", Core.SerializableAssigned.AssetBundle.ToString()));
             config.nameType = NameType.Path;
             config.pattern = "*.json";
             builtInAssetPathItems.Add(config);
 
             // language
             var languageItem = new AssetSearchItem();
-            languageItem.path = IOPath.PathRelativeAsset(IOPath.PathCombine(App.AssetsDirectory, "Language", "Data"));
+            languageItem.path = IOPath.PathRelativeAsset(IOPath.PathCombine(UApplication.AssetsDirectory, "Language", "Data"));
             languageItem.nameType = NameType.Path;
             languageItem.pattern = "*.txt";
             builtInAssetPathItems.Add(languageItem);
 
             // table
             var tableItem = new AssetSearchItem();
-            tableItem.path = IOPath.PathRelativeAsset(IOPath.PathCombine(App.AssetsDirectory, "Table", "Data"));
+            tableItem.path = IOPath.PathRelativeAsset(IOPath.PathCombine(UApplication.AssetsDirectory, "Table", "Data"));
             tableItem.nameType = NameType.Path;
             tableItem.pattern = "*.csv";
 

@@ -21,7 +21,7 @@ end
 function NetManager:registerPB()
     for k, v in ipairs(pb) do
         logger.debug("register pb: " .. v)
-        local path = IOPath.PathCombine(App.PBDirectory, v)
+        local path = IOPath.PathCombine(UApplication.PBDirectory, v)
         local addr = io.open(path, "rb")
         local buffer = addr:read "*a"
         addr:close()
@@ -57,7 +57,7 @@ end
 
 function NetManager:createPack(protocal, cmd)
     cmd = cmd or -1
-    return UFramework.Network.SocketPack.AllocateWriter(protocal, cmd)
+    return UFramework.Core.SocketPack.AllocateWriter(protocal, cmd)
 end
 
 function NetManager:sendPack(pack)

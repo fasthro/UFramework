@@ -7,11 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Sirenix.OdinInspector;
-using Sirenix.Utilities.Editor;
-using UFramework.Serialize;
+using UFramework.Core;
 using UnityEngine;
 
-namespace UFramework.Editor.Preferences
+namespace UFramework.Editor.Preferences.Serializable
 {
     public class SerializePage : IPage, IPageBar
     {
@@ -27,8 +26,8 @@ namespace UFramework.Editor.Preferences
         [LabelText("Runtime")]
         public List<SerializeItem> runtimes = new List<SerializeItem>();
 
-        private Dictionary<string, SerializableType> _editorAddressDict = new Dictionary<string, SerializableType>();
-        private Dictionary<string, SerializableType> _runtimeAddressDict = new Dictionary<string, SerializableType>();
+        private Dictionary<string, SerializableAssigned> _editorAddressDict = new Dictionary<string, SerializableAssigned>();
+        private Dictionary<string, SerializableAssigned> _runtimeAddressDict = new Dictionary<string, SerializableAssigned>();
 
         public object GetInstance()
         {
@@ -47,15 +46,15 @@ namespace UFramework.Editor.Preferences
                 if (type.GetInterface("ISerializable") != null)
                 {
                     var name = type.Name;
-                    if (name.EndsWith("Serdata") && !_editorAddressDict.ContainsKey(name))
+                    if (name.EndsWith("Config") && !_editorAddressDict.ContainsKey(name))
                     {
                         var ctors = type.GetConstructors();
-                        var st = (SerializableType)type.GetProperty("serializableType").GetValue(ctors[0].Invoke(null));
-                        if (st == SerializableType.Editor)
+                        var st = (SerializableAssigned)type.GetProperty("assigned").GetValue(ctors[0].Invoke(null));
+                        if (st == SerializableAssigned.Editor)
                         {
                             _editorAddressDict.Add(name, st);
                         }
-                        else if (st != SerializableType.User)
+                        else if (st != SerializableAssigned.User)
                         {
                             _runtimeAddressDict.Add(name, st);
                         }
@@ -70,12 +69,12 @@ namespace UFramework.Editor.Preferences
                 if (types[i].GetInterface("ISerializable") != null)
                 {
                     var name = types[i].Name;
-                    if (name.EndsWith("Serdata") && !_runtimeAddressDict.ContainsKey(name))
+                    if (name.EndsWith("Config") && !_runtimeAddressDict.ContainsKey(name))
                     {
                         Debug.Log(name);
                         var ctors = type.GetConstructors();
-                        var st = (SerializableType)type.GetProperty("serializableType").GetValue(ctors[0].Invoke(null));
-                        if (st != SerializableType.Editor && st != SerializableType.User)
+                        var st = (SerializableAssigned)type.GetProperty("assigned").GetValue(ctors[0].Invoke(null));
+                        if (st != SerializableAssigned.Editor && st != SerializableAssigned.User)
                         {
                             _runtimeAddressDict.Add(name, st);
                         }
@@ -88,7 +87,7 @@ namespace UFramework.Editor.Preferences
             }
 
             editors.Clear();
-            foreach (KeyValuePair<string, SerializableType> item in _editorAddressDict)
+            foreach (KeyValuePair<string, SerializableAssigned> item in _editorAddressDict)
             {
                 var cItem = new SerializeItem();
                 cItem.name = item.Key;
@@ -98,7 +97,7 @@ namespace UFramework.Editor.Preferences
             }
 
             runtimes.Clear();
-            foreach (KeyValuePair<string, SerializableType> item in _runtimeAddressDict)
+            foreach (KeyValuePair<string, SerializableAssigned> item in _runtimeAddressDict)
             {
                 var cItem = new SerializeItem();
                 cItem.name = item.Key;

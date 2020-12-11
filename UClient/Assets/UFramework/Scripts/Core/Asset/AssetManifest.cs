@@ -7,7 +7,7 @@
 using System;
 using UnityEngine;
 
-namespace UFramework.Assets
+namespace UFramework.Core
 {
     [Serializable]
     public class AssetRef
@@ -30,7 +30,7 @@ namespace UFramework.Assets
     public class AssetManifest : ScriptableObject
     {
         public readonly static string AssetPath = "Assets/AssetManifest.asset";
-        public readonly static string AssetBundleFileName = "manifest" + Asset.Extension;
+        public readonly static string AssetBundleFileName = "manifest" + Assets.Extension;
 
         /// <summary>
         /// 资源目录

@@ -4,10 +4,10 @@
  * @Description: bundle asset async
  */
 using System.Collections;
-using UFramework.Pool;
+using UFramework.Core;
 using UnityEngine;
 
-namespace UFramework.Assets
+namespace UFramework.Core
 {
     public class BundleAssetAsyncRequest : AssetRequest
     {
@@ -21,7 +21,7 @@ namespace UFramework.Assets
             return ObjectPool<BundleAssetAsyncRequest>.Instance.Allocate();
         }
 
-        public override IEnumerator OnCoroutineTaskRun()
+        public override IEnumerator DoCoroutineWork()
         {
             loadState = LoadState.LoadAsset;
             request = bundle.assetBundle.LoadAssetAsync(url, assetType);
@@ -30,7 +30,7 @@ namespace UFramework.Assets
             {
                 asset = request.asset;
                 loadState = LoadState.Loaded;
-                OnAsyncCallback();
+                Completed();
             }
         }
 
@@ -43,7 +43,7 @@ namespace UFramework.Assets
         {
             base.Load();
             if (loadState != LoadState.Init) return;
-            bundle = Asset.Instance.GetBundle<BundleAsyncRequest>(Asset.Instance.GetBundleNameWithAssetName(url), true);
+            bundle = Assets.Instance.GetBundle<BundleAsyncRequest>(Assets.Instance.GetBundleNameWithAssetName(url), true);
             if (bundle.isDone)
                 StartCoroutine();
             else

@@ -5,19 +5,12 @@
  */
 
 using System;
-using UFramework.Assets;
-using UFramework.Messenger;
+using UFramework.Core;
 
 namespace UFramework
 {
     public class ResManager : BaseManager
     {
-        protected override void OnInitialize() { }
-        protected override void OnUpdate(float deltaTime) { }
-        protected override void OnLateUpdate() { }
-        protected override void OnFixedUpdate() { }
-        protected override void OnDispose() { }
-
         /// <summary>
         /// bundle
         /// </summary>
@@ -27,7 +20,7 @@ namespace UFramework
         /// <returns></returns>
         public AssetRequest LoadAssetAsync(string path, Type type, UCallback<AssetRequest> callback)
         {
-            return Asset.LoadAssetAsync(path, type, callback);
+            return Assets.LoadAssetAsync(path, type, callback);
         }
 
         /// <summary>
@@ -38,7 +31,7 @@ namespace UFramework
         /// <returns></returns>
         public AssetRequest LoadAsset(string path, Type type)
         {
-            return Asset.LoadAsset(path, type);
+            return Assets.LoadAsset(path, type);
         }
 
         /// <summary>
@@ -50,7 +43,7 @@ namespace UFramework
         /// <returns></returns>
         public AssetRequest LoadResourceAssetAsync(string path, Type type, UCallback<AssetRequest> callback)
         {
-            return Asset.LoadResourceAssetAsync(path, type, callback);
+            return Assets.LoadResourceAssetAsync(path, type, callback);
         }
 
         /// <summary>
@@ -61,7 +54,7 @@ namespace UFramework
         /// <returns></returns>
         public AssetRequest LoadResourceAsset(string path, Type type)
         {
-            return Asset.LoadResourceAsset(path, type);
+            return Assets.LoadResourceAsset(path, type);
         }
 
         /// <summary>
@@ -72,7 +65,7 @@ namespace UFramework
         /// <returns></returns>
         public AssetRequest LoadWebAsset(string path, Type type, UCallback<AssetRequest> callback)
         {
-            return Asset.LoadWebAsset(path, type, callback);
+            return Assets.LoadWebAsset(path, type, callback);
         }
 
         /// <summary>
@@ -81,7 +74,7 @@ namespace UFramework
         /// <param name="asset"></param>
         public void UnloadAsset(AssetRequest asset)
         {
-            Asset.UnloadAsset(asset);
+            Assets.UnloadAsset(asset);
         }
     }
 }

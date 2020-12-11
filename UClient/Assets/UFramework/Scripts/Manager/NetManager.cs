@@ -3,8 +3,8 @@
  * @Date: 2020-05-26 22:39:27
  * @Description: TCPManager(Socket Manager)
  */
-using UFramework.Network;
-using UFramework.Tools;
+using UFramework.Core;
+using UFramework.Core;
 using System;
 using System.Text;
 
@@ -36,7 +36,7 @@ namespace UFramework
         /// <returns></returns>
         private DoubleQueue<SocketPack> _packQueue = new DoubleQueue<SocketPack>();
 
-        protected override void OnInitialize()
+        public override void OnAwake()
         {
             isRedirecting = false;
             _packQueue.Clear();
@@ -157,30 +157,14 @@ namespace UFramework
         #endregion
 
         #region BaseManager
-        protected override void OnUpdate(float deltaTime)
+        public override void OnUpdate(float deltaTime)
         {
             _client?.OnUpdate();
         }
 
-        protected override void OnLateUpdate()
-        { }
-
-        protected override void OnFixedUpdate()
-        { }
-
-        protected override void OnDispose()
+        public override void OnDestroy()
         {
             _client?.Disconnecte();
-        }
-
-        protected override void Log(object message)
-        {
-            base.Log(string.Format("[NetManager] {0}", message.ToString()));
-        }
-
-        protected override void LogError(object message)
-        {
-            base.LogError(string.Format("[NetManager] {0}", message.ToString()));
         }
 
         #endregion

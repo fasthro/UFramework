@@ -13,12 +13,12 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
 
-namespace UFramework.Editor.Preferences.Assets
+namespace UFramework.Editor.Preferences.AssetImporter
 {
     public class AssetImporterPage : IPage, IPageBar
     {
         public string menuName { get { return "AssetImporter"; } }
-        static AssetImporterSerdata Serdata { get { return Serialize.Serializable<AssetImporterSerdata>.Instance; } }
+        static Preferences_AssetImporter_Config Config { get { return Core.Serializer<Preferences_AssetImporter_Config>.Instance; } }
 
         [ShowInInspector]
         [TableList(IsReadOnly = true, AlwaysExpanded = true)]
@@ -46,9 +46,9 @@ namespace UFramework.Editor.Preferences.Assets
 
         public void OnRenderBefore()
         {
-            textures = Serdata.textures;
-            modes = Serdata.modes;
-            audios = Serdata.audios;
+            textures = Config.textures;
+            modes = Config.modes;
+            audios = Config.audios;
 
             if (textures.Count <= 0 || modes.Count <= 0)
             {
@@ -58,11 +58,11 @@ namespace UFramework.Editor.Preferences.Assets
 
         public void OnSaveDescribe()
         {
-            if (Serdata == null) return;
-            Serdata.textures = textures;
-            Serdata.modes = modes;
-            Serdata.audios = audios;
-            Serdata.Serialization();
+            if (Config == null) return;
+            Config.textures = textures;
+            Config.modes = modes;
+            Config.audios = audios;
+            Config.Serialize();
         }
 
         public void OnPageBarDraw()
@@ -100,10 +100,10 @@ namespace UFramework.Editor.Preferences.Assets
         {
             // texture
             textures.Clear();
-            for (int i = 0; i < Serdata.texturePaths.Count; i++)
+            for (int i = 0; i < Config.texturePaths.Count; i++)
             {
-                var texture = Serdata.texturePaths[i];
-                var files = ParsePath(texture.path, Serdata.texturePattern);
+                var texture = Config.texturePaths[i];
+                var files = ParsePath(texture.path, Config.texturePattern);
                 for (int k = 0; k < files.Length; k++)
                 {
                     var file = files[k];
@@ -154,7 +154,7 @@ namespace UFramework.Editor.Preferences.Assets
 
             bool legal = false;
 
-            var patterns = Serdata.texturePattern.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            var patterns = Config.texturePattern.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var item in patterns)
             {
                 if (item.Equals(ext))
@@ -166,7 +166,7 @@ namespace UFramework.Editor.Preferences.Assets
 
             if (!legal)
             {
-                patterns = Serdata.modePattern.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                patterns = Config.modePattern.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var item in patterns)
                 {
                     if (item.Equals(ext))
@@ -179,7 +179,7 @@ namespace UFramework.Editor.Preferences.Assets
 
             if (!legal)
             {
-                patterns = Serdata.audioPattern.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                patterns = Config.audioPattern.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var item in patterns)
                 {
                     if (item.Equals(ext))
@@ -215,7 +215,7 @@ namespace UFramework.Editor.Preferences.Assets
         /// <param name="searchItem"></param>
         public static void ReimportTexture(TextureSearchPathItem searchItem)
         {
-            var files = ParsePath(searchItem.path, Serdata.texturePattern);
+            var files = ParsePath(searchItem.path, Config.texturePattern);
             for (int k = 0; k < files.Length; k++)
             {
                 var file = files[k];

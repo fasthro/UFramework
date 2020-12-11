@@ -4,10 +4,10 @@
  * @Description: resource async asset
  */
 using System.Collections;
-using UFramework.Pool;
+using UFramework.Core;
 using UnityEngine;
 
-namespace UFramework.Assets
+namespace UFramework.Core
 {
     public class ResourceAssetAsyncRequest : AssetRequest
     {
@@ -25,7 +25,7 @@ namespace UFramework.Assets
             ObjectPool<ResourceAssetAsyncRequest>.Instance.Recycle(this);
         }
 
-        public override IEnumerator OnCoroutineTaskRun()
+        public override IEnumerator DoCoroutineWork()
         {
             loadState = LoadState.LoadAsset;
 
@@ -36,7 +36,7 @@ namespace UFramework.Assets
             {
                 asset = _request.asset;
                 loadState = LoadState.Loaded;
-                OnAsyncCallback();
+                Completed();
             }
         }
 

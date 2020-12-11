@@ -31,8 +31,8 @@ function LuaEngine:__dtor()
     LuaEngine.instance = nil
 end
 
--- static
-function LuaEngine.launch(loglevel)
+-- 初始化 luaEngine
+function LuaEngine.initialize(loglevel)
     -- 日志等级
     logger.setlevel(loglevel)
 
@@ -40,7 +40,7 @@ function LuaEngine.launch(loglevel)
     _setRootObject(_new(LuaEngine))
 end
 
-function LuaEngine.runner()
+function LuaEngine.launch()
     LuaEngine.onRunner(LuaEngine.instance)
 end
 

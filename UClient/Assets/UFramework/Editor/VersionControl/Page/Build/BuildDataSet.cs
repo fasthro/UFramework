@@ -7,21 +7,17 @@ using System;
 using System.Collections;
 using System.Linq;
 using Sirenix.OdinInspector;
-using UFramework.Serialize;
+using UFramework.Core;
 using UnityEditor;
 using UnityEngine;
 using Unity.EditorCoroutines.Editor;
-using UFramework.Assets;
 using System.IO;
-using UFramework.Editor.Preferences.Assets;
-using Version = UFramework.VersionControl.Version;
+using UFramework.Editor.Preferences.AssetBundle;
 using System.Collections.Generic;
-using UFramework.VersionControl;
-using UFramework.Tools;
-using UFramework.Editor.Preferences;
-using UFramework.Lua;
+using UFramework.Editor.Preferences.Lua;
+using UFramework.Editor.VersionControl.Version;
 
-namespace UFramework.Editor.VersionControl
+namespace UFramework.Editor.VersionControl.Build
 {
     public enum PACKAGE_TYPE
     {
@@ -30,9 +26,9 @@ namespace UFramework.Editor.VersionControl
         GOOGLE_PLAY_OBB,
     }
 
-    public class VersionBuildSerdata : ISerializable
+    public class VersionControl_Build_Config : ISerializable
     {
-        public SerializableType serializableType { get { return SerializableType.Editor; } }
+        public SerializableAssigned assigned { get { return SerializableAssigned.Editor; } }
 
         /// <summary>
         /// 应用版本
@@ -75,9 +71,9 @@ namespace UFramework.Editor.VersionControl
 
         #endregion
 
-        public void Serialization()
+        public void Serialize()
         {
-            Serializable<VersionBuildSerdata>.Serialization(this);
+            Serializer<VersionControl_Build_Config>.Serialize(this);
         }
     }
 
@@ -96,11 +92,11 @@ namespace UFramework.Editor.VersionControl
 
         private void OnValueChanged_PackageType()
         {
-            Serializable<VersionBuildSerdata>.Instance.packageType = packageType;
-            Serializable<VersionBuildSerdata>.Instance.Serialization();
+            Serializer<VersionControl_Build_Config>.Instance.packageType = packageType;
+            Serializer<VersionControl_Build_Config>.Instance.Serialize();
 
-            Serialize.Serializable<AppSerdata>.Instance.useAPKExpansionFiles = packageType == PACKAGE_TYPE.GOOGLE_PLAY_OBB;
-            Serialize.Serializable<AppSerdata>.Instance.Serialization();
+            Core.Serializer<AppConfig>.Instance.useAPKExpansionFiles = packageType == PACKAGE_TYPE.GOOGLE_PLAY_OBB;
+            Core.Serializer<AppConfig>.Instance.Serialize();
 
             PlayerSettings.Android.useAPKExpansionFiles = packageType == PACKAGE_TYPE.GOOGLE_PLAY_OBB;
             EditorUserBuildSettings.buildAppBundle = packageType == PACKAGE_TYPE.GOOGLE_PLAY_APPBUNDLE;
@@ -220,10 +216,10 @@ namespace UFramework.Editor.VersionControl
         private IEnumerator _CopyAssetBundle()
         {
             progress = 0;
-            var assetBundlePath = IOPath.PathCombine(App.TempDirectory, Platform.BuildTargetCurrentName);
+            var assetBundlePath = IOPath.PathCombine(UApplication.TempDirectory, Platform.BuildTargetCurrentName);
             var assetBundleDataPath = IOPath.PathCombine(Application.streamingAssetsPath, Platform.BuildTargetCurrentName);
             IOPath.DirectoryClear(assetBundleDataPath);
-            string[] files = IOPath.DirectoryGetFiles(assetBundlePath, "*" + Asset.Extension, SearchOption.AllDirectories);
+            string[] files = IOPath.DirectoryGetFiles(assetBundlePath, "*" + Assets.Extension, SearchOption.AllDirectories);
             for (int i = 0; i < files.Length; i++)
             {
                 var fp = files[i];
@@ -246,8 +242,8 @@ namespace UFramework.Editor.VersionControl
 
         private void _CopyVersion()
         {
-            var versionFilePath = IOPath.PathCombine(App.TempDirectory, Version.FileName);
-            IOPath.FileCopy(versionFilePath, IOPath.PathCombine(Application.streamingAssetsPath, Version.FileName));
+            var versionFilePath = IOPath.PathCombine(UApplication.TempDirectory, Core.Version.FileName);
+            IOPath.FileCopy(versionFilePath, IOPath.PathCombine(Application.streamingAssetsPath, Core.Version.FileName));
             AssetDatabase.Refresh();
         }
 
@@ -263,7 +259,7 @@ namespace UFramework.Editor.VersionControl
         {
             var page = new LuaPage();
             page.OnRenderBefore();
-            page.BuildScripts(Serialize.Serializable<LuaSerdata>.Instance.byteEncode, false);
+            page.BuildScripts(Core.Serializer<LuaConfig>.Instance.byteEncode, false);
         }
 
         [ShowInInspector, Button, HorizontalGroup]
@@ -277,7 +273,7 @@ namespace UFramework.Editor.VersionControl
         IEnumerator _CopyScripts()
         {
             progress = 0;
-            var luaPath = IOPath.PathCombine(App.TempDirectory, "Lua");
+            var luaPath = IOPath.PathCombine(UApplication.TempDirectory, "Lua");
             var luaDataPath = IOPath.PathCombine(Application.streamingAssetsPath, "Lua");
             IOPath.DirectoryClear(luaDataPath);
             string[] files = IOPath.DirectoryGetFiles(luaPath, "*.lua", SearchOption.AllDirectories);
@@ -302,7 +298,7 @@ namespace UFramework.Editor.VersionControl
         {
             if (_isBuild) return;
 
-            if (Serialize.Serializable<AppSerdata>.Instance.isDevelopmentVersion)
+            if (Core.Serializer<AppConfig>.Instance.isDevelopmentVersion)
             {
                 EditorUtility.DisplayDialog("Build", "当前为开发环境, 无法构建应用. 请切换到 Version Contorl -> Application 页进行环境切换.", "确定");
                 return;
@@ -324,9 +320,9 @@ namespace UFramework.Editor.VersionControl
             totalProgress = 0;
             progress = 0;
 
-            var assetBundlePath = IOPath.PathCombine(App.TempDirectory, Platform.BuildTargetCurrentName);
-            var versionFilePath = IOPath.PathCombine(App.TempDirectory, Version.FileName);
-            var outPath = IOPath.PathCombine(App.BuildDirectory, Platform.BuildTargetCurrentName);
+            var assetBundlePath = IOPath.PathCombine(UApplication.TempDirectory, Platform.BuildTargetCurrentName);
+            var versionFilePath = IOPath.PathCombine(UApplication.TempDirectory, Core.Version.FileName);
+            var outPath = IOPath.PathCombine(UApplication.BuildDirectory, Platform.BuildTargetCurrentName);
 
             // bundle
             totalProgress++;
@@ -352,16 +348,16 @@ namespace UFramework.Editor.VersionControl
 
             // version
             progress = 0;
-            VersionPage.BuildVersion(IOPath.PathCombine(App.TempDirectory, Version.FileName));
+            VersionPage.BuildVersion(IOPath.PathCombine(UApplication.TempDirectory, Core.Version.FileName));
             _CopyVersion();
             yield return new EditorWaitForSeconds(1);
             totalProgress++;
 
             // setting
             progress = 0;
-            var buildSerdata = Serializable<VersionBuildSerdata>.Instance;
+            var buildSerdata = Serializer<VersionControl_Build_Config>.Instance;
             buildSerdata.versionCode++;
-            buildSerdata.Serialization();
+            buildSerdata.Serialize();
 
             switch (EditorUserBuildSettings.activeBuildTarget)
             {
@@ -400,10 +396,10 @@ namespace UFramework.Editor.VersionControl
             totalProgress++;
 
             // 构建版本目录
-            var dn = "data-v" + Serialize.Serializable<VersionSerdata>.Instance.version;
+            var dn = "data-v" + Core.Serializer<VersionControl_Version_Config>.Instance.version;
             var documentPath = IOPath.PathCombine(outPath, dn);
             IOPath.DirectoryClear(documentPath);
-            IOPath.FileCopy(versionFilePath, IOPath.PathCombine(documentPath, Version.FileName));
+            IOPath.FileCopy(versionFilePath, IOPath.PathCombine(documentPath, Core.Version.FileName));
             yield return new EditorWaitForSeconds(1);
             totalProgress++;
 
@@ -422,7 +418,7 @@ namespace UFramework.Editor.VersionControl
         {
             var time = DateTime.Now.ToString("yyyyMMdd-HHmmss");
             var name = "app-" + PlayerSettings.bundleVersion + "-v";
-            var version = Serialize.Serializable<VersionSerdata>.Instance.version;
+            var version = Core.Serializer<VersionControl_Version_Config>.Instance.version;
             switch (target)
             {
                 case BuildTarget.Android:
@@ -463,7 +459,7 @@ namespace UFramework.Editor.VersionControl
             totalProgress = 0;
             progress = 0;
 
-            var versionConfig = Serialize.Serializable<VersionSerdata>.Instance;
+            var versionConfig = Core.Serializer<VersionControl_Version_Config>.Instance;
             var version = versionConfig.GetPlatformVersion();
 
             if (!version.HasNewPatchVersionWaitBuild())
@@ -473,7 +469,7 @@ namespace UFramework.Editor.VersionControl
                 return;
             }
 
-            var dataPath = IOPath.PathCombine(App.BuildDirectory, Platform.BuildTargetCurrentName, "data-v" + versionConfig.version);
+            var dataPath = IOPath.PathCombine(UApplication.BuildDirectory, Platform.BuildTargetCurrentName, "data-v" + versionConfig.version);
 
             var nPatchVersionCode = version.GetNextPatchVersion();
             var oPatchVersionCode = nPatchVersionCode - 1;
@@ -481,8 +477,8 @@ namespace UFramework.Editor.VersionControl
 
             string oVersionPath = null;
             if (currentPatch != null)
-                oVersionPath = IOPath.PathCombine(dataPath, currentPatch.displayName, Version.FileName);
-            else oVersionPath = IOPath.PathCombine(dataPath, Version.FileName);
+                oVersionPath = IOPath.PathCombine(dataPath, currentPatch.displayName, Core.Version.FileName);
+            else oVersionPath = IOPath.PathCombine(dataPath, Core.Version.FileName);
 
             if (!IOPath.FileExists(oVersionPath))
             {
@@ -493,7 +489,7 @@ namespace UFramework.Editor.VersionControl
 
             // 查询需要更新的文件
             // files
-            var oVer = Version.LoadVersion(oVersionPath);
+            var oVer = Core.Version.LoadVersion(oVersionPath);
             var fileMap = new Dictionary<string, VFile>();
             for (int i = 0; i < oVer.files.Length; i++)
                 fileMap.Add(oVer.files[i].name, oVer.files[i]);
@@ -575,7 +571,7 @@ namespace UFramework.Editor.VersionControl
             int _index = 0;
             foreach (var item in nPatchFiles)
             {
-                var source = IOPath.PathCombine(App.TempDirectory, Platform.BuildTargetCurrentName, item.name);
+                var source = IOPath.PathCombine(UApplication.TempDirectory, Platform.BuildTargetCurrentName, item.name);
                 var dest = IOPath.PathCombine(nPatchPath, item.name);
                 IOPath.FileCopy(source, dest);
 
@@ -587,7 +583,7 @@ namespace UFramework.Editor.VersionControl
             foreach (var item in nPatchSFiles)
             {
                 var tp = IOPath.PathCombine("Lua", newSDirs[item.dirIndex], item.name);
-                var source = IOPath.PathCombine(App.TempDirectory, tp);
+                var source = IOPath.PathCombine(UApplication.TempDirectory, tp);
                 var dest = IOPath.PathCombine(nPatchPath, tp);
                 IOPath.FileCopy(source, dest);
 
@@ -601,8 +597,8 @@ namespace UFramework.Editor.VersionControl
             // 生成版本信息文件
             newPatch.len = IOPath.FileSize(zipPath);
             newPatch = version.UpdatePatch(newPatch);
-            versionConfig.Serialization();
-            VersionPage.BuildVersion(IOPath.PathCombine(nPathDir, Version.FileName));
+            versionConfig.Serialize();
+            VersionPage.BuildVersion(IOPath.PathCombine(nPathDir, Core.Version.FileName));
 
             _isBuild = false;
             EditorUtility.RevealInFinder(nPatchPath);

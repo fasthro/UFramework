@@ -7,10 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
-using UFramework.Localization;
+using UFramework.Core;
 using UnityEngine;
 
-namespace UFramework.Table
+namespace UFramework.Core
 {
     public class TableParseCSV : TableParse
     {
@@ -21,7 +21,7 @@ namespace UFramework.Table
         private string[] _lines;
         private FieldInfo[] _fields;
 
-        public TableParseCSV(string tableName) : base(tableName, FormatOptions.CSV) { LoadAsset(); }
+        public TableParseCSV(string tableName) : base(tableName, TableFormat.CSV) { LoadAsset(); }
 
         /// <summary>
         /// 构建数据
@@ -165,59 +165,59 @@ namespace UFramework.Table
             }
             else if (field.FieldType == typeof(bool))
             {
-                field.SetValue(obj, TypeUtils.ContentToBooleanValue(value));
+                field.SetValue(obj, TableTypeUtils.ContentToBooleanValue(value));
             }
             else if (field.FieldType == typeof(Vector2))
             {
-                field.SetValue(obj, TypeUtils.ContentToVector2Value(value));
+                field.SetValue(obj, TableTypeUtils.ContentToVector2Value(value));
             }
             else if (field.FieldType == typeof(Vector3))
             {
-                field.SetValue(obj, TypeUtils.ContentToVector3Value(value));
+                field.SetValue(obj, TableTypeUtils.ContentToVector3Value(value));
             }
-            else if (field.FieldType == typeof(LanguageItem))
+            else if (field.FieldType == typeof(LocalizationText))
             {
-                field.SetValue(obj, TypeUtils.ContentToLanguageItemValue(value));
+                field.SetValue(obj, TableTypeUtils.ContentToLanguageItemValue(value));
             }
             else if (field.FieldType == typeof(byte[]))
             {
-                field.SetValue(obj, TypeUtils.ContentToArrayByteValue(value));
+                field.SetValue(obj, TableTypeUtils.ContentToArrayByteValue(value));
             }
             else if (field.FieldType == typeof(int[]))
             {
-                field.SetValue(obj, TypeUtils.ContentToArrayIntValue(value));
+                field.SetValue(obj, TableTypeUtils.ContentToArrayIntValue(value));
             }
             else if (field.FieldType == typeof(long[]))
             {
-                field.SetValue(obj, TypeUtils.ContentToArrayLongValue(value));
+                field.SetValue(obj, TableTypeUtils.ContentToArrayLongValue(value));
             }
             else if (field.FieldType == typeof(float[]))
             {
-                field.SetValue(obj, TypeUtils.ContentToArrayFloatValue(value));
+                field.SetValue(obj, TableTypeUtils.ContentToArrayFloatValue(value));
             }
             else if (field.FieldType == typeof(double[]))
             {
-                field.SetValue(obj, TypeUtils.ContentToArrayDoubleValue(value));
+                field.SetValue(obj, TableTypeUtils.ContentToArrayDoubleValue(value));
             }
             else if (field.FieldType == typeof(string[]))
             {
-                field.SetValue(obj, TypeUtils.ContentToArrayStringValue(value));
+                field.SetValue(obj, TableTypeUtils.ContentToArrayStringValue(value));
             }
             else if (field.FieldType == typeof(bool[]))
             {
-                field.SetValue(obj, TypeUtils.ContentToArrayBooleanValue(value));
+                field.SetValue(obj, TableTypeUtils.ContentToArrayBooleanValue(value));
             }
             else if (field.FieldType == typeof(Vector2[]))
             {
-                field.SetValue(obj, TypeUtils.ContentToArrayVector2Value(value));
+                field.SetValue(obj, TableTypeUtils.ContentToArrayVector2Value(value));
             }
             else if (field.FieldType == typeof(Vector3[]))
             {
-                field.SetValue(obj, TypeUtils.ContentToArrayVector3Value(value));
+                field.SetValue(obj, TableTypeUtils.ContentToArrayVector3Value(value));
             }
-            else if (field.FieldType == typeof(LanguageItem[]))
+            else if (field.FieldType == typeof(LocalizationText[]))
             {
-                field.SetValue(obj, TypeUtils.ContentToArrayLanguageItemValue(value));
+                field.SetValue(obj, TableTypeUtils.ContentToArrayLanguageItemValue(value));
             }
         }
 

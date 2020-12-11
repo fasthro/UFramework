@@ -1,10 +1,10 @@
 ﻿/*
  * @Author: fasthro
  * @Date: 2020-05-20 22:45:06
- * @Description: Delegate Define
+ * @Description: callback
  */
  
-namespace UFramework.Messenger
+namespace UFramework.Core
 {
     public delegate void UCallback();
     public delegate void UCallback<T>(T arg1);

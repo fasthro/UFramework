@@ -8,17 +8,16 @@ using System.Collections.Generic;
 using System.IO;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
-using UFramework.Assets;
-using UFramework.VersionControl;
+using UFramework.Core;
 using UnityEditor;
 using UnityEngine;
 
-namespace UFramework.Editor.VersionControl
+namespace UFramework.Editor.VersionControl.Version
 {
     public class VersionPage : IPage, IPageBar
     {
         public string menuName { get { return "Version"; } }
-        static VersionSerdata Serdata { get { return Serialize.Serializable<VersionSerdata>.Instance; } }
+        static VersionControl_Version_Config Config { get { return Core.Serializer<VersionControl_Version_Config>.Instance; } }
 
         /// <summary>
         /// 当前版本
@@ -48,18 +47,18 @@ namespace UFramework.Editor.VersionControl
                 if (!item.isRelease) return;
 
             var patch = new VEditorPatch();
-            patch.aVersion = Serdata.version;
+            patch.aVersion = Config.version;
             patch.pVersion = patchs.Count;
             patch.timestamp = TimeUtils.UTCTimeStamps();
             patch.UpdateDisplay();
             patchs.Add(patch);
             patchs.Sort((a, b) => b.pVersion.CompareTo(a.pVersion));
 
-            var pv = Serdata.GetPlatformVersion();
+            var pv = Config.GetPlatformVersion();
             foreach (var item in pv.supports)
             {
                 var _patch = new VEditorPatch();
-                _patch.aVersion = Serdata.version;
+                _patch.aVersion = Config.version;
                 _patch.pVersion = item.patchs.Count;
                 _patch.timestamp = TimeUtils.UTCTimeStamps();
                 _patch.UpdateDisplay();
@@ -96,10 +95,10 @@ namespace UFramework.Editor.VersionControl
 
         public void OnRenderBefore()
         {
-            var pv = Serdata.GetPlatformVersion();
+            var pv = Config.GetPlatformVersion();
 
-            version = Serdata.version;
-            minVersion = Serdata.minVersion;
+            version = Config.version;
+            minVersion = Config.minVersion;
             patchs = pv.patchs;
             patchs.Sort((a, b) => b.pVersion.CompareTo(a.pVersion));
 
@@ -114,10 +113,10 @@ namespace UFramework.Editor.VersionControl
 
         public void OnSaveDescribe()
         {
-            var pv = Serdata.GetPlatformVersion();
+            var pv = Config.GetPlatformVersion();
 
-            Serdata.version = version;
-            Serdata.minVersion = minVersion;
+            Config.version = version;
+            Config.minVersion = minVersion;
             pv.patchs = patchs;
 
             pv.supports.Clear();
@@ -128,7 +127,7 @@ namespace UFramework.Editor.VersionControl
             foreach (var item in historyDictionary)
                 pv.historys.Add(item.Value);
 
-            Serdata.Serialization();
+            Config.Serialize();
         }
 
         public void OnPageBarDraw()
@@ -219,8 +218,8 @@ namespace UFramework.Editor.VersionControl
             supportDictionary.Clear();
             historyDictionary.Clear();
 
-            Serdata.GetPlatformVersion().releaseVersionCodes.Clear();
-            Serdata.Serialization();
+            Config.GetPlatformVersion().releaseVersionCodes.Clear();
+            Config.Serialize();
         }
 
         private void OnMinVersionChange()
@@ -261,18 +260,18 @@ namespace UFramework.Editor.VersionControl
         /// <param name="path"></param>
         public static void BuildVersion(string path)
         {
-            var pv = Serdata.GetPlatformVersion();
+            var pv = Config.GetPlatformVersion();
 
-            var ver = new Version();
-            ver.version = Serdata.version;
-            ver.minVersion = Serdata.minVersion;
+            var ver = new Core.Version();
+            ver.version = Config.version;
+            ver.minVersion = Config.minVersion;
             ver.timestamp = TimeUtils.UTCTimeStamps();
             CheckVersionFiles(out ver.files);
             CheckVersionScripts(out ver.sDirs, out ver.sFiles);
             ver.versionDict.Clear();
 
             var vInfo = new VInfo();
-            vInfo.version = Serdata.version;
+            vInfo.version = Config.version;
             vInfo.patchs = new VPatch[pv.patchs.Count];
             for (int i = 0; i < pv.patchs.Count; i++)
             {
@@ -308,7 +307,7 @@ namespace UFramework.Editor.VersionControl
                 ver.versionDict.Add(item.version, info);
             }
 
-            Version.VersionWrite(path, ver);
+            Core.Version.VersionWrite(path, ver);
         }
 
         /// <summary>
@@ -316,21 +315,21 @@ namespace UFramework.Editor.VersionControl
         /// </summary>
         public static void BuildReleaseRecords()
         {
-            var pv = Serdata.GetPlatformVersion();
+            var pv = Config.GetPlatformVersion();
 
             bool _create = true;
             foreach (var item in pv.releaseVersionCodes)
             {
-                if (item == Serdata.version)
+                if (item == Config.version)
                 {
                     _create = false;
                     break;
                 }
             }
             if (_create)
-                pv.releaseVersionCodes.Add(Serdata.version);
+                pv.releaseVersionCodes.Add(Config.version);
 
-            Serdata.Serialization();
+            Config.Serialize();
         }
 
         /// <summary>
@@ -340,7 +339,7 @@ namespace UFramework.Editor.VersionControl
         /// <returns></returns>
         public static bool IsPublishVersion(int version)
         {
-            var pv = Serdata.GetPlatformVersion();
+            var pv = Config.GetPlatformVersion();
             foreach (var item in pv.releaseVersionCodes)
                 return item == version;
             return false;
@@ -352,7 +351,7 @@ namespace UFramework.Editor.VersionControl
         /// <returns></returns>
         public static bool IsPublishVersion()
         {
-            return IsPublishVersion(Serdata.version);
+            return IsPublishVersion(Config.version);
         }
 
         /// <summary>
@@ -363,8 +362,8 @@ namespace UFramework.Editor.VersionControl
         {
             List<VFile> vfiles = new List<VFile>();
 
-            var assetBundlePath = IOPath.PathCombine(App.TempDirectory, Platform.BuildTargetCurrentName);
-            string[] files = IOPath.DirectoryGetFiles(assetBundlePath, "*" + Asset.Extension, SearchOption.AllDirectories);
+            var assetBundlePath = IOPath.PathCombine(UApplication.TempDirectory, Platform.BuildTargetCurrentName);
+            string[] files = IOPath.DirectoryGetFiles(assetBundlePath, "*" + Assets.Extension, SearchOption.AllDirectories);
             for (int i = 0; i < files.Length; i++)
             {
                 var path = files[i];
@@ -391,7 +390,7 @@ namespace UFramework.Editor.VersionControl
             List<string> dirs = new List<string>();
             List<VScriptFile> sFiles = new List<VScriptFile>();
 
-            var tp = IOPath.PathCombine(App.TempDirectory, "Lua");
+            var tp = IOPath.PathCombine(UApplication.TempDirectory, "Lua");
             string[] files = IOPath.DirectoryGetFiles(tp, "*.lua", SearchOption.AllDirectories);
             for (int i = 0; i < files.Length; i++)
             {

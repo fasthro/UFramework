@@ -5,8 +5,9 @@
  */
 
 using Sirenix.OdinInspector;
-using UFramework.Serialize;
-namespace UFramework.Editor.Preferences
+using UFramework.Core;
+
+namespace UFramework.Editor.Preferences.Serializable
 {
     [System.Serializable]
     public class SerializeItem
@@ -17,6 +18,6 @@ namespace UFramework.Editor.Preferences
 
         [ShowInInspector, HideLabel, ReadOnly]
         [HorizontalGroup("Address")]
-        public SerializableType serializableType;
+        public SerializableAssigned serializableType;
     }
 }

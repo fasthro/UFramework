@@ -5,12 +5,11 @@
  */
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
-using UFramework.Serialize;
-using UFramework.VersionControl;
+using UFramework.Core;
 using UnityEditor;
 using UnityEngine;
 
-namespace UFramework.Editor.VersionControl
+namespace UFramework.Editor.VersionControl.Version
 {
 
     [System.Serializable]
@@ -48,12 +47,12 @@ namespace UFramework.Editor.VersionControl
         {
             if (EditorUtility.DisplayDialog("Patch", "确定发布补丁?", "发布", "取消"))
             {
-                var serdata = Serializable<VersionSerdata>.Instance;
+                var serdata = Serializer<VersionControl_Version_Config>.Instance;
                 var pv = serdata.GetPlatformVersion();
-                var dataPath = IOPath.PathCombine(App.BuildDirectory, Platform.BuildTargetCurrentName, "data-v" + serdata.version);
+                var dataPath = IOPath.PathCombine(UApplication.BuildDirectory, Platform.BuildTargetCurrentName, "data-v" + serdata.version);
 
                 var patchFilePath = IOPath.PathCombine(dataPath, displayName, displayName + ".zip");
-                var versionFilePath = IOPath.PathCombine(dataPath, displayName, Version.FileName);
+                var versionFilePath = IOPath.PathCombine(dataPath, displayName, Core.Version.FileName);
                 if (!IOPath.FileExists(patchFilePath) || !IOPath.FileExists(versionFilePath) || len == 0)
                 {
                     EditorUtility.DisplayDialog("Patch", "补丁文件不存在, 请构建补丁后尝试发布.", "确定");
@@ -236,9 +235,9 @@ namespace UFramework.Editor.VersionControl
         }
     }
 
-    public class VersionSerdata : ISerializable
+    public class VersionControl_Version_Config : ISerializable
     {
-        public SerializableType serializableType { get { return SerializableType.Editor; } }
+        public SerializableAssigned assigned { get { return SerializableAssigned.Editor; } }
 
         /// <summary>
         /// 当前版本
@@ -283,9 +282,9 @@ namespace UFramework.Editor.VersionControl
             return pv;
         }
 
-        public void Serialization()
+        public void Serialize()
         {
-            Serializable<VersionSerdata>.Serialization(this);
+            Serializer<VersionControl_Version_Config>.Serialize(this);
         }
     }
 }

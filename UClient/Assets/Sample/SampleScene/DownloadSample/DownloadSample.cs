@@ -5,7 +5,7 @@
  */
 using System.Collections;
 using System.Collections.Generic;
-using UFramework.Tools;
+using UFramework.Core;
 using UnityEngine;
 
 namespace UFramework.Sample
@@ -23,9 +23,9 @@ namespace UFramework.Sample
                 {
                     download.Cancel();
                 }
-                download = Download.AddDownload("http://res.fairygui.com/FairyGUI-Editor_2020.2.1.zip",
+                download = Downloader.AddDownload("http://res.fairygui.com/FairyGUI-Editor_2020.2.1.zip",
                  IOPath.PathCombine(Application.streamingAssetsPath, "download-sample-file.zip"),
-                 OnCompleted, OnProgress, OnCancelled, OnFailed);
+                 this.OnCompleted, this.OnProgress, this.OnCancelled, this.OnFailed);
             }
 
             if (GUILayout.Button("Cancel Download", GUILayout.Width(300), GUILayout.Height(100)))

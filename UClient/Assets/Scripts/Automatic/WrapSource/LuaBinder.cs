@@ -167,23 +167,27 @@ public static class LuaBinder
 		L.RegFunction("GTweenCallback1", new LuaCSFunction(FairyGUI_GTweenCallback1));
 		L.EndModule();
 		L.BeginModule("UFramework");
-		UFramework_AppWrap.Register(L);
+		UFramework_UApplicationWrap.Register(L);
 		UFramework_IOPathWrap.Register(L);
 		UFramework_CryptWrap.Register(L);
 		UFramework_NetManagerWrap.Register(L);
 		UFramework_ResManagerWrap.Register(L);
+		UFramework_ManagerContainerWrap.Register(L);
+		UFramework_ManagerServiceWrap.Register(L);
+		UFramework_ServiceContainerWrap.Register(L);
+		UFramework_ServiceWrap.Register(L);
 		UFramework_BaseManagerWrap.Register(L);
+		UFramework_BaseServiceWrap.Register(L);
+		UFramework_MonoSingleton_UFramework_ServiceWrap.Register(L);
 		L.BeginModule("UI");
 		UFramework_UI_UIPanelWrap.Register(L);
 		UFramework_UI_FiaryPanelWrap.Register(L);
 		UFramework_UI_LayerWrap.Register(L);
 		L.EndModule();
-		L.BeginModule("Network");
-		UFramework_Network_ProtocalTypeWrap.Register(L);
-		UFramework_Network_SocketPackWrap.Register(L);
-		L.EndModule();
-		L.BeginModule("Messenger");
-		L.RegFunction("UCallback_UFramework_Assets_AssetRequest", new LuaCSFunction(UFramework_Messenger_UCallback_UFramework_Assets_AssetRequest));
+		L.BeginModule("Core");
+		UFramework_Core_ProtocalTypeWrap.Register(L);
+		UFramework_Core_SocketPackWrap.Register(L);
+		L.RegFunction("UCallback_UFramework_Core_AssetRequest", new LuaCSFunction(UFramework_Core_UCallback_UFramework_Core_AssetRequest));
 		L.EndModule();
 		L.EndModule();
 		L.EndModule();
@@ -1664,7 +1668,7 @@ public static class LuaBinder
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int UFramework_Messenger_UCallback_UFramework_Assets_AssetRequest(IntPtr L)
+	static int UFramework_Core_UCallback_UFramework_Core_AssetRequest(IntPtr L)
 	{
 		try
 		{
@@ -1673,14 +1677,14 @@ public static class LuaBinder
 
 			if (count == 1)
 			{
-				Delegate arg1 = DelegateTraits<UFramework.Messenger.UCallback<UFramework.Assets.AssetRequest>>.Create(func);
+				Delegate arg1 = DelegateTraits<UFramework.Core.UCallback<UFramework.Core.AssetRequest>>.Create(func);
 				ToLua.Push(L, arg1);
 				func.Dispose();
 			}
 			else
 			{
 				LuaTable self = ToLua.CheckLuaTable(L, 2);
-				Delegate arg1 = DelegateTraits<UFramework.Messenger.UCallback<UFramework.Assets.AssetRequest>>.Create(func, self);
+				Delegate arg1 = DelegateTraits<UFramework.Core.UCallback<UFramework.Core.AssetRequest>>.Create(func, self);
 				ToLua.Push(L, arg1);
 				func.Dispose();
 				self.Dispose();

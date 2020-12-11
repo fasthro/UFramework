@@ -3,10 +3,10 @@
  * @Date: 2020-12-10 14:51:32
  * @Description: 
  */
-using UFramework.Table;
+using UFramework.Core;
 using Sirenix.OdinInspector;
 
-namespace UFramework.Editor.Preferences
+namespace UFramework.Editor.Preferences.Table
 {
     [System.Serializable]
     public class TableItem
@@ -17,6 +17,6 @@ namespace UFramework.Editor.Preferences
 
         [ShowInInspector, HideLabel]
         [HorizontalGroup("Format")]
-        public DataFormatOptions format;
+        public TableDataIndexFormat format;
     }
 }

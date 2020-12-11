@@ -5,6 +5,9 @@
  */
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
+using UFramework.Editor.VersionControl.App;
+using UFramework.Editor.VersionControl.Build;
+using UFramework.Editor.VersionControl.Version;
 using UnityEditor;
 using UnityEngine;
 

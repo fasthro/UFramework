@@ -8,20 +8,17 @@ using System.Collections.Generic;
 using System.IO;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
-using UFramework.Assets;
-using UFramework.Editor.VersionControl;
-using UFramework.Tools;
-using UFramework.VersionControl;
+using UFramework.Core;
 using UnityEditor;
 using UnityEngine;
 
-namespace UFramework.Editor.Preferences.Assets
+namespace UFramework.Editor.Preferences.AssetBundle
 {
     public class AssetBundlePage : IPage, IPageBar
     {
         public string menuName { get { return "AssetBundle"; } }
-        static ABAssetSerdata AssetSerdata { get { return Serialize.Serializable<ABAssetSerdata>.Instance; } }
-        static ABAssetSearchPathSerdata AssetSearchPathSerdata { get { return Serialize.Serializable<ABAssetSearchPathSerdata>.Instance; } }
+        static Preferences_AssetBundle_AssetConfig AssetConfig { get { return Core.Serializer<Preferences_AssetBundle_AssetConfig>.Instance; } }
+        static Preferences_AssetBundle_SearchPathConfig SearchPathConfig { get { return Core.Serializer<Preferences_AssetBundle_SearchPathConfig>.Instance; } }
 
         [BoxGroup("General Setting")]
         public bool buildNameHash = true;
@@ -97,7 +94,7 @@ namespace UFramework.Editor.Preferences.Assets
         }
         public void OnRenderBefore()
         {
-            assetBundlePath = IOPath.PathCombine(App.TempDirectory, Platform.BuildTargetCurrentName);
+            assetBundlePath = IOPath.PathCombine(UApplication.TempDirectory, Platform.BuildTargetCurrentName);
 
             if (!IOPath.FileExists(AssetManifest.AssetPath))
             {
@@ -110,10 +107,10 @@ namespace UFramework.Editor.Preferences.Assets
             dependenciesAssetSortRuler = new SortRuler(dependencieAssets);
             builtInAssetSortRuler = new SortRuler(builtInAssets);
 
-            bundles = AssetSerdata.bundles;
-            assets = AssetSerdata.assets;
-            dependencieAssets = AssetSerdata.dependencieAssets;
-            builtInAssets = AssetSerdata.builtInAssets;
+            bundles = AssetConfig.bundles;
+            assets = AssetConfig.assets;
+            dependencieAssets = AssetConfig.dependencieAssets;
+            builtInAssets = AssetConfig.builtInAssets;
 
             if (bundles.Count <= 0
                 || (assets.Count > 0 && assets[0].GetTarget() == null)
@@ -143,13 +140,13 @@ namespace UFramework.Editor.Preferences.Assets
 
         public void OnSaveDescribe()
         {
-            if (AssetSerdata == null) return;
+            if (AssetConfig == null) return;
 
-            AssetSerdata.bundles = bundles;
-            AssetSerdata.assets = assets;
-            AssetSerdata.dependencieAssets = dependencieAssets;
-            AssetSerdata.builtInAssets = builtInAssets;
-            AssetSerdata.Serialization();
+            AssetConfig.bundles = bundles;
+            AssetConfig.assets = assets;
+            AssetConfig.dependencieAssets = dependencieAssets;
+            AssetConfig.builtInAssets = builtInAssets;
+            AssetConfig.Serialize();
         }
 
         private void OnBundlesTitleBarGUI()
@@ -223,9 +220,9 @@ namespace UFramework.Editor.Preferences.Assets
             assets.Clear();
             assetTracker.Clear();
 
-            for (int i = 0; i < AssetSearchPathSerdata.assetPathItems.Count; i++)
+            for (int i = 0; i < SearchPathConfig.assetPathItems.Count; i++)
             {
-                var items = ParsePathItem(AssetSearchPathSerdata.assetPathItems[i]);
+                var items = ParsePathItem(SearchPathConfig.assetPathItems[i]);
                 for (int k = 0; k < items.Count; k++)
                 {
                     var item = items[k];
@@ -245,9 +242,9 @@ namespace UFramework.Editor.Preferences.Assets
                 }
             }
 
-            for (int i = 0; i < AssetSearchPathSerdata.assetFileItems.Count; i++)
+            for (int i = 0; i < SearchPathConfig.assetFileItems.Count; i++)
             {
-                var fileItem = AssetSearchPathSerdata.assetFileItems[i];
+                var fileItem = SearchPathConfig.assetFileItems[i];
                 if (ValidateAssetPath(fileItem.path))
                 {
                     var pathItem = new AssetSearchItem();
@@ -269,14 +266,14 @@ namespace UFramework.Editor.Preferences.Assets
                 progressTitle = "analysis file path";
                 progress = i;
                 progressDes = fileItem.path;
-                Utils.UpdateProgress(progressTitle, progressDes, progress, AssetSearchPathSerdata.assetFileItems.Count);
+                Utils.UpdateProgress(progressTitle, progressDes, progress, SearchPathConfig.assetFileItems.Count);
             }
 
             // analysis built-in
             builtInAssets.Clear();
-            for (int i = 0; i < AssetSearchPathSerdata.builtInAssetPathItems.Count; i++)
+            for (int i = 0; i < SearchPathConfig.builtInAssetPathItems.Count; i++)
             {
-                var items = ParsePathItem(AssetSearchPathSerdata.builtInAssetPathItems[i]);
+                var items = ParsePathItem(SearchPathConfig.builtInAssetPathItems[i]);
                 for (int k = 0; k < items.Count; k++)
                 {
                     var item = items[k];
@@ -292,9 +289,9 @@ namespace UFramework.Editor.Preferences.Assets
             }
 
             // analysis built-in file
-            for (int i = 0; i < AssetSearchPathSerdata.builtInAssetFileItems.Count; i++)
+            for (int i = 0; i < SearchPathConfig.builtInAssetFileItems.Count; i++)
             {
-                var fileItem = AssetSearchPathSerdata.builtInAssetFileItems[i];
+                var fileItem = SearchPathConfig.builtInAssetFileItems[i];
                 if (ValidateAssetPath(fileItem.path))
                 {
                     var pathItem = new AssetSearchItem();
@@ -312,7 +309,7 @@ namespace UFramework.Editor.Preferences.Assets
                 progressTitle = "analysis built-in file path";
                 progress = i;
                 progressDes = fileItem.path;
-                Utils.UpdateProgress(progressTitle, progressDes, progress, AssetSearchPathSerdata.assetFileItems.Count);
+                Utils.UpdateProgress(progressTitle, progressDes, progress, SearchPathConfig.assetFileItems.Count);
             }
 
             // analysis bundles
@@ -688,8 +685,8 @@ namespace UFramework.Editor.Preferences.Assets
         /// <returns></returns>
         private string GetBuildBundleName(string bundle)
         {
-            if (buildNameHash) return HashUtils.GetMD5Hash(bundle) + Asset.Extension;
-            return bundle.ToLower() + Asset.Extension;
+            if (buildNameHash) return HashUtils.GetMD5Hash(bundle) + Core.Assets.Extension;
+            return bundle.ToLower() + Core.Assets.Extension;
         }
 
         /// <summary>

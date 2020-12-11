@@ -6,15 +6,14 @@
 using System.Collections;
 using System.IO;
 using ICSharpCode.SharpZipLib.Zip;
-using UFramework.Panel.FairyGUI;
-using UFramework.Coroutine;
-using UFramework.Tools;
+using UFramework.UI;
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections.Generic;
 using System;
+using Coroutine = UFramework.Core.Coroutine;
 
-namespace UFramework.VersionControl
+namespace UFramework.Core
 {
     public enum UpdaterStep
     {
@@ -84,7 +83,7 @@ namespace UFramework.VersionControl
             {
                 if (_newVersion != null) return _newVersion.version;
                 else if (_appVersion != null) return _appVersion.version;
-                else return Serialize.Serializable<AppSerdata>.Instance.version;
+                else return Core.Serializer<AppConfig>.Instance.version;
             }
         }
 
@@ -107,7 +106,7 @@ namespace UFramework.VersionControl
         private Action _onCompleted;
         private UpdaterStep _step;
 
-        private AppSerdata _app;
+        private AppConfig _app;
 
         private int _maxValue;
         private int _value;
@@ -122,7 +121,7 @@ namespace UFramework.VersionControl
 
         protected override void OnSingletonAwake()
         {
-            _app = Serialize.Serializable<AppSerdata>.Instance;
+            _app = Core.Serializer<AppConfig>.Instance;
 
             if (_app.isDevelopmentVersion)
                 return;
@@ -136,7 +135,7 @@ namespace UFramework.VersionControl
             VersionStreamingPath = IOPath.PathCombine(StreamingAssetsPath, Version.FileName, false);
             LuaPath = IOPath.PathCombine(Application.persistentDataPath, LUA_DIR_NAME);
 
-            _downloader = new PatchDownloader(BaseURL, Application.persistentDataPath, OnCompleted, OnPatchDownloadFailed);
+            _downloader = new PatchDownloader(BaseURL, Application.persistentDataPath, this.OnCompleted, this.OnPatchDownloadFailed);
         }
 
         protected override void OnSingletonUpdate(float deltaTime)
@@ -180,25 +179,25 @@ namespace UFramework.VersionControl
                         IOPath.DirectoryCreate(AssetBundlePath);
                     break;
                 case UpdaterStep.CheckVersionCopy:
-                    UFactoryCoroutine.CreateRun(CheckVersionCopy());
+                    Coroutine.Allocate(CheckVersionCopy());
                     break;
                 case UpdaterStep.CheckFileCopy:
-                    UFactoryCoroutine.CreateRun(CheckFileCopy());
+                    Coroutine.Allocate(CheckFileCopy());
                     break;
                 case UpdaterStep.Copy:
-                    UFactoryCoroutine.CreateRun(UpdateCopy());
+                    Coroutine.Allocate(UpdateCopy());
                     break;
                 case UpdaterStep.RequestVersion:
-                    UFactoryCoroutine.CreateRun(RequestVersion());
+                    Coroutine.Allocate(RequestVersion());
                     break;
                 case UpdaterStep.CheckVersion:
-                    UFactoryCoroutine.CreateRun(CheckVersion());
+                    Coroutine.Allocate(CheckVersion());
                     break;
                 case UpdaterStep.CheckDownload:
-                    UFactoryCoroutine.CreateRun(CheckDownloads());
+                    Coroutine.Allocate(CheckDownloads());
                     break;
                 case UpdaterStep.OptionDownload:
-                    UFactoryCoroutine.CreateRun(OptionDownloadPatch());
+                    Coroutine.Allocate(OptionDownloadPatch());
                     break;
             }
         }
@@ -599,7 +598,7 @@ namespace UFramework.VersionControl
         /// </summary>
         private void OnPatchDownloadFailed()
         {
-            UFactoryCoroutine.CreateRun(UpdaterFailed());
+            Coroutine.Allocate(UpdaterFailed());
         }
 
         private void OnCompleted()

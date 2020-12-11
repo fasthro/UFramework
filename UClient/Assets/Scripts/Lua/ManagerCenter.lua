@@ -18,11 +18,13 @@ local ManagerCenter =
 function ManagerCenter:__ctor()
     self._managers = typesys.new(typesys.map, type(""), typesys.BaseManager)
 
+    local container = Service.container:GetService("ManagerService").container
+
     _G.PanelManager = self:_addManager(typesys.PanelManager)
     _G.CtrlManager = self:_addManager(typesys.CtrlManager)
     _G.EventManager = self:_addManager(typesys.EventManager)
-    _G.NetManager = self:_addManager(typesys.NetManager, App.GetManager("NetManager"))
-    _G.ResManager = self:_addManager(typesys.ResManager, App.GetManager("ResManager"))
+    _G.NetManager = self:_addManager(typesys.NetManager, container:GetManager("NetManager"))
+    _G.ResManager = self:_addManager(typesys.ResManager, container:GetManager("ResManager"))
 end
 
 function ManagerCenter:__dtor()

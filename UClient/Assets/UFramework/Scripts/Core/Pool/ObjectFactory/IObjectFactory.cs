@@ -4,7 +4,7 @@
  * @Description: 对象工厂接口
  */
 
-namespace UFramework.Pool
+namespace UFramework.Core.Pool
 {
     public interface IObjectFactory<T>
     {

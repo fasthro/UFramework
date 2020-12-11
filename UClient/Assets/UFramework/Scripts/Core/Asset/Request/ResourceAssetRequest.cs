@@ -3,10 +3,10 @@
  * @Date: 2020-09-21 10:27:50
  * @Description: resource asset
  */
-using UFramework.Pool;
+using UFramework.Core;
 using UnityEngine;
 
-namespace UFramework.Assets
+namespace UFramework.Core
 {
     public class ResourceAssetRequest : AssetRequest
     {
@@ -28,7 +28,7 @@ namespace UFramework.Assets
             if (loadState != LoadState.Init) return;
             asset = Resources.Load(url, assetType);
             loadState = LoadState.Loaded;
-            OnCallback();
+            Completed();
         }
 
         protected override void OnReferenceEmpty()

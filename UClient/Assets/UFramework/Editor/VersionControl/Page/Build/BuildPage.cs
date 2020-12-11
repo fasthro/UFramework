@@ -10,12 +10,12 @@ using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
 
-namespace UFramework.Editor.VersionControl
+namespace UFramework.Editor.VersionControl.Build
 {
     public class BuilderPage : IPage, IPageBar
     {
         public string menuName { get { return "Build"; } }
-        static VersionBuildSerdata Serdata { get { return Serialize.Serializable<VersionBuildSerdata>.Instance; } }
+        static VersionControl_Build_Config Config { get { return Core.Serializer<VersionControl_Build_Config>.Instance; } }
 
         /// <summary>
         /// 版本
@@ -37,7 +37,7 @@ namespace UFramework.Editor.VersionControl
 
         public void OnRenderBefore()
         {
-            appVersion = Serdata.appVersion;
+            appVersion = Config.appVersion;
             if (string.IsNullOrEmpty(appVersion))
                 appVersion = "1.0.0";
 
@@ -46,8 +46,8 @@ namespace UFramework.Editor.VersionControl
 
         public void OnSaveDescribe()
         {
-            Serdata.appVersion = appVersion;
-            Serdata.Serialization();
+            Config.appVersion = appVersion;
+            Config.Serialize();
         }
 
         public void OnPageBarDraw()
@@ -57,22 +57,22 @@ namespace UFramework.Editor.VersionControl
 
         private void ApplySetting()
         {
-            PlayerSettings.Android.useAPKExpansionFiles = Serdata.packageType == PACKAGE_TYPE.GOOGLE_PLAY_OBB;
-            EditorUserBuildSettings.buildAppBundle = Serdata.packageType == PACKAGE_TYPE.GOOGLE_PLAY_APPBUNDLE;
+            PlayerSettings.Android.useAPKExpansionFiles = Config.packageType == PACKAGE_TYPE.GOOGLE_PLAY_OBB;
+            EditorUserBuildSettings.buildAppBundle = Config.packageType == PACKAGE_TYPE.GOOGLE_PLAY_APPBUNDLE;
 
-            PlayerSettings.SetScriptingBackend(BuildTargetGroup.iOS, Serdata.scripting);
-            PlayerSettings.SetScriptingBackend(BuildTargetGroup.Android, Serdata.scripting);
-            PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, Serdata.scripting);
+            PlayerSettings.SetScriptingBackend(BuildTargetGroup.iOS, Config.scripting);
+            PlayerSettings.SetScriptingBackend(BuildTargetGroup.Android, Config.scripting);
+            PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, Config.scripting);
 
             // arm64
-            var _googlePlaySupportARM64 = Serdata.scripting == ScriptingImplementation.IL2CPP && (Serdata.packageType == PACKAGE_TYPE.GOOGLE_PLAY_APPBUNDLE || Serdata.packageType == PACKAGE_TYPE.GOOGLE_PLAY_OBB);
+            var _googlePlaySupportARM64 = Config.scripting == ScriptingImplementation.IL2CPP && (Config.packageType == PACKAGE_TYPE.GOOGLE_PLAY_APPBUNDLE || Config.packageType == PACKAGE_TYPE.GOOGLE_PLAY_OBB);
             if (_googlePlaySupportARM64)
             {
                 PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64 | AndroidArchitecture.ARMv7;
             }
             else
             {
-                if (Serdata.supportARM64)
+                if (Config.supportARM64)
                     PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64 | AndroidArchitecture.ARMv7;
                 else
                     PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARMv7;

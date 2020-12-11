@@ -5,11 +5,11 @@
  */
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
-using UFramework.Serialize;
+using UFramework.Core;
 using UnityEditor;
 using UnityEngine;
 
-namespace UFramework.Editor.Preferences
+namespace UFramework.Editor.Preferences.Proto
 {
     /// <summary>
     /// Proto 生成类型
@@ -105,18 +105,15 @@ namespace UFramework.Editor.Preferences
         public ProtoCMDType cmdType;
     }
 
-    /// <summary>
-    /// proto serdata
-    /// </summary>
-    public class ProtoSerdata : ISerializable
+    public class Preferences_Proto_Config : ISerializable
     {
-        public SerializableType serializableType { get { return SerializableType.Editor; } }
+        public SerializableAssigned assigned { get { return SerializableAssigned.Editor; } }
 
         public List<ProtoFile> protos = new List<ProtoFile>();
 
-        public void Serialization()
+        public void Serialize()
         {
-            Serializable<ProtoSerdata>.Serialization(this);
+            Serializer<Preferences_Proto_Config>.Serialize(this);
         }
     }
 }

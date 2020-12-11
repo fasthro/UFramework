@@ -5,7 +5,7 @@
  */
 using System.Collections;
 using System.Collections.Generic;
-using UFramework.Timers;
+using UFramework.Core;
 using UnityEngine;
 
 namespace UFramework.Sample

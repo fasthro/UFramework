@@ -9,7 +9,7 @@ namespace UFramework
 {
     public abstract class MonoSingleton<T> : MonoBehaviour, ISingleton where T : MonoSingleton<T>
     {
-        protected static T instance = null;
+        private static T instance = null;
         private static readonly object obj = new object();
         private static bool isDestory = false;
 
@@ -70,6 +70,11 @@ namespace UFramework
             OnSingletonDestory();
         }
 
+        void OnApplicationQuit()
+        {
+            OnSingletonApplicationQuit();
+        }
+
         public void Default() { }
 
         public void SingletonAwake() { OnSingletonAwake(); }
@@ -79,6 +84,7 @@ namespace UFramework
         protected virtual void OnSingletonStart() { }
 
         protected virtual void OnSingletonDestory() { }
+        protected virtual void OnSingletonApplicationQuit() { }
 
         protected virtual void OnSingletonUpdate(float deltaTime) { }
         protected virtual void OnSingletonLateUpdate() { }

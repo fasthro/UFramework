@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-namespace UFramework.VersionControl
+namespace UFramework.Core
 {
     [System.Serializable]
     public class VFile

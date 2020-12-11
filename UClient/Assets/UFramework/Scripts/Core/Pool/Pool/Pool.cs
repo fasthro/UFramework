@@ -6,7 +6,7 @@
 
 using System.Collections.Generic;
 
-namespace UFramework.Pool
+namespace UFramework.Core.Pool
 {
     public abstract class Pool<T> : IPool<T>
     {

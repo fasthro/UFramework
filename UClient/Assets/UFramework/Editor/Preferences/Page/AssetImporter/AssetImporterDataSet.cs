@@ -6,12 +6,12 @@
 
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
-using UFramework.Serialize;
+using UFramework.Core;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
 
-namespace UFramework.Editor.Preferences.Assets
+namespace UFramework.Editor.Preferences.AssetImporter
 {
     /// <summary>
     /// texture max size
@@ -238,12 +238,9 @@ namespace UFramework.Editor.Preferences.Assets
         }
     }
 
-    /// <summary>
-    /// serdata
-    /// </summary>
-    public class AssetImporterSerdata : ISerializable
+    public class Preferences_AssetImporter_Config : ISerializable
     {
-        public SerializableType serializableType { get { return SerializableType.Editor; } }
+        public SerializableAssigned assigned { get { return SerializableAssigned.Editor; } }
 
         public string texturePattern = "*.png,*.tga";
         public string modePattern = "*.fbx";
@@ -262,9 +259,9 @@ namespace UFramework.Editor.Preferences.Assets
         public List<TextureItem> modes = new List<TextureItem>();
         public List<TextureItem> audios = new List<TextureItem>();
 
-        public void Serialization()
+        public void Serialize()
         {
-            Serializable<AssetImporterSerdata>.Serialization(this);
+            Serializer<Preferences_AssetImporter_Config>.Serialize(this);
         }
     }
 }

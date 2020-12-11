@@ -3,7 +3,7 @@
  * @Date: 2020-10-23 12:05:09
  * @Description: MenuItems
  */
-using UFramework.Serialize;
+using UFramework.Core;
 using UnityEditor;
 using UnityEngine;
 
@@ -17,17 +17,17 @@ namespace UFramework.Editor
         static void Cleanup()
         {
             // Serdata
-            IOPath.DirectoryClear(IOPath.PathCombine(App.AssetsDirectory, "Serdata", SerializableType.Editor.ToString()));
-            IOPath.DirectoryClear(IOPath.PathCombine(App.AssetsDirectory, "Serdata", SerializableType.AssetBundle.ToString()));
-            IOPath.DirectoryClear(IOPath.PathCombine(App.AssetsDirectory, "Serdata", SerializableType.Resources.ToString()));
-            IOPath.DirectoryClear(IOPath.PathCombine(App.AssetsDirectory, "Serdata", SerializableType.Persistent.ToString()));
-            IOPath.DirectoryClear(IOPath.PathCombine(App.AssetsDirectory, "Serdata", SerializableType.User.ToString()));
+            IOPath.DirectoryClear(IOPath.PathCombine(UApplication.AssetsDirectory, "Serdata", SerializableAssigned.Editor.ToString()));
+            IOPath.DirectoryClear(IOPath.PathCombine(UApplication.AssetsDirectory, "Serdata", SerializableAssigned.AssetBundle.ToString()));
+            IOPath.DirectoryClear(IOPath.PathCombine(UApplication.AssetsDirectory, "Serdata", SerializableAssigned.Resources.ToString()));
+            IOPath.DirectoryClear(IOPath.PathCombine(UApplication.AssetsDirectory, "Serdata", SerializableAssigned.Persistent.ToString()));
+            IOPath.DirectoryClear(IOPath.PathCombine(UApplication.AssetsDirectory, "Serdata", SerializableAssigned.User.ToString()));
         }
 
         [MenuItem(Root + "Cleanup -> UTemp Path", false, 2001)]
         static void CleanupUTempPath()
         {
-            IOPath.DirectoryClear(App.TempDirectory);
+            IOPath.DirectoryClear(UApplication.TempDirectory);
         }
 
         [MenuItem(Root + "Cleanup -> Persistent Data Path", false, 2002)]

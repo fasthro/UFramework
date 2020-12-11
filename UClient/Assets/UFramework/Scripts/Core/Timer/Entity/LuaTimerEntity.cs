@@ -4,10 +4,8 @@
  * @Description: lua timer
  */
 using LuaInterface;
-using UFramework.Messenger;
-using UFramework.Pool;
 
-namespace UFramework.Timers
+namespace UFramework.Core
 {
     public class LuaTimerEntity : TimerEntity
     {

@@ -4,23 +4,23 @@
  * @Description: table parse
  */
 using System.Collections.Generic;
-using UFramework.Assets;
+using UFramework.Core;
 using UnityEngine;
 
-namespace UFramework.Table
+namespace UFramework.Core
 {
     public abstract class TableParse
     {
         protected string _tableName;
-        protected FormatOptions _format;
+        protected TableFormat _format;
         protected string _content;
 
-        public TableParse(string tableName, FormatOptions format) { _tableName = tableName; }
+        public TableParse(string tableName, TableFormat format) { _tableName = tableName; }
 
         protected void LoadAsset()
         {
             if (!string.IsNullOrEmpty(_content)) return;
-            var filePath = IOPath.PathCombine(App.AssetsDirectory, "Table", "Data", _tableName + ".csv");
+            var filePath = IOPath.PathCombine(UApplication.AssetsDirectory, "Table", "Data", _tableName + ".csv");
 #if UNITY_EDITOR
             _content = IOPath.FileReadText(filePath);
 #else

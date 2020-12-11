@@ -6,10 +6,10 @@
 using System;
 using System.Collections.Generic;
 using ICSharpCode.SharpZipLib.Zip;
-using UFramework.Tools;
+using UFramework.Core;
 using UnityEngine;
 
-namespace UFramework.VersionControl
+namespace UFramework.Core
 {
     public enum PatchDownloadStep
     {
@@ -86,7 +86,7 @@ namespace UFramework.VersionControl
             _baseSp = 1f / (float)count;
             step = PatchDownloadStep.Downloading;
             foreach (var item in _patchs)
-                _downloads.Add(Download.AddDownload(GetDownloadURL(item), GetFilePath(item), OnDownloaded, OnDownloadProgress, OnDownloadCanceled, OnDownloadFailed));
+                _downloads.Add(Downloader.AddDownload(GetDownloadURL(item), GetFilePath(item), OnDownloaded, OnDownloadProgress, OnDownloadCanceled, OnDownloadFailed));
         }
 
         private string GetDownloadURL(VPatch patch)

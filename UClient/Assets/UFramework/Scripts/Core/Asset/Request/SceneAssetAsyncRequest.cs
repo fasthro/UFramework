@@ -4,9 +4,9 @@
  * @Description: scene asset async
  */
 using System.Collections;
-using UFramework.Pool;
+using UFramework.Core;
 
-namespace UFramework.Assets
+namespace UFramework.Core
 {
     public class SceneAssetAsyncRequest : AssetRequest
     {
@@ -22,10 +22,10 @@ namespace UFramework.Assets
             ObjectPool<SceneAssetAsyncRequest>.Instance.Recycle(this);
         }
 
-        public override IEnumerator OnCoroutineTaskRun()
+        public override IEnumerator DoCoroutineWork()
         {
             yield return null;
-            OnAsyncCallback();
+            Completed();
         }
 
         public override void Load()
