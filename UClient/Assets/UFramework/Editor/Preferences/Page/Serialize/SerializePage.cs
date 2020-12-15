@@ -71,7 +71,6 @@ namespace UFramework.Editor.Preferences.Serializable
                     var name = types[i].Name;
                     if (name.EndsWith("Config") && !_runtimeAddressDict.ContainsKey(name))
                     {
-                        Debug.Log(name);
                         var ctors = type.GetConstructors();
                         var st = (SerializableAssigned)type.GetProperty("assigned").GetValue(ctors[0].Invoke(null));
                         if (st != SerializableAssigned.Editor && st != SerializableAssigned.User)
