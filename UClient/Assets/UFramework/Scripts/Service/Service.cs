@@ -15,7 +15,13 @@ namespace UFramework
         protected override void OnSingletonAwake()
         {
             container = new ServiceContainer();
-            container.RegisterService(new ManagerService());
+
+            RegisterService(new ManagerService());
+        }
+
+        public void RegisterService(BaseService service, bool overwriteExisting = true)
+        {
+            container.RegisterService(service, overwriteExisting);
 
             _allServices = container.GetAllServices();
         }
