@@ -4,10 +4,8 @@
  * @Description: fixed capacity
  */
 using System;
-using UFramework.Core;
-using UnityEngine;
 
-namespace UFramework.Core
+namespace UFramework.Network
 {
     public class FixedByteArray : AutoByteArray
     {

@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30330.147
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LockstepServer", "LockstepServer\LockstepServer.csproj", "{DB36B814-C40E-4703-A1FF-AF196B7E854B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1857364B-9131-4732-80E3-F83CAC8CCDFD} = {1857364B-9131-4732-80E3-F83CAC8CCDFD}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiteNetLib", "3rd\LiteNetLib\LiteNetLib.csproj", "{1857364B-9131-4732-80E3-F83CAC8CCDFD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DB36B814-C40E-4703-A1FF-AF196B7E854B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB36B814-C40E-4703-A1FF-AF196B7E854B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB36B814-C40E-4703-A1FF-AF196B7E854B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB36B814-C40E-4703-A1FF-AF196B7E854B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1857364B-9131-4732-80E3-F83CAC8CCDFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1857364B-9131-4732-80E3-F83CAC8CCDFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1857364B-9131-4732-80E3-F83CAC8CCDFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1857364B-9131-4732-80E3-F83CAC8CCDFD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1B960827-3319-42E3-8B4C-CA56BA66045A}
+	EndGlobalSection
+EndGlobal

@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="2048,1152">
   <displayList>
-    <component id="n4_z4a2" name="_sendpbc" src="unrx1" fileName="Components/Yellow-Button.xml" pkg="hamedtby" xy="0,0">
-      <Button title="测试PBC"/>
+    <component id="n4_z4a2" name="_gsSendPBC" src="unrx1" fileName="Components/Yellow-Button.xml" pkg="hamedtby" xy="0,0">
+      <Button title="发送PBC数据(GS)"/>
+    </component>
+    <component id="n5_dpsx" name="_bsConnect" src="unrx1" fileName="Components/Yellow-Button.xml" pkg="hamedtby" xy="479,0">
+      <Button title="连接BS)"/>
+    </component>
+    <component id="n6_dpsx" name="_bsSendPBC" src="unrx1" fileName="Components/Yellow-Button.xml" pkg="hamedtby" xy="479,146">
+      <Button title="发送PBC数据(BS)"/>
     </component>
   </displayList>
 </component>

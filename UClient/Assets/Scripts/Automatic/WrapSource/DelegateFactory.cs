@@ -80,6 +80,8 @@ public class DelegateFactory
 		dict.Add(typeof(FairyGUI.UIObjectFactory.GComponentCreator), factory.FairyGUI_UIObjectFactory_GComponentCreator);
 		dict.Add(typeof(FairyGUI.UIObjectFactory.GLoaderCreator), factory.FairyGUI_UIObjectFactory_GLoaderCreator);
 		dict.Add(typeof(UFramework.Core.UCallback<UFramework.Core.AssetRequest>), factory.UFramework_Core_UCallback_UFramework_Core_AssetRequest);
+		dict.Add(typeof(UFramework.Core.UCallback<float>), factory.UFramework_Core_UCallback_float);
+		dict.Add(typeof(UFramework.Core.UCallback), factory.UFramework_Core_UCallback);
 
 		DelegateTraits<System.Action>.Init(factory.System_Action);
 		DelegateTraits<UnityEngine.Events.UnityAction>.Init(factory.UnityEngine_Events_UnityAction);
@@ -144,6 +146,8 @@ public class DelegateFactory
 		DelegateTraits<FairyGUI.UIObjectFactory.GComponentCreator>.Init(factory.FairyGUI_UIObjectFactory_GComponentCreator);
 		DelegateTraits<FairyGUI.UIObjectFactory.GLoaderCreator>.Init(factory.FairyGUI_UIObjectFactory_GLoaderCreator);
 		DelegateTraits<UFramework.Core.UCallback<UFramework.Core.AssetRequest>>.Init(factory.UFramework_Core_UCallback_UFramework_Core_AssetRequest);
+		DelegateTraits<UFramework.Core.UCallback<float>>.Init(factory.UFramework_Core_UCallback_float);
+		DelegateTraits<UFramework.Core.UCallback>.Init(factory.UFramework_Core_UCallback);
 
 		TypeTraits<System.Action>.Init(factory.Check_System_Action);
 		TypeTraits<UnityEngine.Events.UnityAction>.Init(factory.Check_UnityEngine_Events_UnityAction);
@@ -208,6 +212,8 @@ public class DelegateFactory
 		TypeTraits<FairyGUI.UIObjectFactory.GComponentCreator>.Init(factory.Check_FairyGUI_UIObjectFactory_GComponentCreator);
 		TypeTraits<FairyGUI.UIObjectFactory.GLoaderCreator>.Init(factory.Check_FairyGUI_UIObjectFactory_GLoaderCreator);
 		TypeTraits<UFramework.Core.UCallback<UFramework.Core.AssetRequest>>.Init(factory.Check_UFramework_Core_UCallback_UFramework_Core_AssetRequest);
+		TypeTraits<UFramework.Core.UCallback<float>>.Init(factory.Check_UFramework_Core_UCallback_float);
+		TypeTraits<UFramework.Core.UCallback>.Init(factory.Check_UFramework_Core_UCallback);
 
 		StackTraits<System.Action>.Push = factory.Push_System_Action;
 		StackTraits<UnityEngine.Events.UnityAction>.Push = factory.Push_UnityEngine_Events_UnityAction;
@@ -272,6 +278,8 @@ public class DelegateFactory
 		StackTraits<FairyGUI.UIObjectFactory.GComponentCreator>.Push = factory.Push_FairyGUI_UIObjectFactory_GComponentCreator;
 		StackTraits<FairyGUI.UIObjectFactory.GLoaderCreator>.Push = factory.Push_FairyGUI_UIObjectFactory_GLoaderCreator;
 		StackTraits<UFramework.Core.UCallback<UFramework.Core.AssetRequest>>.Push = factory.Push_UFramework_Core_UCallback_UFramework_Core_AssetRequest;
+		StackTraits<UFramework.Core.UCallback<float>>.Push = factory.Push_UFramework_Core_UCallback_float;
+		StackTraits<UFramework.Core.UCallback>.Push = factory.Push_UFramework_Core_UCallback;
 	}
     
     public static Delegate CreateDelegate(Type t, LuaFunction func = null)
@@ -4023,6 +4031,116 @@ public class DelegateFactory
 	}
 
 	void Push_UFramework_Core_UCallback_UFramework_Core_AssetRequest(IntPtr L, UFramework.Core.UCallback<UFramework.Core.AssetRequest> o)
+	{
+		ToLua.Push(L, o);
+	}
+
+	class UFramework_Core_UCallback_float_Event : LuaDelegate
+	{
+		public UFramework_Core_UCallback_float_Event(LuaFunction func) : base(func) { }
+		public UFramework_Core_UCallback_float_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(float param0)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(float param0)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.Push(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public UFramework.Core.UCallback<float> UFramework_Core_UCallback_float(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			UFramework.Core.UCallback<float> fn = delegate(float param0) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			UFramework_Core_UCallback_float_Event target = new UFramework_Core_UCallback_float_Event(func);
+			UFramework.Core.UCallback<float> d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			UFramework_Core_UCallback_float_Event target = new UFramework_Core_UCallback_float_Event(func, self);
+			UFramework.Core.UCallback<float> d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	bool Check_UFramework_Core_UCallback_float(IntPtr L, int pos)
+	{
+		return TypeChecker.CheckDelegateType<UFramework.Core.UCallback<float>>(L, pos);
+	}
+
+	void Push_UFramework_Core_UCallback_float(IntPtr L, UFramework.Core.UCallback<float> o)
+	{
+		ToLua.Push(L, o);
+	}
+
+	class UFramework_Core_UCallback_Event : LuaDelegate
+	{
+		public UFramework_Core_UCallback_Event(LuaFunction func) : base(func) { }
+		public UFramework_Core_UCallback_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call()
+		{
+			func.Call();
+		}
+
+		public void CallWithSelf()
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public UFramework.Core.UCallback UFramework_Core_UCallback(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			UFramework.Core.UCallback fn = delegate() { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			UFramework_Core_UCallback_Event target = new UFramework_Core_UCallback_Event(func);
+			UFramework.Core.UCallback d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			UFramework_Core_UCallback_Event target = new UFramework_Core_UCallback_Event(func, self);
+			UFramework.Core.UCallback d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	bool Check_UFramework_Core_UCallback(IntPtr L, int pos)
+	{
+		return TypeChecker.CheckDelegateType<UFramework.Core.UCallback>(L, pos);
+	}
+
+	void Push_UFramework_Core_UCallback(IntPtr L, UFramework.Core.UCallback o)
 	{
 		ToLua.Push(L, o);
 	}

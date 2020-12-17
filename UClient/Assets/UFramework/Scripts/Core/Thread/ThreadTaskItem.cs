@@ -93,18 +93,24 @@ namespace UFramework.Core
         private ThreadTaskItem Builder(Action<object> callback, object param)
         {
             _callback1 = callback;
+            _object1 = param;
             return this;
         }
 
         private ThreadTaskItem Builder(Action<object, object> callback, object param, object param2)
         {
             _callback2 = callback;
+            _object1 = param;
+            _object2 = param2;
             return this;
         }
 
         private ThreadTaskItem Builder(Action<object, object, object> callback, object param1, object param2, object param3)
         {
             _callback3 = callback;
+            _object1 = param1;
+            _object2 = param2;
+            _object3 = param3;
             return this;
         }
 

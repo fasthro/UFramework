@@ -21,7 +21,8 @@ end
 function panel:onShow()
     panel.__super.onShow(self)
     
-    local on_click_pbc = function()
+    -- pbc(GS)
+    local on_click_gsSendPBC = function()
         local protobuf = require("3rd.pbc.protobuf")
 
         local addressbook = {
@@ -32,9 +33,31 @@ function panel:onShow()
                 {number = "87654321", type = "WORK"}
             }
         }
-        NetManager:sendPBC(1001, addressbook)
+        NetManager:sendGamePBC(1001, addressbook)
     end
-    self:_bindClick(self.view._sendpbc, on_click_pbc)
+    self:_bindClick(self.view._gsSendPBC, on_click_gsSendPBC)
+
+    -- 连接(BS)
+    local on_click_bsConnect = function()
+        NetManager:connect(NETWORK_CHANNEL_TYPE.BATTLE, "127.0.0.1", 15940)
+    end
+    self:_bindClick(self.view._bsConnect, on_click_bsConnect)
+
+    -- pb(BS)
+    local on_click_bsSendPBC = function()
+        local protobuf = require("3rd.pbc.protobuf")
+
+        local addressbook = {
+            name = "Client",
+            id = 12345,
+            phones = {
+                {number = "1301234567"},
+                {number = "87654321", type = "WORK"}
+            }
+        }
+        NetManager:sendBattlePBC(1001, addressbook)
+    end
+    self:_bindClick(self.view._bsSendPBC, on_click_bsSendPBC)
 end
 
 function panel:onHide()

@@ -1,170 +1,183 @@
 /*
  * @Author: fasthro
  * @Date: 2020-05-26 22:39:27
- * @Description: TCPManager(Socket Manager)
+ * @Description: network manager
  */
-using UFramework.Core;
-using UFramework.Core;
 using System;
-using System.Text;
+using UFramework.Core;
+using UFramework.Network;
+using System.Collections.Generic;
+using System.Net.Sockets;
 
 namespace UFramework
 {
-    public class NetManager : BaseManager, ISocketListener
+    public class NetManager : BaseManager, ISocketChannelListener
     {
         /// <summary>
-        /// connected
-        /// </summary>、
-        /// <value></value>
-        public bool isConnected { get { return _client != null && _client.isConnected; } }
-
-        /// <summary>
-        /// 重定向中
+        /// 
         /// </summary>
-        /// <value></value>
-        public bool isRedirecting { get; private set; }
-
-        /// <summary>
-        /// Socket Client
-        /// </summary>
-        private SocketClient _client;
-
-        /// <summary>
-        /// 消息处理队列
-        /// </summary>
-        /// <typeparam name="SocketPack"></typeparam>
+        /// <typeparam name="int">channelId</typeparam>
+        /// <typeparam name="int">index</typeparam>
         /// <returns></returns>
-        private DoubleQueue<SocketPack> _packQueue = new DoubleQueue<SocketPack>();
-
-        public override void OnAwake()
-        {
-            isRedirecting = false;
-            _packQueue.Clear();
-            CreateSocketClient();
-        }
+        private readonly Dictionary<int, int> _channelDict = new Dictionary<int, int>();
+        private readonly List<SocketChannel> _channels = new List<SocketChannel>();
 
         /// <summary>
-        /// 创建 socekt client
+        /// 创建 Channel
         /// </summary>
-        private void CreateSocketClient()
+        /// <param name="channelId"></param>
+        /// <param name="protocalType"></param>
+        public void CreateChannel(int channelId, ProtocalType protocalType)
         {
-            _client = new SocketClient(this);
-            _client.connectTimeout = 15000;
-            _client.receiveBufferSize = 8192;
-            _client.sendBufferSize = 8192;
-        }
-
-        /// <summary>
-        /// 连接服务器
-        /// </summary>
-        /// <param name="ip"></param>
-        /// <param name="port"></param>
-        public void Connecte(string ip, int port)
-        {
-            if (!isConnected)
-                _client.Connect(ip, port);
-        }
-
-        /// <summary>
-        /// 重定向
-        /// </summary>
-        /// <param name="ip"></param>
-        /// <param name="port"></param>
-        public void Redirect(string ip, int port)
-        {
-            isRedirecting = true;
-
-            if (_client != null)
+            if (_channelDict.ContainsKey(channelId))
             {
-                _client.Disconnecte();
-                _client = null;
+                Logger.Error($"Socket Channel 已经存在。ChannelId:{channelId}");
+                return;
             }
+            var channel = new SocketChannel(channelId, protocalType, this);
+            _channelDict.Add(channelId, _channels.Count);
+            _channels.Add(channel);
+        }
 
-            _packQueue.Clear();
-            CreateSocketClient();
-            Connecte(ip, port);
+        /// <summary>
+        /// 移除 Channel
+        /// </summary>
+        /// <param name="channelId"></param>
+        public void RemoveChannel(int channelId)
+        {
+            if (_channelDict.ContainsKey(channelId))
+            {
+                var index = _channelDict[channelId];
+                var channel = _channels[index];
+                channel.Dispose();
+
+                _channels.RemoveAt(index);
+                _channelDict.Remove(channelId);
+            }
+        }
+
+        /// <summary>
+        /// 获取 Channel
+        /// </summary>
+        /// <param name="channelId"></param>
+        /// <returns></returns>
+        public SocketChannel GetChannel(int channelId)
+        {
+            if (_channelDict.ContainsKey(channelId))
+                return _channels[_channelDict[channelId]];
+            return null;
+        }
+
+        /// <summary>
+        /// 连接
+        /// </summary>
+        /// <param name="channelId"></param>
+        /// <param name="ip"></param>
+        /// <param name="port"></param>
+        public void Connect(int channelId, string ip, int port)
+        {
+            var channel = GetChannel(channelId);
+            if (channel != null)
+                channel.Connect(ip, port);
         }
 
         /// <summary>
         /// 断开连接
         /// </summary>
-        public void Disconnecte()
+        /// <param name="channelId"></param>
+        public void Disconnect(int channelId)
         {
-            if (isConnected)
-                _client.Disconnecte();
+            var channel = GetChannel(channelId);
+            if (channel != null)
+                channel.Disconnect();
         }
 
         /// <summary>
-        /// send pack
+        /// 发送数据
         /// </summary>
-        /// <param name="value"></param>
-        public void Send(SocketPack pack)
+        /// <param name="channelId"></param>
+        /// <param name="pack"></param>
+        public void Send(int channelId, SocketPack pack)
         {
-            _client.Send(pack);
+            var channel = GetChannel(channelId);
+            if (channel != null)
+                channel.Send(pack);
         }
 
-        #region ISocketListener
-
-        public void OnSocketConnected()
+        public void Redirect(int channelId, string ip, int port)
         {
-            ThreadQueue.EnqueueMain(_OnSocketConnected);
+            var channel = GetChannel(channelId);
+            if (channel != null)
+                channel.Redirect(ip, port);
         }
-
-        private void _OnSocketConnected()
-        {
-            isRedirecting = false;
-            LuaCall("onSocketConnected");
-        }
-
-        public void OnSocketDisconnected()
-        {
-            _packQueue.Clear();
-            ThreadQueue.EnqueueMain(_OnSocketDisconnected);
-        }
-
-        private void _OnSocketDisconnected()
-        {
-            if (isRedirecting) return;
-            LuaCall("onSocketDisconnected");
-        }
-
-        public void OnSocketReceive(SocketPack pack)
-        {
-            _packQueue.Enqueue(pack);
-            ThreadQueue.EnqueueMain(_OnSocketReceive);
-        }
-
-        private void _OnSocketReceive()
-        {
-            _packQueue.Swap();
-            while (!_packQueue.IsEmpty())
-            {
-                LuaCall("onSocketReceive", _packQueue.Dequeue());
-            }
-        }
-
-        public void OnSocketException(Exception exception)
-        {
-            _packQueue.Clear();
-            ThreadQueue.EnqueueMain(_OnSocketException, exception);
-        }
-
-        private void _OnSocketException(object exception)
-        {
-            LuaCall("onSocketException", exception == null ? "" : exception.ToString());
-        }
-
-        #endregion
 
         #region BaseManager
+
         public override void OnUpdate(float deltaTime)
         {
-            _client?.OnUpdate();
+            for (int i = 0; i < _channels.Count; i++)
+                _channels[i].Update();
         }
 
         public override void OnDestroy()
         {
-            _client?.Disconnecte();
+            for (int i = 0; i < _channels.Count; i++)
+                _channels[i].Dispose();
+        }
+
+        #endregion
+
+        #region socket
+
+        public void OnSocketChannelConnected(int channelId)
+        {
+            ThreadQueue.EnqueueMain(_OnSocketConnected, channelId);
+        }
+
+        private void _OnSocketConnected(object channelId)
+        {
+            LuaCall("onSocketConnected", channelId);
+        }
+
+        public void OnSocketChannelDisconnected(int channelId)
+        {
+            ThreadQueue.EnqueueMain(_OnSocketDisconnected, channelId);
+        }
+
+        private void _OnSocketDisconnected(object channelId)
+        {
+            LuaCall("onSocketDisconnected", channelId);
+        }
+
+        public void OnSocketChannelReceive(int channelId)
+        {
+            ThreadQueue.EnqueueMain(_OnSocketReceive, channelId);
+        }
+
+        private void _OnSocketReceive(object channelId)
+        {
+            var channel = GetChannel((int)channelId);
+            if (channel != null)
+            {
+                if (channel.packQueue.IsEmpty())
+                {
+                    channel.packQueue.Swap();
+                }
+                while (!channel.packQueue.IsEmpty())
+                {
+                    LuaCall("onSocketReceive", channelId, channel.packQueue.Dequeue());
+                }
+            }
+        }
+
+        public void OnSocketChannelException(int channelId, SocketError error)
+        {
+            ThreadQueue.EnqueueMain(_OnSocketException, channelId, error);
+        }
+
+        private void _OnSocketException(object channelId, object error)
+        {
+            LuaCall("onSocketException", channelId, error);
         }
 
         #endregion
