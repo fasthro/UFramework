@@ -77,6 +77,8 @@ namespace UFramework.Network
             {
                 ProcessSend();
             }
+            
+            _client.PollEvents();
         }
 
         public void Connect(string ip, int port)
@@ -155,6 +157,8 @@ namespace UFramework.Network
         {
             isConnecting = false;
             isConnected = true;
+
+            _listener.OnSocketConnected();
         }
 
         public void OnPeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)

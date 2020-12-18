@@ -1,19 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 
-namespace LockstepServer
+namespace LockstepServer.Src
 {
-    class Launcher : AppServer
+    internal class Launcher : AppServer
     {
         public Launcher(int port) : base()
         {
             StartServer(port);
         }
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Console.Title = "Lockstep Server";
 
@@ -37,7 +35,6 @@ namespace LockstepServer
             {
                 Console.WriteLine("Entering nothing will choose defaults.");
                 Console.WriteLine("Enter Host IP (Default: 0.0.0.0):");
-
 
                 /*text = Console.ReadLine();
                 if (string.IsNullOrEmpty(text))
@@ -89,14 +86,17 @@ namespace LockstepServer
                         case "stop":
                             OnStop(server);
                             break;
+
                         case "r":
                         case "restart":
                             OnRestart(server, host, port);
                             break;
+
                         case "q":
                         case "quit":
                             OnQuit(server);
                             break;
+
                         case "h":
                         case "help":
                             OnHelp();
@@ -110,7 +110,7 @@ namespace LockstepServer
             }
         }
 
-        static void OnStop(Launcher server)
+        private static void OnStop(Launcher server)
         {
             Launcher server4;
             Monitor.Enter(server4 = server);
@@ -128,7 +128,7 @@ namespace LockstepServer
             }
         }
 
-        static void OnRestart(Launcher server, string host, int port)
+        private static void OnRestart(Launcher server, string host, int port)
         {
             Launcher server2;
             Monitor.Enter(server2 = server);
@@ -149,7 +149,7 @@ namespace LockstepServer
             Console.WriteLine(string.Format("Hosting ip [{0}] on port [{1}]", host, port));
         }
 
-        static void OnQuit(Launcher server)
+        private static void OnQuit(Launcher server)
         {
             Launcher server3;
             Monitor.Enter(server3 = server);
@@ -164,7 +164,7 @@ namespace LockstepServer
             }
         }
 
-        static void OnHelp()
+        private static void OnHelp()
         {
             Console.WriteLine("(s)top - Stops hosting\n(r)estart - Restarts the hosting service even when stopped\n(e)lo - Set the elo range to accept in difference [i.e. \"elorange = 10\"]\n(q)uit - Quits the application\n(h)elp - Get a full list of comands");
         }
