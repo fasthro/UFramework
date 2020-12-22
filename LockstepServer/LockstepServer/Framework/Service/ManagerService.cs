@@ -16,6 +16,7 @@ namespace LockstepServer
             container = new ManagerContainer();
 
             RegisterManager(new NetManager());
+            RegisterManager(new HandlerManager());
             RegisterManager(new ModelManager());
             RegisterManager(new DataManager());
         }

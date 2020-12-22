@@ -1,0 +1,24 @@
+syntax = "proto3";
+package PB_BattleServer;
+
+//> 握手
+//#[C2S][901]#
+message Handshake_C2S {
+	string secret = 1;
+}
+
+//#[S2C][901]#
+message Handshake_S2C {
+	int32 resultCode = 1;
+}
+
+//> 进入房间
+//#[C2S][902]#
+message EnterRoom_C2S {
+	
+}
+
+//#[S2C][902]#
+message EnterRoom_S2C {
+	int32 resultCode = 1;
+}

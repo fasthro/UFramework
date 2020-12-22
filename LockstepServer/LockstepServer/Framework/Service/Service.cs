@@ -44,5 +44,19 @@
         }
 
         #endregion container
+
+        #region manager
+
+        public T GetManager<T>() where T : IManager
+        {
+            return container.GetService<ManagerService>().GetManager<T>();
+        }
+
+        public IManager GetManager(string managerName)
+        {
+            return container.GetService<ManagerService>().GetManager(managerName);
+        }
+
+        #endregion manager
     }
 }

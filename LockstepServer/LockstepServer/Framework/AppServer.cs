@@ -44,7 +44,7 @@ namespace LockstepServer
             Service.Instance.Default();
 
             //创建服务器网络监听
-            var netListener = Service.Instance.GetService<ManagerService>().GetManager<NetManager>() as IServerListener;
+            var netListener = Service.Instance.GetManager<NetManager>() as IServerListener;
             _udpSocketServer = new UdpSocketServer(netListener);
 
             LogHelper.Info("AppServer Initialized!");

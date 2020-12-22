@@ -50,9 +50,8 @@ namespace UFramework.Network
         private NetDataWriter _sender;
         private DoubleQueue<SocketPack> _sendQueue;
 
-        private AutoByteArray _receiver;
-        private FixedByteArray _receivePackSizer;
-        private FixedByteArray _receivePackHeader;
+        private FixedByteArray _fixedHeadReader;
+        private byte[] _fixedBuff;
 
         public UdpSocketClient(ISocketClientListener listener, PackType protocal = PackType.Binary)
         {
@@ -61,9 +60,9 @@ namespace UFramework.Network
 
             _sendQueue = new DoubleQueue<SocketPack>();
             _sender = new NetDataWriter();
-            _receiver = new AutoByteArray(128);
-            _receivePackSizer = new FixedByteArray(2);
-            _receivePackHeader = new FixedByteArray(SocketPack.HEADER_SIZE);
+
+            _fixedHeadReader = new FixedByteArray(SocketPack.HEADER_SIZE);
+            _fixedBuff = new byte[SocketPack.HEADER_SIZE];
 
             _client = new LiteNetLib.NetManager(this);
             _client.UpdateTime = 15;
@@ -77,7 +76,7 @@ namespace UFramework.Network
             {
                 ProcessSend();
             }
-            
+
             _client.PollEvents();
         }
 
@@ -121,19 +120,11 @@ namespace UFramework.Network
             }
             while (!_sendQueue.IsEmpty())
             {
+                _sender.Reset();
+
                 var pack = _sendQueue.Dequeue();
-
                 pack.PackSendData();
-                switch (pack.packType)
-                {
-                    case PackType.SizeBinary:
-                        _sender.Put((ushort)pack.rawDataSize);
-                        break;
-                    case PackType.SizeHeaderBinary:
-                        _sender.Put((ushort)(SocketPack.HEADER_SIZE + pack.rawDataSize));
-                        break;
-                }
-
+                _sender.Put(pack.sizer.buffer);
                 if (!pack.header.isEmpty)
                     _sender.Put(pack.header.buffer);
 
@@ -179,21 +170,27 @@ namespace UFramework.Network
             }
             else
             {
-                _receiver.Clear();
-                _receiver.Write(reader.RawData);
-
-                _receivePackSizer.Clear();
-                _receivePackSizer.Write(_receiver.Read(2));
-
-                var packSize = _receivePackSizer.ReadUInt16();
-
+                reader.GetUShort();
                 if (packType == PackType.SizeHeaderBinary)
                 {
-                    _receivePackHeader.Clear();
-                    _receivePackHeader.Write(_receiver.Read(SocketPack.HEADER_SIZE));
-                    _listener.OnSocketReceive(SocketPack.AllocateReader(packType, _receivePackHeader, _receiver.Read(packSize - SocketPack.HEADER_SIZE)));
+                    reader.GetBytes(_fixedBuff, SocketPack.HEADER_SIZE);
+                    _fixedHeadReader.Clear();
+                    _fixedHeadReader.Write(_fixedBuff);
+
+                    var count = reader.AvailableBytes;
+                    byte[] bytes = new byte[count];
+                    reader.GetBytes(bytes, count);
+
+                    _listener.OnSocketReceive(SocketPack.AllocateReader(packType, _fixedHeadReader, bytes));
                 }
-                _listener.OnSocketReceive(SocketPack.AllocateReader(packType, _receiver.Read(packSize)));
+                else
+                {
+                    var count = reader.AvailableBytes;
+                    byte[] bytes = new byte[count];
+                    reader.GetBytes(bytes, count);
+
+                    _listener.OnSocketReceive(SocketPack.AllocateReader(packType, bytes));
+                }
             }
         }
 

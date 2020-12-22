@@ -23,6 +23,12 @@ namespace UFramework.Network
         /// byte[] [0-3]:cmd [4-7]:session
         /// </summary>
         public readonly static int HEADER_SIZE = 8;
+
+        /// <summary>
+        /// 小端字节序解析
+        /// </summary>
+        public readonly static bool LITTLE_ENDIAN = false;
+
         static int SESSION = 0;
 
         /// <summary>
@@ -63,6 +69,12 @@ namespace UFramework.Network
         public int rawDataSize { get { return rawData.Length; } }
 
         /// <summary>
+        /// size bytes
+        /// </summary>
+        /// <value></value>
+        public FixedByteArray sizer { get; private set; }
+
+        /// <summary>
         /// header bytes
         /// </summary>
         /// <value></value>
@@ -101,6 +113,7 @@ namespace UFramework.Network
 
         public SocketPack()
         {
+            sizer = new FixedByteArray(2);
             header = new FixedByteArray(HEADER_SIZE);
         }
 
@@ -145,6 +158,20 @@ namespace UFramework.Network
 
         public void PackSendData()
         {
+            if (packType == PackType.SizeBinary || packType == PackType.SizeHeaderBinary)
+            {
+                sizer.Clear();
+                switch (packType)
+                {
+                    case PackType.SizeBinary:
+                        sizer.Write((ushort)rawDataSize);
+                        break;
+                    case PackType.SizeHeaderBinary:
+                        sizer.Write((ushort)(SocketPack.HEADER_SIZE + rawDataSize));
+                        break;
+                }
+            }
+
             if (packType == PackType.SizeHeaderBinary)
             {
                 header.Clear();

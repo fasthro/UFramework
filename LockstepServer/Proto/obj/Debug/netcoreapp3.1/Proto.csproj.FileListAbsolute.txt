@@ -1,0 +1,12 @@
+C:\Users\cc\Desktop\UFramework\LockstepServer\Proto\bin\Debug\netcoreapp3.1\Proto.deps.json
+C:\Users\cc\Desktop\UFramework\LockstepServer\Proto\bin\Debug\netcoreapp3.1\Proto.dll
+C:\Users\cc\Desktop\UFramework\LockstepServer\Proto\bin\Debug\netcoreapp3.1\Proto.pdb
+C:\Users\cc\Desktop\UFramework\LockstepServer\Proto\bin\Debug\netcoreapp3.1\Google.Protobuf.dll
+C:\Users\cc\Desktop\UFramework\LockstepServer\Proto\bin\Debug\netcoreapp3.1\Google.Protobuf.xml
+C:\Users\cc\Desktop\UFramework\LockstepServer\Proto\obj\Debug\netcoreapp3.1\Proto.csprojAssemblyReference.cache
+C:\Users\cc\Desktop\UFramework\LockstepServer\Proto\obj\Debug\netcoreapp3.1\Proto.AssemblyInfoInputs.cache
+C:\Users\cc\Desktop\UFramework\LockstepServer\Proto\obj\Debug\netcoreapp3.1\Proto.AssemblyInfo.cs
+C:\Users\cc\Desktop\UFramework\LockstepServer\Proto\obj\Debug\netcoreapp3.1\Proto.csproj.CoreCompileInputs.cache
+C:\Users\cc\Desktop\UFramework\LockstepServer\Proto\obj\Debug\netcoreapp3.1\Proto.csproj.CopyComplete
+C:\Users\cc\Desktop\UFramework\LockstepServer\Proto\obj\Debug\netcoreapp3.1\Proto.dll
+C:\Users\cc\Desktop\UFramework\LockstepServer\Proto\obj\Debug\netcoreapp3.1\Proto.pdb

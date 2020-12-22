@@ -9,6 +9,10 @@ namespace LockstepServer.Src
         public Launcher(int port) : base()
         {
             StartServer(port);
+
+            var launchManager = new LaunchManager();
+            Service.Instance.GetService<ManagerService>().RegisterManager(launchManager);
+            launchManager.Launch();
         }
 
         private static void Main(string[] args)

@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\3rd\LiteNetLib\LiteNetLib.csproj" />
+    <ProjectReference Include="..\Proto\Proto.csproj" />
   </ItemGroup>
 
   <ItemGroup>

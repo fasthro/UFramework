@@ -226,10 +226,8 @@ namespace UFramework.Network
                         _sendlenQueue.Enqueue(pack.rawDataSize);
                         break;
                     case PackType.SizeBinary:
-                        _sendPackSizer.Write((ushort)pack.rawDataSize);
-                        break;
                     case PackType.SizeHeaderBinary:
-                        _sendPackSizer.Write((ushort)(SocketPack.HEADER_SIZE + pack.rawDataSize));
+                        _sender.Write(pack.sizer.buffer);
                         break;
                 }
 

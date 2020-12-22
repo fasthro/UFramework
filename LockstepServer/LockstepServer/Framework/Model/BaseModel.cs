@@ -23,7 +23,7 @@ namespace LockstepServer
 
             if (dataManager == null)
             {
-                dataManager = Service.Instance.GetService<ManagerService>().GetManager<DataManager>();
+                dataManager = Service.Instance.GetManager<DataManager>();
             }
         }
 

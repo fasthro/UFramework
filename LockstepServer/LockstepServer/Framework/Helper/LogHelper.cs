@@ -60,5 +60,17 @@ namespace LockstepServer
                 logger.Error(message);
             }
         }
+
+        public static void Warn(object message)
+        {
+            if (isConsole)
+            {
+                Console.WriteLine("[WARN] " + message.ToString());
+            }
+            else
+            {
+                logger.Warn(message);
+            }
+        }
     }
 }

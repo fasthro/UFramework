@@ -47,7 +47,6 @@ namespace LockstepServer
 
         public void OnNetworkReceive(NetPeer peer, NetPacketReader reader, DeliveryMethod deliveryMethod)
         {
-            LogHelper.Info("收到客户端协议[" + peer.EndPoint + "]");
             _listener.OnNetworkReceive(peer, reader, deliveryMethod);
         }
 
@@ -61,14 +60,11 @@ namespace LockstepServer
 
         public void OnPeerConnected(NetPeer peer)
         {
-            LogHelper.Info("客户端连接成功 [" + peer.EndPoint + "]");
             _listener.OnPeerConnected(peer);
         }
 
         public void OnPeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)
         {
-            LogHelper.Info("客户端连接断开 [" + peer.EndPoint + "]");
-
             _listener.OnPeerDisconnected(peer, disconnectInfo);
         }
 

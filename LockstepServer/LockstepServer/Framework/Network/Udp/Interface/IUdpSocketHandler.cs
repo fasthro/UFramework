@@ -10,6 +10,6 @@ namespace LockstepServer
 {
     public interface IUdpSocketHandler
     {
-        void OnMessage(NetPeer peer, byte[] bytes);
+        void OnMessage(NetPeer peer, int session, byte[] bytes);
     }
 }

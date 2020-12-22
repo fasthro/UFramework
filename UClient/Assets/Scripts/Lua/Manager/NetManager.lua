@@ -33,11 +33,15 @@ function NetManager:registerPB()
     end
 end
 
-function NetManager:pbcEncode(cmd, session, message)
+function NetManager:pbcEncode(cmd, session, message, addsession)
     assert(c2s[cmd], string.format("pbc c2s %d undefine", cmd))
     local message = protobuf.encode(c2s[cmd], message)
     if message ~= nil then
-        return message .. string.pack(">I4", session)
+        if addsession then
+            return message .. string.pack(">I4", session)
+        else
+            return message
+        end
     end
     return nil
 end
@@ -88,9 +92,9 @@ function NetManager:sendBattlePack(pack)
     self._ext:Send(NETWORK_CHANNEL_TYPE.BATTLE, pack)
 end
 
-function NetManager:_sendPBC(channeld, cmd, message)
+function NetManager:_sendPBC(channeld, cmd, message, addsession)
     local pack = self:createPack(NETWORK_PACK_TYPE.SIZE_HEADER_BINARY, cmd)
-    message = self:pbcEncode(cmd, pack.session, message)
+    message = self:pbcEncode(cmd, pack.session, message, addsession)
     if message ~= nil then
         pack:WriteBuffer(message)
         self:_sendPack(channeld, pack)
@@ -101,11 +105,11 @@ function NetManager:_sendPBC(channeld, cmd, message)
 end
 
 function NetManager:sendGamePBC(cmd, message)
-    self:_sendPBC(NETWORK_CHANNEL_TYPE.GAME, cmd, message)
+    self:_sendPBC(NETWORK_CHANNEL_TYPE.GAME, cmd, message, true)
 end
 
 function NetManager:sendBattlePBC(cmd, message)
-    self:_sendPBC(NETWORK_CHANNEL_TYPE.BATTLE, cmd, message)
+    self:_sendPBC(NETWORK_CHANNEL_TYPE.BATTLE, cmd, message, false)
 end
 
 function NetManager:onSocketConnected(channelId)

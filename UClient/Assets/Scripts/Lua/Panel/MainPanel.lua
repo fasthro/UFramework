@@ -20,53 +20,40 @@ end
 
 function panel:onShow()
     panel.__super.onShow(self)
-    
-    -- pbc(GS)
-    local on_click_gsSendPBC = function()
-        local protobuf = require("3rd.pbc.protobuf")
 
-        local addressbook = {
-            name = "Client",
-            id = 12345,
-            phones = {
-                {number = "1301234567"},
-                {number = "87654321", type = "WORK"}
-            }
-        }
-        NetManager:sendGamePBC(1001, addressbook)
-    end
-    self:_bindClick(self.view._gsSendPBC, on_click_gsSendPBC)
+    EventManager:once(EVENT_NAMES.NET_CONNECTED, self.onConnected, self)
 
-    -- 连接(BS)
-    local on_click_bsConnect = function()
-        NetManager:connect(NETWORK_CHANNEL_TYPE.BATTLE, "127.0.0.1", 15940)
-    end
-    self:_bindClick(self.view._bsConnect, on_click_bsConnect)
-
-    -- pb(BS)
-    local on_click_bsSendPBC = function()
-        local protobuf = require("3rd.pbc.protobuf")
-
-        local addressbook = {
-            name = "Client",
-            id = 12345,
-            phones = {
-                {number = "1301234567"},
-                {number = "87654321", type = "WORK"}
-            }
-        }
-        NetManager:sendBattlePBC(1001, addressbook)
-    end
-    self:_bindClick(self.view._bsSendPBC, on_click_bsSendPBC)
+    -- 连接战斗服
+    NetManager:connect(NETWORK_CHANNEL_TYPE.BATTLE, "127.0.0.1", 15940)
 end
 
 function panel:onHide()
 end
 
+function panel:onConnected()
+    local handshake = {
+        secret = "fasthro-key"
+    }
+    NetManager:sendBattlePBC(901, handshake)
+end
+
 function panel:onNetReceived(cmd, pack)
-    if cmd == 1001 then
-        logger.debug("收到了1001测试协议")
+    if cmd <= 0 then
+        return
     end
+
+    local cm = self["NetCmd_" .. tostring(cmd)]
+    if cm ~= nil then
+        cm(self)
+    end
+end
+
+function panel:NetCmd_901()
+    NetManager:sendBattlePBC(902, {})
+end
+
+function panel:NetCmd_902()
+    logger.debug("进入房间成功，等待其他玩家加入")
 end
 
 return panel

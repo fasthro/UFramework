@@ -34,3 +34,5 @@ C:\Users\cc\Desktop\UFramework\LockstepServer\LockstepServer\bin\Debug\netcoreap
 C:\Users\cc\Desktop\UFramework\LockstepServer\LockstepServer\bin\Debug\netcoreapp3.1\MongoDB.Driver.dll
 C:\Users\cc\Desktop\UFramework\LockstepServer\LockstepServer\obj\Debug\netcoreapp3.1\LockstepServer.csproj.CoreCompileInputs.cache
 C:\Users\cc\Desktop\UFramework\LockstepServer\LockstepServer\bin\Debug\netcoreapp3.1\MongoDB.Driver.GridFS.dll
+C:\Users\cc\Desktop\UFramework\LockstepServer\LockstepServer\bin\Debug\netcoreapp3.1\Proto.dll
+C:\Users\cc\Desktop\UFramework\LockstepServer\LockstepServer\bin\Debug\netcoreapp3.1\Proto.pdb

@@ -31,10 +31,23 @@ namespace UFramework.Network
             return BitConverter.ToUInt16(EndianReverse(Read(2)), 0);
         }
 
+        public int ReadInt32()
+        {
+            return BitConverter.ToInt32(EndianReverse(Read(4)), 0);
+        }
+
         static byte[] EndianReverse(byte[] data)
         {
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(data);
+            if (SocketPack.LITTLE_ENDIAN)
+            {
+                if (!BitConverter.IsLittleEndian)
+                    Array.Reverse(data);
+            }
+            else
+            {
+                if (BitConverter.IsLittleEndian)
+                    Array.Reverse(data);
+            }
             return data;
         }
     }
