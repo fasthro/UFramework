@@ -19,6 +19,7 @@ namespace LockstepServer
         private const int PACK_HEADER_SIZE = 8;
 
         private FixedByteArray _fixedReader;
+        private FixedByteArray _fixedWriter;
         private byte[] _fixedBuff;
 
         private HandlerManager _handlerManager;
@@ -28,6 +29,7 @@ namespace LockstepServer
         protected override void OnInitialize()
         {
             _fixedReader = new FixedByteArray(PACK_HEADER_SIZE);
+            _fixedWriter = new FixedByteArray(PACK_HEADER_SIZE);
             _fixedBuff = new byte[PACK_HEADER_SIZE];
         }
 
@@ -73,15 +75,17 @@ namespace LockstepServer
 
         public void Send(NetPeer peer, int cmd, int session, IMessage message)
         {
+            _fixedWriter.Clear();
+            _fixedWriter.Write(cmd);
+            _fixedWriter.Write(session);
+
             var data = message.ToByteArray();
 
             var _writer = new NetDataWriter();
             _writer.Reset();
             _writer.Put((ushort)(data.Length + PACK_HEADER_SIZE));
-            _writer.Put(cmd);
-            _writer.Put(session);
+            _writer.Put(_fixedWriter.buffer);
             _writer.Put(data);
-
             peer.Send(_writer, DeliveryMethod.ReliableOrdered);
         }
 

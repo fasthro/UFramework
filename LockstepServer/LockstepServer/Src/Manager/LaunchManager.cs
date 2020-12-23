@@ -25,6 +25,7 @@ namespace LockstepServer.Src
         private void RegisterManager()
         {
             RegisterManager<RoomManager>();
+            RegisterManager<PlayerManager>();
         }
 
         private void RegisterManager<T>() where T : IManager, new()

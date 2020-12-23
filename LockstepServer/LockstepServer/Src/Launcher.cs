@@ -15,6 +15,12 @@ namespace LockstepServer.Src
             launchManager.Launch();
         }
 
+        protected override void OnUpdate(float deltaTime)
+        {
+            base.OnUpdate(deltaTime);
+            Service.Instance.DoUpdate(deltaTime);
+        }
+
         private static void Main(string[] args)
         {
             Console.Title = "Lockstep Server";

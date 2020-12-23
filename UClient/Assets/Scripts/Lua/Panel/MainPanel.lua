@@ -31,10 +31,7 @@ function panel:onHide()
 end
 
 function panel:onConnected()
-    local handshake = {
-        secret = "fasthro-key"
-    }
-    NetManager:sendBattlePBC(901, handshake)
+    NetManager:sendBattlePBC(901, {uid = 1})
 end
 
 function panel:onNetReceived(cmd, pack)
@@ -44,16 +41,20 @@ function panel:onNetReceived(cmd, pack)
 
     local cm = self["NetCmd_" .. tostring(cmd)]
     if cm ~= nil then
-        cm(self)
+        cm(self, pack)
     end
 end
 
-function panel:NetCmd_901()
-    NetManager:sendBattlePBC(902, {})
+function panel:NetCmd_901(msg)
+    if msg.resultCode == 200 then
+        NetManager:sendBattlePBC(902, {roomSecretKey = msg.roomSecretKey})
+    end
 end
 
-function panel:NetCmd_902()
-    logger.debug("进入房间成功，等待其他玩家加入")
+function panel:NetCmd_902(msg)
+    if msg.resultCode == 200 then
+        logger.debug("进入房间成功，等待其他玩家加入")
+    end
 end
 
 return panel

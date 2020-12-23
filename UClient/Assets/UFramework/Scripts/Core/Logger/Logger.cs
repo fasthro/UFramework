@@ -4,6 +4,8 @@
  * @Description: logger
  */
 
+using System.Text;
+
 namespace UFramework
 {
     public enum LogLevel
@@ -64,6 +66,21 @@ namespace UFramework
         static bool CheckLevel(int level)
         {
             return level >= CUR_LEVEL;
+        }
+
+        public static void DebugBytes(byte[] bytes)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("[");
+            for(int i = 0; i < bytes.Length; i++){
+                sb.Append(bytes[i]);
+                if(i < bytes.Length - 1) {
+                    sb.Append(",");
+                }
+            }
+            sb.Append("] size " + bytes.Length);
+
+            Debug(sb.ToString());
         }
     }
 }

@@ -4,21 +4,32 @@ package PB_BattleServer;
 //> 握手
 //#[C2S][901]#
 message Handshake_C2S {
-	string secret = 1;
+	int64 uid = 1;
 }
 
 //#[S2C][901]#
 message Handshake_S2C {
 	int32 resultCode = 1;
+	string roomSecretKey = 2; // 房间密钥
 }
 
 //> 进入房间
 //#[C2S][902]#
 message EnterRoom_C2S {
-	
+	string roomSecretKey = 1; // 房间密钥
 }
 
 //#[S2C][902]#
 message EnterRoom_S2C {
 	int32 resultCode = 1;
+}
+
+//#[S2C][950]#
+message BattleStart_S2C {
+
+}
+
+//#[S2C][951]#
+message Frame_S2C {
+
 }

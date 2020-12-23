@@ -29,12 +29,22 @@ namespace LockstepServer.Src
 
         public long AddUser(UserInfo user)
         {
-            user.uid = Helper.NewGuidId();
+            // user.uid = Helper.NewGuidId();
             if (!Add<UserInfo>(user))
             {
                 return 0L;
             }
             return user.uid;
+        }
+
+        public long ExistUser(long uid)
+        {
+            var result = Exist<UserInfo>(u => u.uid == uid);
+            if (result != null)
+            {
+                return result.uid;
+            }
+            return 0L;
         }
     }
 }

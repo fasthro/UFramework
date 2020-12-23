@@ -125,6 +125,8 @@ namespace UFramework.Network
             if (fixHeader != null)
             {
                 this.header.Write(fixHeader.buffer);
+                cmd = this.header.ReadInt32();
+                session = this.header.ReadInt32();
             }
             return this;
         }

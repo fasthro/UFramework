@@ -22,17 +22,21 @@ namespace PBBattleServer {
     static GsReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cghncy5wcm90bxIPUEJfQmF0dGxlU2VydmVyIh8KDUhhbmRzaGFrZV9DMlMS",
-            "DgoGc2VjcmV0GAEgASgJIiMKDUhhbmRzaGFrZV9TMkMSEgoKcmVzdWx0Q29k",
-            "ZRgBIAEoBSIPCg1FbnRlclJvb21fQzJTIiMKDUVudGVyUm9vbV9TMkMSEgoK",
-            "cmVzdWx0Q29kZRgBIAEoBWIGcHJvdG8z"));
+            "Cghncy5wcm90bxIPUEJfQmF0dGxlU2VydmVyIhwKDUhhbmRzaGFrZV9DMlMS",
+            "CwoDdWlkGAEgASgDIjoKDUhhbmRzaGFrZV9TMkMSEgoKcmVzdWx0Q29kZRgB",
+            "IAEoBRIVCg1yb29tU2VjcmV0S2V5GAIgASgJIiYKDUVudGVyUm9vbV9DMlMS",
+            "FQoNcm9vbVNlY3JldEtleRgBIAEoCSIjCg1FbnRlclJvb21fUzJDEhIKCnJl",
+            "c3VsdENvZGUYASABKAUiEQoPQmF0dGxlU3RhcnRfUzJDIgsKCUZyYW1lX1My",
+            "Q2IGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::PBBattleServer.Handshake_C2S), global::PBBattleServer.Handshake_C2S.Parser, new[]{ "Secret" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::PBBattleServer.Handshake_S2C), global::PBBattleServer.Handshake_S2C.Parser, new[]{ "ResultCode" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::PBBattleServer.EnterRoom_C2S), global::PBBattleServer.EnterRoom_C2S.Parser, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::PBBattleServer.EnterRoom_S2C), global::PBBattleServer.EnterRoom_S2C.Parser, new[]{ "ResultCode" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::PBBattleServer.Handshake_C2S), global::PBBattleServer.Handshake_C2S.Parser, new[]{ "Uid" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::PBBattleServer.Handshake_S2C), global::PBBattleServer.Handshake_S2C.Parser, new[]{ "ResultCode", "RoomSecretKey" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::PBBattleServer.EnterRoom_C2S), global::PBBattleServer.EnterRoom_C2S.Parser, new[]{ "RoomSecretKey" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::PBBattleServer.EnterRoom_S2C), global::PBBattleServer.EnterRoom_S2C.Parser, new[]{ "ResultCode" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::PBBattleServer.BattleStart_S2C), global::PBBattleServer.BattleStart_S2C.Parser, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::PBBattleServer.Frame_S2C), global::PBBattleServer.Frame_S2C.Parser, null, null, null, null)
           }));
     }
     #endregion
@@ -67,7 +71,7 @@ namespace PBBattleServer {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public Handshake_C2S(Handshake_C2S other) : this() {
-      secret_ = other.secret_;
+      uid_ = other.uid_;
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -75,14 +79,14 @@ namespace PBBattleServer {
       return new Handshake_C2S(this);
     }
 
-    /// <summary>Field number for the "secret" field.</summary>
-    public const int SecretFieldNumber = 1;
-    private string secret_ = "";
+    /// <summary>Field number for the "uid" field.</summary>
+    public const int UidFieldNumber = 1;
+    private long uid_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string Secret {
-      get { return secret_; }
+    public long Uid {
+      get { return uid_; }
       set {
-        secret_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        uid_ = value;
       }
     }
 
@@ -99,14 +103,14 @@ namespace PBBattleServer {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (Secret != other.Secret) return false;
+      if (Uid != other.Uid) return false;
       return true;
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
-      if (Secret.Length != 0) hash ^= Secret.GetHashCode();
+      if (Uid != 0L) hash ^= Uid.GetHashCode();
       return hash;
     }
 
@@ -117,17 +121,17 @@ namespace PBBattleServer {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-      if (Secret.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(Secret);
+      if (Uid != 0L) {
+        output.WriteRawTag(8);
+        output.WriteInt64(Uid);
       }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
-      if (Secret.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Secret);
+      if (Uid != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(Uid);
       }
       return size;
     }
@@ -137,8 +141,8 @@ namespace PBBattleServer {
       if (other == null) {
         return;
       }
-      if (other.Secret.Length != 0) {
-        Secret = other.Secret;
+      if (other.Uid != 0L) {
+        Uid = other.Uid;
       }
     }
 
@@ -150,8 +154,8 @@ namespace PBBattleServer {
           default:
             input.SkipLastField();
             break;
-          case 10: {
-            Secret = input.ReadString();
+          case 8: {
+            Uid = input.ReadInt64();
             break;
           }
         }
@@ -188,6 +192,7 @@ namespace PBBattleServer {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public Handshake_S2C(Handshake_S2C other) : this() {
       resultCode_ = other.resultCode_;
+      roomSecretKey_ = other.roomSecretKey_;
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -206,6 +211,20 @@ namespace PBBattleServer {
       }
     }
 
+    /// <summary>Field number for the "roomSecretKey" field.</summary>
+    public const int RoomSecretKeyFieldNumber = 2;
+    private string roomSecretKey_ = "";
+    /// <summary>
+    ///  房间密钥
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string RoomSecretKey {
+      get { return roomSecretKey_; }
+      set {
+        roomSecretKey_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as Handshake_S2C);
@@ -220,6 +239,7 @@ namespace PBBattleServer {
         return true;
       }
       if (ResultCode != other.ResultCode) return false;
+      if (RoomSecretKey != other.RoomSecretKey) return false;
       return true;
     }
 
@@ -227,6 +247,7 @@ namespace PBBattleServer {
     public override int GetHashCode() {
       int hash = 1;
       if (ResultCode != 0) hash ^= ResultCode.GetHashCode();
+      if (RoomSecretKey.Length != 0) hash ^= RoomSecretKey.GetHashCode();
       return hash;
     }
 
@@ -241,6 +262,10 @@ namespace PBBattleServer {
         output.WriteRawTag(8);
         output.WriteInt32(ResultCode);
       }
+      if (RoomSecretKey.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(RoomSecretKey);
+      }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -248,6 +273,9 @@ namespace PBBattleServer {
       int size = 0;
       if (ResultCode != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(ResultCode);
+      }
+      if (RoomSecretKey.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(RoomSecretKey);
       }
       return size;
     }
@@ -259,6 +287,9 @@ namespace PBBattleServer {
       }
       if (other.ResultCode != 0) {
         ResultCode = other.ResultCode;
+      }
+      if (other.RoomSecretKey.Length != 0) {
+        RoomSecretKey = other.RoomSecretKey;
       }
     }
 
@@ -272,6 +303,10 @@ namespace PBBattleServer {
             break;
           case 8: {
             ResultCode = input.ReadInt32();
+            break;
+          }
+          case 18: {
+            RoomSecretKey = input.ReadString();
             break;
           }
         }
@@ -308,11 +343,26 @@ namespace PBBattleServer {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public EnterRoom_C2S(EnterRoom_C2S other) : this() {
+      roomSecretKey_ = other.roomSecretKey_;
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public EnterRoom_C2S Clone() {
       return new EnterRoom_C2S(this);
+    }
+
+    /// <summary>Field number for the "roomSecretKey" field.</summary>
+    public const int RoomSecretKeyFieldNumber = 1;
+    private string roomSecretKey_ = "";
+    /// <summary>
+    ///  房间密钥
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string RoomSecretKey {
+      get { return roomSecretKey_; }
+      set {
+        roomSecretKey_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -328,12 +378,14 @@ namespace PBBattleServer {
       if (ReferenceEquals(other, this)) {
         return true;
       }
+      if (RoomSecretKey != other.RoomSecretKey) return false;
       return true;
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
+      if (RoomSecretKey.Length != 0) hash ^= RoomSecretKey.GetHashCode();
       return hash;
     }
 
@@ -344,11 +396,18 @@ namespace PBBattleServer {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
+      if (RoomSecretKey.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(RoomSecretKey);
+      }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
+      if (RoomSecretKey.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(RoomSecretKey);
+      }
       return size;
     }
 
@@ -356,6 +415,9 @@ namespace PBBattleServer {
     public void MergeFrom(EnterRoom_C2S other) {
       if (other == null) {
         return;
+      }
+      if (other.RoomSecretKey.Length != 0) {
+        RoomSecretKey = other.RoomSecretKey;
       }
     }
 
@@ -367,6 +429,10 @@ namespace PBBattleServer {
           default:
             input.SkipLastField();
             break;
+          case 10: {
+            RoomSecretKey = input.ReadString();
+            break;
+          }
         }
       }
     }
@@ -487,6 +553,190 @@ namespace PBBattleServer {
             ResultCode = input.ReadInt32();
             break;
           }
+        }
+      }
+    }
+
+  }
+
+  /// <summary>
+  /// #[S2C][950]#
+  /// </summary>
+  public sealed partial class BattleStart_S2C : pb::IMessage<BattleStart_S2C> {
+    private static readonly pb::MessageParser<BattleStart_S2C> _parser = new pb::MessageParser<BattleStart_S2C>(() => new BattleStart_S2C());
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<BattleStart_S2C> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::PBBattleServer.GsReflection.Descriptor.MessageTypes[4]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public BattleStart_S2C() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public BattleStart_S2C(BattleStart_S2C other) : this() {
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public BattleStart_S2C Clone() {
+      return new BattleStart_S2C(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as BattleStart_S2C);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(BattleStart_S2C other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      return true;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(BattleStart_S2C other) {
+      if (other == null) {
+        return;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+        }
+      }
+    }
+
+  }
+
+  /// <summary>
+  /// #[S2C][951]#
+  /// </summary>
+  public sealed partial class Frame_S2C : pb::IMessage<Frame_S2C> {
+    private static readonly pb::MessageParser<Frame_S2C> _parser = new pb::MessageParser<Frame_S2C>(() => new Frame_S2C());
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<Frame_S2C> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::PBBattleServer.GsReflection.Descriptor.MessageTypes[5]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Frame_S2C() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Frame_S2C(Frame_S2C other) : this() {
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Frame_S2C Clone() {
+      return new Frame_S2C(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as Frame_S2C);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(Frame_S2C other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      return true;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(Frame_S2C other) {
+      if (other == null) {
+        return;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
         }
       }
     }
