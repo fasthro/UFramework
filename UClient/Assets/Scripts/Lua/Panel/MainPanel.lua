@@ -54,6 +54,8 @@ end
 function panel:NetCmd_902(msg)
     if msg.resultCode == 200 then
         logger.debug("进入房间成功，等待其他玩家加入")
+    else
+        logger.debug("进入房间失败 code: " .. tostring(msg.resultCode))
     end
 end
 

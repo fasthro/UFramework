@@ -19,18 +19,18 @@ local function initialize()
     end
 end
 
-function CMD.encode(msgid, session, message)
+function CMD.encode(msgid, session, layer, message)
     assert(s2c[msgid], string.format("pbc s2c %d undefine", msgid))
     local data = protobuf.encode(s2c[msgid], message)
-    local buf = string.pack(">I4", msgid) .. string.pack(">I4", session) .. data
+    local buf = string.pack(">I4", msgid) .. string.pack(">I4", session).. string.pack(">I2", layer) .. data
     return buf
 end
 
 function CMD.decode(data)
     local dlen = #data - 8
-    local msgid, session, msgdata = string.unpack(">I4>I4>c" .. tostring(dlen), data)
+    local msgid, session, layer, msgdata = string.unpack(">I4>I4>I2>c" .. tostring(dlen), data)
     assert(c2s[msgid], string.format("pbc c2s %d undefine", msgid))
-    return msgid, session, protobuf.decode(c2s[msgid], msgdata)
+    return msgid, session, layer, protobuf.decode(c2s[msgid], msgdata)
 end
 
 skynet.start(function()

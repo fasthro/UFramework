@@ -16,6 +16,11 @@ namespace UFramework.Network
 
         public FixedByteArray(int capacity) : base(capacity, capacity) { }
 
+        public void Write(short value)
+        {
+            Write(EndianReverse(BitConverter.GetBytes(value)));
+        }
+
         public void Write(ushort value)
         {
             Write(EndianReverse(BitConverter.GetBytes(value)));
@@ -24,6 +29,11 @@ namespace UFramework.Network
         public void Write(int value)
         {
             Write(EndianReverse(BitConverter.GetBytes(value)));
+        }
+
+        public short ReadInt16()
+        {
+            return BitConverter.ToInt16(EndianReverse(Read(2)), 0);
         }
 
         public ushort ReadUInt16()

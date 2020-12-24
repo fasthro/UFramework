@@ -19,6 +19,11 @@ namespace LockstepServer
             get { return _buffer; }
         }
 
+        public void Write(short value)
+        {
+            Write(EndianReverse(BitConverter.GetBytes(value)));
+        }
+
         public void Write(ushort value)
         {
             Write(EndianReverse(BitConverter.GetBytes(value)));
@@ -27,6 +32,11 @@ namespace LockstepServer
         public void Write(int value)
         {
             Write(EndianReverse(BitConverter.GetBytes(value)));
+        }
+
+        public short ReadInt16()
+        {
+            return BitConverter.ToInt16(EndianReverse(Read(2)), 0);
         }
 
         public ushort ReadUInt16()

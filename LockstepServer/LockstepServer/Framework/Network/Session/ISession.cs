@@ -15,8 +15,18 @@ namespace LockstepServer
     {
         int sessionId { get; }
 
+        void Kick();
+
         void Send(int cmd, int session, IMessage message);
 
-        void Kick();
+        void SendLua(int cmd, int session, IMessage message);
+
+        void SendCSharp(int cmd, int session, IMessage message);
+
+        void Push(int cmd, IMessage message);
+
+        void PushLua(int cmd, IMessage message);
+
+        public void PushCSharp(int cmd, IMessage message);
     }
 }

@@ -9,6 +9,9 @@ using UFramework.Core;
 
 namespace UFramework.Network
 {
+    /// <summary>
+    /// 包类型
+    /// </summary>
     public enum PackType
     {
         Binary, // byte[] [...]:data
@@ -16,13 +19,24 @@ namespace UFramework.Network
         SizeHeaderBinary,  // byte[] [0-1]:(ushort)size [2-SocketPackHeader.SIZE]:header [...]:data
     }
 
+    /// <summary>
+    /// 协议处理层
+    /// </summary>
+    public enum ProcessLayer
+    {
+        All,
+        Lua,
+        CSharp
+    }
+
+
     public class SocketPack : IPoolBehaviour
     {
         /// <summary>
         /// 头长度
-        /// byte[] [0-3]:cmd [4-7]:session
+        /// byte[] [1-4]:cmd [5-8]:session [9-10]:layer
         /// </summary>
-        public readonly static int HEADER_SIZE = 8;
+        public readonly static int HEADER_SIZE = 10;
 
         /// <summary>
         /// 小端字节序解析
@@ -42,6 +56,12 @@ namespace UFramework.Network
         /// </summary>
         /// <value></value>
         public int session { get; private set; }
+
+        /// <summary>
+        /// 协议处理层
+        /// </summary>
+        /// <value></value>
+        public ProcessLayer layer { get; private set; }
 
         /// <summary>
         /// 协议类型
@@ -94,9 +114,9 @@ namespace UFramework.Network
             return ObjectPool<SocketPack>.Instance.Allocate().InitializeReader(packType, header, data);
         }
 
-        public static SocketPack AllocateWriter(PackType packType, int cmd)
+        public static SocketPack AllocateWriter(PackType packType, int cmd, ProcessLayer layer)
         {
-            return ObjectPool<SocketPack>.Instance.Allocate().InitializeWriter(packType, cmd);
+            return ObjectPool<SocketPack>.Instance.Allocate().InitializeWriter(packType, cmd, layer);
         }
 
         public void Recycle()
@@ -127,15 +147,17 @@ namespace UFramework.Network
                 this.header.Write(fixHeader.buffer);
                 cmd = this.header.ReadInt32();
                 session = this.header.ReadInt32();
+                layer = (ProcessLayer)this.header.ReadInt16();
             }
             return this;
         }
 
-        private SocketPack InitializeWriter(PackType packType, int cmd)
+        private SocketPack InitializeWriter(PackType packType, int cmd, ProcessLayer layer)
         {
             this.packType = packType;
             this.cmd = cmd;
             this.session = SESSION++;
+            this.layer = layer;
             return this;
         }
 
@@ -179,6 +201,7 @@ namespace UFramework.Network
                 header.Clear();
                 header.Write(cmd);
                 header.Write(session);
+                header.Write((short)layer);
             }
         }
 

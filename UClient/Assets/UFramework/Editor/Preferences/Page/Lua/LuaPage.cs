@@ -293,6 +293,7 @@ namespace UFramework.Editor.Preferences.Lua
 
             bindTypes.Add(_GT(typeof(UFramework.Network.PackType)));
             bindTypes.Add(_GT(typeof(UFramework.Network.ProtocalType)));
+            bindTypes.Add(_GT(typeof(UFramework.Network.ProcessLayer)));
             bindTypes.Add(_GT(typeof(UFramework.Network.SocketChannel)));
             bindTypes.Add(_GT(typeof(UFramework.Network.SocketPack)));
             bindTypes.Add(_GT(typeof(System.Net.Sockets.SocketError)));

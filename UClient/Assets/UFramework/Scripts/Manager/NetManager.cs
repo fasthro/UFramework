@@ -136,6 +136,7 @@ namespace UFramework
 
         private void _OnSocketConnected(object channelId)
         {
+            Messenger.Broadcast<int>(GlobalEvent.NET_CONNECTED, (int)channelId);
             LuaCall("onSocketConnected", channelId);
         }
 
@@ -146,6 +147,7 @@ namespace UFramework
 
         private void _OnSocketDisconnected(object channelId)
         {
+            Messenger.Broadcast<int>(GlobalEvent.NET_DISCONNECTED, (int)channelId);
             LuaCall("onSocketDisconnected", channelId);
         }
 
@@ -156,7 +158,8 @@ namespace UFramework
 
         private void _OnSocketReceive(object channelId)
         {
-            var channel = GetChannel((int)channelId);
+            var cid = (int)channelId;
+            var channel = GetChannel(cid);
             if (channel != null)
             {
                 if (channel.packQueue.IsEmpty())
@@ -165,7 +168,22 @@ namespace UFramework
                 }
                 while (!channel.packQueue.IsEmpty())
                 {
-                    LuaCall("onSocketReceive", channelId, channel.packQueue.Dequeue());
+                    var pack = channel.packQueue.Dequeue();
+                    if (pack.layer == ProcessLayer.All)
+                    {
+                        Messenger.Broadcast<int, SocketPack>(GlobalEvent.NET_RECEIVED, cid, pack);
+                        LuaCall("onSocketReceive", cid, pack);
+                    }
+                    else if (pack.layer == ProcessLayer.Lua)
+                    {
+                        LuaCall("onSocketReceive", cid, pack);
+                    }
+                    else if (pack.layer == ProcessLayer.CSharp)
+                    {
+                        Logger.Debug($"c# socket receive channelId: {cid} cmd: {pack.cmd}");
+                        Messenger.Broadcast<int, SocketPack>(GlobalEvent.NET_RECEIVED, cid, pack);
+                    }
+                    pack.Recycle();
                 }
             }
         }
@@ -177,6 +195,7 @@ namespace UFramework
 
         private void _OnSocketException(object channelId, object error)
         {
+            Messenger.Broadcast<int, SocketError>(GlobalEvent.NET_EXCEPTION, (int)channelId, (SocketError)error);
             LuaCall("onSocketException", channelId, error);
         }
 

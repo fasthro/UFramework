@@ -20,6 +20,7 @@ namespace LockstepServer
         }
 
         public int sessionId => _connection.Id;
+        private NetManager _netManager => Service.Instance.GetManager<NetManager>();
 
         public void Kick()
         {
@@ -28,7 +29,32 @@ namespace LockstepServer
 
         public void Send(int cmd, int session, IMessage message)
         {
-            Service.Instance.GetManager<NetManager>().Send(_connection, cmd, session, message);
+            _netManager.Send(_connection, cmd, session, NetworkProcessLayer.All, message);
+        }
+
+        public void SendLua(int cmd, int session, IMessage message)
+        {
+            _netManager.Send(_connection, cmd, session, NetworkProcessLayer.Lua, message);
+        }
+
+        public void SendCSharp(int cmd, int session, IMessage message)
+        {
+            _netManager.Send(_connection, cmd, session, NetworkProcessLayer.CSharp, message);
+        }
+
+        public void Push(int cmd, IMessage message)
+        {
+            _netManager.Send(_connection, cmd, 0, NetworkProcessLayer.All, message);
+        }
+
+        public void PushLua(int cmd, IMessage message)
+        {
+            _netManager.Send(_connection, cmd, 0, NetworkProcessLayer.Lua, message);
+        }
+
+        public void PushCSharp(int cmd, IMessage message)
+        {
+            _netManager.Send(_connection, cmd, 0, NetworkProcessLayer.CSharp, message);
         }
     }
 }

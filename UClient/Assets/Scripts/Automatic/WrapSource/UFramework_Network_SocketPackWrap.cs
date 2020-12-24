@@ -17,11 +17,14 @@ public class UFramework_Network_SocketPackWrap
 		L.RegFunction("New", new LuaCSFunction(_CreateUFramework_Network_SocketPack));
 		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
 		L.RegVar("HEADER_SIZE", new LuaCSFunction(get_HEADER_SIZE), null);
+		L.RegVar("LITTLE_ENDIAN", new LuaCSFunction(get_LITTLE_ENDIAN), null);
 		L.RegVar("cmd", new LuaCSFunction(get_cmd), null);
 		L.RegVar("session", new LuaCSFunction(get_session), null);
+		L.RegVar("layer", new LuaCSFunction(get_layer), null);
 		L.RegVar("packType", new LuaCSFunction(get_packType), null);
 		L.RegVar("luaRawData", new LuaCSFunction(get_luaRawData), null);
 		L.RegVar("rawDataSize", new LuaCSFunction(get_rawDataSize), null);
+		L.RegVar("sizer", new LuaCSFunction(get_sizer), null);
 		L.RegVar("header", new LuaCSFunction(get_header), null);
 		L.RegVar("isRecycled", new LuaCSFunction(get_isRecycled), new LuaCSFunction(set_isRecycled));
 		L.EndClass();
@@ -91,10 +94,11 @@ public class UFramework_Network_SocketPackWrap
 	{
 		try
 		{
-			ToLua.CheckArgsCount(L, 2);
+			ToLua.CheckArgsCount(L, 3);
 			UFramework.Network.PackType arg0 = (UFramework.Network.PackType)ToLua.CheckObject(L, 1, TypeTraits<UFramework.Network.PackType>.type);
 			int arg1 = (int)LuaDLL.luaL_checkinteger(L, 2);
-			UFramework.Network.SocketPack o = UFramework.Network.SocketPack.AllocateWriter(arg0, arg1);
+			UFramework.Network.ProcessLayer arg2 = (UFramework.Network.ProcessLayer)ToLua.CheckObject(L, 3, TypeTraits<UFramework.Network.ProcessLayer>.type);
+			UFramework.Network.SocketPack o = UFramework.Network.SocketPack.AllocateWriter(arg0, arg1, arg2);
 			ToLua.PushObject(L, o);
 			return 1;
 		}
@@ -200,6 +204,20 @@ public class UFramework_Network_SocketPackWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_LITTLE_ENDIAN(IntPtr L)
+	{
+		try
+		{
+			LuaDLL.lua_pushboolean(L, UFramework.Network.SocketPack.LITTLE_ENDIAN);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_cmd(IntPtr L)
 	{
 		object o = null;
@@ -234,6 +252,25 @@ public class UFramework_Network_SocketPackWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o, "attempt to index session on a nil value");
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_layer(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			UFramework.Network.SocketPack obj = (UFramework.Network.SocketPack)o;
+			UFramework.Network.ProcessLayer ret = obj.layer;
+			ToLua.Push(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o, "attempt to index layer on a nil value");
 		}
 	}
 
@@ -291,6 +328,25 @@ public class UFramework_Network_SocketPackWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o, "attempt to index rawDataSize on a nil value");
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_sizer(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			UFramework.Network.SocketPack obj = (UFramework.Network.SocketPack)o;
+			UFramework.Network.FixedByteArray ret = obj.sizer;
+			ToLua.PushObject(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o, "attempt to index sizer on a nil value");
 		}
 	}
 

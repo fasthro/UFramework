@@ -23,6 +23,13 @@ _G.NETWORK_CHANNEL_TYPE = {
     BATTLE = 2 -- 战斗服务器
 }
 
+-- 网络处理层
+_G.NETWORK_PROCESS_LAYER = {
+    ALL = UFramework.Network.ProcessLayer.All,
+    LUA = UFramework.Network.ProcessLayer.Lua,
+    CSharp = UFramework.Network.ProcessLayer.CSharp,
+}
+
 -- UI面板层
 _G.PANEL_LAYER = {
     SCNEN = UFramework.UI.Layer.SCNEN,

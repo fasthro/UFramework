@@ -4,43 +4,41 @@
  * @Description: 进入房间
  */
 
-using LiteNetLib;
 using PBBattleServer;
 
 namespace LockstepServer.Src
 {
-    public class EnterRoomHandler : IHandler
+    public class EnterRoomHandler : BaseHandler
     {
-        public int cmd => 902;
+        private bool _enterSucceed;
 
-        public void OnMessage(NetPeer peer, int session, byte[] bytes)
+        public override int cmd => 902;
+        public PlayerManager playerManager => Service.Instance.GetManager<PlayerManager>();
+        public RoomManager roomManager => Service.Instance.GetManager<RoomManager>();
+
+        protected override void OnMessage(byte[] bytes)
         {
-            var playerManager = Service.Instance.GetManager<PlayerManager>();
-            var roomManager = Service.Instance.GetManager<RoomManager>();
-
-            #region rec
-
             EnterRoom_C2S c2s = EnterRoom_C2S.Parser.ParseFrom(bytes);
             LogHelper.Info($"客户端进入房间请求[{c2s.RoomSecretKey}]");
 
-            bool result = false;
+            _enterSucceed = false;
             var player = playerManager.GetPlayer(peer.Id);
             if (player != null)
             {
-                result = roomManager.EnterRoom(player, c2s.RoomSecretKey);
+                _enterSucceed = roomManager.EnterRoom(player, c2s.RoomSecretKey);
             }
+        }
 
-            #endregion rec
+        protected override bool OnResponse()
+        {
+            EnterRoom_S2C s2c = CreateResponseMessage<EnterRoom_S2C>();
+            s2c.ResultCode = _enterSucceed ? ResultCode.SUCCEED : ResultCode.FAILED;
+            return true;
+        }
 
-            #region send
-
-            var s2c = new EnterRoom_S2C();
-            s2c.ResultCode = result ? ResultCode.SUCCEED : ResultCode.FAILED;
-            Service.Instance.GetManager<NetManager>().Send(peer, cmd, session, s2c);
-
-            #endregion send
-
-            if (result)
+        protected override void OnAction()
+        {
+            if (_enterSucceed)
             {
                 if (roomManager.room.status == RoomStatus.Ready)
                 {

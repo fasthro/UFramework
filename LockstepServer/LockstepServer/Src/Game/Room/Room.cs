@@ -67,7 +67,7 @@ namespace LockstepServer.Src
             BattleStart_S2C s2c = new BattleStart_S2C();
             for (int i = 0; i < _players.Length; i++)
             {
-                _players[i].session.Send(950, -1, s2c);
+                _players[i].session.PushCSharp(950, s2c);
             }
             LogHelper.Info($"房间[{roomId}]玩家已满，开始战斗");
         }
@@ -79,7 +79,7 @@ namespace LockstepServer.Src
             var s2c = new Frame_S2C();
             for (int i = 0; i < _players.Length; i++)
             {
-                _players[i].session.Send(951, -1, s2c);
+                _players[i].session.PushCSharp(951, s2c);
             }
         }
     }

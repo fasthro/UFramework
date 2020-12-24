@@ -10,13 +10,13 @@ using LiteNetLib.Utils;
 
 namespace LockstepServer
 {
-    internal class NetManager : BaseManager, IServerListener
+    public class NetManager : BaseManager, IServerListener
     {
         /// <summary>
         /// 头长度
-        /// byte[] [0-3]:cmd [4-7]:session
+        /// byte[] [1-4]:cmd [5-8]:session [9-10]:layer
         /// </summary>
-        private const int PACK_HEADER_SIZE = 8;
+        private const int PACK_HEADER_SIZE = 10;
 
         private FixedByteArray _fixedReader;
         private FixedByteArray _fixedWriter;
@@ -49,14 +49,15 @@ namespace LockstepServer
 
             var cmd = _fixedReader.ReadInt32();
             var session = _fixedReader.ReadInt32();
+            var layer = (NetworkProcessLayer)_fixedReader.ReadInt16();
 
-            LogHelper.Debug($"收到客户端协议[{peer.EndPoint}] cmd:{cmd} session:{session}");
+            LogHelper.Debug($"收到客户端协议[{peer.EndPoint}] cmd:{cmd} session:{session} layer:{layer}");
 
             var count = reader.AvailableBytes;
             byte[] bytes = new byte[count];
             reader.GetBytes(bytes, count);
 
-            _handlerManager.OnReceive(peer, cmd, session, bytes);
+            _handlerManager.OnReceive(peer, cmd, session, layer, bytes);
         }
 
         public void OnPeerConnected(NetPeer peer)
@@ -73,11 +74,12 @@ namespace LockstepServer
 
         #region send
 
-        public void Send(NetPeer peer, int cmd, int session, IMessage message)
+        public void Send(NetPeer peer, int cmd, int session, NetworkProcessLayer layer, IMessage message)
         {
             _fixedWriter.Clear();
             _fixedWriter.Write(cmd);
             _fixedWriter.Write(session);
+            _fixedWriter.Write((short)layer);
 
             var data = message.ToByteArray();
 

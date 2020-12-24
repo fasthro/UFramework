@@ -16,10 +16,10 @@ public class UFramework_NetManagerWrap
 		L.RegFunction("Redirect", new LuaCSFunction(Redirect));
 		L.RegFunction("OnUpdate", new LuaCSFunction(OnUpdate));
 		L.RegFunction("OnDestroy", new LuaCSFunction(OnDestroy));
-		L.RegFunction("OnSocketConnected", new LuaCSFunction(OnSocketConnected));
-		L.RegFunction("OnSocketDisconnected", new LuaCSFunction(OnSocketDisconnected));
-		L.RegFunction("OnSocketReceive", new LuaCSFunction(OnSocketReceive));
-		L.RegFunction("OnSocketException", new LuaCSFunction(OnSocketException));
+		L.RegFunction("OnSocketChannelConnected", new LuaCSFunction(OnSocketChannelConnected));
+		L.RegFunction("OnSocketChannelDisconnected", new LuaCSFunction(OnSocketChannelDisconnected));
+		L.RegFunction("OnSocketChannelReceive", new LuaCSFunction(OnSocketChannelReceive));
+		L.RegFunction("OnSocketChannelException", new LuaCSFunction(OnSocketChannelException));
 		L.RegFunction("New", new LuaCSFunction(_CreateUFramework_NetManager));
 		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
 		L.EndClass();
@@ -209,7 +209,7 @@ public class UFramework_NetManagerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int OnSocketConnected(IntPtr L)
+	static int OnSocketChannelConnected(IntPtr L)
 	{
 		try
 		{
@@ -226,7 +226,7 @@ public class UFramework_NetManagerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int OnSocketDisconnected(IntPtr L)
+	static int OnSocketChannelDisconnected(IntPtr L)
 	{
 		try
 		{
@@ -243,7 +243,7 @@ public class UFramework_NetManagerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int OnSocketReceive(IntPtr L)
+	static int OnSocketChannelReceive(IntPtr L)
 	{
 		try
 		{
@@ -260,7 +260,7 @@ public class UFramework_NetManagerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int OnSocketException(IntPtr L)
+	static int OnSocketChannelException(IntPtr L)
 	{
 		try
 		{

@@ -175,14 +175,14 @@ public static class LuaBinder
 		UFramework_UApplicationWrap.Register(L);
 		UFramework_IOPathWrap.Register(L);
 		UFramework_CryptWrap.Register(L);
+		UFramework_BaseManagerWrap.Register(L);
 		UFramework_NetManagerWrap.Register(L);
 		UFramework_ResManagerWrap.Register(L);
 		UFramework_ManagerContainerWrap.Register(L);
 		UFramework_ManagerServiceWrap.Register(L);
+		UFramework_BaseServiceWrap.Register(L);
 		UFramework_ServiceContainerWrap.Register(L);
 		UFramework_ServiceWrap.Register(L);
-		UFramework_BaseManagerWrap.Register(L);
-		UFramework_BaseServiceWrap.Register(L);
 		UFramework_MonoSingleton_UFramework_ServiceWrap.Register(L);
 		L.BeginModule("UI");
 		UFramework_UI_UIPanelWrap.Register(L);
@@ -192,6 +192,7 @@ public static class LuaBinder
 		L.BeginModule("Network");
 		UFramework_Network_PackTypeWrap.Register(L);
 		UFramework_Network_ProtocalTypeWrap.Register(L);
+		UFramework_Network_ProcessLayerWrap.Register(L);
 		UFramework_Network_SocketChannelWrap.Register(L);
 		UFramework_Network_SocketPackWrap.Register(L);
 		L.EndModule();

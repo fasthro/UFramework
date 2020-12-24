@@ -13,6 +13,7 @@ namespace LockstepServer
     public class HandlerManager : BaseManager
     {
         private static Dictionary<int, IHandler> handlerDict = new Dictionary<int, IHandler>();
+        public NetManager netManager => Service.Instance.GetManager<NetManager>();
 
         public void RegisterHandler(int protocal, IHandler handler)
         {
@@ -43,14 +44,19 @@ namespace LockstepServer
             }
         }
 
-        public void OnReceive(NetPeer peer, int cmd, int session, byte[] data)
+        public void OnReceive(NetPeer peer, int cmd, int session, NetworkProcessLayer layer, byte[] data)
         {
             IHandler handler = null;
             if (handlerDict.TryGetValue(cmd, out handler))
             {
                 try
                 {
-                    handler?.OnMessage(peer, session, data);
+                    handler.DoMessage(peer, session, layer, data);
+                    if (handler.DoResponse())
+                    {
+                        netManager.Send(peer, handler.cmd, handler.session, handler.layer, handler.responseMessage);
+                    }
+                    handler.DoAction();
                 }
                 catch (Exception ex)
                 {

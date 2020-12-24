@@ -67,9 +67,10 @@ function NetManager:disconnect(channeld)
     self._ext:Disconnect(channeld)
 end
 
-function NetManager:createPack(protocal, cmd)
+function NetManager:createPack(protocal, cmd, layer)
     cmd = cmd or -1
-    return UFramework.Network.SocketPack.AllocateWriter(protocal, cmd)
+    layer = layer or NETWORK_PROCESS_LAYER.LUA
+    return UFramework.Network.SocketPack.AllocateWriter(protocal, cmd, layer)
 end
 
 function NetManager:_sendPack(channelId, pack)
@@ -88,8 +89,8 @@ function NetManager:sendBattlePack(pack)
     self._ext:Send(NETWORK_CHANNEL_TYPE.BATTLE, pack)
 end
 
-function NetManager:_sendPBC(channeld, cmd, message)
-    local pack = self:createPack(NETWORK_PACK_TYPE.SIZE_HEADER_BINARY, cmd)
+function NetManager:_sendPBC(channeld, cmd, layer, message)
+    local pack = self:createPack(NETWORK_PACK_TYPE.SIZE_HEADER_BINARY, cmd, layer)
     message = self:pbcEncode(cmd, pack.session, message)
     if message ~= nil then
         pack:WriteBuffer(message)
@@ -100,12 +101,12 @@ function NetManager:_sendPBC(channeld, cmd, message)
     end
 end
 
-function NetManager:sendGamePBC(cmd, message)
-    self:_sendPBC(NETWORK_CHANNEL_TYPE.GAME, cmd, message)
+function NetManager:sendGamePBC(cmd, message, layer)
+    self:_sendPBC(NETWORK_CHANNEL_TYPE.GAME, cmd, layer, message)
 end
 
-function NetManager:sendBattlePBC(cmd, message)
-    self:_sendPBC(NETWORK_CHANNEL_TYPE.BATTLE, cmd, message)
+function NetManager:sendBattlePBC(cmd, message, layer)
+    self:_sendPBC(NETWORK_CHANNEL_TYPE.BATTLE, cmd, layer, message)
 end
 
 function NetManager:onSocketConnected(channelId)
@@ -132,7 +133,6 @@ function NetManager:onSocketReceive(channelId, pack)
         else
             logger.error("netmanager receive pack error. cmd: " .. pack.cmd)
         end
-        pack:Recycle()
     else
         EventManager:broadcast(EVENT_NAMES.NET_RECEIVED, -1, pack)
     end
