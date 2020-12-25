@@ -8,7 +8,7 @@ PID_FILE=$CUR_DIR/game.pid
 function start(){
 	rm -rf $CUR_DIR/log/game.log
 	echo "start game service"
-	$CUR_DIR/skynet/skynet $CUR_DIR/config/config.game
+	$CUR_DIR/3rd/skynet/skynet $CUR_DIR/config/config.game
 }
 
 function stop(){
