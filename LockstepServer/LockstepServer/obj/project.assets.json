@@ -1437,6 +1437,16 @@
           "bin/placeholder/LiteNetLib.dll": {}
         }
       },
+      "Lockstep/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.1",
+        "compile": {
+          "bin/placeholder/Lockstep.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Lockstep.dll": {}
+        }
+      },
       "Proto/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v3.1",
@@ -5135,6 +5145,11 @@
       "path": "../3rd/LiteNetLib/LiteNetLib.csproj",
       "msbuildProject": "../3rd/LiteNetLib/LiteNetLib.csproj"
     },
+    "Lockstep/1.0.0": {
+      "type": "project",
+      "path": "../Lockstep/Lockstep.csproj",
+      "msbuildProject": "../Lockstep/Lockstep.csproj"
+    },
     "Proto/1.0.0": {
       "type": "project",
       "path": "../Proto/Proto.csproj",
@@ -5144,6 +5159,7 @@
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
       "LiteNetLib >= 1.0.0",
+      "Lockstep >= 1.0.0",
       "MongoDB.Bson >= 2.11.5",
       "MongoDB.Driver >= 2.11.5",
       "MongoDB.Driver.Core >= 2.11.5",
@@ -5184,6 +5200,9 @@
           "projectReferences": {
             "C:\\Users\\cc\\Desktop\\UFramework\\LockstepServer\\3rd\\LiteNetLib\\LiteNetLib.csproj": {
               "projectPath": "C:\\Users\\cc\\Desktop\\UFramework\\LockstepServer\\3rd\\LiteNetLib\\LiteNetLib.csproj"
+            },
+            "C:\\Users\\cc\\Desktop\\UFramework\\LockstepServer\\Lockstep\\Lockstep.csproj": {
+              "projectPath": "C:\\Users\\cc\\Desktop\\UFramework\\LockstepServer\\Lockstep\\Lockstep.csproj"
             },
             "C:\\Users\\cc\\Desktop\\UFramework\\LockstepServer\\Proto\\Proto.csproj": {
               "projectPath": "C:\\Users\\cc\\Desktop\\UFramework\\LockstepServer\\Proto\\Proto.csproj"

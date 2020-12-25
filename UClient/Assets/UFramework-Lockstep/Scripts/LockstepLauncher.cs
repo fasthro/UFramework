@@ -4,6 +4,8 @@
  * @Description: Lockstep Launcher
  */
 
+using LSC;
+
 namespace UFramework.Lockstep
 {
     [MonoSingletonPath("UFramework-Lockstep")]
@@ -13,8 +15,8 @@ namespace UFramework.Lockstep
         {
             #region LSTime
 
-            LSTime.Instance.Default();
-            Service.Instance.AddUpdateListener(LSTime.OnUpdate, ServiceUpdateOrder.Before);
+            LSTime.Initialize();
+            Service.Instance.AddUpdateListener(LSTime.Update, ServiceUpdateOrder.Before);
 
             #endregion
 

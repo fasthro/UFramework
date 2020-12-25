@@ -6,12 +6,15 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LockstepServer", "LockstepServer\LockstepServer.csproj", "{DB36B814-C40E-4703-A1FF-AF196B7E854B}"
 	ProjectSection(ProjectDependencies) = postProject
 		{1857364B-9131-4732-80E3-F83CAC8CCDFD} = {1857364B-9131-4732-80E3-F83CAC8CCDFD}
+		{10B56DC6-A143-4423-85DD-20755E77A840} = {10B56DC6-A143-4423-85DD-20755E77A840}
 		{1A912ED5-354D-4110-99E6-31688B3E2786} = {1A912ED5-354D-4110-99E6-31688B3E2786}
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiteNetLib", "3rd\LiteNetLib\LiteNetLib.csproj", "{1857364B-9131-4732-80E3-F83CAC8CCDFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Proto", "Proto\Proto.csproj", "{1A912ED5-354D-4110-99E6-31688B3E2786}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Proto", "Proto\Proto.csproj", "{1A912ED5-354D-4110-99E6-31688B3E2786}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lockstep", "Lockstep\Lockstep.csproj", "{10B56DC6-A143-4423-85DD-20755E77A840}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +34,10 @@ Global
 		{1A912ED5-354D-4110-99E6-31688B3E2786}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A912ED5-354D-4110-99E6-31688B3E2786}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A912ED5-354D-4110-99E6-31688B3E2786}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10B56DC6-A143-4423-85DD-20755E77A840}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10B56DC6-A143-4423-85DD-20755E77A840}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10B56DC6-A143-4423-85DD-20755E77A840}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10B56DC6-A143-4423-85DD-20755E77A840}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

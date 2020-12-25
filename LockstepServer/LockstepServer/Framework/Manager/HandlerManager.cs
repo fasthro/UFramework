@@ -60,7 +60,12 @@ namespace LockstepServer
                 }
                 catch (Exception ex)
                 {
-                    LogHelper.Error(ex.Message);
+                    var s2c = new PB.ServerException();
+                    s2c.Cmd = cmd;
+                    s2c.Session = session;
+
+                    netManager.Send(peer, NetwokCmd.SERVER_EXCEPTION, 0, NetworkProcessLayer.All, s2c);
+                    LogHelper.Error(ex.Message + "\n" + ex.StackTrace);
                 }
             }
         }

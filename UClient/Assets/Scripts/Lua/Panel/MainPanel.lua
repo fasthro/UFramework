@@ -1,3 +1,9 @@
+local CMD = {
+    [901] = true,
+    [902] = true,
+    [903] = true
+}
+
 local panel =
     typesys.def.MainPanel {
     __super = typesys.BasePanel
@@ -35,7 +41,7 @@ function panel:onConnected()
 end
 
 function panel:onNetReceived(cmd, pack)
-    if cmd <= 0 then
+    if cmd <= 0 or not CMD[cmd] then
         return
     end
 
@@ -54,9 +60,14 @@ end
 function panel:NetCmd_902(msg)
     if msg.resultCode == 200 then
         logger.debug("进入房间成功，等待其他玩家加入")
+        NetManager:sendBattlePBC(903, {uid = 1})
     else
         logger.debug("进入房间失败 code: " .. tostring(msg.resultCode))
     end
+end
+
+function panel:NetCmd_903(msg)
+    logger.debug("已经准备完成")
 end
 
 return panel

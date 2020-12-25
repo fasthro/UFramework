@@ -3,7 +3,11 @@
  * @Date: 2020-12-15 14:32:45
  * @Description: 帧同步模拟器服务
  */
+using UFramework.Core;
+using LSC;
 using UnityEngine;
+using UFramework.Network;
+using PBBS;
 
 namespace UFramework.Lockstep
 {
@@ -57,6 +61,8 @@ namespace UFramework.Lockstep
 
         public override void OnAwake()
         {
+            Messenger.AddListener<int, SocketPack>(GlobalEvent.NET_RECEIVED, OnNetReceived);
+
             tickDeltaTime = 1000 / LSDefine.FRAME_RATE;
         }
 
@@ -73,9 +79,6 @@ namespace UFramework.Lockstep
             if (!isRunning) return;
 
             tickSinceStart = (int)((LSTime.realtimeSinceStartupMS - startTime) / tickDeltaTime);
-
-            if (isClientMode) UpdateClient();
-            else UpdateServer();
         }
 
         /// <summary>
@@ -86,37 +89,15 @@ namespace UFramework.Lockstep
             while (tick < tickSinceStart)
             {
                 tick++;
-                Simulate();
             }
         }
 
-        /// <summary>
-        /// 服务器模式更新
-        /// </summary>
-        private void UpdateServer()
+        private void OnNetReceived(int channelId, SocketPack pack)
         {
-
-        }
-
-        /// <summary>
-        /// 模拟
-        /// </summary>
-        private void Simulate()
-        {
-
-        }
-
-        /// <summary>
-        /// 预测
-        /// </summary>
-        private void Predict()
-        {
-
-        }
-
-        private void Step()
-        {
-
+            if (pack.cmd == 950)
+            {
+                var s2c = StartSimulate_S2C.Parser.ParseFrom(pack.rawData);
+            }
         }
     }
 }

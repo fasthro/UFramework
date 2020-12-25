@@ -6,7 +6,7 @@
 
 using Google.Protobuf;
 using LiteNetLib;
-using PBBattleServer;
+using PBBS;
 
 namespace LockstepServer.Src
 {

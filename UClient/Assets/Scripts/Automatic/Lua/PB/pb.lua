@@ -1,6 +1,8 @@
 -- uframework automatically generated
 local pb = {
 	"addressbook.pb",
-	"gs.pb",
+	"sys.pb",
+	"bscommon.pb",
+	"bs.pb",
 }
 return pb

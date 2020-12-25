@@ -72,7 +72,7 @@ namespace LockstepServer.Src
                 Console.WriteLine(string.Format("Hosting ip [{0}] on port [{1}]", host, port));
                 Console.WriteLine("Commands Available\n(s)top - Stops hosting\n(r)estart - Restarts the hosting service even when stopped\n(q)uit - Quits the application\n(h)elp - Get a full list of comands");
                 server = new Launcher(port);
-                var frameTime = (int)(1000 / (float)20);
+                var frameTime = (int)(1000 / (float)30);
                 while (server.IsRunning)
                 {
                     server.DoUpdate(frameTime);

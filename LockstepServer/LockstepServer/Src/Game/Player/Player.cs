@@ -22,6 +22,12 @@ namespace LockstepServer.Src
 
         #endregion interface
 
+        #region data
+
+        public bool isReady { get; set; }
+
+        #endregion data
+
         public Player(long uid, ISession session)
         {
             _uid = uid;

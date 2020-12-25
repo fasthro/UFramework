@@ -9,6 +9,7 @@
       "LockstepServer/1.0.0": {
         "dependencies": {
           "LiteNetLib": "1.0.0",
+          "Lockstep": "1.0.0",
           "MongoDB.Bson": "2.11.5",
           "MongoDB.Driver": "2.11.5",
           "MongoDB.Driver.Core": "2.11.5",
@@ -848,6 +849,11 @@
           "LiteNetLib.dll": {}
         }
       },
+      "Lockstep/1.0.0": {
+        "runtime": {
+          "Lockstep.dll": {}
+        }
+      },
       "Proto/1.0.0": {
         "runtime": {
           "Proto.dll": {}
@@ -1486,6 +1492,11 @@
       "hashPath": "system.xml.xdocument.4.3.0.nupkg.sha512"
     },
     "LiteNetLib/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Lockstep/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

@@ -41,6 +41,7 @@ namespace LockstepServer.Src
         {
             RegisterHandler<HandshakeHandler>();
             RegisterHandler<EnterRoomHandler>();
+            RegisterHandler<ReadyHandler>();
         }
 
         private void RegisterHandler<T>() where T : IHandler, new()

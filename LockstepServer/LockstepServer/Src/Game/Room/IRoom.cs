@@ -4,23 +4,19 @@
  * @Description:
  */
 
+using Google.Protobuf;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace LockstepServer.Src
 {
-    public enum RoomStatus
-    {
-        Underfill,
-        Ready,
-    }
-
     internal interface IRoom
     {
         int roomId { get; }
         string secretKey { get; }
-        RoomStatus status { get; }
-        int count { get; }
+        int playerCount { get; }
+
+        void PushMessage(int cmd, IMessage message);
     }
 }

@@ -1,0 +1,9 @@
+C:\Users\cc\Desktop\UFramework\LockstepServer\Lockstep\bin\Debug\netcoreapp3.1\Lockstep.deps.json
+C:\Users\cc\Desktop\UFramework\LockstepServer\Lockstep\bin\Debug\netcoreapp3.1\Lockstep.dll
+C:\Users\cc\Desktop\UFramework\LockstepServer\Lockstep\bin\Debug\netcoreapp3.1\Lockstep.pdb
+C:\Users\cc\Desktop\UFramework\LockstepServer\Lockstep\obj\Debug\netcoreapp3.1\Lockstep.csprojAssemblyReference.cache
+C:\Users\cc\Desktop\UFramework\LockstepServer\Lockstep\obj\Debug\netcoreapp3.1\Lockstep.AssemblyInfoInputs.cache
+C:\Users\cc\Desktop\UFramework\LockstepServer\Lockstep\obj\Debug\netcoreapp3.1\Lockstep.AssemblyInfo.cs
+C:\Users\cc\Desktop\UFramework\LockstepServer\Lockstep\obj\Debug\netcoreapp3.1\Lockstep.csproj.CoreCompileInputs.cache
+C:\Users\cc\Desktop\UFramework\LockstepServer\Lockstep\obj\Debug\netcoreapp3.1\Lockstep.dll
+C:\Users\cc\Desktop\UFramework\LockstepServer\Lockstep\obj\Debug\netcoreapp3.1\Lockstep.pdb

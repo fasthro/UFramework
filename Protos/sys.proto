@@ -1,0 +1,10 @@
+syntax = "proto3";
+package PB;
+
+//--------------------------------- 101 ---------------------------------
+//> 服务器异常
+//#[S2C][101]#
+message ServerException {
+  int32 cmd = 1;
+  int32 session = 2;
+}

@@ -11,11 +11,6 @@ namespace LockstepServer.Src
         private static int ROOMID = 1;
         public Room room { get; private set; }
 
-        public bool EnterRoom(Player player, string secretKey)
-        {
-            return room.Enter(player, secretKey); ;
-        }
-
         protected override void OnInitialize()
         {
             room = new Room(1);
