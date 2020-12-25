@@ -1,7 +1,7 @@
 -- @Author: fasthro
 -- @Date:   2020-11-24 16:55:49
 -- @Last Modified by:   fasthro
--- @Last Modified time: 2020-12-08 16:15:29
+-- @Last Modified time: 2020-12-25 15:57:54
 -- 日志系统
 local skynet = require "skynet"
 local logging = require "logger.logging"
@@ -9,7 +9,7 @@ local logging = require "logger.logging"
 local prepare = function(level, message)
     local pattern = "[%level] %message"
     message = string.gsub(message, "%%", "%%%%")
-    pattern = string.gsub(pattern, "%%level", "[" .. level .. "]")
+    pattern = string.gsub(pattern, "%%level", "" .. level .. "")
     pattern = string.gsub(pattern, "%%message", message)
     return pattern
 end
