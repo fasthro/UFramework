@@ -31,13 +31,15 @@ function panel:onShow()
         local username = self.view._username._input.text
         local password = self.view._password._input.text
         local serverid = "gate_name1"
-        LoginCtrl:connectLoginServer("192.168.1.171", 8001, username, password, serverid)
+        -- LoginCtrl:connectLoginServer("192.168.1.171", 8001, username, password, serverid) -- 本机
+        LoginCtrl:connectLoginServer("39.97.236.132", 8001, username, password, serverid) -- 阿里云
     end
     self:_bindClick(self.view._login, on_click_login)
 
     -- touch start game
     local on_click_touch = function()
-        LoginCtrl:connectGameServer("192.168.1.171", 9001)
+        -- LoginCtrl:connectGameServer("192.168.1.171", 9001)
+        LoginCtrl:connectGameServer("39.97.236.132", 9001)  -- 阿里云
     end
     self:_bindClick(self.view._touch, on_click_touch)
 
