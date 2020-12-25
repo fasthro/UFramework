@@ -14,6 +14,7 @@
     <component id="nmjqj" name="Cancel.xml" path="/Components/"/>
     <component id="kivak" name="Center.xml" path="/Components/"/>
     <image id="o7b2l" name="Dark-Popup-Top.png" path="/Images/" scale="9grid" scale9grid="39,26,78,52"/>
+    <image id="hu34m" name="Black.png" path="/Images/" scale="9grid" scale9grid="20,20,24,24"/>
   </resources>
   <publish name=""/>
 </packageDescription>

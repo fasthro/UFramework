@@ -4,9 +4,8 @@
  * @Description: aotu capacity
  */
 using System;
-using UnityEngine;
 
-namespace UFramework.Core
+namespace UFramework.Network
 {
     public class AutoByteArray
     {

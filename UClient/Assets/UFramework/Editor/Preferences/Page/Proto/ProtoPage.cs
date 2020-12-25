@@ -25,6 +25,7 @@ namespace UFramework.Editor.Preferences.Proto
         static string ProtoDir;
         static string Protogen;
         static string PBServerOutpath;
+        static string CSServerOutpath;
 
         static Preferences_Proto_Config Config { get { return Serializer<Preferences_Proto_Config>.Instance; } }
 
@@ -46,6 +47,7 @@ namespace UFramework.Editor.Preferences.Proto
             ProtoDir = IOPath.PathCombine(rootDir, "Protos");
             Protogen = IOPath.PathCombine(rootDir, "Tools", "protoc.exe");
             PBServerOutpath = IOPath.PathCombine(rootDir, "UServer/src/proto/pbc");
+            CSServerOutpath = IOPath.PathCombine(rootDir, "LockstepServer/Proto/Src");
 
             protos.Clear();
             var files = IOPath.DirectoryGetFiles(ProtoDir, "*.proto", SearchOption.AllDirectories);
@@ -77,6 +79,7 @@ namespace UFramework.Editor.Preferences.Proto
                 {
                     protos[i].name = op.name;
                     protos[i].path = op.path;
+                    protos[i].genType = op.genType;
                     protos[i].orderIndex = op.orderIndex;
                 }
 
@@ -326,6 +329,8 @@ namespace UFramework.Editor.Preferences.Proto
 
             var incDir = Path.GetDirectoryName(proto.path);
             Utils.ExecuteProcess(Protogen, "--proto_path=" + incDir + " --csharp_out=" + CSOutpath + " " + proto.path, ProtoDir);
+            // to server
+            IOPath.FileCopy(outpath, IOPath.PathCombine(CSServerOutpath, proto.name + ".cs"));
         }
 
 
@@ -337,7 +342,7 @@ namespace UFramework.Editor.Preferences.Proto
 
             IOPath.FileDelete(outpath);
             Utils.ExecuteProcess(Protogen, " -o " + outpath + " " + proto.path + " -I=" + ProtoDir, ProtoDir);
-            // to server
+            // to skynet server
             IOPath.FileCopy(outpath, IOPath.PathCombine(PBServerOutpath, proto.name + ".pb"));
         }
     }

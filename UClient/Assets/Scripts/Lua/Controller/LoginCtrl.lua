@@ -82,7 +82,7 @@ function LoginCtrl:connectLoginServer(ip, port, username, password, serverid)
     self._serverid = serverid
     self._authStatus = LOGIN_AUTHOR_STATUS.LOGIN_SERVER_CHALLENGE
 
-    NetManager:connect(ip, port)
+    NetManager:connect(NETWORK_CHANNEL_TYPE.LOGIN, ip, port)
 end
 
 -- 连接游戏服务器
@@ -91,7 +91,7 @@ end
 function LoginCtrl:connectGameServer(ip, port)
     if self._status == LOGIN_STATUS.LOGINED then
         self._authStatus = LOGIN_AUTHOR_STATUS.GAME_SERVER_CONNECT
-        NetManager:redirect(ip, port)
+        NetManager:connect(NETWORK_CHANNEL_TYPE.GAME, ip, port)
     end
 end
 
@@ -104,9 +104,9 @@ function LoginCtrl:onConnected()
         local hmac = crypt.HMAC64(crypt.HashKey(handshake), self._secret)
 
         -- 游戏服务器验证方式与登陆服务器消息结构不同，前两个字节为消息长度
-        local pack = NetManager:createPack(PROTOCAL_TYPE.SIZE_BINARY)
+        local pack = NetManager:createPack(NETWORK_PACK_TYPE.SIZE_BINARY)
         pack:WriteBuffer(string.format("%s:%s", handshake, crypt.Base64Encode(hmac)))
-        NetManager:sendPack(pack)
+        NetManager:sendGamePack(pack)
     end
 end
 
@@ -169,9 +169,9 @@ end
 
 -- 发送授权码
 function LoginCtrl:sendAuthCode(data)
-    local pack = NetManager:createPack(PROTOCAL_TYPE.BINARY)
+    local pack = NetManager:createPack(NETWORK_PACK_TYPE.BINARY)
     pack:WriteBuffer(data .. "\n")
-    NetManager:sendPack(pack)
+    NetManager:sendLoginPack(pack)
 end
 
 -- 移除事件监听

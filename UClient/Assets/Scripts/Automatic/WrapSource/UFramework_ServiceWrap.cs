@@ -7,10 +7,177 @@ public class UFramework_ServiceWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(UFramework.Service), typeof(UFramework.MonoSingleton<UFramework.Service>));
+		L.RegFunction("RegisterService", new LuaCSFunction(RegisterService));
+		L.RegFunction("GetService", new LuaCSFunction(GetService));
+		L.RegFunction("AddUpdateListener", new LuaCSFunction(AddUpdateListener));
+		L.RegFunction("RemoveUpdateListener", new LuaCSFunction(RemoveUpdateListener));
+		L.RegFunction("AddLateUpdateListener", new LuaCSFunction(AddLateUpdateListener));
+		L.RegFunction("RemoveLateUpdateListener", new LuaCSFunction(RemoveLateUpdateListener));
+		L.RegFunction("AddFixedUpdateListener", new LuaCSFunction(AddFixedUpdateListener));
+		L.RegFunction("RemoveFixedUpdateListener", new LuaCSFunction(RemoveFixedUpdateListener));
 		L.RegFunction("__eq", new LuaCSFunction(op_Equality));
 		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
 		L.RegVar("container", new LuaCSFunction(get_container), new LuaCSFunction(set_container));
 		L.EndClass();
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int RegisterService(IntPtr L)
+	{
+		try
+		{
+			int count = LuaDLL.lua_gettop(L);
+
+			if (count == 2)
+			{
+				UFramework.Service obj = (UFramework.Service)ToLua.CheckObject<UFramework.Service>(L, 1);
+				UFramework.BaseService arg0 = (UFramework.BaseService)ToLua.CheckObject<UFramework.BaseService>(L, 2);
+				obj.RegisterService(arg0);
+				return 0;
+			}
+			else if (count == 3)
+			{
+				UFramework.Service obj = (UFramework.Service)ToLua.CheckObject<UFramework.Service>(L, 1);
+				UFramework.BaseService arg0 = (UFramework.BaseService)ToLua.CheckObject<UFramework.BaseService>(L, 2);
+				bool arg1 = LuaDLL.luaL_checkboolean(L, 3);
+				obj.RegisterService(arg0, arg1);
+				return 0;
+			}
+			else
+			{
+				return LuaDLL.luaL_throw(L, "invalid arguments to method: UFramework.Service.RegisterService");
+			}
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int GetService(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			UFramework.Service obj = (UFramework.Service)ToLua.CheckObject<UFramework.Service>(L, 1);
+			string arg0 = ToLua.CheckString(L, 2);
+			UFramework.BaseService o = obj.GetService(arg0);
+			ToLua.PushObject(L, o);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int AddUpdateListener(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 3);
+			UFramework.Service obj = (UFramework.Service)ToLua.CheckObject<UFramework.Service>(L, 1);
+			UFramework.Core.UCallback<float> arg0 = (UFramework.Core.UCallback<float>)ToLua.CheckDelegate<UFramework.Core.UCallback<float>>(L, 2);
+			UFramework.ServiceUpdateOrder arg1 = (UFramework.ServiceUpdateOrder)ToLua.CheckObject(L, 3, TypeTraits<UFramework.ServiceUpdateOrder>.type);
+			obj.AddUpdateListener(arg0, arg1);
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int RemoveUpdateListener(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 3);
+			UFramework.Service obj = (UFramework.Service)ToLua.CheckObject<UFramework.Service>(L, 1);
+			UFramework.Core.UCallback<float> arg0 = (UFramework.Core.UCallback<float>)ToLua.CheckDelegate<UFramework.Core.UCallback<float>>(L, 2);
+			UFramework.ServiceUpdateOrder arg1 = (UFramework.ServiceUpdateOrder)ToLua.CheckObject(L, 3, TypeTraits<UFramework.ServiceUpdateOrder>.type);
+			obj.RemoveUpdateListener(arg0, arg1);
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int AddLateUpdateListener(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 3);
+			UFramework.Service obj = (UFramework.Service)ToLua.CheckObject<UFramework.Service>(L, 1);
+			UFramework.Core.UCallback arg0 = (UFramework.Core.UCallback)ToLua.CheckDelegate<UFramework.Core.UCallback>(L, 2);
+			UFramework.ServiceUpdateOrder arg1 = (UFramework.ServiceUpdateOrder)ToLua.CheckObject(L, 3, TypeTraits<UFramework.ServiceUpdateOrder>.type);
+			obj.AddLateUpdateListener(arg0, arg1);
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int RemoveLateUpdateListener(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 3);
+			UFramework.Service obj = (UFramework.Service)ToLua.CheckObject<UFramework.Service>(L, 1);
+			UFramework.Core.UCallback arg0 = (UFramework.Core.UCallback)ToLua.CheckDelegate<UFramework.Core.UCallback>(L, 2);
+			UFramework.ServiceUpdateOrder arg1 = (UFramework.ServiceUpdateOrder)ToLua.CheckObject(L, 3, TypeTraits<UFramework.ServiceUpdateOrder>.type);
+			obj.RemoveLateUpdateListener(arg0, arg1);
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int AddFixedUpdateListener(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 3);
+			UFramework.Service obj = (UFramework.Service)ToLua.CheckObject<UFramework.Service>(L, 1);
+			UFramework.Core.UCallback arg0 = (UFramework.Core.UCallback)ToLua.CheckDelegate<UFramework.Core.UCallback>(L, 2);
+			UFramework.ServiceUpdateOrder arg1 = (UFramework.ServiceUpdateOrder)ToLua.CheckObject(L, 3, TypeTraits<UFramework.ServiceUpdateOrder>.type);
+			obj.AddFixedUpdateListener(arg0, arg1);
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int RemoveFixedUpdateListener(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 3);
+			UFramework.Service obj = (UFramework.Service)ToLua.CheckObject<UFramework.Service>(L, 1);
+			UFramework.Core.UCallback arg0 = (UFramework.Core.UCallback)ToLua.CheckDelegate<UFramework.Core.UCallback>(L, 2);
+			UFramework.ServiceUpdateOrder arg1 = (UFramework.ServiceUpdateOrder)ToLua.CheckObject(L, 3, TypeTraits<UFramework.ServiceUpdateOrder>.type);
+			obj.RemoveFixedUpdateListener(arg0, arg1);
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

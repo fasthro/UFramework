@@ -291,19 +291,25 @@ namespace UFramework.Editor.Preferences.Lua
             }
             bindTypes.Add(_GT(typeof(UFramework.UI.Layer)));
 
-            bindTypes.Add(_GT(typeof(UFramework.Core.ProtocalType)));
-            bindTypes.Add(_GT(typeof(UFramework.Core.SocketPack)));
+            bindTypes.Add(_GT(typeof(UFramework.Network.PackType)));
+            bindTypes.Add(_GT(typeof(UFramework.Network.ProtocalType)));
+            bindTypes.Add(_GT(typeof(UFramework.Network.ProcessLayer)));
+            bindTypes.Add(_GT(typeof(UFramework.Network.SocketChannel)));
+            bindTypes.Add(_GT(typeof(UFramework.Network.SocketPack)));
+            bindTypes.Add(_GT(typeof(System.Net.Sockets.SocketError)));
 
             bindTypes.Add(_GT(typeof(UFramework.UApplication)));
             bindTypes.Add(_GT(typeof(UFramework.IOPath)));
             bindTypes.Add(_GT(typeof(UFramework.Crypt)));
 
+            bindTypes.Add(_GT(typeof(UFramework.BaseManager)));
             bindTypes.Add(_GT(typeof(UFramework.NetManager)));
             bindTypes.Add(_GT(typeof(UFramework.ResManager)));
 
             bindTypes.Add(_GT(typeof(UFramework.ManagerContainer)));
             bindTypes.Add(_GT(typeof(UFramework.ManagerService)));
 
+            bindTypes.Add(_GT(typeof(UFramework.BaseService)));
             bindTypes.Add(_GT(typeof(UFramework.ServiceContainer)));
             bindTypes.Add(_GT(typeof(UFramework.Service)));
 

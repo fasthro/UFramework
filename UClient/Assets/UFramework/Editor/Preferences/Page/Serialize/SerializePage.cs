@@ -14,7 +14,7 @@ namespace UFramework.Editor.Preferences.Serializable
 {
     public class SerializePage : IPage, IPageBar
     {
-        public string menuName { get { return "Serialize(序列化)"; } }
+        public string menuName { get { return "Serdata(序列化)"; } }
 
         [ShowInInspector]
         [TableList(IsReadOnly = true, AlwaysExpanded = true)]

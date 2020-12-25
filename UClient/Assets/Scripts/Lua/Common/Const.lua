@@ -3,11 +3,31 @@ Author: fasthro
 Date: 2020-11-25 11:25:50
 Description: 系统常量
 --]]
+-- 网络类型
+_G.NETWORK_PROTOCAL_TYPE = {
+    TCP = UFramework.Network.ProtocalType.Tcp,
+    UDP = UFramework.Network.ProtocalType.Udp
+}
+
 -- 网络数据包类型
-_G.PROTOCAL_TYPE = {
-    BINARY = UFramework.Core.ProtocalType.Binary,
-    SIZE_BINARY = UFramework.Core.ProtocalType.SizeBinary,
-    SIZE_HEADER_BINARY = UFramework.Core.ProtocalType.SizeHeaderBinary
+_G.NETWORK_PACK_TYPE = {
+    BINARY = UFramework.Network.PackType.Binary,
+    SIZE_BINARY = UFramework.Network.PackType.SizeBinary,
+    SIZE_HEADER_BINARY = UFramework.Network.PackType.SizeHeaderBinary
+}
+
+-- 网络通道类型
+_G.NETWORK_CHANNEL_TYPE = {
+    LOGIN = 0, -- 登陆服务器
+    GAME = 1, -- 游戏服务器
+    BATTLE = 2 -- 战斗服务器
+}
+
+-- 网络处理层
+_G.NETWORK_PROCESS_LAYER = {
+    ALL = UFramework.Network.ProcessLayer.All,
+    LUA = UFramework.Network.ProcessLayer.Lua,
+    CSharp = UFramework.Network.ProcessLayer.CSharp,
 }
 
 -- UI面板层

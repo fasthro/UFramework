@@ -120,7 +120,7 @@ function EventManager:remove(eventname, listener)
         return
     end
 
-    logger.debug("remove event: " .. eventname)
+    -- logger.debug("remove event: " .. eventname)
 
     if listener == nil then
         self._listeners:set(eventname, nil)
@@ -178,7 +178,7 @@ function EventManager:_create(eventname, listener, owner, isonce)
         end
         wrap:add(listener, owner)
 
-        logger.debug("add event: " .. eventname .. " once: " .. tostring(isonce))
+        -- logger.debug("add event: " .. eventname .. " once: " .. tostring(isonce))
     else
         if eventname == nil or eventname == "" or #eventname == 0 then
             logger.error(string.format("eventname is empty.", eventname))

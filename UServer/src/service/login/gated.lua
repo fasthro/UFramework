@@ -1,9 +1,9 @@
 -- @Author: fasthro
 -- @Date:   2020-11-25 15:13:22
 -- @Last Modified by:   fasthro
--- @Last Modified time: 2020-12-08 12:48:22
+-- @Last Modified time: 2020-12-23 15:02:03
 
-local msgserver = require "snax.msgserver"
+local msgserver = require "msgserver"
 local crypt = require "skynet.crypt"
 local skynet = require "skynet"
 local cluster = require "skynet.cluster"

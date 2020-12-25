@@ -3,11 +3,13 @@
  * @Date: 2020-07-13 23:51:59
  * @Description: App Launch
  */
+using System.Collections;
 using FairyGUI;
 using UFramework.Core;
 using UFramework.NativePlatform;
 using UFramework.UI;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace UFramework
 {
@@ -17,6 +19,8 @@ namespace UFramework
         public static Launcher Main { get { return Launcher.Instance; } }
         public static GameObject MainGameObject { get { return Launcher.Instance.gameObject; } }
         public static bool Develop { get; private set; }
+
+        public UnityEvent launchedListener;
 
         private Launch _launch;
         private bool _initialized;
@@ -43,31 +47,44 @@ namespace UFramework
             Timer.Instance.Default();
             // 下载器
             Downloader.Instance.Default();
+            // 启动服务
+            Service.Instance.Default();
             // 版本器
-            Updater.Instance.StartUpdate(_launch, OnUpdaterCompleted);
+            Updater.Instance.StartUpdate(_launch, () =>
+            {
+                // 资源
+                Assets.Instance.Initialize((succeed) =>
+                {
+                    if (succeed)
+                    {
+                        Launched();
+                    }
+                    else Core.Coroutine.Allocate(OnAssetFailed());
+                });
+            });
         }
 
-        private void OnUpdaterCompleted()
+        IEnumerator OnAssetFailed()
         {
-            // 资源
-            Assets.Instance.Initialize(OnAssetCompleted);
+            var mb = MessageBox.Allocate().Show("提示", "资源初始化失败,请检查资源", "退出").OnlyOK();
+            yield return mb;
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
         }
 
-        private void OnAssetCompleted(bool result)
+        private void Launched()
         {
             _initialized = true;
 
-            // 启动服务
-            Service.Instance.Default();
-
             // 启动luaEngine
-            Service.Instance.container.GetService<ManagerService>().container.GetManager<LuaManager>().LaunchEngine();
+            Service.Instance.GetService<ManagerService>().GetManager<LuaManager>().LaunchEngine();
 
-            _launch.ShowTouchBeginOperation(OnRunner);
-        }
+            launchedListener?.Invoke();
 
-        private void OnRunner()
-        {
+            _launch.Hide();
             _launch.Dispose();
             _launch = null;
         }

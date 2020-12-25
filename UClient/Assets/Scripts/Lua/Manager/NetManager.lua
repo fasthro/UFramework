@@ -15,6 +15,10 @@ local NetManager =
 
 function NetManager:initialize()
     self:registerPB()
+
+    self:createChannel(NETWORK_CHANNEL_TYPE.LOGIN, NETWORK_PROTOCAL_TYPE.TCP)
+    self:createChannel(NETWORK_CHANNEL_TYPE.GAME, NETWORK_PROTOCAL_TYPE.TCP)
+    self:createChannel(NETWORK_CHANNEL_TYPE.BATTLE, NETWORK_PROTOCAL_TYPE.UDP)
 end
 
 -- 注册PB
@@ -33,66 +37,95 @@ function NetManager:pbcEncode(cmd, session, message)
     assert(c2s[cmd], string.format("pbc c2s %d undefine", cmd))
     local message = protobuf.encode(c2s[cmd], message)
     if message ~= nil then
-        return message .. string.pack(">I4", session)
+        return message
     end
     return nil
 end
 
 function NetManager:pbcDecode(cmd, buffer)
     assert(s2c[cmd], string.format("pbc s2c %d undefine", cmd))
-    local message = protobuf.decode(s2c[cmd], buffer:sub(1, -6))
+    local message = protobuf.decode(s2c[cmd], buffer)
     if message ~= nil then
         return message
     end
     return nil
 end
 
-function NetManager:connect(ip, port)
-    self._ext:Connecte(ip, port)
+function NetManager:createChannel(channeld, protocalType)
+    self._ext:CreateChannel(channeld, protocalType)
 end
 
-function NetManager:redirect(ip, port)
-    self._ext:Redirect(ip, port)
+function NetManager:connect(channeld, ip, port)
+    self._ext:Connect(channeld, ip, port)
 end
 
-function NetManager:createPack(protocal, cmd)
+function NetManager:redirect(channeld, ip, port)
+    self._ext:Redirect(channeld, ip, port)
+end
+
+function NetManager:disconnect(channeld)
+    self._ext:Disconnect(channeld)
+end
+
+function NetManager:createPack(protocal, cmd, layer)
     cmd = cmd or -1
-    return UFramework.Core.SocketPack.AllocateWriter(protocal, cmd)
+    layer = layer or NETWORK_PROCESS_LAYER.LUA
+    return UFramework.Network.SocketPack.AllocateWriter(protocal, cmd, layer)
 end
 
-function NetManager:sendPack(pack)
-    self._ext:Send(pack)
+function NetManager:_sendPack(channelId, pack)
+    self._ext:Send(channelId, pack)
 end
 
-function NetManager:sendPBC(cmd, message)
-    local pack = self:createPack(PROTOCAL_TYPE.SIZE_HEADER_BINARY, cmd)
+function NetManager:sendLoginPack(pack)
+    self._ext:Send(NETWORK_CHANNEL_TYPE.LOGIN, pack)
+end
+
+function NetManager:sendGamePack(pack)
+    self._ext:Send(NETWORK_CHANNEL_TYPE.GAME, pack)
+end
+
+function NetManager:sendBattlePack(pack)
+    self._ext:Send(NETWORK_CHANNEL_TYPE.BATTLE, pack)
+end
+
+function NetManager:_sendPBC(channeld, cmd, layer, message)
+    local pack = self:createPack(NETWORK_PACK_TYPE.SIZE_HEADER_BINARY, cmd, layer)
     message = self:pbcEncode(cmd, pack.session, message)
     if message ~= nil then
         pack:WriteBuffer(message)
-        self:sendPack(pack)
+        self:_sendPack(channeld, pack)
     else
         pack:Recycle()
         logger.error("netmanager send pack error. cmd: " .. cmd)
     end
 end
 
-function NetManager:onSocketConnected()
-    logger.debug("onSocketConnected.")
+function NetManager:sendGamePBC(cmd, message, layer)
+    self:_sendPBC(NETWORK_CHANNEL_TYPE.GAME, cmd, layer, message)
+end
+
+function NetManager:sendBattlePBC(cmd, message, layer)
+    self:_sendPBC(NETWORK_CHANNEL_TYPE.BATTLE, cmd, layer, message)
+end
+
+function NetManager:onSocketConnected(channelId)
+    logger.debug("lua socket connected channelId: " .. tostring(channelId))
     EventManager:broadcast(EVENT_NAMES.NET_CONNECTED)
 end
 
-function NetManager:onSocketDisconnected()
-    logger.debug("onSocketDisconnected.")
+function NetManager:onSocketDisconnected(channelId)
+    logger.debug("lua socket disconnected channelId: " .. tostring(channelId))
     EventManager:broadcast(EVENT_NAMES.NET_DISCONNECTED)
 end
 
-function NetManager:onSocketException(exception)
-    logger.debug("onSocketException.[" .. exception .. "]")
+function NetManager:onSocketException(channelId, error)
+    logger.debug("lua socket exception channelId: " .. tostring(channelId) .. " error: " .. tostring(error))
     EventManager:broadcast(EVENT_NAMES.NET_EXCEPTION)
 end
 
-function NetManager:onSocketReceive(pack)
-    logger.debug("onSocketReceive.[" .. pack.cmd .. "]")
+function NetManager:onSocketReceive(channelId, pack)
+    logger.debug("lua socket receive channelId: " .. tostring(channelId) .. " cmd: " .. tostring(pack.cmd))
     if pack.cmd > 0 then
         local message = self:pbcDecode(pack.cmd, pack.luaRawData)
         if message ~= nil then
@@ -100,7 +133,6 @@ function NetManager:onSocketReceive(pack)
         else
             logger.error("netmanager receive pack error. cmd: " .. pack.cmd)
         end
-        pack:Recycle()
     else
         EventManager:broadcast(EVENT_NAMES.NET_RECEIVED, -1, pack)
     end

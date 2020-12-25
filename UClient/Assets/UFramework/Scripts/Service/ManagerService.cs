@@ -30,6 +30,17 @@ namespace UFramework
         }
 
         [NoToLua]
+        public T GetManager<T>() where T : BaseManager
+        {
+            return container.GetManager<T>();
+        }
+
+        public BaseManager GetManager(string managerName)
+        {
+            return container.GetManager(managerName);
+        }
+
+        [NoToLua]
         public override void OnUpdate(float deltaTime)
         {
             for (int i = 0; i < _allManagers.Length; i++)

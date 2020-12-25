@@ -110,14 +110,6 @@ namespace UFramework.Core
             }
         }
 
-        static void OnBroadcasting(int eventType)
-        {
-            if (!EventDict.ContainsKey(eventType))
-            {
-                throw new BroadcastException(string.Format("Broadcasting message \"{0}\" but no listener found. Try marking the message with Messenger.MarkAsPermanent.", eventType));
-            }
-        }
-
         static BroadcastException CreateBroadcastSignatureException(int eventType)
         {
             return new BroadcastException(string.Format("Broadcasting message \"{0}\" but listeners have a different signature than the broadcaster.", eventType));
@@ -215,8 +207,6 @@ namespace UFramework.Core
 
         public static void Broadcast(int eventType)
         {
-            OnBroadcasting(eventType);
-
             Delegate d;
             if (EventDict.TryGetValue(eventType, out d))
             {
@@ -235,8 +225,6 @@ namespace UFramework.Core
 
         public static void Broadcast<T>(int eventType, T arg1)
         {
-            OnBroadcasting(eventType);
-
             Delegate d;
             if (EventDict.TryGetValue(eventType, out d))
             {
@@ -255,8 +243,6 @@ namespace UFramework.Core
 
         public static void Broadcast<T, U>(int eventType, T arg1, U arg2)
         {
-            OnBroadcasting(eventType);
-
             Delegate d;
             if (EventDict.TryGetValue(eventType, out d))
             {
@@ -275,8 +261,6 @@ namespace UFramework.Core
 
         public static void Broadcast<T, U, V>(int eventType, T arg1, U arg2, V arg3)
         {
-            OnBroadcasting(eventType);
-
             Delegate d;
             if (EventDict.TryGetValue(eventType, out d))
             {
@@ -295,8 +279,6 @@ namespace UFramework.Core
 
         public static void Broadcast<T, U, V, Z>(int eventType, T arg1, U arg2, V arg3, Z arg4)
         {
-            OnBroadcasting(eventType);
-
             Delegate d;
             if (EventDict.TryGetValue(eventType, out d))
             {

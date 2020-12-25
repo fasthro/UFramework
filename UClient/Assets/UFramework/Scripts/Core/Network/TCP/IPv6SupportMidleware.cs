@@ -3,7 +3,7 @@ using System;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 
-namespace UFramework.Core
+namespace UFramework.Network
 {
     public class IPv6SupportMidleware
     {

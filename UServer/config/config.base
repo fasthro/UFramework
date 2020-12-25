@@ -1,8 +1,8 @@
 
 thread    = 8
 bootstrap = "snlua bootstrap"
-cpath     = "skynet/cservice/?.so"
-lualoader  = "skynet/lualib/loader.lua"
+cpath     = "3rd/skynet/cservice/?.so"
+lualoader  = "3rd/skynet/lualib/loader.lua"
 cluster = "src/config/clustername.lua"
 preload = "src/preload.lua"
 
@@ -15,7 +15,7 @@ local function concat(args)
 end
 
 luaservice = concat {
-	"skynet/service/?.lua",
+	"3rd/skynet/service/?.lua",
 
 	"src/main/?.lua",
 	"src/service/?.lua",
@@ -23,7 +23,7 @@ luaservice = concat {
 }
 
 lua_path = concat {
-	"skynet/lualib/?.lua",
+	"3rd/skynet/lualib/?.lua",
 
 	"src/lualib/?.lua",
 
@@ -40,6 +40,6 @@ lua_path = concat {
 }
 
 lua_cpath  = concat {
-  "skynet/luaclib/?.so",
+  "3rd/skynet/luaclib/?.so",
   "luaclib/?.so",
 }

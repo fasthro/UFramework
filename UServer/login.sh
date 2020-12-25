@@ -8,7 +8,7 @@ PID_FILE=$CUR_DIR/login.pid
 function start(){
 	rm -rf $CUR_DIR/log/login.log
 	echo "start login service"
-	$CUR_DIR/skynet/skynet $CUR_DIR/config/config.login
+	$CUR_DIR/3rd/skynet/skynet $CUR_DIR/config/config.login
 }
 
 function stop(){

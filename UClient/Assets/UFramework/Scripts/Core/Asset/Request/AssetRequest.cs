@@ -99,8 +99,9 @@ namespace UFramework.Core
 
         protected void Completed()
         {
-            this._callback.InvokeGracefully(this);
-            this._callback = null;
+            loadState = LoadState.Loaded;
+            _callback.InvokeGracefully(this);
+            _callback = null;
         }
 
         protected void StartCoroutine()
@@ -111,14 +112,14 @@ namespace UFramework.Core
         public AssetRequest AddCallback(UCallback<AssetRequest> callback)
         {
             if (callback != null)
-                this._callback += callback;
+                _callback += callback;
             return this;
         }
 
         public AssetRequest RemoveCallback(UCallback<AssetRequest> callback)
         {
             if (callback != null)
-                this._callback -= callback;
+                _callback -= callback;
             return this;
         }
 

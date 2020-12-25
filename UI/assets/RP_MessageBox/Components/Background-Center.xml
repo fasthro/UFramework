@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="819,489">
   <displayList>
-    <image id="n0_nmjq" name="n0" src="nmjqa" fileName="Images/Dark-Popup-Background.png" xy="0,0" size="819,489" alpha="0.33" pkg="h49w8gjg">
+    <image id="n0_nmjq" name="n0" src="hu34m" fileName="Images/Black.png" xy="0,0" size="819,489" alpha="0.33">
       <relation target="" sidePair="width-width,height-height"/>
     </image>
   </displayList>
