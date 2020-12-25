@@ -1,5 +1,5 @@
 local skynet = require "skynet"
-
+local runconfig = require "runconfig"
 local playerclass = require "player.player"
 
 skynet.register_protocol {
@@ -8,9 +8,25 @@ skynet.register_protocol {
     unpack = skynet.tostring,
 }
 
+local brokecachelen = runconfig.brokecachelen
+
 local gate
 local userid, subid
 local player
+local logout_timer, login_time
+
+local function logout()
+    if gate then
+        skynet.call(gate, "lua", "logout", userid, subid)
+    end
+    
+    if logout_timer then
+        helper.remove_timer(logout_timer)
+        logout_timer = nil
+    end
+    
+    -- skynet.exit()
+end
 
 local CMD = {}
 
@@ -22,13 +38,12 @@ function CMD.login(source, uid, sid, secret, addr)
     subid = sid
     
     player:login(userid)
-end
-
-local function logout()
-    if gate then
-        skynet.call(gate, "lua", "logout", userid, subid)
+    
+    if logout_timer then
+        helper.remove_timer(logout_timer)
+        logout_timer = nil
     end
-    skynet.exit()
+    logout_timer = helper.add_timer(brokecachelen * 100, logout)
 end
 
 function CMD.logout(source)
@@ -40,12 +55,24 @@ end
 -- 连接中断不意味着玩家下线，在一定时间内没有恢复连接，才进行下线处理
 function CMD.afk(source)
     -- the connection is broken, but the user may back
-    skynet.error(string.format("AFK"))
+    logger.debug(string.format("AFK"))
+    player.connection = 0
+    -- 但设定了一定的时限，超过时限还没回来的话即刻当作离线退出处理
+    if logout_timer then
+        helper.remove_timer(logout_timer)
+        logout_timer = nil
+    end
+    logout_timer = helper.add_timer(brokecachelen * 100, logout)
 end
 
 -- 连接修复
 function CMD.cbk(source, fd, addr)
-    
+    logger.debug(string.format("CBK"))
+    player.connection = fd
+    if logout_timer then
+        helper.remove_timer(logout_timer)
+        logout_timer = nil
+    end
 end
 
 skynet.start(function()
@@ -60,9 +87,14 @@ skynet.start(function()
     
     skynet.dispatch("client", function(_, _, msg)
         local pbcloader = skynet.uniqueservice("pbcloader")
-        local msgid, session, layer, message = skynet.call(pbcloader, "lua", "decode", msg)
-        local respmessage = player:onreceive(msgid, session, layer, message)
-        local response = skynet.call(pbcloader, "lua", "encode", msgid, session, layer, respmessage)
-        skynet.ret(response)
+        local cmd, session, layer, message = skynet.call(pbcloader, "lua", "decode", msg)
+        player:on_message(cmd, message)
+        local respmessage = player:on_response()
+        if respmessage ~= nil then
+            local response = skynet.call(pbcloader, "lua", "encode", cmd, session, layer, respmessage)
+            skynet.ret(response)
+        else
+            skynet.ignoreret()
+        end
     end)
 end)
