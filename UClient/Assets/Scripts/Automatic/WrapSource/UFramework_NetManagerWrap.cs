@@ -14,8 +14,6 @@ public class UFramework_NetManagerWrap
 		L.RegFunction("Disconnect", new LuaCSFunction(Disconnect));
 		L.RegFunction("Send", new LuaCSFunction(Send));
 		L.RegFunction("Redirect", new LuaCSFunction(Redirect));
-		L.RegFunction("OnUpdate", new LuaCSFunction(OnUpdate));
-		L.RegFunction("OnDestroy", new LuaCSFunction(OnDestroy));
 		L.RegFunction("OnSocketChannelConnected", new LuaCSFunction(OnSocketChannelConnected));
 		L.RegFunction("OnSocketChannelDisconnected", new LuaCSFunction(OnSocketChannelDisconnected));
 		L.RegFunction("OnSocketChannelReceive", new LuaCSFunction(OnSocketChannelReceive));
@@ -167,39 +165,6 @@ public class UFramework_NetManagerWrap
 			string arg1 = ToLua.CheckString(L, 3);
 			int arg2 = (int)LuaDLL.luaL_checkinteger(L, 4);
 			obj.Redirect(arg0, arg1, arg2);
-			return 0;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int OnUpdate(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 2);
-			UFramework.NetManager obj = (UFramework.NetManager)ToLua.CheckObject<UFramework.NetManager>(L, 1);
-			float arg0 = (float)LuaDLL.luaL_checknumber(L, 2);
-			obj.OnUpdate(arg0);
-			return 0;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int OnDestroy(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 1);
-			UFramework.NetManager obj = (UFramework.NetManager)ToLua.CheckObject<UFramework.NetManager>(L, 1);
-			obj.OnDestroy();
 			return 0;
 		}
 		catch (Exception e)

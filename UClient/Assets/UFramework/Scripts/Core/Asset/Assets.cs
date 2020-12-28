@@ -74,7 +74,7 @@ namespace UFramework.Core
         public void Initialize(Action<bool> onCompleted)
         {
             Develop = Core.Serializer<AppConfig>.Instance.isDevelopmentVersion;
-            AssetBundlePath = IOPath.PathCombine(Application.persistentDataPath, Platform.RuntimePlatformCurrentName);
+            AssetBundlePath = IOPath.PathCombine(Develop ? UApplication.TempDirectory : Application.persistentDataPath, Platform.RuntimePlatformCurrentName);
             _onInitializeCompleted = onCompleted;
             ManifestRequest.Allocate().AddCallback(OnInitialize).Load();
         }

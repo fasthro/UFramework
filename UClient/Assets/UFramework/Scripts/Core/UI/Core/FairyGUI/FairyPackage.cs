@@ -36,9 +36,9 @@ namespace UFramework.UI
             );
             LoadDependen();
 #else
-            _bundleRequest = Asset.LoadBundleAsync(IOPath.PathCombine(UConfig.Read<AppConfig>().uiDirectory, packageName), (request) =>
+            _bundleRequest = Assets.LoadBundleAsync(IOPath.PathCombine(Core.Serializer<AppConfig>.Instance.uiDirectory, packageName), (request) =>
             {
-                if (!isStandby)
+                if (!_isStandby)
                 {
                     package = UIPackage.AddPackage(request.asset as AssetBundle);
                     LoadDependen();

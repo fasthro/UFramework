@@ -24,8 +24,8 @@ namespace UFramework.Core
 #if UNITY_EDITOR
             _content = IOPath.FileReadText(filePath);
 #else
-            var asset = Asset.LoadAsset(filePath, typeof(TextAsset));
-            m_content = asset.GetAsset<TextAsset>().text;
+            var asset = Assets.LoadAsset(filePath, typeof(TextAsset));
+            _content = asset.GetAsset<TextAsset>().text;
             asset.Unload();
 #endif
         }

@@ -183,6 +183,9 @@ public static class LuaBinder
 		UFramework_BaseServiceWrap.Register(L);
 		UFramework_ServiceContainerWrap.Register(L);
 		UFramework_ServiceWrap.Register(L);
+		UFramework_BaseUnityBehaviourBindLuaWrap.Register(L);
+		UFramework_BaseUnityBehaviourWrap.Register(L);
+		UFramework_BaseBehaviourWrap.Register(L);
 		UFramework_MonoSingleton_UFramework_ServiceWrap.Register(L);
 		L.BeginModule("UI");
 		UFramework_UI_UIPanelWrap.Register(L);

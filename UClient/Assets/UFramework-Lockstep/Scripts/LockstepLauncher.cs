@@ -20,27 +20,12 @@ namespace UFramework.Lockstep
 
             #endregion
 
-            #region service
-
-            Service.Instance.RegisterService(new SimulatorService());
-
-            #endregion
-
-            #region manager
-
-            var managerService = Service.Instance.GetService<ManagerService>();
-
-            managerService.RegisterManager(new GameManager());
-            managerService.RegisterManager(new BattleManager());
-            managerService.RegisterManager(new InputManager());
-            managerService.RegisterManager(new FrameManager());
-
-            #endregion
+            Service.Instance.RegisterService(new GameService());
         }
 
         public void Launched()
         {
-            Service.Instance.container.GetService<SimulatorService>().StartSimulate();
+            Service.Instance.container.GetService<GameService>().Launch();
         }
     }
 }

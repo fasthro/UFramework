@@ -4,7 +4,6 @@
  * @Description: bundle asset async
  */
 using System.Collections;
-using UFramework.Core;
 using UnityEngine;
 
 namespace UFramework.Core

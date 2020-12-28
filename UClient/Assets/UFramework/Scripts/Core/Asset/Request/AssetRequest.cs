@@ -5,10 +5,6 @@
  */
 using System;
 using System.Collections;
-using UFramework.Core;
-using UFramework.Core;
-using UFramework.Core;
-using UFramework.Core;
 
 namespace UFramework.Core
 {

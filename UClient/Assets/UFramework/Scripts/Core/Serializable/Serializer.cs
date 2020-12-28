@@ -55,19 +55,19 @@ namespace UFramework.Core
 #if UNITY_EDITOR
             content = IOPath.FileReadText(IOPath.PathCombine(RootPath, obj.assigned.ToString(), fileName));
 #else
-            if (obj.serializableType == SerializableType.Resources)
+            if (obj.assigned == SerializableAssigned.Resources)
             {
-                var asset = Asset.LoadResourceAsset(name, typeof(TextAsset));
+                var asset = Assets.LoadResourceAsset(name, typeof(TextAsset));
                 content = asset.GetAsset<TextAsset>().text;
                 asset.Unload();
             }
-            else if (obj.serializableType == SerializableType.AssetBundle)
+            else if (obj.assigned == SerializableAssigned.AssetBundle)
             {
-                var asset = Asset.LoadAsset(IOPath.PathCombine(AssetBundlePath, obj.serializableType.ToString(), fileName), typeof(TextAsset));
+                var asset = Assets.LoadAsset(IOPath.PathCombine(AssetBundlePath, obj.assigned.ToString(), fileName), typeof(TextAsset));
                 content = asset.GetAsset<TextAsset>().text;
                 asset.Unload();
             }
-            else if (obj.serializableType == SerializableType.Persistent)
+            else if (obj.assigned == SerializableAssigned.Persistent)
             {
                 // TODO
             }

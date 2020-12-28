@@ -104,7 +104,7 @@ namespace UFramework
             _updateBeforeListener?.Invoke(deltaTime);
 
             for (int i = 0; i < _allServices.Length; i++)
-                _allServices[i].OnUpdate(deltaTime);
+                _allServices[i].Update(deltaTime);
 
             _updateAfterListener?.Invoke(deltaTime);
         }
@@ -114,7 +114,7 @@ namespace UFramework
             _lateupdateBeforeListener?.Invoke();
 
             for (int i = 0; i < _allServices.Length; i++)
-                _allServices[i].OnLateUpdate();
+                _allServices[i].LateUpdate();
 
             _lateupdateAfterListener?.Invoke();
         }
@@ -124,7 +124,7 @@ namespace UFramework
             _fixedupdateBeforeListener?.Invoke();
 
             for (int i = 0; i < _allServices.Length; i++)
-                _allServices[i].OnFixedUpdate();
+                _allServices[i].FixedUpdate();
 
             _fixedupdateAfterListener?.Invoke();
         }
@@ -132,13 +132,13 @@ namespace UFramework
         protected override void OnSingletonDestory()
         {
             for (int i = 0; i < _allServices.Length; i++)
-                _allServices[i].OnDestroy();
+                _allServices[i].Dispose();
         }
 
         protected override void OnSingletonApplicationQuit()
         {
             for (int i = 0; i < _allServices.Length; i++)
-                _allServices[i].OnApplicationQuit();
+                _allServices[i].ApplicationQuit();
         }
     }
 }

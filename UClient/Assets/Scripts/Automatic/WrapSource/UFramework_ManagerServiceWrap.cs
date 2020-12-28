@@ -7,7 +7,6 @@ public class UFramework_ManagerServiceWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(UFramework.ManagerService), typeof(UFramework.BaseService));
-		L.RegFunction("OnAwake", new LuaCSFunction(OnAwake));
 		L.RegFunction("RegisterManager", new LuaCSFunction(RegisterManager));
 		L.RegFunction("GetManager", new LuaCSFunction(GetManager));
 		L.RegFunction("New", new LuaCSFunction(_CreateUFramework_ManagerService));
@@ -33,22 +32,6 @@ public class UFramework_ManagerServiceWrap
 			{
 				return LuaDLL.luaL_throw(L, "invalid arguments to ctor method: UFramework.ManagerService.New");
 			}
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int OnAwake(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 1);
-			UFramework.ManagerService obj = (UFramework.ManagerService)ToLua.CheckObject<UFramework.ManagerService>(L, 1);
-			obj.OnAwake();
-			return 0;
 		}
 		catch (Exception e)
 		{

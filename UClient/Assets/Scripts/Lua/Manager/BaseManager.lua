@@ -12,7 +12,7 @@ function BaseManager:__ctor(ext)
     self._ext = ext
 
     if ext ~= nil then
-        ext:LuaBind(self)
+        ext.luaTable = self
     end
 end
 

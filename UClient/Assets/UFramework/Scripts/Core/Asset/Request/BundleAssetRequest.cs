@@ -3,7 +3,9 @@
  * @Date: 2020-09-18 14:44:45
  * @Description: bundle asset
  */
-using UFramework.Core;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace UFramework.Core
 {
@@ -17,6 +19,7 @@ namespace UFramework.Core
         {
             return ObjectPool<BundleAssetRequest>.Instance.Allocate();
         }
+
         public override void Recycle()
         {
             ObjectPool<BundleAssetRequest>.Instance.Recycle(this);
@@ -27,13 +30,24 @@ namespace UFramework.Core
             base.Load();
             if (loadState != LoadState.Init) return;
 
-            bundle = Assets.Instance.GetBundle<BundleRequest>(Assets.Instance.GetBundleNameWithAssetName(url), false);
-            bundle.Load();
+            if (Assets.Develop)
+            {
+#if UNITY_EDITOR
+                asset = AssetDatabase.LoadAssetAtPath(url, assetType);
+                Completed();
+#endif
+            }
+            else
+            {
 
-            asset = bundle.assetBundle.LoadAsset(url, assetType);
+                bundle = Assets.Instance.GetBundle<BundleRequest>(Assets.Instance.GetBundleNameWithAssetName(url), false);
+                bundle.Load();
 
-            loadState = LoadState.Loaded;
-            Completed();
+                asset = bundle.assetBundle.LoadAsset(url, assetType);
+
+                loadState = LoadState.Loaded;
+                Completed();
+            }
         }
 
         protected override void OnReferenceEmpty()

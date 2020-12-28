@@ -183,7 +183,7 @@ namespace UFramework.Editor.Preferences.AssetBundle
         /// </summary>
         [ShowInInspector, HideLabel, FolderPath]
         [HorizontalGroup("Search Path")]
-        [ValidateInput("ValidateInputPath", "$validateInputPathMsg", InfoMessageType.Error)]
+        [ValidateInput("ValidateInputPath", "$_validateInputPathMsg", InfoMessageType.Error)]
         public string path;
 
         /// <summary>
@@ -227,7 +227,7 @@ namespace UFramework.Editor.Preferences.AssetBundle
         /// </summary>
         [ShowInInspector, HideLabel, FilePath]
         [HorizontalGroup("File Path")]
-        [ValidateInput("ValidateInputPath", "$validateInputPathMsg", InfoMessageType.Error)]
+        [ValidateInput("ValidateInputPath", "$_validateInputPathMsg", InfoMessageType.Error)]
         public string path;
 
         /// <summary>

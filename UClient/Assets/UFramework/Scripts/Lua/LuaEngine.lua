@@ -12,7 +12,7 @@ require("Common.Function")
 require("Logger.Logger")
 require("Define")
 require("DefinePanel")
-require("ManagerCenter")
+require("Service.Service")
 
 local _new = typesys.new
 local _setRootObject = typesys.setRootObject
@@ -20,7 +20,7 @@ local _typesys_gc = typesys.gc
 
 LuaEngine =
     typesys.def.LuaEngine {
-    managerCenter = typesys.ManagerCenter
+    service = typesys.Service
 }
 
 function LuaEngine:__ctor()
@@ -62,9 +62,8 @@ end
 
 -- members
 function LuaEngine:onRunner()
-    self.managerCenter = _new(typesys.ManagerCenter)
-    AlertCtrl:initialize()
-    LoginCtrl:initialize()
+    self.service = _new(typesys.Service)
+    self.service:initialize()
 end
 
 function LuaEngine:onUpdate()

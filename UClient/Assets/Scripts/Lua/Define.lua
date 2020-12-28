@@ -5,11 +5,13 @@ Description: define
 --]]
 ------------------------------------------- uframework csharp -------------------------------------------
 _G.UApplication = UFramework.UApplication
-_G.Service = UFramework.Service.Instance
 _G.IOPath = UFramework.IOPath
 
 ------------------------------------------- global -------------------------------------------
 _G.LuaEngine = nil
+
+-- service
+_G.ManagerService = nil
 
 -- manager
 _G.CtrlManager = nil

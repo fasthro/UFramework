@@ -5,6 +5,6 @@
  */
 namespace LSC{
     public static class LSNetCmd {
-        readonly public static int StartSimulate = 950;
+        public const int START = 950;
     }
 }

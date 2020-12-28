@@ -23,7 +23,7 @@ namespace UFramework
 
         private LuaLooper _loop;
 
-        public override void OnAwake()
+        protected override void OnInitialize()
         {
             Lua = new LuaState();
             OpenLibs();
@@ -262,22 +262,22 @@ namespace UFramework
 
         #endregion
 
-        public override void OnUpdate(float deltaTime)
+        protected override void OnUpdate(float deltaTime)
         {
             _luaEngineUpdateFunc.Call();
         }
 
-        public override void OnLateUpdate()
+        protected override void OnLateUpdate()
         {
             _luaEngineLateUpdateFunc.Call();
         }
 
-        public override void OnFixedUpdate()
+        protected override void OnFixedUpdate()
         {
             _luaEngineFixedUpdateFunc.Call();
         }
 
-        public override void OnDestroy()
+        protected override void OnDispose()
         {
             if (_luaEngineUpdateFunc != null)
             {

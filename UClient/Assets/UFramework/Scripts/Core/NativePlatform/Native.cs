@@ -30,7 +30,7 @@ namespace UFramework.NativePlatform
             Utils = new NativeUtils();
 
 #if !UNITY_EDITOR && UNITY_ANDROID
-            NativeAndroid.Initialize();
+            AndroidNative.Initialize();
 #endif
         }
     }

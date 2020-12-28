@@ -12,6 +12,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4efd3d0189a600447ad360358041a551, type: 3}
   m_Name: AssetManifest
   m_EditorClassIdentifier: 
-  dirs: []
-  assets: []
-  bundles: []
+  dirs:
+  - Assets/Arts/Player
+  - Assets/UAssets/Serializable/AssetBundle
+  - Assets/UAssets/Language/Data/ChineseSimplified
+  - Assets/UAssets/Table/Data
+  assets:
+  - name: Player1.prefab
+    bundle: 2
+    dirIndex: 0
+  - name: TableConfig.json
+    bundle: 4
+    dirIndex: 1
+  - name: 0.txt
+    bundle: 1
+    dirIndex: 2
+  - name: 1.txt
+    bundle: 3
+    dirIndex: 2
+  - name: Template.csv
+    bundle: 0
+    dirIndex: 3
+  bundles:
+  - name: 2038ca226310debdde227b05e104e969.unity3d
+    id: 0
+    dependencies: 
+    size: 1462
+    hash: 3626eec958aca994ba0b243a52c51849
+  - name: 2e8b0eb683f58e1884b970a3282272cf.unity3d
+    id: 1
+    dependencies: 
+    size: 1204
+    hash: 252a4a57fe4733bf10ae3baa9ebb4cff
+  - name: 37cdb46aab5f2608c6421202a6e5ecba.unity3d
+    id: 2
+    dependencies: 
+    size: 91780
+    hash: dab57e5815aeea60902e3b167f63f71f
+  - name: 97e43a8abac9eae00e8a5a7916f6948c.unity3d
+    id: 3
+    dependencies: 
+    size: 1203
+    hash: a5439d8f14eb33b7f1e44e6ceed6b1a8
+  - name: c602351bf196a0728f54d9aaa569027f.unity3d
+    id: 4
+    dependencies: 
+    size: 1265
+    hash: 885b0b1d2aa34b72c8e16b21d2159637

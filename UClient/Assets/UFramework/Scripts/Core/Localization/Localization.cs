@@ -43,7 +43,7 @@ namespace UFramework.Core
 #if UNITY_EDITOR
             text = IOPath.FileReadText(filePath);
 #else
-            var asset = Asset.LoadAsset(filePath, typeof(TextAsset));
+            var asset = Assets.LoadAsset(filePath, typeof(TextAsset));
             text = asset.GetAsset<TextAsset>().text;
             asset.Unload();
 #endif

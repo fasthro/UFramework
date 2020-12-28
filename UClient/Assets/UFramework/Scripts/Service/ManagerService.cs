@@ -13,7 +13,7 @@ namespace UFramework
 
         private BaseManager[] _allManagers;
 
-        public override void OnAwake()
+        protected override void OnInitialize()
         {
             container = new ManagerContainer();
 
@@ -41,38 +41,38 @@ namespace UFramework
         }
 
         [NoToLua]
-        public override void OnUpdate(float deltaTime)
+        protected override void OnUpdate(float deltaTime)
         {
             for (int i = 0; i < _allManagers.Length; i++)
-                _allManagers[i].OnUpdate(deltaTime);
+                _allManagers[i].Update(deltaTime);
         }
 
         [NoToLua]
-        public override void OnLateUpdate()
+        protected override void OnLateUpdate()
         {
             for (int i = 0; i < _allManagers.Length; i++)
-                _allManagers[i].OnLateUpdate();
+                _allManagers[i].LateUpdate();
         }
 
         [NoToLua]
-        public override void OnFixedUpdate()
+        protected override void OnFixedUpdate()
         {
             for (int i = 0; i < _allManagers.Length; i++)
-                _allManagers[i].OnFixedUpdate();
+                _allManagers[i].FixedUpdate();
         }
 
         [NoToLua]
-        public override void OnDestroy()
+        protected override void OnDispose()
         {
             for (int i = 0; i < _allManagers.Length; i++)
-                _allManagers[i].OnDestroy();
+                _allManagers[i].Dispose();
         }
 
         [NoToLua]
-        public override void OnApplicationQuit()
+        protected override void OnApplicationQuit()
         {
             for (int i = 0; i < _allManagers.Length; i++)
-                _allManagers[i].OnApplicationQuit();
+                _allManagers[i].ApplicationQuit();
         }
     }
 }
