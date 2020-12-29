@@ -5,8 +5,6 @@
  */
 using System.Collections.Generic;
 using UFramework.Core;
-using UFramework.Core;
-using UnityEngine;
 
 namespace UFramework.UI
 {

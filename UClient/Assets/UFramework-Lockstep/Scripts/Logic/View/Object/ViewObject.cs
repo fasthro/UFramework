@@ -10,6 +10,6 @@ namespace UFramework.Lockstep
 
     public class ViewObject : MonoBehaviour
     {
-        public ViewData viewData;
+        
     }
 }

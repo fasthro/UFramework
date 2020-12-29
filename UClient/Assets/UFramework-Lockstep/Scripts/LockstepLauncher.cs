@@ -4,28 +4,37 @@
  * @Description: Lockstep Launcher
  */
 
-using LSC;
+using UFramework;
 
-namespace UFramework.Lockstep
+namespace ULockstepFramework
 {
     [MonoSingletonPath("UFramework-Lockstep")]
     public class LockstepLauncher : MonoSingleton<LockstepLauncher>
     {
-        protected override void OnSingletonAwake()
-        {
-            #region LSTime
-
-            LSTime.Initialize();
-            Service.Instance.AddUpdateListener(LSTime.Update, ServiceUpdateOrder.Before);
-
-            #endregion
-
-            Service.Instance.RegisterService(new GameService());
-        }
-
         public void Launched()
         {
-            Service.Instance.container.GetService<GameService>().Launch();
         }
+
+        protected override void OnSingletonAwake()
+        {
+            _launcher = Lockstep.Launcher.Create();
+        }
+
+        protected override void OnSingletonStart()
+        {
+            _launcher.Initialize();
+        }
+
+        protected override void OnSingletonUpdate(float deltaTime)
+        {
+            _launcher.Update();
+        }
+
+        protected override void OnSingletonDestory()
+        {
+            _launcher.Dispose();
+        }
+
+        private Lockstep.Launcher _launcher;
     }
 }
