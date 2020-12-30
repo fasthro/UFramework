@@ -14,14 +14,18 @@ namespace Lockstep
     {
         public void RegisterService(IService service)
         {
-            var type = service.GetType();
-            if (!_allServices.ContainsKey(type))
+            var interfaceTypes = service.GetType().FindInterfaces((type, criteria) =>
+                    type.GetInterfaces().Any(t => t == typeof(IService)), service)
+                .ToArray();
+
+            foreach (var type in interfaceTypes)
             {
-                _allServices.Add(type, service);
-            }
-            else
-            {
-                _allServices[type] = service;
+                if (!_allServices.ContainsKey(type))
+                    _allServices.Add(type, service);
+                else
+                {
+                    _allServices[type] = service;
+                }
             }
         }
 

@@ -4,6 +4,7 @@
  * @Description: Lockstep Launcher
  */
 
+using Lockstep.Logic;
 using UFramework;
 
 namespace ULockstepFramework
@@ -17,12 +18,13 @@ namespace ULockstepFramework
 
         protected override void OnSingletonAwake()
         {
-            _launcher = Lockstep.Launcher.Create();
+            _launcher = new LauncherClient();
         }
 
         protected override void OnSingletonStart()
         {
             _launcher.Initialize();
+            _launcher.Test();
         }
 
         protected override void OnSingletonUpdate(float deltaTime)
@@ -35,6 +37,6 @@ namespace ULockstepFramework
             _launcher.Dispose();
         }
 
-        private Lockstep.Launcher _launcher;
+        private LauncherClient _launcher;
     }
 }

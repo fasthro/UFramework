@@ -4,16 +4,17 @@
  * @Description:
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Lockstep
 {
     public interface IView
     {
+        Vector3 position { get; set; }
+        Quaternion rotation { get; set; }
+
+        GameEntity entity { get; }
+
         void BindEntity(GameEntity entity);
     }
 }

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6141356736626861830}
   - component: {fileID: 7043644326668590447}
   - component: {fileID: 4152610077114710136}
-  - component: {fileID: 5742250725642366259}
+  - component: {fileID: 8462105341182730593}
   m_Layer: 0
   m_Name: Player1
   m_TagString: Untagged
@@ -94,7 +94,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5742250725642366259
+--- !u!114 &8462105341182730593
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -103,8 +103,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1539322165226550428}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4398052662aa89e44a43bd188117b7c7, type: 3}
+  m_Script: {fileID: 11500000, guid: b1a4c1cdb9db6084a9ac4ce51bb87292, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewData:
-    artPath: Assets/Arts/Player/Player1.prefab

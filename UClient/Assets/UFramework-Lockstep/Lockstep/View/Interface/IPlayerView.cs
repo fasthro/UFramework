@@ -6,7 +6,7 @@
 
 namespace Lockstep
 {
-    public interface IPlayerView
+    public interface IPlayerView : IView
     {
     }
 }

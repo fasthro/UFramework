@@ -4,6 +4,10 @@
  * @Description:
  */
 
+using System;
+using System.Collections;
+using System.Collections.Generic;
+
 namespace Lockstep
 {
     public class GameService : BaseService, IGameService

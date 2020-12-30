@@ -4,16 +4,33 @@
  * @Description:
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Lockstep
 {
     public abstract class BaseService : IService
     {
-        protected GameService _gameService;
+        public virtual void SetReference(ServiceContainer container)
+        {
+            _gameService = container.GetService<IGameService>();
+            _entityService = container.GetService<IEntityService>();
+            _viewService = container.GetService<IViewService>();
+            _initializeService = container.GetService<IInitializeService>();
+        }
+
+        public virtual void Initialize()
+        {
+        }
+
+        public virtual void Update()
+        {
+        }
+
+        public virtual void Dispose()
+        {
+        }
+
+        protected IGameService _gameService;
+        protected IEntityService _entityService;
+        protected IViewService _viewService;
+        protected IInitializeService _initializeService;
     }
 }

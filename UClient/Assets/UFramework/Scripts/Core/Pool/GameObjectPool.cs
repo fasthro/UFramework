@@ -5,8 +5,8 @@
  */
 
 using System.Collections.Generic;
-using UnityEngine;
 using UFramework.Core.Pool;
+using UnityEngine;
 
 namespace UFramework.Core
 {
@@ -15,11 +15,10 @@ namespace UFramework.Core
     /// </summary>
     public class GammeObjectPoolIdentity : MonoBehaviour, IPoolBehaviour
     {
-        // 回收后60s内没有被唤醒使用，直接通知Unit销毁处理
-        const float DISPOSE_SLEEP_TIME = 60f;
-
         public string id;
+
         public float sleepTime { get; set; }
+
         public bool isRecycled { get; set; }
 
         public bool isDispose
@@ -64,6 +63,9 @@ namespace UFramework.Core
                 sleepTime = time;
             }
         }
+
+        // 回收后60s内没有被唤醒使用，直接通知Unit销毁处理
+        private const float DISPOSE_SLEEP_TIME = 60f;
     }
 
     /// <summary>
@@ -71,22 +73,18 @@ namespace UFramework.Core
     /// </summary>
     public class GammeObjectPoolUnit : Pool<GammeObjectPoolIdentity>
     {
-        public string id { get; private set; }
-        public GameObject prefab { get; private set; }
-
         /// <summary>
-        /// 是否处于空闲状态
+        /// Pool Unit
         /// </summary>
-        /// <value></value>
-        public bool isFree
+        /// <param name="id"></param>
+        /// <param name="root"></param>
+        public GammeObjectPoolUnit(string id, Transform root)
         {
-            get { return _stacks.Count > 0 && _balanceCount <= 0; }
+            this.id = id;
+            this._assetRequest = Assets.LoadAsset(id, typeof(GameObject));
+            this.prefab = this._assetRequest.asset as GameObject;
+            this._parentTrans = root;
         }
-
-        private Transform _parentTrans;
-
-        // 激活与回收的平衡数量（当平衡数量为0时，说明外界没有使用对象池中的对象）
-        private int _balanceCount;
 
         /// <summary>
         /// Pool Unit
@@ -99,6 +97,18 @@ namespace UFramework.Core
             this.id = id;
             this.prefab = prefab;
             this._parentTrans = root;
+        }
+
+        public string id { get; private set; }
+        public GameObject prefab { get; private set; }
+
+        /// <summary>
+        /// 是否处于空闲状态
+        /// </summary>
+        /// <value></value>
+        public bool isFree
+        {
+            get { return _stacks.Count > 0 && _balanceCount <= 0; }
         }
 
         /// <summary>
@@ -165,6 +175,13 @@ namespace UFramework.Core
             GameObject.Destroy(newPoolIdentity.gameObject);
             newPoolIdentity = null;
         }
+
+        private Transform _parentTrans;
+
+        // 激活与回收的平衡数量（当平衡数量为0时，说明外界没有使用对象池中的对象）
+        private int _balanceCount;
+
+        private AssetRequest _assetRequest;
     }
 
     /// <summary>
@@ -172,22 +189,36 @@ namespace UFramework.Core
     /// </summary>
     public class GammeObjectPool : MonoSingleton<GammeObjectPool>
     {
-        private Dictionary<string, GammeObjectPoolUnit> poolUnitDictionary = new Dictionary<string, GammeObjectPoolUnit>();
-
         /// <summary>
         /// 分配对象
         /// </summary>
         /// <param name="res"></param>
         /// <returns></returns>
-        public GameObject Allocate(string res)
+        public GameObject Allocate(string res, Transform parent)
         {
             GammeObjectPoolUnit unit = null;
             if (poolUnitDictionary.TryGetValue(res, out unit))
             {
                 return unit.Allocate().gameObject;
             }
-            // TODO
-            unit = new GammeObjectPoolUnit(res, null, null);
+            unit = new GammeObjectPoolUnit(res, parent);
+            poolUnitDictionary.Add(res, unit);
+            return unit.Allocate().gameObject;
+        }
+
+        /// <summary>
+        /// 分配对象
+        /// </summary>
+        /// <param name="res"></param>
+        /// <returns></returns>
+        public GameObject Allocate(string res, GameObject prefab, Transform parent)
+        {
+            GammeObjectPoolUnit unit = null;
+            if (poolUnitDictionary.TryGetValue(res, out unit))
+            {
+                return unit.Allocate().gameObject;
+            }
+            unit = new GammeObjectPoolUnit(res, prefab, parent);
             poolUnitDictionary.Add(res, unit);
             return unit.Allocate().gameObject;
         }
@@ -229,5 +260,7 @@ namespace UFramework.Core
             GameObject.Destroy(gameObject);
             return false;
         }
+
+        private Dictionary<string, GammeObjectPoolUnit> poolUnitDictionary = new Dictionary<string, GammeObjectPoolUnit>();
     }
 }

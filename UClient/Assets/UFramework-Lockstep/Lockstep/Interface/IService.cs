@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Lockstep
 {
-    public interface IService
+    public interface IService : IBehaviour
     {
     }
 }
