@@ -19,9 +19,6 @@ namespace Lockstep.Logic
         public override void Initialize()
         {
             base.Initialize();
-
-            var view = _viewService.CreateView<IPlayerView>("Assets/Arts/Player/Player1.prefab");
-            view.entity.cPosition.position = new Vector3(10, 0, 0);
         }
     }
 }

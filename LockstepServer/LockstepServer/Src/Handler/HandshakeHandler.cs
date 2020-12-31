@@ -12,20 +12,20 @@ namespace LockstepServer.Src
 {
     public class HandshakeHandler : BaseHandler
     {
-        public override int cmd => 901;
+        public HandshakeHandler(ServiceContainer container) : base(container)
+        {
+        }
 
-        public PlayerManager playerManager => Service.Instance.GetManager<PlayerManager>();
-        public ModelManager modelManager => Service.Instance.GetManager<ModelManager>();
-        public RoomManager roomManager => Service.Instance.GetManager<RoomManager>();
+        public override int cmd => 901;
 
         protected override void OnMessage(byte[] bytes)
         {
             Handshake_C2S c2s = Handshake_C2S.Parser.ParseFrom(bytes);
             LogHelper.Info($"客户端握手验证[{c2s.Uid}]");
 
-            if (!playerManager.ExistPlayer(c2s.Uid))
+            if (!_playerService.ExistPlayer(c2s.Uid))
             {
-                var userModel = modelManager.GetModel<UserModel>();
+                var userModel = _modelService.GetModel<UserModel>();
                 if (userModel != null)
                 {
                     if (userModel.ExistUser(c2s.Uid) == 0L)
@@ -35,7 +35,7 @@ namespace LockstepServer.Src
                         userModel.AddUser(user);
                     }
                 }
-                playerManager.AddPlayer(new Player(c2s.Uid, new UdpSession(peer)));
+                _playerService.AddPlayer(new Player(c2s.Uid, new UdpSession(peer)));
             }
         }
 
@@ -43,7 +43,7 @@ namespace LockstepServer.Src
         {
             Handshake_S2C s2c = CreateResponseMessage<Handshake_S2C>();
             s2c.ResultCode = ResultCode.SUCCEED;
-            s2c.RoomSecretKey = roomManager.room.secretKey;
+            s2c.RoomSecretKey = _roomService.room.secretKey;
             return true;
         }
     }

@@ -40,6 +40,8 @@ namespace Lockstep
             system.TearDown();
         }
 
+        protected IService[] _allServices;
+
         protected virtual void InitializeService()
         {
             serviceContainer = new ServiceContainer();
@@ -57,7 +59,5 @@ namespace Lockstep
                 .Add(new Feature("Movement")
                     .Add(new UpdateViewPositionAndRotationSystem(contexts)));
         }
-
-        private IService[] _allServices;
     }
 }

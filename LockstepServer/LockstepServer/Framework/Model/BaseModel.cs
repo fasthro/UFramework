@@ -11,20 +11,11 @@ using System.Linq.Expressions;
 
 namespace LockstepServer
 {
-    public class BaseModel
+    public class BaseModel : BaseBehaviour
     {
-        protected static DataManager dataManager;
-
-        private string _tableName;
-
-        public BaseModel(string tabName)
+        public BaseModel(ServiceContainer container, string tabName) : base(container)
         {
             _tableName = tabName;
-
-            if (dataManager == null)
-            {
-                dataManager = Service.Instance.GetManager<DataManager>();
-            }
         }
 
         public string tableName
@@ -37,7 +28,7 @@ namespace LockstepServer
         /// </summary>
         public T GetDoc<T>(Expression<Func<T, bool>> filter)
         {
-            return dataManager.GetDoc(tableName, filter);
+            return _dataService.GetDoc(tableName, filter);
         }
 
         /// <summary>
@@ -45,11 +36,11 @@ namespace LockstepServer
         /// </summary>
         public List<T> Query<T>(Expression<Func<T, bool>> filter = null)
         {
-            if (string.IsNullOrEmpty(tableName) || dataManager == null)
+            if (string.IsNullOrEmpty(tableName))
             {
                 throw new Exception();
             }
-            return dataManager.Query(tableName, filter);
+            return _dataService.Query(tableName, filter);
         }
 
         /// <summary>
@@ -57,11 +48,11 @@ namespace LockstepServer
         /// </summary>
         public T Exist<T>(Expression<Func<T, bool>> filter)
         {
-            if (string.IsNullOrEmpty(tableName) || dataManager == null)
+            if (string.IsNullOrEmpty(tableName))
             {
                 throw new Exception();
             }
-            return dataManager.Exist<T>(tableName, filter);
+            return _dataService.Exist<T>(tableName, filter);
         }
 
         /// <summary>
@@ -69,11 +60,11 @@ namespace LockstepServer
         /// </summary>
         protected bool Add<T>(T doc)
         {
-            if (string.IsNullOrEmpty(tableName) || dataManager == null)
+            if (string.IsNullOrEmpty(tableName))
             {
                 throw new Exception();
             }
-            return dataManager.Add(tableName, doc);
+            return _dataService.Add(tableName, doc);
         }
 
         /// <summary>
@@ -81,11 +72,11 @@ namespace LockstepServer
         /// </summary>
         protected T Get<T>(string strKey, Expression<Func<T, bool>> filter)
         {
-            if (string.IsNullOrEmpty(tableName) || dataManager == null)
+            if (string.IsNullOrEmpty(tableName))
             {
                 throw new Exception();
             }
-            return dataManager.Get<T>(tableName, strKey, filter);
+            return _dataService.Get<T>(tableName, strKey, filter);
         }
 
         /// <summary>
@@ -93,11 +84,13 @@ namespace LockstepServer
         /// </summary>
         protected void Set<T>(UpdateDefinition<T> update, Expression<Func<T, bool>> filter)
         {
-            if (string.IsNullOrEmpty(tableName) || dataManager == null)
+            if (string.IsNullOrEmpty(tableName))
             {
                 throw new Exception();
             }
-            dataManager.Set(tableName, update, filter);
+            _dataService.Set(tableName, update, filter);
         }
+
+        private string _tableName;
     }
 }

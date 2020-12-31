@@ -24,7 +24,6 @@ namespace ULockstepFramework
         protected override void OnSingletonStart()
         {
             _launcher.Initialize();
-            _launcher.Test();
         }
 
         protected override void OnSingletonUpdate(float deltaTime)

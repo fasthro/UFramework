@@ -12,6 +12,10 @@ namespace LockstepServer.Src
 {
     public class Simulator : BaseBehaviour
     {
+        public Simulator(ServiceContainer container) : base(container)
+        {
+        }
+
         /// <summary>
         /// 随机种子
         /// </summary>
@@ -22,13 +26,13 @@ namespace LockstepServer.Src
         /// </summary>
         public int tick { get; private set; }
 
-        protected override void OnInitialize()
+        public override void Initialize()
         {
             seed = new Random().Next();
             LogHelper.Debug($"Random Seed:{seed}");
         }
 
-        protected override void OnUpdate(float deltaTime)
+        public override void Update()
         {
             tick++;
         }

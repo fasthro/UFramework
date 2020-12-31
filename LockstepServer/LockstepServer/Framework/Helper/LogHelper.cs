@@ -22,7 +22,7 @@ namespace LockstepServer
         {
             repository = LogManager.CreateRepository("NETCoreRepository");
             XmlConfigurator.Configure(repository, new FileInfo("log4net.config"));
-            logger = LogManager.GetLogger(repository.Name, typeof(AppServer));
+            logger = LogManager.GetLogger(repository.Name, typeof(Launcher));
         }
 
         public static void Debug(object message)

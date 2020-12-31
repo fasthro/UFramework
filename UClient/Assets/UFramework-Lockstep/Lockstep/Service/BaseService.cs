@@ -8,12 +8,19 @@ namespace Lockstep
 {
     public abstract class BaseService : IService
     {
+        public BaseService()
+        {
+            Initialize();
+        }
+
         public virtual void SetReference(ServiceContainer container)
         {
             _gameService = container.GetService<IGameService>();
             _entityService = container.GetService<IEntityService>();
             _viewService = container.GetService<IViewService>();
             _initializeService = container.GetService<IInitializeService>();
+            _simulatorService = container.GetService<ISimulatorService>();
+            _networkService = container.GetService<INetworkService>();
         }
 
         public virtual void Initialize()
@@ -32,5 +39,7 @@ namespace Lockstep
         protected IEntityService _entityService;
         protected IViewService _viewService;
         protected IInitializeService _initializeService;
+        protected ISimulatorService _simulatorService;
+        protected INetworkService _networkService;
     }
 }

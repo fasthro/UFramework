@@ -20,7 +20,7 @@ namespace LockstepServer
         }
 
         public int sessionId => _connection.Id;
-        private NetManager _netManager => Service.Instance.GetManager<NetManager>();
+        private NetworkService _netManager => Service.Instance.GetManager<NetworkService>();
 
         public void Kick()
         {

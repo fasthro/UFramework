@@ -15,15 +15,26 @@ namespace Lockstep.Logic
 
         public static LauncherClient Instance { get; private set; }
 
-        public void Test()
+        public override void Update()
         {
-            serviceContainer.GetService<IInitializeService>().Initialize();
+            base.Update();
+            foreach (var service in _allServices)
+                (service as IBehaviour).Update();
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            foreach (var service in _allServices)
+                (service as IBehaviour).Dispose();
         }
 
         protected override void InitializeService()
         {
             base.InitializeService();
             serviceContainer.RegisterService(new ViewService());
+            serviceContainer.RegisterService(new NetworkService());
+            serviceContainer.RegisterService(new SimulatorService());
             serviceContainer.RegisterService(new InitService());
         }
     }

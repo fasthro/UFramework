@@ -27,9 +27,10 @@ namespace PBBS {
             "Q29kZRgBIAEoBRIVCg1yb29tU2VjcmV0S2V5GAIgASgJIiYKDUVudGVyUm9v",
             "bV9DMlMSFQoNcm9vbVNlY3JldEtleRgBIAEoCSIjCg1FbnRlclJvb21fUzJD",
             "EhIKCnJlc3VsdENvZGUYASABKAUiGAoJUmVhZHlfQzJTEgsKA3VpZBgBIAEo",
-            "AyILCglSZWFkeV9TMkMiSwoRU3RhcnRTaW11bGF0ZV9TMkMSDAoEc2VlZBgB",
-            "IAEoBRIoCgl1c2VySW5mb3MYAiADKAsyFS5QQl9CU0NvbW1vbi5Vc2VySW5m",
-            "b2IGcHJvdG8z"));
+            "AyILCglSZWFkeV9TMkMiQwoRU3RhcnRTaW11bGF0ZV9TMkMSDAoEc2VlZBgB",
+            "IAEoBRIgCgV1c2VycxgCIAMoCzIRLlBCX0JTQ29tbW9uLlVzZXIiRgoNUHVz",
+            "aEZyYW1lX1MyQxIMCgR0aWNrGAEgASgFEicKBmlucHV0cxgCIAMoCzIXLlBC",
+            "X0JTQ29tbW9uLkZyYW1lSW5wdXRiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::PBBSCommon.BscommonReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
@@ -39,7 +40,8 @@ namespace PBBS {
             new pbr::GeneratedClrTypeInfo(typeof(global::PBBS.EnterRoom_S2C), global::PBBS.EnterRoom_S2C.Parser, new[]{ "ResultCode" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::PBBS.Ready_C2S), global::PBBS.Ready_C2S.Parser, new[]{ "Uid" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::PBBS.Ready_S2C), global::PBBS.Ready_S2C.Parser, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::PBBS.StartSimulate_S2C), global::PBBS.StartSimulate_S2C.Parser, new[]{ "Seed", "UserInfos" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::PBBS.StartSimulate_S2C), global::PBBS.StartSimulate_S2C.Parser, new[]{ "Seed", "Users" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::PBBS.PushFrame_S2C), global::PBBS.PushFrame_S2C.Parser, new[]{ "Tick", "Inputs" }, null, null, null)
           }));
     }
     #endregion
@@ -805,7 +807,7 @@ namespace PBBS {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public StartSimulate_S2C(StartSimulate_S2C other) : this() {
       seed_ = other.seed_;
-      userInfos_ = other.userInfos_.Clone();
+      users_ = other.users_.Clone();
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -824,14 +826,14 @@ namespace PBBS {
       }
     }
 
-    /// <summary>Field number for the "userInfos" field.</summary>
-    public const int UserInfosFieldNumber = 2;
-    private static readonly pb::FieldCodec<global::PBBSCommon.UserInfo> _repeated_userInfos_codec
-        = pb::FieldCodec.ForMessage(18, global::PBBSCommon.UserInfo.Parser);
-    private readonly pbc::RepeatedField<global::PBBSCommon.UserInfo> userInfos_ = new pbc::RepeatedField<global::PBBSCommon.UserInfo>();
+    /// <summary>Field number for the "users" field.</summary>
+    public const int UsersFieldNumber = 2;
+    private static readonly pb::FieldCodec<global::PBBSCommon.User> _repeated_users_codec
+        = pb::FieldCodec.ForMessage(18, global::PBBSCommon.User.Parser);
+    private readonly pbc::RepeatedField<global::PBBSCommon.User> users_ = new pbc::RepeatedField<global::PBBSCommon.User>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::PBBSCommon.UserInfo> UserInfos {
-      get { return userInfos_; }
+    public pbc::RepeatedField<global::PBBSCommon.User> Users {
+      get { return users_; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -848,7 +850,7 @@ namespace PBBS {
         return true;
       }
       if (Seed != other.Seed) return false;
-      if(!userInfos_.Equals(other.userInfos_)) return false;
+      if(!users_.Equals(other.users_)) return false;
       return true;
     }
 
@@ -856,7 +858,7 @@ namespace PBBS {
     public override int GetHashCode() {
       int hash = 1;
       if (Seed != 0) hash ^= Seed.GetHashCode();
-      hash ^= userInfos_.GetHashCode();
+      hash ^= users_.GetHashCode();
       return hash;
     }
 
@@ -871,7 +873,7 @@ namespace PBBS {
         output.WriteRawTag(8);
         output.WriteInt32(Seed);
       }
-      userInfos_.WriteTo(output, _repeated_userInfos_codec);
+      users_.WriteTo(output, _repeated_users_codec);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -880,7 +882,7 @@ namespace PBBS {
       if (Seed != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(Seed);
       }
-      size += userInfos_.CalculateSize(_repeated_userInfos_codec);
+      size += users_.CalculateSize(_repeated_users_codec);
       return size;
     }
 
@@ -892,7 +894,7 @@ namespace PBBS {
       if (other.Seed != 0) {
         Seed = other.Seed;
       }
-      userInfos_.Add(other.userInfos_);
+      users_.Add(other.users_);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -908,7 +910,148 @@ namespace PBBS {
             break;
           }
           case 18: {
-            userInfos_.AddEntriesFrom(input, _repeated_userInfos_codec);
+            users_.AddEntriesFrom(input, _repeated_users_codec);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  /// <summary>
+  ///  服务器下推帧
+  /// #[S2C][951]#
+  /// </summary>
+  public sealed partial class PushFrame_S2C : pb::IMessage<PushFrame_S2C> {
+    private static readonly pb::MessageParser<PushFrame_S2C> _parser = new pb::MessageParser<PushFrame_S2C>(() => new PushFrame_S2C());
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<PushFrame_S2C> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::PBBS.BsReflection.Descriptor.MessageTypes[7]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public PushFrame_S2C() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public PushFrame_S2C(PushFrame_S2C other) : this() {
+      tick_ = other.tick_;
+      inputs_ = other.inputs_.Clone();
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public PushFrame_S2C Clone() {
+      return new PushFrame_S2C(this);
+    }
+
+    /// <summary>Field number for the "tick" field.</summary>
+    public const int TickFieldNumber = 1;
+    private int tick_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int Tick {
+      get { return tick_; }
+      set {
+        tick_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "inputs" field.</summary>
+    public const int InputsFieldNumber = 2;
+    private static readonly pb::FieldCodec<global::PBBSCommon.FrameInput> _repeated_inputs_codec
+        = pb::FieldCodec.ForMessage(18, global::PBBSCommon.FrameInput.Parser);
+    private readonly pbc::RepeatedField<global::PBBSCommon.FrameInput> inputs_ = new pbc::RepeatedField<global::PBBSCommon.FrameInput>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::RepeatedField<global::PBBSCommon.FrameInput> Inputs {
+      get { return inputs_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as PushFrame_S2C);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(PushFrame_S2C other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Tick != other.Tick) return false;
+      if(!inputs_.Equals(other.inputs_)) return false;
+      return true;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Tick != 0) hash ^= Tick.GetHashCode();
+      hash ^= inputs_.GetHashCode();
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Tick != 0) {
+        output.WriteRawTag(8);
+        output.WriteInt32(Tick);
+      }
+      inputs_.WriteTo(output, _repeated_inputs_codec);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (Tick != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Tick);
+      }
+      size += inputs_.CalculateSize(_repeated_inputs_codec);
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(PushFrame_S2C other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Tick != 0) {
+        Tick = other.Tick;
+      }
+      inputs_.Add(other.inputs_);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 8: {
+            Tick = input.ReadInt32();
+            break;
+          }
+          case 18: {
+            inputs_.AddEntriesFrom(input, _repeated_inputs_codec);
             break;
           }
         }

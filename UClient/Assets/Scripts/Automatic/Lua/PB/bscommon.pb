@@ -1,6 +1,12 @@
 
-W
-bscommon.protoPB_BSCommon"0
-UserInfo
-uid (Ruid
-name (	Rnamebproto3
+à
+bscommon.protoPB_BSCommon":
+User
+userId (RuserId
+userName (	RuserName"!
+FrameInputCmd
+num (Rnum"Z
+
+FrameInput
+tick (Rtick8
+	inputCmds (2.PB_BSCommon.FrameInputCmdR	inputCmdsbproto3

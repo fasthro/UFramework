@@ -37,7 +37,6 @@ namespace LockstepServer.Src
         public Simulator simulator { get; private set; }
 
         /// <summary>
-        ///
         /// </summary>
         /// <value></value>
         public bool isRunning { get; private set; }
@@ -62,7 +61,7 @@ namespace LockstepServer.Src
 
         #endregion simulate
 
-        public Room(int id)
+        public Room(ServiceContainer container, int id) : base(container)
         {
             _roomId = id;
             _secretKey = Crypt.Base64Encode(Crypt.RandomKey());
@@ -109,6 +108,24 @@ namespace LockstepServer.Src
         }
 
         /// <summary>
+        /// 离开房间
+        /// </summary>
+        /// <param name="uid"></param>
+        public void Remove(long uid)
+        {
+            for (int i = 0; i < GameDefine.ROOM_PLAYER_MAX_COUNT; i++)
+            {
+                if (_players[i].uid == uid)
+                {
+                    _players[i] = null;
+                    _playerCount--;
+                    break;
+                }
+            }
+            LogHelper.Info($"玩家[{uid}]离开房间[{roomId}], 当前房间玩家数量{playerCount}个");
+        }
+
+        /// <summary>
         /// 玩家准备好
         /// </summary>
         /// <param name="player"></param>
@@ -144,7 +161,7 @@ namespace LockstepServer.Src
                 player?.session.PushCSharp(cmd, message);
         }
 
-        protected override void OnUpdate(float deltaTime)
+        public override void Update()
         {
             if (!isRunning)
                 return;
@@ -155,7 +172,7 @@ namespace LockstepServer.Src
             tickSinceStart = (int)((LSTime.realtimeSinceStartupMS - startTime) / tickDeltaTime);
             while (simulator.tick < tickSinceStart)
             {
-                simulator.DoUpdate(tickDeltaTime);
+                simulator.Update();
             }
         }
 
@@ -163,13 +180,13 @@ namespace LockstepServer.Src
         {
             var s2c = new StartSimulate_S2C();
             s2c.Seed = simulator.seed;
-            s2c.UserInfos.Clear();
+            s2c.Users.Clear();
             foreach (var player in _players)
             {
-                var info = new PBBSCommon.UserInfo();
-                info.Uid = player.uid;
-                info.Name = "Name " + player.uid;
-                s2c.UserInfos.Add(info);
+                var info = new PBBSCommon.User();
+                info.UserId = player.uid;
+                info.UserName = "Name " + player.uid;
+                s2c.Users.Add(info);
             }
             PushMessage(950, s2c);
         }

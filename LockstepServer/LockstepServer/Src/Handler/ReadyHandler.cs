@@ -13,13 +13,16 @@ namespace LockstepServer.Src
 {
     public class ReadyHandler : BaseHandler
     {
+        public ReadyHandler(ServiceContainer container) : base(container)
+        {
+        }
+
         public override int cmd => 903;
-        public RoomManager roomManager => Service.Instance.GetManager<RoomManager>();
 
         protected override void OnMessage(byte[] bytes)
         {
             Ready_C2S c2c = Ready_C2S.Parser.ParseFrom(bytes);
-            roomManager.room.Ready(c2c.Uid);
+            _roomService.room.Ready(c2c.Uid);
         }
 
         protected override bool OnResponse()
@@ -30,9 +33,9 @@ namespace LockstepServer.Src
 
         protected override void OnAction()
         {
-            if (roomManager.room.isAllReady)
+            if (_roomService.room.isAllReady)
             {
-                roomManager.room.StartSimulate();
+                _roomService.room.StartSimulate();
             }
         }
     }

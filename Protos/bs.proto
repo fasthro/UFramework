@@ -42,5 +42,12 @@ message Ready_S2C {}
 //#[S2C][950]#
 message StartSimulate_S2C {
   int32 seed = 1;
-  repeated PB_BSCommon.UserInfo userInfos = 2;
+  repeated PB_BSCommon.User users = 2;
+}
+
+// 服务器下推帧
+//#[S2C][951]#
+message PushFrame_S2C {
+  int32 tick = 1;
+  repeated PB_BSCommon.FrameInput inputs = 2;
 }
