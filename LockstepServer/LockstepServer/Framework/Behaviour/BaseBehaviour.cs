@@ -6,9 +6,9 @@ namespace LockstepServer
 {
     public abstract class BaseBehaviour : BaseService
     {
-        public BaseBehaviour(ServiceContainer serviceContainer)
+        public BaseBehaviour()
         {
-            SetReference(serviceContainer);
+            SetReference();
         }
     }
 }

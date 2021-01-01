@@ -4,7 +4,6 @@
  * @Description:
  */
 
-using LockstepServer.Src;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,20 +12,27 @@ namespace LockstepServer
 {
     public abstract class BaseService : IService
     {
+        protected static ServiceContainer _container;
+
         public BaseService()
         {
             Initialize();
         }
 
-        public virtual void SetReference(ServiceContainer container)
+        public static void SetContainer(ServiceContainer container)
         {
-            _helperService = container.GetService<IHelperService>();
-            _dataService = container.GetService<IDataService>();
-            _handlerService = container.GetService<IHandlerService>();
-            _modelService = container.GetService<IModelService>();
-            _networkService = container.GetService<INetworkService>();
-            _playerService = container.GetService<IPlayerService>();
-            _roomService = container.GetService<IRoomService>();
+            _container = container;
+        }
+
+        public virtual void SetReference()
+        {
+            _helperService = _container.GetService<IHelperService>();
+            _dataService = _container.GetService<IDataService>();
+            _handlerService = _container.GetService<IHandlerService>();
+            _modelService = _container.GetService<IModelService>();
+            _networkService = _container.GetService<INetworkService>();
+            //_playerService = _container.GetService<IPlayerService>();
+            //_roomService = _container.GetService<IRoomService>();
         }
 
         public virtual void Initialize()
@@ -46,7 +52,7 @@ namespace LockstepServer
         protected IHandlerService _handlerService;
         protected IModelService _modelService;
         protected INetworkService _networkService;
-        protected IPlayerService _playerService;
-        protected IRoomService _roomService;
+        //protected IPlayerService _playerService;
+        //protected IRoomService _roomService;
     }
 }

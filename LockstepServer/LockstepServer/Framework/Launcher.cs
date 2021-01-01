@@ -1,8 +1,4 @@
-﻿using log4net;
-using log4net.Config;
-using log4net.Repository;
-
-/*
+﻿/*
  * @Author: fasthro
  * @Date: 2020/12/18 14:44:00
  * @Description:
@@ -19,7 +15,7 @@ namespace LockstepServer
             _port = port;
         }
 
-        public bool IsRunning => _udpSocketServer.isRunning;
+        public bool IsRunning { get { return _udpSocketServer != null && _udpSocketServer.isRunning; } }
         public ServiceContainer serviceContainer { get; private set; }
 
         public void Initialize()
@@ -30,7 +26,7 @@ namespace LockstepServer
             foreach (var service in _allServices)
             {
                 var ser = service as BaseService;
-                ser.SetReference(serviceContainer);
+                ser.SetReference();
             }
 
             //创建服务器网络监听
@@ -60,7 +56,9 @@ namespace LockstepServer
 
         protected virtual void InitializeService()
         {
+
             serviceContainer = new ServiceContainer();
+            BaseService.SetContainer(serviceContainer);
             serviceContainer.RegisterService(new HelperService());
             serviceContainer.RegisterService(new NetworkService());
             serviceContainer.RegisterService(new DataService());

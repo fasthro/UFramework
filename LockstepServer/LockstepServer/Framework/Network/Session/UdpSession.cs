@@ -10,7 +10,7 @@ using System;
 
 namespace LockstepServer
 {
-    public class UdpSession : ISession
+    public class UdpSession : BaseBehaviour, ISession
     {
         private NetPeer _connection;
 
@@ -20,7 +20,6 @@ namespace LockstepServer
         }
 
         public int sessionId => _connection.Id;
-        private NetworkService _netManager => Service.Instance.GetManager<NetworkService>();
 
         public void Kick()
         {
@@ -29,32 +28,32 @@ namespace LockstepServer
 
         public void Send(int cmd, int session, IMessage message)
         {
-            _netManager.Send(_connection, cmd, session, NetworkProcessLayer.All, message);
+            _networkService.Send(_connection, cmd, session, NetworkProcessLayer.All, message);
         }
 
         public void SendLua(int cmd, int session, IMessage message)
         {
-            _netManager.Send(_connection, cmd, session, NetworkProcessLayer.Lua, message);
+            _networkService.Send(_connection, cmd, session, NetworkProcessLayer.Lua, message);
         }
 
         public void SendCSharp(int cmd, int session, IMessage message)
         {
-            _netManager.Send(_connection, cmd, session, NetworkProcessLayer.CSharp, message);
+            _networkService.Send(_connection, cmd, session, NetworkProcessLayer.CSharp, message);
         }
 
         public void Push(int cmd, IMessage message)
         {
-            _netManager.Send(_connection, cmd, 0, NetworkProcessLayer.All, message);
+            _networkService.Send(_connection, cmd, 0, NetworkProcessLayer.All, message);
         }
 
         public void PushLua(int cmd, IMessage message)
         {
-            _netManager.Send(_connection, cmd, 0, NetworkProcessLayer.Lua, message);
+            _networkService.Send(_connection, cmd, 0, NetworkProcessLayer.Lua, message);
         }
 
         public void PushCSharp(int cmd, IMessage message)
         {
-            _netManager.Send(_connection, cmd, 0, NetworkProcessLayer.CSharp, message);
+            _networkService.Send(_connection, cmd, 0, NetworkProcessLayer.CSharp, message);
         }
     }
 }

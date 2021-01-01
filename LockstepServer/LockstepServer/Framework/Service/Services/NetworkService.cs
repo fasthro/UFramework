@@ -21,8 +21,6 @@ namespace LockstepServer
         private FixedByteArray _fixedWriter;
         private byte[] _fixedBuff;
 
-        private HandlerService _handlerManager;
-
         #region base
 
         public override void Initialize()
@@ -38,9 +36,6 @@ namespace LockstepServer
 
         public void OnNetworkReceive(NetPeer peer, NetPacketReader reader, DeliveryMethod deliveryMethod)
         {
-            if (_handlerManager == null)
-                _handlerManager = Service.Instance.GetManager<HandlerService>();
-
             reader.GetUShort();
 
             reader.GetBytes(_fixedBuff, PACK_HEADER_SIZE);
@@ -56,7 +51,7 @@ namespace LockstepServer
             byte[] bytes = new byte[count];
             reader.GetBytes(bytes, count);
 
-            _handlerManager.OnReceive(peer, cmd, session, layer, bytes);
+            _handlerService.OnReceive(peer, cmd, session, layer, bytes);
         }
 
         public void OnPeerConnected(NetPeer peer)
@@ -68,9 +63,7 @@ namespace LockstepServer
         {
             LogHelper.Info("客户端连接断开 [" + peer.EndPoint + "]");
 
-            if (_handlerManager == null)
-                _handlerManager = Service.Instance.GetManager<HandlerService>();
-            _handlerManager.OnReceive(peer, NetwokCmd.CLIENT_DISCONNECT, 0, 0, null);
+            _handlerService.OnReceive(peer, NetwokCmd.CLIENT_DISCONNECT, 0, 0, null);
         }
 
         #endregion IServerListener

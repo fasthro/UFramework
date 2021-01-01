@@ -13,7 +13,7 @@ namespace LockstepServer
 {
     public class BaseModel : BaseBehaviour
     {
-        public BaseModel(ServiceContainer container, string tabName) : base(container)
+        public BaseModel(string tabName) : base()
         {
             _tableName = tabName;
         }
