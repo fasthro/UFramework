@@ -6,12 +6,8 @@
 
 namespace LockstepServer.Src
 {
-    public class DisconnectHandler : BaseHandler
+    public class DisconnectHandler : BaseGameHandler
     {
-        public DisconnectHandler(ServiceContainer container) : base(container)
-        {
-        }
-
         public override int cmd => NetwokCmd.CLIENT_DISCONNECT;
 
         protected override void OnMessage(byte[] bytes)

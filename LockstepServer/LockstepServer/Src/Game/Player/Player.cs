@@ -6,7 +6,7 @@
 
 namespace LockstepServer.Src
 {
-    public class Player : IPlayer
+    public class Player : BaseGameBehaviour, IPlayer
     {
         #region private
 

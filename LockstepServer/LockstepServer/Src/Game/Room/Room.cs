@@ -10,7 +10,7 @@ using PBBS;
 
 namespace LockstepServer.Src
 {
-    public class Room : BaseBehaviour, IRoom
+    public class Room : BaseGameBehaviour, IRoom
     {
         #region interface
 
@@ -61,7 +61,7 @@ namespace LockstepServer.Src
 
         #endregion simulate
 
-        public Room(ServiceContainer container, int id) : base(container)
+        public Room(int id) : base()
         {
             _roomId = id;
             _secretKey = Crypt.Base64Encode(Crypt.RandomKey());

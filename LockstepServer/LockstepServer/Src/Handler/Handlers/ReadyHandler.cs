@@ -11,12 +11,8 @@ using PBBS;
 
 namespace LockstepServer.Src
 {
-    public class ReadyHandler : BaseHandler
+    public class ReadyHandler : BaseGameHandler
     {
-        public ReadyHandler(ServiceContainer container) : base(container)
-        {
-        }
-
         public override int cmd => 903;
 
         protected override void OnMessage(byte[] bytes)

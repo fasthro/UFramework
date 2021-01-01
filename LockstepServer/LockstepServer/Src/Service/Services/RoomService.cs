@@ -12,7 +12,7 @@ namespace LockstepServer.Src
 
         public override void Initialize()
         {
-            _room = new Room(ServerLauncher.Instance.serviceContainer, 1);
+            _room = new Room(1);
         }
 
         public override void Update()

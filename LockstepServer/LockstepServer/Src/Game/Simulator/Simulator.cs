@@ -10,12 +10,8 @@ using System.Text;
 
 namespace LockstepServer.Src
 {
-    public class Simulator : BaseBehaviour
+    public class Simulator : BaseGameBehaviour
     {
-        public Simulator(ServiceContainer container) : base(container)
-        {
-        }
-
         /// <summary>
         /// 随机种子
         /// </summary>

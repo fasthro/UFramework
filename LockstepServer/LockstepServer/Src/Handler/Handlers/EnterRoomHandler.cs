@@ -8,12 +8,8 @@ using PBBS;
 
 namespace LockstepServer.Src
 {
-    public class EnterRoomHandler : BaseHandler
+    public class EnterRoomHandler : BaseGameHandler
     {
-        public EnterRoomHandler(ServiceContainer container) : base(container)
-        {
-        }
-
         public override int cmd => 902;
 
         protected override void OnMessage(byte[] bytes)

@@ -10,12 +10,8 @@ using PBBS;
 
 namespace LockstepServer.Src
 {
-    public class HandshakeHandler : BaseHandler
+    public class HandshakeHandler : BaseGameHandler
     {
-        public HandshakeHandler(ServiceContainer container) : base(container)
-        {
-        }
-
         public override int cmd => 901;
 
         protected override void OnMessage(byte[] bytes)

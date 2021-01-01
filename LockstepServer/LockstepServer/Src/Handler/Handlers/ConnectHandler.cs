@@ -10,12 +10,8 @@ using System.Text;
 
 namespace LockstepServer.Src
 {
-    public class ConnectHandler : BaseHandler
+    public class ConnectHandler : BaseGameHandler
     {
-        public ConnectHandler(ServiceContainer container) : base(container)
-        {
-        }
-
         public override int cmd => NetwokCmd.CLIENT_CONNECT;
 
         protected override void OnMessage(byte[] bytes)

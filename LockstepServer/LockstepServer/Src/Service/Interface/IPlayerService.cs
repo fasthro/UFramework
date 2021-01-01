@@ -11,5 +11,7 @@ namespace LockstepServer.Src
         Player GetPlayer(int sessionId);
 
         void AddPlayer(Player player);
+
+        bool ExistPlayer(long uid);
     }
 }
