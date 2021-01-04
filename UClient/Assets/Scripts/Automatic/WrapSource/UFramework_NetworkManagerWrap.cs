@@ -2,11 +2,11 @@
 using System;
 using LuaInterface;
 
-public class UFramework_NetManagerWrap
+public class UFramework_NetworkManagerWrap
 {
 	public static void Register(LuaState L)
 	{
-		L.BeginClass(typeof(UFramework.NetManager), typeof(UFramework.BaseManager));
+		L.BeginClass(typeof(UFramework.NetworkManager), typeof(UFramework.BaseManager));
 		L.RegFunction("CreateChannel", new LuaCSFunction(CreateChannel));
 		L.RegFunction("RemoveChannel", new LuaCSFunction(RemoveChannel));
 		L.RegFunction("GetChannel", new LuaCSFunction(GetChannel));
@@ -18,13 +18,13 @@ public class UFramework_NetManagerWrap
 		L.RegFunction("OnSocketChannelDisconnected", new LuaCSFunction(OnSocketChannelDisconnected));
 		L.RegFunction("OnSocketChannelReceive", new LuaCSFunction(OnSocketChannelReceive));
 		L.RegFunction("OnSocketChannelException", new LuaCSFunction(OnSocketChannelException));
-		L.RegFunction("New", new LuaCSFunction(_CreateUFramework_NetManager));
+		L.RegFunction("New", new LuaCSFunction(_CreateUFramework_NetworkManager));
 		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
 		L.EndClass();
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int _CreateUFramework_NetManager(IntPtr L)
+	static int _CreateUFramework_NetworkManager(IntPtr L)
 	{
 		try
 		{
@@ -32,13 +32,13 @@ public class UFramework_NetManagerWrap
 
 			if (count == 0)
 			{
-				UFramework.NetManager obj = new UFramework.NetManager();
+				UFramework.NetworkManager obj = new UFramework.NetworkManager();
 				ToLua.PushObject(L, obj);
 				return 1;
 			}
 			else
 			{
-				return LuaDLL.luaL_throw(L, "invalid arguments to ctor method: UFramework.NetManager.New");
+				return LuaDLL.luaL_throw(L, "invalid arguments to ctor method: UFramework.NetworkManager.New");
 			}
 		}
 		catch (Exception e)
@@ -53,7 +53,7 @@ public class UFramework_NetManagerWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 3);
-			UFramework.NetManager obj = (UFramework.NetManager)ToLua.CheckObject<UFramework.NetManager>(L, 1);
+			UFramework.NetworkManager obj = (UFramework.NetworkManager)ToLua.CheckObject<UFramework.NetworkManager>(L, 1);
 			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			UFramework.Network.ProtocalType arg1 = (UFramework.Network.ProtocalType)ToLua.CheckObject(L, 3, TypeTraits<UFramework.Network.ProtocalType>.type);
 			obj.CreateChannel(arg0, arg1);
@@ -71,7 +71,7 @@ public class UFramework_NetManagerWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
-			UFramework.NetManager obj = (UFramework.NetManager)ToLua.CheckObject<UFramework.NetManager>(L, 1);
+			UFramework.NetworkManager obj = (UFramework.NetworkManager)ToLua.CheckObject<UFramework.NetworkManager>(L, 1);
 			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.RemoveChannel(arg0);
 			return 0;
@@ -88,7 +88,7 @@ public class UFramework_NetManagerWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
-			UFramework.NetManager obj = (UFramework.NetManager)ToLua.CheckObject<UFramework.NetManager>(L, 1);
+			UFramework.NetworkManager obj = (UFramework.NetworkManager)ToLua.CheckObject<UFramework.NetworkManager>(L, 1);
 			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			UFramework.Network.SocketChannel o = obj.GetChannel(arg0);
 			ToLua.PushObject(L, o);
@@ -106,7 +106,7 @@ public class UFramework_NetManagerWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 4);
-			UFramework.NetManager obj = (UFramework.NetManager)ToLua.CheckObject<UFramework.NetManager>(L, 1);
+			UFramework.NetworkManager obj = (UFramework.NetworkManager)ToLua.CheckObject<UFramework.NetworkManager>(L, 1);
 			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			string arg1 = ToLua.CheckString(L, 3);
 			int arg2 = (int)LuaDLL.luaL_checkinteger(L, 4);
@@ -125,7 +125,7 @@ public class UFramework_NetManagerWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
-			UFramework.NetManager obj = (UFramework.NetManager)ToLua.CheckObject<UFramework.NetManager>(L, 1);
+			UFramework.NetworkManager obj = (UFramework.NetworkManager)ToLua.CheckObject<UFramework.NetworkManager>(L, 1);
 			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.Disconnect(arg0);
 			return 0;
@@ -142,7 +142,7 @@ public class UFramework_NetManagerWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 3);
-			UFramework.NetManager obj = (UFramework.NetManager)ToLua.CheckObject<UFramework.NetManager>(L, 1);
+			UFramework.NetworkManager obj = (UFramework.NetworkManager)ToLua.CheckObject<UFramework.NetworkManager>(L, 1);
 			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			UFramework.Network.SocketPack arg1 = (UFramework.Network.SocketPack)ToLua.CheckObject<UFramework.Network.SocketPack>(L, 3);
 			obj.Send(arg0, arg1);
@@ -160,7 +160,7 @@ public class UFramework_NetManagerWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 4);
-			UFramework.NetManager obj = (UFramework.NetManager)ToLua.CheckObject<UFramework.NetManager>(L, 1);
+			UFramework.NetworkManager obj = (UFramework.NetworkManager)ToLua.CheckObject<UFramework.NetworkManager>(L, 1);
 			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			string arg1 = ToLua.CheckString(L, 3);
 			int arg2 = (int)LuaDLL.luaL_checkinteger(L, 4);
@@ -179,7 +179,7 @@ public class UFramework_NetManagerWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
-			UFramework.NetManager obj = (UFramework.NetManager)ToLua.CheckObject<UFramework.NetManager>(L, 1);
+			UFramework.NetworkManager obj = (UFramework.NetworkManager)ToLua.CheckObject<UFramework.NetworkManager>(L, 1);
 			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.OnSocketChannelConnected(arg0);
 			return 0;
@@ -196,7 +196,7 @@ public class UFramework_NetManagerWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
-			UFramework.NetManager obj = (UFramework.NetManager)ToLua.CheckObject<UFramework.NetManager>(L, 1);
+			UFramework.NetworkManager obj = (UFramework.NetworkManager)ToLua.CheckObject<UFramework.NetworkManager>(L, 1);
 			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.OnSocketChannelDisconnected(arg0);
 			return 0;
@@ -213,7 +213,7 @@ public class UFramework_NetManagerWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
-			UFramework.NetManager obj = (UFramework.NetManager)ToLua.CheckObject<UFramework.NetManager>(L, 1);
+			UFramework.NetworkManager obj = (UFramework.NetworkManager)ToLua.CheckObject<UFramework.NetworkManager>(L, 1);
 			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			obj.OnSocketChannelReceive(arg0);
 			return 0;
@@ -230,7 +230,7 @@ public class UFramework_NetManagerWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 3);
-			UFramework.NetManager obj = (UFramework.NetManager)ToLua.CheckObject<UFramework.NetManager>(L, 1);
+			UFramework.NetworkManager obj = (UFramework.NetworkManager)ToLua.CheckObject<UFramework.NetworkManager>(L, 1);
 			int arg0 = (int)LuaDLL.luaL_checkinteger(L, 2);
 			System.Net.Sockets.SocketError arg1 = (System.Net.Sockets.SocketError)ToLua.CheckObject(L, 3, TypeTraits<System.Net.Sockets.SocketError>.type);
 			obj.OnSocketChannelException(arg0, arg1);

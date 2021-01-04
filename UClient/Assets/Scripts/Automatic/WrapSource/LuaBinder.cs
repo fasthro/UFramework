@@ -172,21 +172,15 @@ public static class LuaBinder
 		L.RegFunction("GTweenCallback1", new LuaCSFunction(FairyGUI_GTweenCallback1));
 		L.EndModule();
 		L.BeginModule("UFramework");
+		UFramework_AppConfigWrap.Register(L);
 		UFramework_UApplicationWrap.Register(L);
 		UFramework_IOPathWrap.Register(L);
 		UFramework_CryptWrap.Register(L);
-		UFramework_BaseManagerWrap.Register(L);
-		UFramework_NetManagerWrap.Register(L);
-		UFramework_ResManagerWrap.Register(L);
 		UFramework_ManagerContainerWrap.Register(L);
-		UFramework_ManagerServiceWrap.Register(L);
-		UFramework_BaseServiceWrap.Register(L);
-		UFramework_ServiceContainerWrap.Register(L);
-		UFramework_ServiceWrap.Register(L);
-		UFramework_BaseUnityBehaviourBindLuaWrap.Register(L);
-		UFramework_BaseUnityBehaviourWrap.Register(L);
+		UFramework_NetworkManagerWrap.Register(L);
+		UFramework_ResManagerWrap.Register(L);
+		UFramework_BaseManagerWrap.Register(L);
 		UFramework_BaseBehaviourWrap.Register(L);
-		UFramework_MonoSingleton_UFramework_ServiceWrap.Register(L);
 		L.BeginModule("UI");
 		UFramework_UI_UIPanelWrap.Register(L);
 		UFramework_UI_FiaryPanelWrap.Register(L);
@@ -201,8 +195,6 @@ public static class LuaBinder
 		L.EndModule();
 		L.BeginModule("Core");
 		L.RegFunction("UCallback_UFramework_Core_AssetRequest", new LuaCSFunction(UFramework_Core_UCallback_UFramework_Core_AssetRequest));
-		L.RegFunction("UCallback_float", new LuaCSFunction(UFramework_Core_UCallback_float));
-		L.RegFunction("UCallback", new LuaCSFunction(UFramework_Core_UCallback));
 		L.EndModule();
 		L.EndModule();
 		L.EndModule();
@@ -1700,66 +1692,6 @@ public static class LuaBinder
 			{
 				LuaTable self = ToLua.CheckLuaTable(L, 2);
 				Delegate arg1 = DelegateTraits<UFramework.Core.UCallback<UFramework.Core.AssetRequest>>.Create(func, self);
-				ToLua.Push(L, arg1);
-				func.Dispose();
-				self.Dispose();
-			}
-			return 1;
-		}
-		catch(Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int UFramework_Core_UCallback_float(IntPtr L)
-	{
-		try
-		{
-			int count = LuaDLL.lua_gettop(L);
-			LuaFunction func = ToLua.CheckLuaFunction(L, 1);
-
-			if (count == 1)
-			{
-				Delegate arg1 = DelegateTraits<UFramework.Core.UCallback<float>>.Create(func);
-				ToLua.Push(L, arg1);
-				func.Dispose();
-			}
-			else
-			{
-				LuaTable self = ToLua.CheckLuaTable(L, 2);
-				Delegate arg1 = DelegateTraits<UFramework.Core.UCallback<float>>.Create(func, self);
-				ToLua.Push(L, arg1);
-				func.Dispose();
-				self.Dispose();
-			}
-			return 1;
-		}
-		catch(Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int UFramework_Core_UCallback(IntPtr L)
-	{
-		try
-		{
-			int count = LuaDLL.lua_gettop(L);
-			LuaFunction func = ToLua.CheckLuaFunction(L, 1);
-
-			if (count == 1)
-			{
-				Delegate arg1 = DelegateTraits<UFramework.Core.UCallback>.Create(func);
-				ToLua.Push(L, arg1);
-				func.Dispose();
-			}
-			else
-			{
-				LuaTable self = ToLua.CheckLuaTable(L, 2);
-				Delegate arg1 = DelegateTraits<UFramework.Core.UCallback>.Create(func, self);
 				ToLua.Push(L, arg1);
 				func.Dispose();
 				self.Dispose();

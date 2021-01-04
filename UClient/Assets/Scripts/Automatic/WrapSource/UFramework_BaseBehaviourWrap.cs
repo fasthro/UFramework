@@ -7,11 +7,35 @@ public class UFramework_BaseBehaviourWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(UFramework.BaseBehaviour), typeof(System.Object));
+		L.RegFunction("SetContainer", new LuaCSFunction(SetContainer));
 		L.RegFunction("Initialize", new LuaCSFunction(Initialize));
 		L.RegFunction("Update", new LuaCSFunction(Update));
+		L.RegFunction("LateUpdate", new LuaCSFunction(LateUpdate));
+		L.RegFunction("FixedUpdate", new LuaCSFunction(FixedUpdate));
 		L.RegFunction("Dispose", new LuaCSFunction(Dispose));
+		L.RegFunction("ApplicationQuit", new LuaCSFunction(ApplicationQuit));
+		L.RegFunction("SetReference", new LuaCSFunction(SetReference));
+		L.RegFunction("CallLuaFunction", new LuaCSFunction(CallLuaFunction));
 		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("managerContainer", new LuaCSFunction(get_managerContainer), new LuaCSFunction(set_managerContainer));
+		L.RegVar("luaTable", new LuaCSFunction(get_luaTable), new LuaCSFunction(set_luaTable));
 		L.EndClass();
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int SetContainer(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			UFramework.ManagerContainer arg0 = (UFramework.ManagerContainer)ToLua.CheckObject<UFramework.ManagerContainer>(L, 1);
+			UFramework.BaseBehaviour.SetContainer(arg0);
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -48,6 +72,38 @@ public class UFramework_BaseBehaviourWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int LateUpdate(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			UFramework.BaseBehaviour obj = (UFramework.BaseBehaviour)ToLua.CheckObject<UFramework.BaseBehaviour>(L, 1);
+			obj.LateUpdate();
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int FixedUpdate(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			UFramework.BaseBehaviour obj = (UFramework.BaseBehaviour)ToLua.CheckObject<UFramework.BaseBehaviour>(L, 1);
+			obj.FixedUpdate();
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int Dispose(IntPtr L)
 	{
 		try
@@ -60,6 +116,125 @@ public class UFramework_BaseBehaviourWrap
 		catch (Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int ApplicationQuit(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			UFramework.BaseBehaviour obj = (UFramework.BaseBehaviour)ToLua.CheckObject<UFramework.BaseBehaviour>(L, 1);
+			obj.ApplicationQuit();
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int SetReference(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			UFramework.BaseBehaviour obj = (UFramework.BaseBehaviour)ToLua.CheckObject<UFramework.BaseBehaviour>(L, 1);
+			obj.SetReference();
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int CallLuaFunction(IntPtr L)
+	{
+		try
+		{
+			int count = LuaDLL.lua_gettop(L);
+			UFramework.BaseBehaviour obj = (UFramework.BaseBehaviour)ToLua.CheckObject<UFramework.BaseBehaviour>(L, 1);
+			string arg0 = ToLua.CheckString(L, 2);
+			object[] arg1 = ToLua.ToParamsObject(L, 3, count - 2);
+			bool o = obj.CallLuaFunction(arg0, arg1);
+			LuaDLL.lua_pushboolean(L, o);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_managerContainer(IntPtr L)
+	{
+		try
+		{
+			ToLua.PushObject(L, UFramework.BaseBehaviour.managerContainer);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_luaTable(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			UFramework.BaseBehaviour obj = (UFramework.BaseBehaviour)o;
+			LuaInterface.LuaTable ret = obj.luaTable;
+			ToLua.Push(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o, "attempt to index luaTable on a nil value");
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_managerContainer(IntPtr L)
+	{
+		try
+		{
+			UFramework.ManagerContainer arg0 = (UFramework.ManagerContainer)ToLua.CheckObject<UFramework.ManagerContainer>(L, 2);
+			UFramework.BaseBehaviour.managerContainer = arg0;
+			UFramework.BaseBehaviour.managerContainer = arg0;
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_luaTable(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			UFramework.BaseBehaviour obj = (UFramework.BaseBehaviour)o;
+			LuaTable arg0 = ToLua.CheckLuaTable(L, 2);
+			obj.luaTable = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o, "attempt to index luaTable on a nil value");
 		}
 	}
 }

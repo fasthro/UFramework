@@ -6,7 +6,7 @@ public class UFramework_BaseManagerWrap
 {
 	public static void Register(LuaState L)
 	{
-		L.BeginClass(typeof(UFramework.BaseManager), typeof(UFramework.BaseUnityBehaviourBindLua));
+		L.BeginClass(typeof(UFramework.BaseManager), typeof(UFramework.BaseBehaviour));
 		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
 		L.EndClass();
 	}
