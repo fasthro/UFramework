@@ -3,6 +3,11 @@ Author: fasthro
 Date: 2020-08-28 12:15:46
 Description: main
 --]]
+
+_G.UApplication = UFramework.UApplication
+_G.IOPath = UFramework.IOPath
+_G.AppConfig = nil
+
 require("Extension.TableExtension")
 require("UI.FairyGUI")
 require("UI.BasePanel")
@@ -10,17 +15,18 @@ require("Common.Const")
 require("Common.EventName")
 require("Common.Function")
 require("Logger.Logger")
-require("Define")
 require("DefinePanel")
-require("Service.Service")
+require("Launcher")
 
 local _new = typesys.new
 local _setRootObject = typesys.setRootObject
 local _typesys_gc = typesys.gc
 
+local _managerContainer = nil
+
 LuaEngine =
     typesys.def.LuaEngine {
-    service = typesys.Service
+    launcher = typesys.Launcher
 }
 
 function LuaEngine:__ctor()
@@ -32,11 +38,13 @@ function LuaEngine:__dtor()
 end
 
 -- 初始化 luaEngine
-function LuaEngine.initialize(loglevel)
-    -- 日志等级
-    logger.setlevel(loglevel)
+function LuaEngine.initialize(appConfig, managerContainer)
+    _G.AppConfig = appConfig
+    _managerContainer = managerContainer
+    
+    logger.setlevel(0)
 
-    -- 启动LuaEngine
+-- 启动LuaEngine
     _setRootObject(_new(LuaEngine))
 end
 
@@ -62,8 +70,8 @@ end
 
 -- members
 function LuaEngine:onRunner()
-    self.service = _new(typesys.Service)
-    self.service:initialize()
+    self.launcher = _new(typesys.Launcher, _managerContainer)
+    self.launcher:initialize()
 end
 
 function LuaEngine:onUpdate()

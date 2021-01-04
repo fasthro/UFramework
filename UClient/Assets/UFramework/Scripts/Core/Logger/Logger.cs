@@ -72,9 +72,11 @@ namespace UFramework
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("[");
-            for(int i = 0; i < bytes.Length; i++){
+            for (int i = 0; i < bytes.Length; i++)
+            {
                 sb.Append(bytes[i]);
-                if(i < bytes.Length - 1) {
+                if (i < bytes.Length - 1)
+                {
                     sb.Append(",");
                 }
             }

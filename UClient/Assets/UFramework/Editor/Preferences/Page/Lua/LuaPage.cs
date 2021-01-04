@@ -3,6 +3,7 @@
  * @Date: 2020-08-08 19:39:10
  * @Description: Lua/ToLua Page
  */
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -22,10 +23,6 @@ namespace UFramework.Editor.Preferences.Lua
 {
     public class LuaPage : IPage, IPageBar
     {
-        public string menuName { get { return "Lua"; } }
-        static LuaConfig Config { get { return Core.Serializer<LuaConfig>.Instance; } }
-        static Preferences_Lua_BuildConfig BuildConfig { get { return Core.Serializer<Preferences_Lua_BuildConfig>.Instance; } }
-
         [ShowInInspector]
         [BoxGroup("General Setting")]
         [LabelText("Build Use Byte Encode")]
@@ -40,13 +37,6 @@ namespace UFramework.Editor.Preferences.Lua
         [ListDrawerSettings(Expanded = true, CustomRemoveElementFunction = "CustomRemoveElementFunction_searchPaths")]
         public List<LuaSearchPathItem> searchPaths = new List<LuaSearchPathItem>();
 
-        private void CustomRemoveElementFunction_searchPaths(LuaSearchPathItem item)
-        {
-            searchPaths.Remove(item);
-            CheckBuiltInSearchPathItem();
-            SearchPathItemDescribeSave();
-        }
-
         /// <summary>
         /// lua bind type items
         /// </summary>
@@ -55,9 +45,12 @@ namespace UFramework.Editor.Preferences.Lua
         [ShowInInspector]
         public List<LuaWrapBindTypeItem> wrapBindTypes = new List<LuaWrapBindTypeItem>();
 
-        // 基础 wrap 类型列表
-        private BindType[] baseBindTypes;
-        private List<BindType> bindTypes = new List<BindType>();
+        public string menuName { get { return "Lua"; } }
+
+        public static BindType _GT(Type t)
+        {
+            return new BindType(t);
+        }
 
         public object GetInstance()
         {
@@ -103,6 +96,24 @@ namespace UFramework.Editor.Preferences.Lua
             Config.Serialize();
         }
 
+        // 基础 wrap 类型列表
+        private BindType[] baseBindTypes;
+
+        private List<BindType> bindTypes = new List<BindType>();
+
+        private static LuaConfig Config
+        { get { return Core.Serializer<LuaConfig>.Instance; } }
+
+        private static Preferences_Lua_BuildConfig BuildConfig
+        { get { return Core.Serializer<Preferences_Lua_BuildConfig>.Instance; } }
+
+        private void CustomRemoveElementFunction_searchPaths(LuaSearchPathItem item)
+        {
+            searchPaths.Remove(item);
+            CheckBuiltInSearchPathItem();
+            SearchPathItemDescribeSave();
+        }
+
         #region General Setting
 
         /// <summary>
@@ -118,7 +129,7 @@ namespace UFramework.Editor.Preferences.Lua
             Config.byteEncode = byteEncode;
         }
 
-        #endregion
+        #endregion General Setting
 
         #region builtIn Search Path Item
 
@@ -177,7 +188,7 @@ namespace UFramework.Editor.Preferences.Lua
         }
 
         /// <summary>
-        ///  Apply Search PathItem
+        /// Apply Search PathItem
         /// </summary>
         private void SearchPathItemDescribeSave()
         {
@@ -189,7 +200,7 @@ namespace UFramework.Editor.Preferences.Lua
             }
         }
 
-        #endregion
+        #endregion builtIn Search Path Item
 
         #region wrap
 
@@ -298,20 +309,14 @@ namespace UFramework.Editor.Preferences.Lua
             bindTypes.Add(_GT(typeof(UFramework.Network.SocketPack)));
             bindTypes.Add(_GT(typeof(System.Net.Sockets.SocketError)));
 
+            bindTypes.Add(_GT(typeof(UFramework.AppConfig)));
             bindTypes.Add(_GT(typeof(UFramework.UApplication)));
             bindTypes.Add(_GT(typeof(UFramework.IOPath)));
             bindTypes.Add(_GT(typeof(UFramework.Crypt)));
 
-            bindTypes.Add(_GT(typeof(UFramework.BaseManager)));
-            bindTypes.Add(_GT(typeof(UFramework.NetManager)));
-            bindTypes.Add(_GT(typeof(UFramework.ResManager)));
-
             bindTypes.Add(_GT(typeof(UFramework.ManagerContainer)));
-            bindTypes.Add(_GT(typeof(UFramework.ManagerService)));
-
-            bindTypes.Add(_GT(typeof(UFramework.BaseService)));
-            bindTypes.Add(_GT(typeof(UFramework.ServiceContainer)));
-            bindTypes.Add(_GT(typeof(UFramework.Service)));
+            bindTypes.Add(_GT(typeof(UFramework.NetworkManager)));
+            bindTypes.Add(_GT(typeof(UFramework.ResManager)));
 
             CustomSettings.customTypeList = bindTypes.ToArray();
 
@@ -359,7 +364,7 @@ namespace UFramework.Editor.Preferences.Lua
         }
 
         /// <summary>
-        ///  Apply Wrap
+        /// Apply Wrap
         /// </summary>
         private void WrapDescribeSave()
         {
@@ -384,7 +389,7 @@ namespace UFramework.Editor.Preferences.Lua
             }
         }
 
-        #endregion
+        #endregion wrap
 
         #region build code
 
@@ -488,7 +493,7 @@ namespace UFramework.Editor.Preferences.Lua
         /// </summary>
         /// <param name="srcFile"></param>
         /// <param name="outFile"></param>
-        static void EncodeLuaFile(string srcFile, string outFile)
+        private static void EncodeLuaFile(string srcFile, string outFile)
         {
             srcFile = Path.GetFullPath(srcFile);
             if (!srcFile.ToLower().EndsWith(".lua"))
@@ -527,8 +532,7 @@ namespace UFramework.Editor.Preferences.Lua
             pro.WaitForExit();
             Directory.SetCurrentDirectory(currDir);
         }
-        #endregion
 
-        public static BindType _GT(Type t) { return new BindType(t); }
+        #endregion build code
     }
 }
