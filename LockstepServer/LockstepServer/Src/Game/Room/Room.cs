@@ -5,7 +5,7 @@
  */
 
 using Google.Protobuf;
-using LSC;
+using Lockstep;
 using PBBS;
 
 namespace LockstepServer.Src
@@ -147,7 +147,9 @@ namespace LockstepServer.Src
         /// </summary>
         public void StartSimulate()
         {
-            tickDeltaTime = 1000 / LSDefine.FRAME_RATE;
+            LogHelper.Info($"开始游戏");
+
+            tickDeltaTime = 1000 / Define.FRAME_RATE;
             startTime = LSTime.realtimeSinceStartupMS;
 
             simulator = new Simulator();
@@ -184,8 +186,8 @@ namespace LockstepServer.Src
             foreach (var player in _players)
             {
                 var info = new PBBSCommon.User();
-                info.UserId = player.uid;
-                info.UserName = "Name " + player.uid;
+                info.Id = player.uid;
+                info.Name = "Name " + player.uid;
                 s2c.Users.Add(info);
             }
             PushMessage(NetwokCmd.START, s2c);

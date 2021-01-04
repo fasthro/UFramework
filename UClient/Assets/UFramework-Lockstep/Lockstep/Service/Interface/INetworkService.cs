@@ -8,5 +8,6 @@ namespace Lockstep
 {
     public interface INetworkService : IService
     {
+        void SendFrame(Frame frame);
     }
 }

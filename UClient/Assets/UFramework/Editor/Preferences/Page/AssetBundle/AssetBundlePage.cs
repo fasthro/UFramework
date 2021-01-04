@@ -17,8 +17,8 @@ namespace UFramework.Editor.Preferences.AssetBundle
     public class AssetBundlePage : IPage, IPageBar
     {
         public string menuName { get { return "AssetBundle"; } }
-        static Preferences_AssetBundle_AssetConfig AssetConfig { get { return Core.Serializer<Preferences_AssetBundle_AssetConfig>.Instance; } }
-        static Preferences_AssetBundle_SearchPathConfig SearchPathConfig { get { return Core.Serializer<Preferences_AssetBundle_SearchPathConfig>.Instance; } }
+        static Preferences_AssetBundle_AssetConfig AssetConfig { get { return Serializer<Preferences_AssetBundle_AssetConfig>.Instance; } }
+        static Preferences_AssetBundle_SearchPathConfig SearchPathConfig { get { return Serializer<Preferences_AssetBundle_SearchPathConfig>.Instance; } }
 
         [BoxGroup("General Setting")]
         public bool buildNameHash = true;

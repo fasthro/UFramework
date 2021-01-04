@@ -13,14 +13,21 @@ namespace Lockstep
             Initialize();
         }
 
-        public virtual void SetReference(ServiceContainer container)
+        public static void SetContainer(ServiceContainer container)
         {
-            _gameService = container.GetService<IGameService>();
-            _entityService = container.GetService<IEntityService>();
-            _viewService = container.GetService<IViewService>();
-            _initializeService = container.GetService<IInitializeService>();
-            _simulatorService = container.GetService<ISimulatorService>();
-            _networkService = container.GetService<INetworkService>();
+            _container = container;
+        }
+
+        public virtual void SetReference()
+        {
+            _gameService = _container.GetService<IGameService>();
+            _entityService = _container.GetService<IEntityService>();
+            _helperService = _container.GetService<IHelperService>();
+            _viewService = _container.GetService<IViewService>();
+            _initializeService = _container.GetService<IInitializeService>();
+            _networkService = _container.GetService<INetworkService>();
+            _initializeService = _container.GetService<IInitializeService>();
+            _simulatorService = _container.GetService<ISimulatorService>();
         }
 
         public virtual void Initialize()
@@ -37,9 +44,12 @@ namespace Lockstep
 
         protected IGameService _gameService;
         protected IEntityService _entityService;
+        protected IHelperService _helperService;
         protected IViewService _viewService;
         protected IInitializeService _initializeService;
         protected ISimulatorService _simulatorService;
         protected INetworkService _networkService;
+
+        protected static ServiceContainer _container;
     }
 }

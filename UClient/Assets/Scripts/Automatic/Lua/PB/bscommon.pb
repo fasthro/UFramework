@@ -1,12 +1,12 @@
 
-à
-bscommon.protoPB_BSCommon":
-User
-userId (RuserId
-userName (	RuserName"!
-FrameInputCmd
-num (Rnum"Z
-
-FrameInput
-tick (Rtick8
-	inputCmds (2.PB_BSCommon.FrameInputCmdR	inputCmdsbproto3
+Ï
+bscommon.protoPB_BSCommon"*
+User
+id (Rid
+name (	Rname"-
+PlayerInput
+px (Rpx
+py (Rpy"M
+Frame
+tick (Rtick0
+inputs (2.PB_BSCommon.PlayerInputRinputsbproto3

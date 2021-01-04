@@ -22,17 +22,16 @@ namespace PBBSCommon {
     static BscommonReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cg5ic2NvbW1vbi5wcm90bxILUEJfQlNDb21tb24iKAoEVXNlchIOCgZ1c2Vy",
-            "SWQYASABKAMSEAoIdXNlck5hbWUYAiABKAkiHAoNRnJhbWVJbnB1dENtZBIL",
-            "CgNudW0YASABKAUiSQoKRnJhbWVJbnB1dBIMCgR0aWNrGAEgASgFEi0KCWlu",
-            "cHV0Q21kcxgCIAMoCzIaLlBCX0JTQ29tbW9uLkZyYW1lSW5wdXRDbWRiBnBy",
-            "b3RvMw=="));
+            "Cg5ic2NvbW1vbi5wcm90bxILUEJfQlNDb21tb24iIAoEVXNlchIKCgJpZBgB",
+            "IAEoAxIMCgRuYW1lGAIgASgJIiUKC1BsYXllcklucHV0EgoKAnB4GAEgASgB",
+            "EgoKAnB5GAIgASgBIj8KBUZyYW1lEgwKBHRpY2sYASABKAUSKAoGaW5wdXRz",
+            "GAIgAygLMhguUEJfQlNDb21tb24uUGxheWVySW5wdXRiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::PBBSCommon.User), global::PBBSCommon.User.Parser, new[]{ "UserId", "UserName" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::PBBSCommon.FrameInputCmd), global::PBBSCommon.FrameInputCmd.Parser, new[]{ "Num" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::PBBSCommon.FrameInput), global::PBBSCommon.FrameInput.Parser, new[]{ "Tick", "InputCmds" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::PBBSCommon.User), global::PBBSCommon.User.Parser, new[]{ "Id", "Name" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::PBBSCommon.PlayerInput), global::PBBSCommon.PlayerInput.Parser, new[]{ "Px", "Py" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::PBBSCommon.Frame), global::PBBSCommon.Frame.Parser, new[]{ "Tick", "Inputs" }, null, null, null)
           }));
     }
     #endregion
@@ -66,8 +65,8 @@ namespace PBBSCommon {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public User(User other) : this() {
-      userId_ = other.userId_;
-      userName_ = other.userName_;
+      id_ = other.id_;
+      name_ = other.name_;
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -75,25 +74,25 @@ namespace PBBSCommon {
       return new User(this);
     }
 
-    /// <summary>Field number for the "userId" field.</summary>
-    public const int UserIdFieldNumber = 1;
-    private long userId_;
+    /// <summary>Field number for the "id" field.</summary>
+    public const int IdFieldNumber = 1;
+    private long id_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public long UserId {
-      get { return userId_; }
+    public long Id {
+      get { return id_; }
       set {
-        userId_ = value;
+        id_ = value;
       }
     }
 
-    /// <summary>Field number for the "userName" field.</summary>
-    public const int UserNameFieldNumber = 2;
-    private string userName_ = "";
+    /// <summary>Field number for the "name" field.</summary>
+    public const int NameFieldNumber = 2;
+    private string name_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string UserName {
-      get { return userName_; }
+    public string Name {
+      get { return name_; }
       set {
-        userName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        name_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -110,16 +109,16 @@ namespace PBBSCommon {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (UserId != other.UserId) return false;
-      if (UserName != other.UserName) return false;
+      if (Id != other.Id) return false;
+      if (Name != other.Name) return false;
       return true;
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
-      if (UserId != 0L) hash ^= UserId.GetHashCode();
-      if (UserName.Length != 0) hash ^= UserName.GetHashCode();
+      if (Id != 0L) hash ^= Id.GetHashCode();
+      if (Name.Length != 0) hash ^= Name.GetHashCode();
       return hash;
     }
 
@@ -130,24 +129,24 @@ namespace PBBSCommon {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-      if (UserId != 0L) {
+      if (Id != 0L) {
         output.WriteRawTag(8);
-        output.WriteInt64(UserId);
+        output.WriteInt64(Id);
       }
-      if (UserName.Length != 0) {
+      if (Name.Length != 0) {
         output.WriteRawTag(18);
-        output.WriteString(UserName);
+        output.WriteString(Name);
       }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
-      if (UserId != 0L) {
-        size += 1 + pb::CodedOutputStream.ComputeInt64Size(UserId);
+      if (Id != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(Id);
       }
-      if (UserName.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(UserName);
+      if (Name.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
       }
       return size;
     }
@@ -157,11 +156,11 @@ namespace PBBSCommon {
       if (other == null) {
         return;
       }
-      if (other.UserId != 0L) {
-        UserId = other.UserId;
+      if (other.Id != 0L) {
+        Id = other.Id;
       }
-      if (other.UserName.Length != 0) {
-        UserName = other.UserName;
+      if (other.Name.Length != 0) {
+        Name = other.Name;
       }
     }
 
@@ -174,11 +173,11 @@ namespace PBBSCommon {
             input.SkipLastField();
             break;
           case 8: {
-            UserId = input.ReadInt64();
+            Id = input.ReadInt64();
             break;
           }
           case 18: {
-            UserName = input.ReadString();
+            Name = input.ReadString();
             break;
           }
         }
@@ -188,12 +187,12 @@ namespace PBBSCommon {
   }
 
   /// <summary>
-  ///  帧->输入命令
+  ///  帧-> 输入
   /// </summary>
-  public sealed partial class FrameInputCmd : pb::IMessage<FrameInputCmd> {
-    private static readonly pb::MessageParser<FrameInputCmd> _parser = new pb::MessageParser<FrameInputCmd>(() => new FrameInputCmd());
+  public sealed partial class PlayerInput : pb::IMessage<PlayerInput> {
+    private static readonly pb::MessageParser<PlayerInput> _parser = new pb::MessageParser<PlayerInput>(() => new PlayerInput());
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<FrameInputCmd> Parser { get { return _parser; } }
+    public static pb::MessageParser<PlayerInput> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
@@ -206,54 +205,68 @@ namespace PBBSCommon {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public FrameInputCmd() {
+    public PlayerInput() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public FrameInputCmd(FrameInputCmd other) : this() {
-      num_ = other.num_;
+    public PlayerInput(PlayerInput other) : this() {
+      px_ = other.px_;
+      py_ = other.py_;
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public FrameInputCmd Clone() {
-      return new FrameInputCmd(this);
+    public PlayerInput Clone() {
+      return new PlayerInput(this);
     }
 
-    /// <summary>Field number for the "num" field.</summary>
-    public const int NumFieldNumber = 1;
-    private int num_;
+    /// <summary>Field number for the "px" field.</summary>
+    public const int PxFieldNumber = 1;
+    private double px_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public int Num {
-      get { return num_; }
+    public double Px {
+      get { return px_; }
       set {
-        num_ = value;
+        px_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "py" field.</summary>
+    public const int PyFieldNumber = 2;
+    private double py_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public double Py {
+      get { return py_; }
+      set {
+        py_ = value;
       }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
-      return Equals(other as FrameInputCmd);
+      return Equals(other as PlayerInput);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(FrameInputCmd other) {
+    public bool Equals(PlayerInput other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (Num != other.Num) return false;
+      if (Px != other.Px) return false;
+      if (Py != other.Py) return false;
       return true;
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
-      if (Num != 0) hash ^= Num.GetHashCode();
+      if (Px != 0D) hash ^= Px.GetHashCode();
+      if (Py != 0D) hash ^= Py.GetHashCode();
       return hash;
     }
 
@@ -264,28 +277,38 @@ namespace PBBSCommon {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-      if (Num != 0) {
-        output.WriteRawTag(8);
-        output.WriteInt32(Num);
+      if (Px != 0D) {
+        output.WriteRawTag(9);
+        output.WriteDouble(Px);
+      }
+      if (Py != 0D) {
+        output.WriteRawTag(17);
+        output.WriteDouble(Py);
       }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
-      if (Num != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Num);
+      if (Px != 0D) {
+        size += 1 + 8;
+      }
+      if (Py != 0D) {
+        size += 1 + 8;
       }
       return size;
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(FrameInputCmd other) {
+    public void MergeFrom(PlayerInput other) {
       if (other == null) {
         return;
       }
-      if (other.Num != 0) {
-        Num = other.Num;
+      if (other.Px != 0D) {
+        Px = other.Px;
+      }
+      if (other.Py != 0D) {
+        Py = other.Py;
       }
     }
 
@@ -297,8 +320,12 @@ namespace PBBSCommon {
           default:
             input.SkipLastField();
             break;
-          case 8: {
-            Num = input.ReadInt32();
+          case 9: {
+            Px = input.ReadDouble();
+            break;
+          }
+          case 17: {
+            Py = input.ReadDouble();
             break;
           }
         }
@@ -308,12 +335,12 @@ namespace PBBSCommon {
   }
 
   /// <summary>
-  ///  帧-> 输入
+  ///  帧-> 帧
   /// </summary>
-  public sealed partial class FrameInput : pb::IMessage<FrameInput> {
-    private static readonly pb::MessageParser<FrameInput> _parser = new pb::MessageParser<FrameInput>(() => new FrameInput());
+  public sealed partial class Frame : pb::IMessage<Frame> {
+    private static readonly pb::MessageParser<Frame> _parser = new pb::MessageParser<Frame>(() => new Frame());
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<FrameInput> Parser { get { return _parser; } }
+    public static pb::MessageParser<Frame> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
@@ -326,21 +353,21 @@ namespace PBBSCommon {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public FrameInput() {
+    public Frame() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public FrameInput(FrameInput other) : this() {
+    public Frame(Frame other) : this() {
       tick_ = other.tick_;
-      inputCmds_ = other.inputCmds_.Clone();
+      inputs_ = other.inputs_.Clone();
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public FrameInput Clone() {
-      return new FrameInput(this);
+    public Frame Clone() {
+      return new Frame(this);
     }
 
     /// <summary>Field number for the "tick" field.</summary>
@@ -354,23 +381,23 @@ namespace PBBSCommon {
       }
     }
 
-    /// <summary>Field number for the "inputCmds" field.</summary>
-    public const int InputCmdsFieldNumber = 2;
-    private static readonly pb::FieldCodec<global::PBBSCommon.FrameInputCmd> _repeated_inputCmds_codec
-        = pb::FieldCodec.ForMessage(18, global::PBBSCommon.FrameInputCmd.Parser);
-    private readonly pbc::RepeatedField<global::PBBSCommon.FrameInputCmd> inputCmds_ = new pbc::RepeatedField<global::PBBSCommon.FrameInputCmd>();
+    /// <summary>Field number for the "inputs" field.</summary>
+    public const int InputsFieldNumber = 2;
+    private static readonly pb::FieldCodec<global::PBBSCommon.PlayerInput> _repeated_inputs_codec
+        = pb::FieldCodec.ForMessage(18, global::PBBSCommon.PlayerInput.Parser);
+    private readonly pbc::RepeatedField<global::PBBSCommon.PlayerInput> inputs_ = new pbc::RepeatedField<global::PBBSCommon.PlayerInput>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::PBBSCommon.FrameInputCmd> InputCmds {
-      get { return inputCmds_; }
+    public pbc::RepeatedField<global::PBBSCommon.PlayerInput> Inputs {
+      get { return inputs_; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
-      return Equals(other as FrameInput);
+      return Equals(other as Frame);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(FrameInput other) {
+    public bool Equals(Frame other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -378,7 +405,7 @@ namespace PBBSCommon {
         return true;
       }
       if (Tick != other.Tick) return false;
-      if(!inputCmds_.Equals(other.inputCmds_)) return false;
+      if(!inputs_.Equals(other.inputs_)) return false;
       return true;
     }
 
@@ -386,7 +413,7 @@ namespace PBBSCommon {
     public override int GetHashCode() {
       int hash = 1;
       if (Tick != 0) hash ^= Tick.GetHashCode();
-      hash ^= inputCmds_.GetHashCode();
+      hash ^= inputs_.GetHashCode();
       return hash;
     }
 
@@ -401,7 +428,7 @@ namespace PBBSCommon {
         output.WriteRawTag(8);
         output.WriteInt32(Tick);
       }
-      inputCmds_.WriteTo(output, _repeated_inputCmds_codec);
+      inputs_.WriteTo(output, _repeated_inputs_codec);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -410,19 +437,19 @@ namespace PBBSCommon {
       if (Tick != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(Tick);
       }
-      size += inputCmds_.CalculateSize(_repeated_inputCmds_codec);
+      size += inputs_.CalculateSize(_repeated_inputs_codec);
       return size;
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(FrameInput other) {
+    public void MergeFrom(Frame other) {
       if (other == null) {
         return;
       }
       if (other.Tick != 0) {
         Tick = other.Tick;
       }
-      inputCmds_.Add(other.inputCmds_);
+      inputs_.Add(other.inputs_);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -438,7 +465,7 @@ namespace PBBSCommon {
             break;
           }
           case 18: {
-            inputCmds_.AddEntriesFrom(input, _repeated_inputCmds_codec);
+            inputs_.AddEntriesFrom(input, _repeated_inputs_codec);
             break;
           }
         }

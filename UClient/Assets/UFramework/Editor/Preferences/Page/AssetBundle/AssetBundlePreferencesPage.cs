@@ -21,7 +21,7 @@ namespace UFramework.Editor.Preferences.AssetBundle
         public string menuName { get { return "AssetBundle/Preferences"; } }
         static Preferences_AssetBundle_SearchPathConfig SearchPathConfig
         {
-            get { return Core.Serializer<Preferences_AssetBundle_SearchPathConfig>.Instance; }
+            get { return Serializer<Preferences_AssetBundle_SearchPathConfig>.Instance; }
         }
 
         #region search pattern

@@ -38,3 +38,6 @@ C:\Users\cc\Desktop\UFramework\LockstepServer\LockstepServer\bin\Debug\netcoreap
 C:\Users\cc\Desktop\UFramework\LockstepServer\LockstepServer\bin\Debug\netcoreapp3.1\Proto.pdb
 C:\Users\cc\Desktop\UFramework\LockstepServer\LockstepServer\bin\Debug\netcoreapp3.1\Lockstep.dll
 C:\Users\cc\Desktop\UFramework\LockstepServer\LockstepServer\bin\Debug\netcoreapp3.1\Lockstep.pdb
+C:\Users\cc\Desktop\UFramework\LockstepServer\LockstepServer\bin\Debug\netcoreapp3.1\Entitas.dll
+C:\Users\cc\Desktop\UFramework\LockstepServer\LockstepServer\bin\Debug\netcoreapp3.1\Entitas.CodeGeneration.Attributes.dll
+C:\Users\cc\Desktop\UFramework\LockstepServer\LockstepServer\bin\Debug\netcoreapp3.1\Entitas.xml

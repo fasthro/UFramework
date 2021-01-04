@@ -47,7 +47,12 @@ message StartSimulate_S2C {
 
 // 服务器下推帧
 //#[S2C][951]#
-message PushFrame_S2C {
-  int32 tick = 1;
-  repeated PB_BSCommon.FrameInput inputs = 2;
+message Frame_S2C {
+  repeated PB_BSCommon.Frame frames = 2;
+}
+
+// 客户端上传帧
+//#[C2S][952]#
+message Frame_C2S {
+	PB_BSCommon.Frame frame = 1;
 }

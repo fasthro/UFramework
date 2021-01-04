@@ -8,4 +8,13 @@
     <Folder Include="Lockstep\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Entitas">
+      <HintPath>..\3rd\Entitas\Entitas.dll</HintPath>
+    </Reference>
+    <Reference Include="Entitas.CodeGeneration.Attributes">
+      <HintPath>..\3rd\Entitas\Entitas.CodeGeneration.Attributes.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

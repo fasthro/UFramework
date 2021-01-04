@@ -11,6 +11,11 @@ namespace Lockstep
         /// <summary>
         /// 帧率
         /// </summary>
-        public const int FRAME_RATE = 20;
+        public const int FRAME_RATE = 1;
+
+        /// <summary>
+        /// 最大玩家人数
+        /// </summary>
+        public const int MAX_PLAYER_COUNT = 1;
     }
 }

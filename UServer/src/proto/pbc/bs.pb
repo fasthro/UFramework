@@ -1,5 +1,5 @@
 
-ß
+ù
 bs.protoPB_BSbscommon.proto"!
 Handshake_C2S
 uid (Ruid"U
@@ -19,7 +19,8 @@ resultCode"
 	Ready_S2C"P
 StartSimulate_S2C
 seed (Rseed'
-users (2.PB_BSCommon.UserRusers"T
-PushFrame_S2C
-tick (Rtick/
-inputs (2.PB_BSCommon.FrameInputRinputsbproto3
+users (2.PB_BSCommon.UserRusers"7
+	Frame_S2C*
+frames (2.PB_BSCommon.FrameRframes"5
+	Frame_C2S(
+frame (2.PB_BSCommon.FrameRframebproto3

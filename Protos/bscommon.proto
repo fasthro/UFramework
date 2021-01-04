@@ -3,17 +3,18 @@ package PB_BSCommon;
 
 // 用户
 message User {
-  int64 userId = 1;
-  string userName = 2;
-}
-
-// 帧->输入命令
-message FrameInputCmd {
-  int32 num = 1;
+  int64 id = 1;
+  string name = 2;
 }
 
 // 帧-> 输入
-message FrameInput {
+message PlayerInput {
+  double px = 1;
+  double py = 2;
+}
+
+// 帧-> 帧
+message Frame {
   int32 tick = 1;
-  repeated FrameInputCmd inputCmds = 2;
+  repeated PlayerInput inputs = 2;
 }

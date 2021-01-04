@@ -6,7 +6,7 @@
 
 namespace Lockstep.Logic
 {
-    public class PlayerView : UnityBaseView, IPlayerView
+    public class PlayerView : BaseGameView, IPlayerView
     {
     }
 }

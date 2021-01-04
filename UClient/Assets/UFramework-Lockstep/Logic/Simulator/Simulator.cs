@@ -6,12 +6,8 @@
 
 namespace Lockstep.Logic
 {
-    public class Simulator : BaseBehaviour
+    public class Simulator : BaseGameBehaviour
     {
-        public Simulator(ServiceContainer container) : base(container)
-        {
-        }
-
         public bool isRunning { get; private set; }
         public int tick { get; private set; }
 
@@ -20,7 +16,7 @@ namespace Lockstep.Logic
             isRunning = false;
         }
 
-        public void Start(GameStartData data)
+        public void Start(GameStart data)
         {
             foreach (var user in data.users)
             {

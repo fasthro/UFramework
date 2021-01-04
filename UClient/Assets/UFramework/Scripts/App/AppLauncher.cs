@@ -18,6 +18,7 @@ namespace UFramework
         public static AppLauncher Main { get; private set; }
         public static GameObject MainGameObject { get { return Main.gameObject; } }
         public static bool Develop { get; private set; }
+        public ManagerContainer managerContainer { get; private set; }
 
         public void Initialize()
         {
@@ -53,7 +54,7 @@ namespace UFramework
                     if (succeed)
                     {
                         _initialized = true;
-                        _managerContainer.GetManager<LuaManager>().LaunchEngine(_managerContainer);
+                        managerContainer.GetManager<LuaManager>().LaunchEngine(managerContainer);
 
                         OnInitialized();
 
@@ -65,8 +66,6 @@ namespace UFramework
                 });
             });
         }
-
-        protected ManagerContainer _managerContainer;
 
         protected BaseManager[] _allManagers;
 
@@ -112,12 +111,12 @@ namespace UFramework
 
         protected virtual void InitManager()
         {
-            _managerContainer = new ManagerContainer();
-            BaseBehaviour.SetContainer(_managerContainer);
+            managerContainer = new ManagerContainer();
+            BaseBehaviour.SetContainer(managerContainer);
 
-            _managerContainer.RegisterManager(new LuaManager());
-            _managerContainer.RegisterManager(new NetworkManager());
-            _managerContainer.RegisterManager(new ResManager());
+            managerContainer.RegisterManager(new LuaManager());
+            managerContainer.RegisterManager(new NetworkManager());
+            managerContainer.RegisterManager(new ResManager());
         }
 
         protected virtual void OnInitialized()
@@ -132,7 +131,7 @@ namespace UFramework
         {
             InitManager();
 
-            _allManagers = _managerContainer.GetAllManagers();
+            _allManagers = managerContainer.GetAllManagers();
             foreach (var manager in _allManagers)
             {
                 (manager as BaseBehaviour).SetReference();
