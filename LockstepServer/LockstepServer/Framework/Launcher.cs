@@ -4,8 +4,6 @@
  * @Description:
  */
 
-using System.IO;
-
 namespace LockstepServer
 {
     public abstract class Launcher : IBehaviour
@@ -13,6 +11,7 @@ namespace LockstepServer
         public Launcher(int port)
         {
             _port = port;
+            Initialize();
         }
 
         public bool IsRunning { get { return _udpSocketServer != null && _udpSocketServer.isRunning; } }
@@ -29,8 +28,10 @@ namespace LockstepServer
                 ser.SetReference();
             }
 
+            RegisterHandler();
+
             //创建服务器网络监听
-            _udpSocketServer = new UdpSocketServer(serviceContainer.GetService<NetworkService>());
+            _udpSocketServer = new UdpSocketServer(serviceContainer.GetService<INetworkService>() as IServerListener);
             _udpSocketServer.StartServer(_port);
         }
 
@@ -56,7 +57,6 @@ namespace LockstepServer
 
         protected virtual void InitializeService()
         {
-
             serviceContainer = new ServiceContainer();
             BaseService.SetContainer(serviceContainer);
             serviceContainer.RegisterService(new HelperService());
@@ -65,6 +65,10 @@ namespace LockstepServer
             serviceContainer.RegisterService(new HandlerService());
             serviceContainer.RegisterService(new ModelService());
             serviceContainer.RegisterService(new NetworkService());
+        }
+
+        protected virtual void RegisterHandler()
+        {
         }
 
         private int _port;

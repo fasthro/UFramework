@@ -27,6 +27,26 @@ namespace LockstepServer.Src
                 (service as IBehaviour).Dispose();
         }
 
+        protected override void InitializeService()
+        {
+            base.InitializeService();
+            serviceContainer.RegisterService(new PlayerService());
+            serviceContainer.RegisterService(new RoomService());
+        }
+
+        protected override void RegisterHandler()
+        {
+            base.RegisterHandler();
+            var handler = serviceContainer.GetService<IHandlerService>();
+
+            handler.RegisterHandler(NetwokCmd.CLIENT_CONNECT, new ConnectHandler());
+            handler.RegisterHandler(NetwokCmd.CLIENT_DISCONNECT, new DisconnectHandler());
+
+            handler.RegisterHandler(901, new HandshakeHandler());
+            handler.RegisterHandler(902, new EnterRoomHandler());
+            handler.RegisterHandler(903, new ReadyHandler());
+        }
+
         private static void Main(string[] args)
         {
             Console.Title = "Lockstep Server";

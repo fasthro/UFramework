@@ -20,7 +20,6 @@ namespace LockstepServer.Src
             room.Update();
         }
 
-        private static int ROOMID = 1;
         private Room _room;
     }
 }

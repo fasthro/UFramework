@@ -11,6 +11,7 @@ namespace LockstepServer.Src
     {
         public override void SetReference()
         {
+            base.SetReference();
             _playerService = _container.GetService<IPlayerService>();
             _roomService = _container.GetService<IRoomService>();
         }

@@ -188,7 +188,7 @@ namespace LockstepServer.Src
                 info.UserName = "Name " + player.uid;
                 s2c.Users.Add(info);
             }
-            PushMessage(950, s2c);
+            PushMessage(NetwokCmd.START, s2c);
         }
     }
 }

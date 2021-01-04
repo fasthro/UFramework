@@ -31,8 +31,6 @@ namespace LockstepServer
             _handlerService = _container.GetService<IHandlerService>();
             _modelService = _container.GetService<IModelService>();
             _networkService = _container.GetService<INetworkService>();
-            //_playerService = _container.GetService<IPlayerService>();
-            //_roomService = _container.GetService<IRoomService>();
         }
 
         public virtual void Initialize()
@@ -52,7 +50,5 @@ namespace LockstepServer
         protected IHandlerService _handlerService;
         protected IModelService _modelService;
         protected INetworkService _networkService;
-        //protected IPlayerService _playerService;
-        //protected IRoomService _roomService;
     }
 }

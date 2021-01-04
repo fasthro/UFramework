@@ -25,7 +25,6 @@ namespace LockstepServer.Src
         public override void Initialize()
         {
             seed = new Random().Next();
-            LogHelper.Debug($"Random Seed:{seed}");
         }
 
         public override void Update()
