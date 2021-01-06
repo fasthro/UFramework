@@ -3,11 +3,12 @@
  * @Date: 2020/12/31 12:07:48
  * @Description:
  */
+using Lockstep.MessageData;
 
 namespace Lockstep
 {
     public interface INetworkService : IService
     {
-        void SendPlayerInput(PlayerInput input);
+        void SendFrame(Frame frame);
     }
 }

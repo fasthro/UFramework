@@ -35,9 +35,9 @@ namespace Lockstep
         /// The real time in seconds since the game started (Read Only).
         /// </summary>
         /// <value></value>
-        public static float realtimeSinceStartup => (float)((DateTime.Now - _initTime).TotalSeconds);
+        public static float realtimeSinceStartup => (float)(DateTime.Now - _initTime).TotalSeconds;
 
-        public static long realtimeSinceStartupMS => (long)((DateTime.Now - _initTime).TotalMilliseconds);
+        public static long realtimeSinceStartupMS => (long)(DateTime.Now - _initTime).TotalMilliseconds;
 
         public static void Initialize()
         {
@@ -49,10 +49,10 @@ namespace Lockstep
         {
             var now = DateTime.Now;
 
-            deltaTime = (float)((now - _lastFrameTime).TotalSeconds);
-            deltaTimeMS = (long)((now - _lastFrameTime).TotalMilliseconds);
+            deltaTime = (float)(now - _lastFrameTime).TotalSeconds;
+            deltaTimeMS = (long)(now - _lastFrameTime).TotalMilliseconds;
 
-            timeSinceLevelLoad = (float)((now - _initTime).TotalSeconds);
+            timeSinceLevelLoad = (float)(now - _initTime).TotalSeconds;
             frameCount++;
             _lastFrameTime = now;
         }

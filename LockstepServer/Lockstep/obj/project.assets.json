@@ -1,11 +1,30 @@
 {
   "version": 3,
   "targets": {
-    ".NETCoreApp,Version=v3.1": {}
+    ".NETCoreApp,Version=v3.1": {
+      "Proto/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.1",
+        "compile": {
+          "bin/placeholder/Proto.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Proto.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "Proto/1.0.0": {
+      "type": "project",
+      "path": "../Proto/Proto.csproj",
+      "msbuildProject": "../Proto/Proto.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    ".NETCoreApp,Version=v3.1": []
+    ".NETCoreApp,Version=v3.1": [
+      "Proto >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\cc\\.nuget\\packages\\": {},
@@ -36,7 +55,11 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\cc\\Desktop\\UFramework\\LockstepServer\\Proto\\Proto.csproj": {
+              "projectPath": "C:\\Users\\cc\\Desktop\\UFramework\\LockstepServer\\Proto\\Proto.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

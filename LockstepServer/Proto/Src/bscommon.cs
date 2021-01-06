@@ -23,15 +23,18 @@ namespace PBBSCommon {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "Cg5ic2NvbW1vbi5wcm90bxILUEJfQlNDb21tb24iIAoEVXNlchIKCgJpZBgB",
-            "IAEoAxIMCgRuYW1lGAIgASgJIiUKC1BsYXllcklucHV0EgoKAnB4GAEgASgB",
-            "EgoKAnB5GAIgASgBIj8KBUZyYW1lEgwKBHRpY2sYASABKAUSKAoGaW5wdXRz",
-            "GAIgAygLMhguUEJfQlNDb21tb24uUGxheWVySW5wdXRiBnByb3RvMw=="));
+            "IAEoAxIMCgRuYW1lGAIgASgJIisKBUlucHV0EgoKAnB4GAEgASgBEgoKAnB5",
+            "GAIgASgBEgoKAnB6GAMgASgBIjwKBUFnZW50Eg8KB2xvY2FsSWQYASABKAUS",
+            "IgoGaW5wdXRzGAIgAygLMhIuUEJfQlNDb21tb24uSW5wdXQiOQoFRnJhbWUS",
+            "DAoEdGljaxgBIAEoBRIiCgZhZ2VudHMYAiADKAsyEi5QQl9CU0NvbW1vbi5B",
+            "Z2VudGIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::PBBSCommon.User), global::PBBSCommon.User.Parser, new[]{ "Id", "Name" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::PBBSCommon.PlayerInput), global::PBBSCommon.PlayerInput.Parser, new[]{ "Px", "Py" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::PBBSCommon.Frame), global::PBBSCommon.Frame.Parser, new[]{ "Tick", "Inputs" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::PBBSCommon.Input), global::PBBSCommon.Input.Parser, new[]{ "Px", "Py", "Pz" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::PBBSCommon.Agent), global::PBBSCommon.Agent.Parser, new[]{ "LocalId", "Inputs" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::PBBSCommon.Frame), global::PBBSCommon.Frame.Parser, new[]{ "Tick", "Agents" }, null, null, null)
           }));
     }
     #endregion
@@ -187,12 +190,12 @@ namespace PBBSCommon {
   }
 
   /// <summary>
-  ///  帧-> 输入
+  ///  输入
   /// </summary>
-  public sealed partial class PlayerInput : pb::IMessage<PlayerInput> {
-    private static readonly pb::MessageParser<PlayerInput> _parser = new pb::MessageParser<PlayerInput>(() => new PlayerInput());
+  public sealed partial class Input : pb::IMessage<Input> {
+    private static readonly pb::MessageParser<Input> _parser = new pb::MessageParser<Input>(() => new Input());
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<PlayerInput> Parser { get { return _parser; } }
+    public static pb::MessageParser<Input> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
@@ -205,21 +208,22 @@ namespace PBBSCommon {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public PlayerInput() {
+    public Input() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public PlayerInput(PlayerInput other) : this() {
+    public Input(Input other) : this() {
       px_ = other.px_;
       py_ = other.py_;
+      pz_ = other.pz_;
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public PlayerInput Clone() {
-      return new PlayerInput(this);
+    public Input Clone() {
+      return new Input(this);
     }
 
     /// <summary>Field number for the "px" field.</summary>
@@ -244,13 +248,24 @@ namespace PBBSCommon {
       }
     }
 
+    /// <summary>Field number for the "pz" field.</summary>
+    public const int PzFieldNumber = 3;
+    private double pz_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public override bool Equals(object other) {
-      return Equals(other as PlayerInput);
+    public double Pz {
+      get { return pz_; }
+      set {
+        pz_ = value;
+      }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(PlayerInput other) {
+    public override bool Equals(object other) {
+      return Equals(other as Input);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(Input other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -259,6 +274,7 @@ namespace PBBSCommon {
       }
       if (Px != other.Px) return false;
       if (Py != other.Py) return false;
+      if (Pz != other.Pz) return false;
       return true;
     }
 
@@ -267,6 +283,7 @@ namespace PBBSCommon {
       int hash = 1;
       if (Px != 0D) hash ^= Px.GetHashCode();
       if (Py != 0D) hash ^= Py.GetHashCode();
+      if (Pz != 0D) hash ^= Pz.GetHashCode();
       return hash;
     }
 
@@ -285,6 +302,10 @@ namespace PBBSCommon {
         output.WriteRawTag(17);
         output.WriteDouble(Py);
       }
+      if (Pz != 0D) {
+        output.WriteRawTag(25);
+        output.WriteDouble(Pz);
+      }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -296,11 +317,14 @@ namespace PBBSCommon {
       if (Py != 0D) {
         size += 1 + 8;
       }
+      if (Pz != 0D) {
+        size += 1 + 8;
+      }
       return size;
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(PlayerInput other) {
+    public void MergeFrom(Input other) {
       if (other == null) {
         return;
       }
@@ -309,6 +333,9 @@ namespace PBBSCommon {
       }
       if (other.Py != 0D) {
         Py = other.Py;
+      }
+      if (other.Pz != 0D) {
+        Pz = other.Pz;
       }
     }
 
@@ -328,6 +355,10 @@ namespace PBBSCommon {
             Py = input.ReadDouble();
             break;
           }
+          case 25: {
+            Pz = input.ReadDouble();
+            break;
+          }
         }
       }
     }
@@ -335,7 +366,147 @@ namespace PBBSCommon {
   }
 
   /// <summary>
-  ///  帧-> 帧
+  ///  代理
+  /// </summary>
+  public sealed partial class Agent : pb::IMessage<Agent> {
+    private static readonly pb::MessageParser<Agent> _parser = new pb::MessageParser<Agent>(() => new Agent());
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<Agent> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::PBBSCommon.BscommonReflection.Descriptor.MessageTypes[2]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Agent() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Agent(Agent other) : this() {
+      localId_ = other.localId_;
+      inputs_ = other.inputs_.Clone();
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Agent Clone() {
+      return new Agent(this);
+    }
+
+    /// <summary>Field number for the "localId" field.</summary>
+    public const int LocalIdFieldNumber = 1;
+    private int localId_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int LocalId {
+      get { return localId_; }
+      set {
+        localId_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "inputs" field.</summary>
+    public const int InputsFieldNumber = 2;
+    private static readonly pb::FieldCodec<global::PBBSCommon.Input> _repeated_inputs_codec
+        = pb::FieldCodec.ForMessage(18, global::PBBSCommon.Input.Parser);
+    private readonly pbc::RepeatedField<global::PBBSCommon.Input> inputs_ = new pbc::RepeatedField<global::PBBSCommon.Input>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::RepeatedField<global::PBBSCommon.Input> Inputs {
+      get { return inputs_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as Agent);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(Agent other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (LocalId != other.LocalId) return false;
+      if(!inputs_.Equals(other.inputs_)) return false;
+      return true;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (LocalId != 0) hash ^= LocalId.GetHashCode();
+      hash ^= inputs_.GetHashCode();
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (LocalId != 0) {
+        output.WriteRawTag(8);
+        output.WriteInt32(LocalId);
+      }
+      inputs_.WriteTo(output, _repeated_inputs_codec);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (LocalId != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(LocalId);
+      }
+      size += inputs_.CalculateSize(_repeated_inputs_codec);
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(Agent other) {
+      if (other == null) {
+        return;
+      }
+      if (other.LocalId != 0) {
+        LocalId = other.LocalId;
+      }
+      inputs_.Add(other.inputs_);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 8: {
+            LocalId = input.ReadInt32();
+            break;
+          }
+          case 18: {
+            inputs_.AddEntriesFrom(input, _repeated_inputs_codec);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  /// <summary>
+  ///  帧
   /// </summary>
   public sealed partial class Frame : pb::IMessage<Frame> {
     private static readonly pb::MessageParser<Frame> _parser = new pb::MessageParser<Frame>(() => new Frame());
@@ -344,7 +515,7 @@ namespace PBBSCommon {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::PBBSCommon.BscommonReflection.Descriptor.MessageTypes[2]; }
+      get { return global::PBBSCommon.BscommonReflection.Descriptor.MessageTypes[3]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -362,7 +533,7 @@ namespace PBBSCommon {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public Frame(Frame other) : this() {
       tick_ = other.tick_;
-      inputs_ = other.inputs_.Clone();
+      agents_ = other.agents_.Clone();
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -381,14 +552,14 @@ namespace PBBSCommon {
       }
     }
 
-    /// <summary>Field number for the "inputs" field.</summary>
-    public const int InputsFieldNumber = 2;
-    private static readonly pb::FieldCodec<global::PBBSCommon.PlayerInput> _repeated_inputs_codec
-        = pb::FieldCodec.ForMessage(18, global::PBBSCommon.PlayerInput.Parser);
-    private readonly pbc::RepeatedField<global::PBBSCommon.PlayerInput> inputs_ = new pbc::RepeatedField<global::PBBSCommon.PlayerInput>();
+    /// <summary>Field number for the "agents" field.</summary>
+    public const int AgentsFieldNumber = 2;
+    private static readonly pb::FieldCodec<global::PBBSCommon.Agent> _repeated_agents_codec
+        = pb::FieldCodec.ForMessage(18, global::PBBSCommon.Agent.Parser);
+    private readonly pbc::RepeatedField<global::PBBSCommon.Agent> agents_ = new pbc::RepeatedField<global::PBBSCommon.Agent>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::PBBSCommon.PlayerInput> Inputs {
-      get { return inputs_; }
+    public pbc::RepeatedField<global::PBBSCommon.Agent> Agents {
+      get { return agents_; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -405,7 +576,7 @@ namespace PBBSCommon {
         return true;
       }
       if (Tick != other.Tick) return false;
-      if(!inputs_.Equals(other.inputs_)) return false;
+      if(!agents_.Equals(other.agents_)) return false;
       return true;
     }
 
@@ -413,7 +584,7 @@ namespace PBBSCommon {
     public override int GetHashCode() {
       int hash = 1;
       if (Tick != 0) hash ^= Tick.GetHashCode();
-      hash ^= inputs_.GetHashCode();
+      hash ^= agents_.GetHashCode();
       return hash;
     }
 
@@ -428,7 +599,7 @@ namespace PBBSCommon {
         output.WriteRawTag(8);
         output.WriteInt32(Tick);
       }
-      inputs_.WriteTo(output, _repeated_inputs_codec);
+      agents_.WriteTo(output, _repeated_agents_codec);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -437,7 +608,7 @@ namespace PBBSCommon {
       if (Tick != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(Tick);
       }
-      size += inputs_.CalculateSize(_repeated_inputs_codec);
+      size += agents_.CalculateSize(_repeated_agents_codec);
       return size;
     }
 
@@ -449,7 +620,7 @@ namespace PBBSCommon {
       if (other.Tick != 0) {
         Tick = other.Tick;
       }
-      inputs_.Add(other.inputs_);
+      agents_.Add(other.agents_);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -465,7 +636,7 @@ namespace PBBSCommon {
             break;
           }
           case 18: {
-            inputs_.AddEntriesFrom(input, _repeated_inputs_codec);
+            agents_.AddEntriesFrom(input, _repeated_agents_codec);
             break;
           }
         }

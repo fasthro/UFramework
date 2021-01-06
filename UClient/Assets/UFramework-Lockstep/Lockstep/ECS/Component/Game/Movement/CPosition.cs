@@ -4,8 +4,8 @@
  * @Description:
  */
 
+using System.Numerics;
 using Entitas;
-using UnityEngine;
 
 namespace Lockstep
 {

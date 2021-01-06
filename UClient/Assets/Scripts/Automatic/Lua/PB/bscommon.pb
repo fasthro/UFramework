@@ -1,12 +1,16 @@
 
-Ï
+¢
 bscommon.protoPB_BSCommon"*
 User
 id (Rid
-name (	Rname"-
-PlayerInput
+name (	Rname"7
+Input
 px (Rpx
-py (Rpy"M
+py (Rpy
+pz (Rpz"M
+Agent
+localId (RlocalId*
+inputs (2.PB_BSCommon.InputRinputs"G
 Frame
-tick (Rtick0
-inputs (2.PB_BSCommon.PlayerInputRinputsbproto3
+tick (Rtick*
+agents (2.PB_BSCommon.AgentRagentsbproto3

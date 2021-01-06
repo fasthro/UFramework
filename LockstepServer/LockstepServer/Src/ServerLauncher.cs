@@ -42,9 +42,11 @@ namespace LockstepServer.Src
             handler.RegisterHandler(NetwokCmd.CLIENT_CONNECT, new ConnectHandler());
             handler.RegisterHandler(NetwokCmd.CLIENT_DISCONNECT, new DisconnectHandler());
 
-            handler.RegisterHandler(901, new HandshakeHandler());
-            handler.RegisterHandler(902, new EnterRoomHandler());
-            handler.RegisterHandler(903, new ReadyHandler());
+            handler.RegisterHandler(NetwokCmd.HANDSHAKE, new HandshakeHandler());
+            handler.RegisterHandler(NetwokCmd.ENTER_ROOM, new EnterRoomHandler());
+            handler.RegisterHandler(NetwokCmd.READY, new ReadyHandler());
+
+            handler.RegisterHandler(NetwokCmd.AGENT_FRAME, new AgentFrameHandler());
         }
 
         private static void Main(string[] args)

@@ -11,14 +11,14 @@ public partial class GameEntity {
     public Lockstep.CRotation cRotation { get { return (Lockstep.CRotation)GetComponent(GameComponentsLookup.CRotation); } }
     public bool hasCRotation { get { return HasComponent(GameComponentsLookup.CRotation); } }
 
-    public void AddCRotation(UnityEngine.Quaternion newRotation) {
+    public void AddCRotation(System.Numerics.Quaternion newRotation) {
         var index = GameComponentsLookup.CRotation;
         var component = (Lockstep.CRotation)CreateComponent(index, typeof(Lockstep.CRotation));
         component.rotation = newRotation;
         AddComponent(index, component);
     }
 
-    public void ReplaceCRotation(UnityEngine.Quaternion newRotation) {
+    public void ReplaceCRotation(System.Numerics.Quaternion newRotation) {
         var index = GameComponentsLookup.CRotation;
         var component = (Lockstep.CRotation)CreateComponent(index, typeof(Lockstep.CRotation));
         component.rotation = newRotation;

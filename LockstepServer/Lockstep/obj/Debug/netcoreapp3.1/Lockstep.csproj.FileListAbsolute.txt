@@ -11,3 +11,7 @@ C:\Users\cc\Desktop\UFramework\LockstepServer\Lockstep\bin\Debug\netcoreapp3.1\E
 C:\Users\cc\Desktop\UFramework\LockstepServer\Lockstep\bin\Debug\netcoreapp3.1\Entitas.dll
 C:\Users\cc\Desktop\UFramework\LockstepServer\Lockstep\bin\Debug\netcoreapp3.1\Entitas.xml
 C:\Users\cc\Desktop\UFramework\LockstepServer\Lockstep\obj\Debug\netcoreapp3.1\Lockstep.csproj.CopyComplete
+C:\Users\cc\Desktop\UFramework\LockstepServer\Lockstep\bin\Debug\netcoreapp3.1\Google.Protobuf.dll
+C:\Users\cc\Desktop\UFramework\LockstepServer\Lockstep\bin\Debug\netcoreapp3.1\Proto.dll
+C:\Users\cc\Desktop\UFramework\LockstepServer\Lockstep\bin\Debug\netcoreapp3.1\Proto.pdb
+C:\Users\cc\Desktop\UFramework\LockstepServer\Lockstep\bin\Debug\netcoreapp3.1\Google.Protobuf.xml

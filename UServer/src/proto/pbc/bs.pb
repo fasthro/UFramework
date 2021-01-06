@@ -21,6 +21,6 @@ resultCode"
 seed (Rseed'
 users (2.PB_BSCommon.UserRusers"7
 	Frame_S2C*
-frames (2.PB_BSCommon.FrameRframes"5
+frames (2.PB_BSCommon.FrameRframes"5
 	Frame_C2S(
 frame (2.PB_BSCommon.FrameRframebproto3

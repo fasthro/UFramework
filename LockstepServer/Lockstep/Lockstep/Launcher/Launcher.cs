@@ -17,7 +17,12 @@ namespace Lockstep
 
         public void Initialize()
         {
-            InitializeService();
+            #region  service
+            serviceContainer = new ServiceContainer();
+            BaseService.SetContainer(serviceContainer);
+            serviceContainer.RegisterService(new AgentService());
+            serviceContainer.RegisterService(new EntityService());
+            serviceContainer.RegisterService(new HelperService());
 
             _allServices = serviceContainer.GetAllServices();
             foreach (var service in _allServices)
@@ -25,13 +30,29 @@ namespace Lockstep
                 (service as BaseService).SetReference();
             }
 
+            InitializeService();
+
+            #endregion
+
+            #region system
+
+            contexts = Contexts.sharedInstance;
+            system = new Feature("Systems")
+                .Add(new Feature("General")
+                    .Add(new InitGameSystem(contexts))
+                )
+                .Add(new Feature("Movement")
+                    .Add(new UpdateViewPositionAndRotationSystem(contexts)));
+
             InitializeSystem();
+
+            #endregion
         }
 
         public virtual void Update()
         {
-            system.Execute();
-            system.Cleanup();
+            system?.Execute();
+            system?.Cleanup();
         }
 
         public virtual void Dispose()
@@ -43,21 +64,12 @@ namespace Lockstep
 
         protected virtual void InitializeService()
         {
-            serviceContainer = new ServiceContainer();
-            BaseService.SetContainer(serviceContainer);
-            serviceContainer.RegisterService(new GameService());
-            serviceContainer.RegisterService(new EntityService());
+
         }
 
         protected virtual void InitializeSystem()
         {
-            contexts = Contexts.sharedInstance;
-            system = new Feature("Systems")
-                .Add(new Feature("General")
-                    .Add(new InitGameSystem(contexts))
-                )
-                .Add(new Feature("Movement")
-                    .Add(new UpdateViewPositionAndRotationSystem(contexts)));
+
         }
     }
 }

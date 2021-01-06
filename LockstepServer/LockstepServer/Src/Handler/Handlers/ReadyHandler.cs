@@ -17,8 +17,8 @@ namespace LockstepServer.Src
 
         protected override void OnMessage(byte[] bytes)
         {
-            Ready_C2S c2c = Ready_C2S.Parser.ParseFrom(bytes);
-            _roomService.room.Ready(c2c.Uid);
+            Ready_C2S c2s = Ready_C2S.Parser.ParseFrom(bytes);
+            _roomService.room.Ready(c2s.Uid);
         }
 
         protected override bool OnResponse()

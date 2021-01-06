@@ -48,7 +48,7 @@ message StartSimulate_S2C {
 // 服务器下推帧
 //#[S2C][951]#
 message Frame_S2C {
-  repeated PB_BSCommon.Frame frames = 2;
+  repeated PB_BSCommon.Frame frames = 1;
 }
 
 // 客户端上传帧

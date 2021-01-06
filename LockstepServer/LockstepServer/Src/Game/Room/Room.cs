@@ -6,7 +6,10 @@
 
 using Google.Protobuf;
 using Lockstep;
+using Lockstep.MessageData;
 using PBBS;
+using System;
+using System.Collections.Generic;
 
 namespace LockstepServer.Src
 {
@@ -29,12 +32,13 @@ namespace LockstepServer.Src
         private int _playerCount;
 
         private Player[] _players;
+        private Frame _frame;
+        private Dictionary<long, int> _uid2LocalId = new Dictionary<long, int>();
+        private List<Frame> _historyFrames = new List<Frame>();
 
         #endregion private
 
         #region simulate
-
-        public Simulator simulator { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -149,12 +153,22 @@ namespace LockstepServer.Src
         {
             LogHelper.Info($"开始游戏");
 
+            _frame = ObjectPool<Frame>.Instance.Allocate();
             tickDeltaTime = 1000 / Define.FRAME_RATE;
             startTime = LSTime.realtimeSinceStartupMS;
 
-            simulator = new Simulator();
+            _uid2LocalId.Clear();
+            for (int i = 0; i < _players.Length; i++)
+            {
+                var player = _players[i];
+                _uid2LocalId.Add(player.uid, i);
+                var agent = ObjectPool<Agent>.Instance.Allocate();
+                agent.localId = i;
+                _frame.AddAgent(agent);
+            }
 
             PushMessage_StartSimulate();
+            isRunning = true;
         }
 
         public void PushMessage(int cmd, IMessage message)
@@ -168,29 +182,68 @@ namespace LockstepServer.Src
             if (!isRunning)
                 return;
 
-            if (simulator == null)
-                return;
-
             tickSinceStart = (int)((LSTime.realtimeSinceStartupMS - startTime) / tickDeltaTime);
-            while (simulator.tick < tickSinceStart)
+            while (_frame.tick < tickSinceStart)
             {
-                simulator.Update();
+                _frame.tick++;
+                PushMessage_Frame();
+            }
+        }
+
+        public void ReceiveAgentFrame(Frame_C2S c2s)
+        {
+            if (c2s.Frame.Tick < _frame.tick)
+                return;
+            var agents = _frame.agents;
+            foreach (var pAgent in c2s.Frame.Agents)
+            {
+                var agent = agents[pAgent.LocalId];
+                foreach (var pInput in pAgent.Inputs)
+                {
+                    var input = ObjectPool<AgentInput>.Instance.Allocate();
+                    input.FromMessage(pInput);
+                    agent.AddInput(input);
+                }
             }
         }
 
         private void PushMessage_StartSimulate()
         {
             var s2c = new StartSimulate_S2C();
-            s2c.Seed = simulator.seed;
+            s2c.Seed = new Random().Next();
             s2c.Users.Clear();
-            foreach (var player in _players)
+            for (int i = 0; i < _players.Length; i++)
             {
-                var info = new PBBSCommon.User();
-                info.Id = player.uid;
-                info.Name = "Name " + player.uid;
+                var player = _players[i];
+                var info = new PBBSCommon.User()
+                {
+                    Id = player.uid,
+                    Name = "Name " + player.uid
+                };
                 s2c.Users.Add(info);
             }
+
             PushMessage(NetwokCmd.START, s2c);
+        }
+
+        private void PushMessage_Frame()
+        {
+            AddHistory();
+
+            var s2c = new Frame_S2C();
+            var frame = (PBBSCommon.Frame)_frame.ToMessage();
+            var agents = _frame.agents;
+            for (int i = 0; i < Define.MAX_PLAYER_COUNT; i++)
+            {
+                agents[i].CleanInputs();
+            }
+            s2c.Frames.Add(frame);
+            PushMessage(NetwokCmd.PUSH_FRAME, s2c);
+        }
+
+        private void AddHistory()
+        {
+            _historyFrames.Add((Frame)_frame.DeepClone());
         }
     }
 }

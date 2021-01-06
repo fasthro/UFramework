@@ -3,6 +3,7 @@
  * @Date: 2020/12/31 11:55:03
  * @Description:
  */
+using Lockstep.MessageData;
 
 namespace Lockstep.Logic
 {
@@ -11,6 +12,11 @@ namespace Lockstep.Logic
         #region simulator
 
         public Simulator simulator { get; private set; }
+
+        /// <summary>
+        /// 客户端模式
+        /// </summary>
+        public bool isClientModel = false;
 
         /// <summary>
         /// 帧记录
@@ -49,11 +55,14 @@ namespace Lockstep.Logic
 
         #endregion data
 
+        private FrameBuffer _frameBuffer;
+
         public void Start(GameStart data)
         {
             Logger.Debug("开始游戏");
             gameStart = data;
             tickDeltaTime = 1000 / Define.FRAME_RATE;
+            _frameBuffer = new FrameBuffer();
             simulator = new Simulator();
             simulator.Start(data);
         }
@@ -65,26 +74,40 @@ namespace Lockstep.Logic
             simulator.Update();
 
             tickSinceStart = (int)((LSTime.realtimeSinceStartupMS - startTime) / tickDeltaTime);
-            while (simulator.tick < tickSinceStart)
+            if (isClientModel)
             {
-                simulator.Step();
+                while (simulator.tick < tickSinceStart)
+                {
+                    simulator.Step();
+                }
             }
-
-            while (inputTick <= inputPredictTick)
+            else
             {
-                SendInputs(inputTick++);
+                while (inputTick <= inputPredictTick)
+                {
+                    SendInputs(inputTick++);
+                }
             }
         }
 
         private void SendInputs(int tick)
         {
-            var frame = new Frame()
-            {
-                tick = tick,
-                playerInputs = new PlayerInput[Define.MAX_PLAYER_COUNT],
-            };
-            frame.playerInputs[0] = _inputService.curentInput;
+            var frame = ObjectPool<Frame>.Instance.Allocate();
+            frame.tick = tick;
+            frame.AddAgents(_agentService.agents);
+            _agentService.selfAgent.CleanInputs();
             _networkService.SendFrame(frame);
+        }
+
+        public void OnReceiveFrame(Frame frame)
+        {
+            _frameBuffer.PushSFrame(frame);
+        }
+
+        public void OnReceiveFrames(Frame[] frames)
+        {
+            for (int i = 0; i < frames.Length; i++)
+                _frameBuffer.PushSFrame(frames[i]);
         }
     }
 }

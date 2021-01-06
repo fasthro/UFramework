@@ -9,11 +9,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Proto\Proto.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="Entitas">
       <HintPath>..\3rd\Entitas\Entitas.dll</HintPath>
     </Reference>
     <Reference Include="Entitas.CodeGeneration.Attributes">
       <HintPath>..\3rd\Entitas\Entitas.CodeGeneration.Attributes.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Protobuf">
+      <HintPath>..\3rd\Google.Protobuf\Google.Protobuf.dll</HintPath>
     </Reference>
   </ItemGroup>
 

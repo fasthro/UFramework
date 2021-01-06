@@ -20,7 +20,7 @@ namespace Lockstep
             #region  service
             serviceContainer = new ServiceContainer();
             BaseService.SetContainer(serviceContainer);
-            serviceContainer.RegisterService(new GameService());
+            serviceContainer.RegisterService(new AgentService());
             serviceContainer.RegisterService(new EntityService());
             serviceContainer.RegisterService(new HelperService());
 

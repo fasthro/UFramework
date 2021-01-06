@@ -8,11 +8,18 @@
     ".NETCoreApp,Version=v3.1": {
       "Lockstep/1.0.0": {
         "dependencies": {
+          "Proto": "1.0.0",
           "Entitas.CodeGeneration.Attributes": "0.0.0.0",
-          "Entitas": "0.0.0.0"
+          "Entitas": "0.0.0.0",
+          "Google.Protobuf": "3.0.0.0"
         },
         "runtime": {
           "Lockstep.dll": {}
+        }
+      },
+      "Proto/1.0.0": {
+        "runtime": {
+          "Proto.dll": {}
         }
       },
       "Entitas.CodeGeneration.Attributes/0.0.0.0": {
@@ -30,11 +37,24 @@
             "fileVersion": "0.0.0.0"
           }
         }
+      },
+      "Google.Protobuf/3.0.0.0": {
+        "runtime": {
+          "Google.Protobuf.dll": {
+            "assemblyVersion": "3.0.0.0",
+            "fileVersion": "3.0.0.0"
+          }
+        }
       }
     }
   },
   "libraries": {
     "Lockstep/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Proto/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -45,6 +65,11 @@
       "sha512": ""
     },
     "Entitas/0.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Google.Protobuf/3.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

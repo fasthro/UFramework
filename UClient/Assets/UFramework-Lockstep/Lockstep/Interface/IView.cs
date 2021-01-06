@@ -4,7 +4,7 @@
  * @Description:
  */
 
-using UnityEngine;
+using System.Numerics;
 
 namespace Lockstep
 {
@@ -13,6 +13,7 @@ namespace Lockstep
         Vector3 position { get; set; }
         Quaternion rotation { get; set; }
 
+        int localID { get; set;}
         GameEntity entity { get; }
 
         void BindEntity(GameEntity entity);

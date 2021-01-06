@@ -14,13 +14,15 @@ namespace Lockstep
 
         public Quaternion rotation { get; set; }
 
+        public int localID { get; set; }
+        
         public GameEntity entity => _entity;
+
 
         public void BindEntity(GameEntity entity)
         {
             _entity = entity;
         }
-
         protected GameEntity _entity;
     }
 }

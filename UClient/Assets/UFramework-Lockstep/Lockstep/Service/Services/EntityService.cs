@@ -7,7 +7,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Lockstep
 {
@@ -20,7 +19,8 @@ namespace Lockstep
             {
                 entity = CreatePlayer<T>(contexts, view);
             }
-            entity.AddCId(EntityID++);
+            entity.AddCLocalId(view.localID);
+            entity.AddCEntityID(ENTITY_ID++);
 
             var t = view.GetType();
             if (_type2Entities.TryGetValue(t, out var lstObj))
@@ -35,7 +35,7 @@ namespace Lockstep
                 lst.Add(entity);
             }
 
-            _id2Entities[entity.cId.id] = entity;
+            _id2Entities[entity.cEntityID.id] = entity;
 
             return entity;
         }
@@ -58,11 +58,11 @@ namespace Lockstep
             if (_type2Entities.TryGetValue(t, out var lstObj))
             {
                 lstObj.Remove(entity);
-                _id2Entities.Remove(entity.cId.id);
+                _id2Entities.Remove(entity.cEntityID.id);
             }
         }
 
-        private static int EntityID = 0;
+        static int ENTITY_ID = 0;
         private Dictionary<Type, IList> _type2Entities = new Dictionary<Type, IList>();
 
         private Dictionary<int, GameEntity> _id2Entities = new Dictionary<int, GameEntity>();

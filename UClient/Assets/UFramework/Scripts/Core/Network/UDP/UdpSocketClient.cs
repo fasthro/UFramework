@@ -131,7 +131,7 @@ namespace UFramework.Network
                 _sender.Put(pack.rawData);
 
                 var peer = _client.FirstPeer;
-                peer.Send(_sender, DeliveryMethod.ReliableOrdered);
+                peer?.Send(_sender, DeliveryMethod.ReliableOrdered);
 
                 pack.Recycle();
             }

@@ -229,7 +229,11 @@
         },
         "frameworks": {
           "netcoreapp3.1": {
-            "projectReferences": {}
+            "projectReferences": {
+              "C:\\Users\\cc\\Desktop\\UFramework\\LockstepServer\\Proto\\Proto.csproj": {
+                "projectPath": "C:\\Users\\cc\\Desktop\\UFramework\\LockstepServer\\Proto\\Proto.csproj"
+              }
+            }
           }
         },
         "warningProperties": {

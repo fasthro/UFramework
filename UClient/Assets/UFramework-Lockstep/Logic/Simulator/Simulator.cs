@@ -3,6 +3,7 @@
  * @Date: 2020-12-25 18:15:53
  * @Description:
  */
+using Lockstep.MessageData;
 
 namespace Lockstep.Logic
 {
@@ -18,9 +19,14 @@ namespace Lockstep.Logic
 
         public void Start(GameStart data)
         {
+            int index = 0;
             foreach (var user in data.users)
             {
-                _viewService.CreateView<IPlayerView>("Assets/Arts/Player/Player1.prefab");
+                _viewService.CreateView<IPlayerView>("Assets/Arts/Player/Player1.prefab", index);
+                // TODO userID
+                _agentService.CreateAgent(index, user.id == 1);
+                
+                index++;
             }
 
             isRunning = true;

@@ -7,14 +7,21 @@ message User {
   string name = 2;
 }
 
-// 帧-> 输入
-message PlayerInput {
+// 输入
+message Input {
   double px = 1;
   double py = 2;
+  double pz = 3;
 }
 
-// 帧-> 帧
+// 代理
+message Agent {
+	int32 localId = 1;
+	repeated Input inputs = 2;
+}
+
+// 帧
 message Frame {
   int32 tick = 1;
-  repeated PlayerInput inputs = 2;
+  repeated Agent agents = 2;
 }
