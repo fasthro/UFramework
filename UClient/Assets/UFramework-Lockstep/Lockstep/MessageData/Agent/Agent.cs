@@ -21,6 +21,8 @@ namespace Lockstep.MessageData
         /// </summary>
         public AgentInput[] inputs => _inputs.ToArray();
 
+        public GameEntity entity;
+
         #region input
 
         private List<AgentInput> _inputs = new List<AgentInput>();

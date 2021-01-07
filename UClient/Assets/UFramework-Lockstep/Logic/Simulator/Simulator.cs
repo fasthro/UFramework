@@ -22,9 +22,13 @@ namespace Lockstep.Logic
             int index = 0;
             foreach (var user in data.users)
             {
-                _viewService.CreateView<IPlayerView>("Assets/Arts/Player/Player1.prefab", index);
+                var view = _viewService.CreateView<IPlayerView>("Assets/Arts/Player/Player1.prefab", index);
                 // TODO userID
-                _agentService.CreateAgent(index, user.id == 1);
+                if (user.id == 1) {
+                    _gameService.userId = user.id;
+                    _gameService.localId = view.entity.cLocalId.id;
+                }
+                _agentService.CreateAgent(view.entity);
                 
                 index++;
             }

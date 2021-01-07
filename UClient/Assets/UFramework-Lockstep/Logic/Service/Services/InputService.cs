@@ -20,5 +20,10 @@ namespace Lockstep.Logic
             input.position = Input.mousePosition.ToCS();
             _agentService.selfAgent.AddInput(input);
         }
+
+        public void ExecuteInput(Agent agent, AgentInput input)
+        {
+            agent.entity.cPosition.position = input.position;
+        }
     }
 }

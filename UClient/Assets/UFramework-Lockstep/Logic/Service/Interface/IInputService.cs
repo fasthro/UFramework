@@ -9,6 +9,6 @@ namespace Lockstep.Logic
 {
     public interface IInputService : IService
     {
-        
+        void ExecuteInput(Agent agent, AgentInput input);
     }
 }

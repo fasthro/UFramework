@@ -24,15 +24,18 @@ namespace Lockstep
             _agents = new Agent[Define.MAX_PLAYER_COUNT];
         }
 
-        public void CreateAgent(int localId, bool isSelf)
+        public void CreateAgent(GameEntity entity)
         {
-            _agents[localId] = ObjectPool<Agent>.Instance.Allocate();
-            _agents[localId].localId = localId;
+            var localId = entity.cLocalId.id;
 
-            if (isSelf)
+            var agent = ObjectPool<Agent>.Instance.Allocate();
+            agent.localId = localId;
+            
+            if (_gameService.IsSelf(localId))
             {
                 _selfAgent = _agents[localId];
             }
+            _agents[localId] = agent;
         }
 
         public Agent GetAgent(int localId)

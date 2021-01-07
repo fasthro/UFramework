@@ -13,11 +13,12 @@ using Lockstep.MessageData;
 
 namespace Lockstep
 {
-    public interface IAgentService : IService
+    public interface IGameService : IService
     {
-        Agent selfAgent { get; }
-        Agent[] agents { get; }
-        void CreateAgent(GameEntity entity);
-        Agent GetAgent(int localId);
+        long userId { get; set; }
+        int localId { get; set; }
+
+        bool IsSelf(int localId);
+        bool IsSelf(long userId);
     }
 }

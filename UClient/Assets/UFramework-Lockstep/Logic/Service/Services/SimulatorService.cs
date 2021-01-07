@@ -78,7 +78,11 @@ namespace Lockstep.Logic
             {
                 while (simulator.tick < tickSinceStart)
                 {
-                    simulator.Step();
+                    var frame = _frameBuffer.GetFrame(simulator.tick);
+                    if (frame != null)
+                    {
+                        SimulateStep(frame);
+                    }
                 }
             }
             else
@@ -86,6 +90,38 @@ namespace Lockstep.Logic
                 while (inputTick <= inputPredictTick)
                 {
                     SendInputs(inputTick++);
+                }
+
+                UpdateServer();
+            }
+        }
+
+        private void UpdateServer()
+        {
+            while (simulator.tick < _frameBuffer.sTick)
+            {
+                var frame = _frameBuffer.GetFrame(simulator.tick);
+                if (frame != null)
+                {
+                    SimulateStep(frame);
+                }
+            }
+        }
+
+        private void SimulateStep(Frame frame)
+        {
+            ProcessFrame(frame);
+            simulator.Step();
+        }
+
+        private void ProcessFrame(Frame frame)
+        {
+            foreach (var agent in frame.agents)
+            {
+                if (agent.inputs.Length <= 0) continue;
+                foreach (var input in agent.inputs)
+                {
+                    _inputService.ExecuteInput(_agentService.GetAgent(agent.localId), input);
                 }
             }
         }
