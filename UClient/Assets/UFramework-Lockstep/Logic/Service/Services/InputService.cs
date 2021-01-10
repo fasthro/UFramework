@@ -18,12 +18,15 @@ namespace Lockstep.Logic
 
             var input = ObjectPool<AgentInput>.Instance.Allocate();
             input.position = Input.mousePosition.ToCS();
+            _agentService.selfAgent.CleanInputs();
             _agentService.selfAgent.AddInput(input);
         }
 
         public void ExecuteInput(Agent agent, AgentInput input)
         {
             agent.entity.cPosition.position = input.position;
+            var view = (PlayerView)agent.entity.cView.view;
+            view.position = input.position;
         }
     }
 }

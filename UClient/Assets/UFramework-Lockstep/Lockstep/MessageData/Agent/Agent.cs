@@ -23,6 +23,8 @@ namespace Lockstep.MessageData
 
         public GameEntity entity;
 
+        public IView view;
+
         #region input
 
         private List<AgentInput> _inputs = new List<AgentInput>();

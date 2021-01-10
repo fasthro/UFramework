@@ -28,14 +28,13 @@ namespace Lockstep
         {
             var localId = entity.cLocalId.id;
 
-            var agent = ObjectPool<Agent>.Instance.Allocate();
+            var agent = _agents[localId] = ObjectPool<Agent>.Instance.Allocate();
             agent.localId = localId;
-            
+            agent.entity = entity;
             if (_gameService.IsSelf(localId))
             {
-                _selfAgent = _agents[localId];
+                _selfAgent = agent;
             }
-            _agents[localId] = agent;
         }
 
         public Agent GetAgent(int localId)

@@ -100,7 +100,7 @@ namespace Lockstep.Logic
         {
             while (simulator.tick < _frameBuffer.sTick)
             {
-                var frame = _frameBuffer.GetFrame(simulator.tick);
+                var frame = _frameBuffer.GetFrame(simulator.tick + 1);
                 if (frame != null)
                 {
                     SimulateStep(frame);
@@ -131,8 +131,8 @@ namespace Lockstep.Logic
             var frame = ObjectPool<Frame>.Instance.Allocate();
             frame.tick = tick;
             frame.AddAgents(_agentService.agents);
-            _agentService.selfAgent.CleanInputs();
             _networkService.SendFrame(frame);
+            _agentService.selfAgent.CleanInputs();
         }
 
         public void OnReceiveFrame(Frame frame)

@@ -18,7 +18,11 @@ namespace Lockstep.Logic
         public V3 position
         {
             get { return transform.position.ToCS(); }
-            set { transform.position = value.ToUnity(); }
+            set
+            {
+                Debug.Log("position: " + value.ToString());
+                transform.position = value.ToUnity();
+            }
         }
 
         public QR rotation
