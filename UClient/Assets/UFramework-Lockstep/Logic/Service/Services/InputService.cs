@@ -24,9 +24,7 @@ namespace Lockstep.Logic
 
         public void ExecuteInput(Agent agent, AgentInput input)
         {
-            agent.entity.cPosition.position = input.position;
-            var view = (PlayerView)agent.entity.cView.view;
-            view.position = input.position;
+            agent.entity.ReplaceCPosition(input.position);
         }
     }
 }
