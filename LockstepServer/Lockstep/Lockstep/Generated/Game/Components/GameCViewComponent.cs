@@ -14,14 +14,14 @@ public partial class GameEntity {
     public void AddCView(Lockstep.IView newView) {
         var index = GameComponentsLookup.CView;
         var component = (Lockstep.CView)CreateComponent(index, typeof(Lockstep.CView));
-        component.view = newView;
+        component.value = newView;
         AddComponent(index, component);
     }
 
     public void ReplaceCView(Lockstep.IView newView) {
         var index = GameComponentsLookup.CView;
         var component = (Lockstep.CView)CreateComponent(index, typeof(Lockstep.CView));
-        component.view = newView;
+        component.value = newView;
         ReplaceComponent(index, component);
     }
 

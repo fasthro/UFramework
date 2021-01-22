@@ -202,7 +202,7 @@ namespace LockstepServer.Src
                 {
                     var input = ObjectPool<AgentInput>.Instance.Allocate();
                     input.FromMessage(pInput);
-                    agent.AddInput(input);
+                    agent.inputs.Add(input);
                 }
             }
         }
@@ -235,7 +235,7 @@ namespace LockstepServer.Src
             var agents = _frame.agents;
             for (int i = 0; i < Define.MAX_PLAYER_COUNT; i++)
             {
-                agents[i].CleanInputs();
+                agents[i].inputs.Clear();
             }
             s2c.Frames.Add(frame);
             PushMessage(NetwokCmd.PUSH_FRAME, s2c);

@@ -26,7 +26,7 @@ namespace Lockstep.Logic
                 // TODO userID
                 if (user.id == 1) {
                     _gameService.userId = user.id;
-                    _gameService.localId = view.entity.cLocalId.id;
+                    _gameService.localId = view.entity.cLocalId.value;
                 }
                 _agentService.CreateAgent(view.entity);
                 

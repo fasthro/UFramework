@@ -4,25 +4,35 @@
  * @Description:
  */
 
-using System.Numerics;
-
 namespace Lockstep
 {
     public class BaseView : IView
     {
-        public Vector3 position { get; set; }
+        #region public
 
-        public Quaternion rotation { get; set; }
-
-        public int localID { get; set; }
-        
+        public LSVector3 position { get; set; }
         public GameEntity entity => _entity;
 
+        #endregion
 
+        #region private
+
+        private GameEntity _entity;
+
+        #endregion
+        
         public void BindEntity(GameEntity entity)
         {
             _entity = entity;
         }
-        protected GameEntity _entity;
+
+        public void Update()
+        {
+            OnUpdate();
+        }
+
+        protected virtual void OnUpdate()
+        {
+        }
     }
 }

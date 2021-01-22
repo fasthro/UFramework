@@ -17,9 +17,11 @@ namespace Lockstep
 
         public void Initialize()
         {
-            #region  service
+            #region service
+
             serviceContainer = new ServiceContainer();
             BaseService.SetContainer(serviceContainer);
+            serviceContainer.RegisterService(new GameService());
             serviceContainer.RegisterService(new AgentService());
             serviceContainer.RegisterService(new EntityService());
             serviceContainer.RegisterService(new HelperService());
@@ -27,7 +29,7 @@ namespace Lockstep
             _allServices = serviceContainer.GetAllServices();
             foreach (var service in _allServices)
             {
-                (service as BaseService).SetReference();
+                (service as BaseService)?.SetReference();
             }
 
             InitializeService();
@@ -37,12 +39,14 @@ namespace Lockstep
             #region system
 
             contexts = Contexts.sharedInstance;
+            
             system = new Feature("Systems")
                 .Add(new Feature("General")
                     .Add(new InitGameSystem(contexts))
                 )
                 .Add(new Feature("Movement")
-                    .Add(new UpdateViewPositionAndRotationSystem(contexts)));
+                    .Add(new UpdateMovementSystem(contexts))
+                    .Add(new UpdateViewPositionSystem(contexts)));
 
             InitializeSystem();
 
@@ -64,12 +68,10 @@ namespace Lockstep
 
         protected virtual void InitializeService()
         {
-
         }
 
         protected virtual void InitializeSystem()
         {
-
         }
     }
 }

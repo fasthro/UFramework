@@ -11,6 +11,6 @@ namespace Lockstep
     [Game]
     public class CLocalId : IComponent
     {
-        public int id;
+        public int value;
     }
 }

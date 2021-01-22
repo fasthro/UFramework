@@ -5,32 +5,29 @@
  */
 
 using UnityEngine;
-using V3 = System.Numerics.Vector3;
-using QR = System.Numerics.Quaternion;
-using UV3 = UnityEngine.Vector3;
-using UQR = UnityEngine.Quaternion;
 
 namespace Lockstep.Logic
 {
     public class BaseGameView : MonoBehaviour, IView
     {
-        public V3 position
-        {
-            get { return transform.position.ToCS(); }
-            set { transform.position = value.ToUnity(); }
-        }
+        #region public
 
-        public QR rotation
+        public LSVector3 position
         {
-            get { return transform.rotation.ToCS(); }
-            set { transform.rotation = value.ToUnity(); }
+            get => entity.cPosition.value;
+            set => _tPos = value.ToVector3();
         }
-
-        public int localID { get; set; }
 
         public GameEntity entity => _entity;
 
-        protected GameEntity _entity;
+        #endregion
+
+        #region private
+
+        private GameEntity _entity;
+        private Vector3 _tPos;
+
+        #endregion
 
         public void BindEntity(GameEntity entity)
         {
@@ -39,6 +36,7 @@ namespace Lockstep.Logic
 
         public void Update()
         {
+            Vector3.MoveTowards(transform.position, _tPos, Time.deltaTime);
             OnUpdate();
         }
 

@@ -3,6 +3,7 @@
  * @Date: 2021-01-04 15:47:33
  * @Description: 
  */
+
 using System.Collections.Generic;
 using System.Numerics;
 using UnityEngine;
@@ -14,22 +15,22 @@ namespace Lockstep.Logic
     {
         public override void Update()
         {
-            if (_agentService.selfAgent == null)
+            if (_agentService.self == null)
                 return;
-            
+
             var h = Input.GetAxisRaw("Horizontal");
             var v = Input.GetAxisRaw("Vertical");
-            
+
             var input = ObjectPool<AgentInput>.Instance.Allocate();
-            input.position.X = h;
-            input.position.Z = v;
-            _agentService.selfAgent.CleanInputs();
-            _agentService.selfAgent.AddInput(input);
+            input.inputDirection.x = (Fix64) h;
+            input.inputDirection.z = (Fix64) v;
+            _agentService.self.inputs.Clear();
+            _agentService.self.inputs.Add(input);
         }
 
-        public void ExecuteInput(Agent agent, AgentInput input)
+        public void ExecuteInput(GameEntity entity, AgentInput input)
         {
-            agent.entity.ReplaceCPosition(input.position);
+            entity.ReplaceCMovement(input.inputDirection);
         }
     }
 }

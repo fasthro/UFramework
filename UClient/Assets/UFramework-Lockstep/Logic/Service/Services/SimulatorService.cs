@@ -3,6 +3,7 @@
  * @Date: 2020/12/31 11:55:03
  * @Description:
  */
+
 using Lockstep.MessageData;
 
 namespace Lockstep.Logic
@@ -52,6 +53,7 @@ namespace Lockstep.Logic
         #region data
 
         public GameStart gameStart { get; private set; }
+        public GameEntity[] players { get; private set; }
 
         #endregion data
 
@@ -65,6 +67,11 @@ namespace Lockstep.Logic
             _frameBuffer = new FrameBuffer();
             simulator = new Simulator();
             simulator.Start(data);
+
+            var entitys = _entityService.GetEntities<IPlayerView>();
+            players = new GameEntity[entitys.Count];
+            foreach (var entity in entitys)
+                players[entity.cLocalId.value] = entity;
         }
 
         public override void Update()
@@ -73,7 +80,7 @@ namespace Lockstep.Logic
 
             simulator.Update();
 
-            tickSinceStart = (int)((LSTime.realtimeSinceStartupMS - startTime) / tickDeltaTime);
+            tickSinceStart = (int) ((LSTime.realtimeSinceStartupMS - startTime) / tickDeltaTime);
             if (isClientModel)
             {
                 while (simulator.tick < tickSinceStart)
@@ -118,11 +125,9 @@ namespace Lockstep.Logic
         {
             foreach (var agent in frame.agents)
             {
-                if (agent.inputs.Length <= 0) continue;
+                if (agent.inputs.Count <= 0) continue;
                 foreach (var input in agent.inputs)
-                {
-                    _inputService.ExecuteInput(_agentService.GetAgent(agent.localId), input);
-                }
+                    _inputService.ExecuteInput(players[agent.localId], input);
             }
         }
 
@@ -132,7 +137,7 @@ namespace Lockstep.Logic
             frame.tick = tick;
             frame.AddAgents(_agentService.agents);
             _networkService.SendFrame(frame);
-            _agentService.selfAgent.CleanInputs();
+            _agentService.self.inputs.Clear();
         }
 
         public void OnReceiveFrame(Frame frame)
@@ -142,7 +147,7 @@ namespace Lockstep.Logic
 
         public void OnReceiveFrames(Frame[] frames)
         {
-            for (int i = 0; i < frames.Length; i++)
+            for (var i = 0; i < frames.Length; i++)
                 _frameBuffer.PushSFrame(frames[i]);
         }
     }

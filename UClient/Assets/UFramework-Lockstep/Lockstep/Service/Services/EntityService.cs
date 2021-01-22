@@ -7,35 +7,57 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Lockstep
 {
     public class EntityService : BaseService, IEntityService
     {
+        /// <summary>
+        /// 实体ID
+        /// </summary>
+        private static int ENTITY_ID = 0;
+
+        /// <summary>
+        /// 类型实体列表字典
+        /// </summary>
+        private Dictionary<Type, IList> _type2EntityDict = new Dictionary<Type, IList>();
+
+        /// <summary>
+        /// id实体列表字典
+        /// </summary>
+        private Dictionary<int, GameEntity> _id2EntityDict = new Dictionary<int, GameEntity>();
+
         public GameEntity AddEntity<T>(Contexts contexts, T view) where T : IView
         {
             GameEntity entity = null;
             if (typeof(T) == typeof(IPlayerView))
-            {
                 entity = CreatePlayer<T>(contexts, view);
-            }
-            entity.AddCLocalId(view.localID);
+
+            if (entity == null)
+                return null;
+
             entity.AddCEntityID(ENTITY_ID++);
 
-            var t = view.GetType();
-            if (_type2Entities.TryGetValue(t, out var lstObj))
+            var ts = view.GetType().FindInterfaces((type, criteria) =>
+                    type.GetInterfaces().Any(t => t == typeof(IView)), view)
+                .ToArray();
+            foreach (var t in ts)
             {
-                var lst = lstObj as List<GameEntity>;
-                lst.Add(entity);
-            }
-            else
-            {
-                var lst = new List<GameEntity>();
-                _type2Entities.Add(t, lst);
-                lst.Add(entity);
+                if (_type2EntityDict.TryGetValue(t, out var lstObj))
+                {
+                    if (lstObj is List<GameEntity> lst)
+                        lst.Add(entity);
+                }
+                else
+                {
+                    var lst = new List<GameEntity>();
+                    _type2EntityDict.Add(t, lst);
+                    lst.Add(entity);
+                }
             }
 
-            _id2Entities[entity.cEntityID.id] = entity;
+            _id2EntityDict[entity.cEntityID.id] = entity;
 
             return entity;
         }
@@ -43,36 +65,32 @@ namespace Lockstep
         public List<GameEntity> GetEntities<T>() where T : IView
         {
             var t = typeof(T);
-            if (_type2Entities.TryGetValue(t, out var lstObj))
+            if (_type2EntityDict.TryGetValue(t, out var lstObj))
             {
                 return lstObj as List<GameEntity>;
             }
+
             var lst = new List<GameEntity>();
-            _type2Entities.Add(t, lst);
+            _type2EntityDict.Add(t, lst);
             return lst;
         }
 
         public void RemoveEntity<T>(GameEntity entity) where T : IView
         {
             var t = typeof(T);
-            if (_type2Entities.TryGetValue(t, out var lstObj))
+            if (_type2EntityDict.TryGetValue(t, out var lstObj))
             {
                 lstObj.Remove(entity);
-                _id2Entities.Remove(entity.cEntityID.id);
+                _id2EntityDict.Remove(entity.cEntityID.id);
             }
         }
-
-        static int ENTITY_ID = 0;
-        private Dictionary<Type, IList> _type2Entities = new Dictionary<Type, IList>();
-
-        private Dictionary<int, GameEntity> _id2Entities = new Dictionary<int, GameEntity>();
 
         private GameEntity CreatePlayer<T>(Contexts contexts, T view) where T : IView
         {
             var entity = contexts.game.CreateEntity();
-
-            entity.AddCPosition(view.position);
-            entity.AddCRotation(view.rotation);
+            entity.AddCPosition(LSVector3.zero);
+            entity.AddCSpeed(Fix64.One);
+            entity.AddCMovement(LSVector3.zero);
 
             entity.AddCView(view);
             view.BindEntity(entity);

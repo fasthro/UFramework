@@ -4,7 +4,6 @@
  * @Description: 
  */
 
-using System.Numerics;
 using Google.Protobuf;
 
 namespace Lockstep.MessageData
@@ -14,12 +13,7 @@ namespace Lockstep.MessageData
         /// <summary>
         /// 位置
         /// </summary>
-        public Vector3 position;
-
-        /// <summary>
-        /// 旋转
-        /// </summary>
-        public Quaternion rotation;
+        public LSVector3 inputDirection;
 
         #region pool
 
@@ -32,7 +26,6 @@ namespace Lockstep.MessageData
 
         public void OnRecycle()
         {
-
         }
 
         #endregion
@@ -41,29 +34,31 @@ namespace Lockstep.MessageData
 
         public override object ToMessage()
         {
-            var msg = new PBBSCommon.Input();
-            msg.Px = position.X;
-            msg.Py = position.Y;
-            msg.Pz = position.Z;
-            return msg;
+            return new PBBSCommon.Input
+            {
+                Px = (double) inputDirection.x, Py = (double) inputDirection.y, Pz = (double) inputDirection.z
+            };
         }
 
         public override void FromMessage(IMessage message)
         {
-            var msg = (PBBSCommon.Input)message;
-            position.X = (float)msg.Px;
-            position.Y = (float)msg.Py;
-            position.Z = (float)msg.Pz;
+            var msg = (PBBSCommon.Input) message;
+            inputDirection.x = (Fix64) msg.Px;
+            inputDirection.y = (Fix64) msg.Py;
+            inputDirection.z = (Fix64) msg.Pz;
         }
+
         #endregion
 
         #region clone
+
         public override object DeepClone()
         {
             var co = ObjectPool<AgentInput>.Instance.Allocate();
-            co.position = new Vector3(position.X, position.Y, position.Z);
+            co.inputDirection = new LSVector3(inputDirection.x, inputDirection.y, inputDirection.z);
             return co;
         }
+
         #endregion
     }
 }

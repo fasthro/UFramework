@@ -11,17 +11,17 @@ public partial class GameEntity {
     public Lockstep.CLocalId cLocalId { get { return (Lockstep.CLocalId)GetComponent(GameComponentsLookup.CLocalId); } }
     public bool hasCLocalId { get { return HasComponent(GameComponentsLookup.CLocalId); } }
 
-    public void AddCLocalId(int newId) {
+    public void AddCLocalId(int newValue) {
         var index = GameComponentsLookup.CLocalId;
         var component = (Lockstep.CLocalId)CreateComponent(index, typeof(Lockstep.CLocalId));
-        component.id = newId;
+        component.value = newValue;
         AddComponent(index, component);
     }
 
-    public void ReplaceCLocalId(int newId) {
+    public void ReplaceCLocalId(int newValue) {
         var index = GameComponentsLookup.CLocalId;
         var component = (Lockstep.CLocalId)CreateComponent(index, typeof(Lockstep.CLocalId));
-        component.id = newId;
+        component.value = newValue;
         ReplaceComponent(index, component);
     }
 

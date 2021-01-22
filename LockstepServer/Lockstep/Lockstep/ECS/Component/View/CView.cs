@@ -11,6 +11,6 @@ namespace Lockstep
     [Game]
     public class CView : IComponent
     {
-        public IView view;
+        public IView value;
     }
 }

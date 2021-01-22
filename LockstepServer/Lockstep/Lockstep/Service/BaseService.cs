@@ -20,6 +20,7 @@ namespace Lockstep
 
         public virtual void SetReference()
         {
+            _gameService = _container.GetService<IGameService>();
             _agentService = _container.GetService<IAgentService>();
             _entityService = _container.GetService<IEntityService>();
             _helperService = _container.GetService<IHelperService>();
@@ -42,6 +43,7 @@ namespace Lockstep
         {
         }
 
+        protected IGameService _gameService;
         protected IAgentService _agentService;
         protected IEntityService _entityService;
         protected IHelperService _helperService;

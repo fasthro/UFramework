@@ -11,17 +11,17 @@ public partial class GameEntity {
     public Lockstep.CPosition cPosition { get { return (Lockstep.CPosition)GetComponent(GameComponentsLookup.CPosition); } }
     public bool hasCPosition { get { return HasComponent(GameComponentsLookup.CPosition); } }
 
-    public void AddCPosition(System.Numerics.Vector3 newPosition) {
+    public void AddCPosition(Lockstep.LSVector3 newValue) {
         var index = GameComponentsLookup.CPosition;
         var component = (Lockstep.CPosition)CreateComponent(index, typeof(Lockstep.CPosition));
-        component.position = newPosition;
+        component.value = newValue;
         AddComponent(index, component);
     }
 
-    public void ReplaceCPosition(System.Numerics.Vector3 newPosition) {
+    public void ReplaceCPosition(Lockstep.LSVector3 newValue) {
         var index = GameComponentsLookup.CPosition;
         var component = (Lockstep.CPosition)CreateComponent(index, typeof(Lockstep.CPosition));
-        component.position = newPosition;
+        component.value = newValue;
         ReplaceComponent(index, component);
     }
 

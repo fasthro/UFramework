@@ -22,9 +22,6 @@
     <Reference Include="Google.Protobuf">
       <HintPath>..\3rd\Google.Protobuf\Google.Protobuf.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>..\3rd\UnityEngine\UnityEngine.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

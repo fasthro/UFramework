@@ -21,8 +21,8 @@ namespace Lockstep.Logic
         {
             var gameobject = GammeObjectPool.Instance.Allocate(path, null);
             var view = gameobject.GetComponent<T>();
-            view.localID = localId;
             var entity = _entityService.AddEntity<T>(LauncherClient.Instance.contexts, view);
+            entity.AddCLocalId(localId);
             gameobject.Link(entity);
             return view;
         }

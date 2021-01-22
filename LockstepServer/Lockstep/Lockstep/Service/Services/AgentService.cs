@@ -13,31 +13,38 @@ namespace Lockstep
 {
     public class AgentService : BaseService, IAgentService
     {
-        public Agent selfAgent => _selfAgent;
-        private Agent _selfAgent;
+        #region public
 
         public Agent[] agents => _agents;
+        public Agent self => _self;
+
+        #endregion
+
+        #region private
+
         private Agent[] _agents;
+        private Agent _self;
+
+        #endregion
 
         public override void Initialize()
         {
             _agents = new Agent[Define.MAX_PLAYER_COUNT];
         }
 
-        public void CreateAgent(int localId, bool isSelf)
+        public void CreateAgent(GameEntity entity)
         {
-            _agents[localId] = ObjectPool<Agent>.Instance.Allocate();
-            _agents[localId].localId = localId;
+            var localId = entity.cLocalId.value;
+            var agent = agents[localId] = ObjectPool<Agent>.Instance.Allocate();
+            agent.localId = localId;
 
-            if (isSelf)
-            {
-                _selfAgent = _agents[localId];
-            }
+            if (_gameService.IsSelf(localId))
+                _self = agent;
         }
 
         public Agent GetAgent(int localId)
         {
-            return _agents[localId];
+            return agents[localId];
         }
     }
 }
