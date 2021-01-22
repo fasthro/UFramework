@@ -17,5 +17,6 @@ namespace Lockstep
         GameEntity entity { get; }
 
         void BindEntity(GameEntity entity);
+        void Update();
     }
 }

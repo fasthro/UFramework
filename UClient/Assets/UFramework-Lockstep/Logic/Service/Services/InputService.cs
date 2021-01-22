@@ -4,6 +4,7 @@
  * @Description: 
  */
 using System.Collections.Generic;
+using System.Numerics;
 using UnityEngine;
 using Lockstep.MessageData;
 
@@ -15,9 +16,13 @@ namespace Lockstep.Logic
         {
             if (_agentService.selfAgent == null)
                 return;
-
+            
+            var h = Input.GetAxisRaw("Horizontal");
+            var v = Input.GetAxisRaw("Vertical");
+            
             var input = ObjectPool<AgentInput>.Instance.Allocate();
-            input.position = Input.mousePosition.ToCS();
+            input.position.X = h;
+            input.position.Z = v;
             _agentService.selfAgent.CleanInputs();
             _agentService.selfAgent.AddInput(input);
         }

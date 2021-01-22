@@ -5,7 +5,6 @@
  */
 
 using UnityEngine;
-
 using V3 = System.Numerics.Vector3;
 using QR = System.Numerics.Quaternion;
 using UV3 = UnityEngine.Vector3;
@@ -18,11 +17,7 @@ namespace Lockstep.Logic
         public V3 position
         {
             get { return transform.position.ToCS(); }
-            set
-            {
-                Debug.Log("position: " + value.ToString());
-                transform.position = value.ToUnity();
-            }
+            set { transform.position = value.ToUnity(); }
         }
 
         public QR rotation
@@ -30,15 +25,25 @@ namespace Lockstep.Logic
             get { return transform.rotation.ToCS(); }
             set { transform.rotation = value.ToUnity(); }
         }
+
         public int localID { get; set; }
 
         public GameEntity entity => _entity;
+
+        protected GameEntity _entity;
 
         public void BindEntity(GameEntity entity)
         {
             _entity = entity;
         }
 
-        protected GameEntity _entity;
+        public void Update()
+        {
+            OnUpdate();
+        }
+
+        protected virtual void OnUpdate()
+        {
+        }
     }
 }

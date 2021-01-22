@@ -6,6 +6,7 @@
 
 using Entitas;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace Lockstep
 {
@@ -20,7 +21,7 @@ namespace Lockstep
         {
             foreach (var entity in entities)
             {
-                entity.cView.view.position = entity.cPosition.position;
+                entity.cView.view.position = entity.cView.view.position + Vector3.Normalize(entity.cPosition.position) * 1f;
                 entity.cView.view.rotation = entity.cRotation.rotation;
             }
         }
