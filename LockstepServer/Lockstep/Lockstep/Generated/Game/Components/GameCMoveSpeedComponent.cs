@@ -8,25 +8,25 @@
 //------------------------------------------------------------------------------
 public partial class GameEntity {
 
-    public Lockstep.CSpeed cSpeed { get { return (Lockstep.CSpeed)GetComponent(GameComponentsLookup.CSpeed); } }
-    public bool hasCSpeed { get { return HasComponent(GameComponentsLookup.CSpeed); } }
+    public Lockstep.CMoveSpeed cMoveSpeed { get { return (Lockstep.CMoveSpeed)GetComponent(GameComponentsLookup.CMoveSpeed); } }
+    public bool hasCMoveSpeed { get { return HasComponent(GameComponentsLookup.CMoveSpeed); } }
 
-    public void AddCSpeed(Lockstep.Fix64 newValue) {
-        var index = GameComponentsLookup.CSpeed;
-        var component = (Lockstep.CSpeed)CreateComponent(index, typeof(Lockstep.CSpeed));
+    public void AddCMoveSpeed(Lockstep.Fix64 newValue) {
+        var index = GameComponentsLookup.CMoveSpeed;
+        var component = (Lockstep.CMoveSpeed)CreateComponent(index, typeof(Lockstep.CMoveSpeed));
         component.value = newValue;
         AddComponent(index, component);
     }
 
-    public void ReplaceCSpeed(Lockstep.Fix64 newValue) {
-        var index = GameComponentsLookup.CSpeed;
-        var component = (Lockstep.CSpeed)CreateComponent(index, typeof(Lockstep.CSpeed));
+    public void ReplaceCMoveSpeed(Lockstep.Fix64 newValue) {
+        var index = GameComponentsLookup.CMoveSpeed;
+        var component = (Lockstep.CMoveSpeed)CreateComponent(index, typeof(Lockstep.CMoveSpeed));
         component.value = newValue;
         ReplaceComponent(index, component);
     }
 
-    public void RemoveCSpeed() {
-        RemoveComponent(GameComponentsLookup.CSpeed);
+    public void RemoveCMoveSpeed() {
+        RemoveComponent(GameComponentsLookup.CMoveSpeed);
     }
 }
 
@@ -40,17 +40,17 @@ public partial class GameEntity {
 //------------------------------------------------------------------------------
 public sealed partial class GameMatcher {
 
-    static Entitas.IMatcher<GameEntity> _matcherCSpeed;
+    static Entitas.IMatcher<GameEntity> _matcherCMoveSpeed;
 
-    public static Entitas.IMatcher<GameEntity> CSpeed {
+    public static Entitas.IMatcher<GameEntity> CMoveSpeed {
         get {
-            if (_matcherCSpeed == null) {
-                var matcher = (Entitas.Matcher<GameEntity>)Entitas.Matcher<GameEntity>.AllOf(GameComponentsLookup.CSpeed);
+            if (_matcherCMoveSpeed == null) {
+                var matcher = (Entitas.Matcher<GameEntity>)Entitas.Matcher<GameEntity>.AllOf(GameComponentsLookup.CMoveSpeed);
                 matcher.componentNames = GameComponentsLookup.componentNames;
-                _matcherCSpeed = matcher;
+                _matcherCMoveSpeed = matcher;
             }
 
-            return _matcherCSpeed;
+            return _matcherCMoveSpeed;
         }
     }
 }

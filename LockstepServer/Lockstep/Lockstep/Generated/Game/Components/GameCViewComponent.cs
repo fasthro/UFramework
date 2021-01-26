@@ -11,17 +11,17 @@ public partial class GameEntity {
     public Lockstep.CView cView { get { return (Lockstep.CView)GetComponent(GameComponentsLookup.CView); } }
     public bool hasCView { get { return HasComponent(GameComponentsLookup.CView); } }
 
-    public void AddCView(Lockstep.IView newView) {
+    public void AddCView(Lockstep.IView newValue) {
         var index = GameComponentsLookup.CView;
         var component = (Lockstep.CView)CreateComponent(index, typeof(Lockstep.CView));
-        component.value = newView;
+        component.value = newValue;
         AddComponent(index, component);
     }
 
-    public void ReplaceCView(Lockstep.IView newView) {
+    public void ReplaceCView(Lockstep.IView newValue) {
         var index = GameComponentsLookup.CView;
         var component = (Lockstep.CView)CreateComponent(index, typeof(Lockstep.CView));
-        component.value = newView;
+        component.value = newValue;
         ReplaceComponent(index, component);
     }
 

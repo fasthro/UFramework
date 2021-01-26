@@ -20,7 +20,7 @@ namespace Lockstep
         /// The completion time in seconds since the last frame (Read Only).
         /// </summary>
         /// <value></value>
-        public static float deltaTime { get; private set; }
+        public static Fix64 deltaTime { get; private set; }
 
         public static long deltaTimeMS { get; private set; }
 
@@ -29,15 +29,15 @@ namespace Lockstep
         /// level has been loaded.
         /// </summary>
         /// <value></value>
-        public static float timeSinceLevelLoad { get; private set; }
+        public static Fix64 timeSinceLevelLoad { get; private set; }
 
         /// <summary>
         /// The real time in seconds since the game started (Read Only).
         /// </summary>
         /// <value></value>
-        public static float realtimeSinceStartup => (float)(DateTime.Now - _initTime).TotalSeconds;
+        public static float realtimeSinceStartup => (float) (DateTime.Now - _initTime).TotalSeconds;
 
-        public static long realtimeSinceStartupMS => (long)(DateTime.Now - _initTime).TotalMilliseconds;
+        public static long realtimeSinceStartupMS => (long) (DateTime.Now - _initTime).TotalMilliseconds;
 
         public static void Initialize()
         {
@@ -49,15 +49,15 @@ namespace Lockstep
         {
             var now = DateTime.Now;
 
-            deltaTime = (float)(now - _lastFrameTime).TotalSeconds;
-            deltaTimeMS = (long)(now - _lastFrameTime).TotalMilliseconds;
+            deltaTime = (Fix64) (now - _lastFrameTime).TotalSeconds;
+            deltaTimeMS = (long) (now - _lastFrameTime).TotalMilliseconds;
 
-            timeSinceLevelLoad = (float)(now - _initTime).TotalSeconds;
+            timeSinceLevelLoad = (Fix64) (now - _initTime).TotalSeconds;
             frameCount++;
             _lastFrameTime = now;
         }
 
-        new public static string ToString()
+        public new static string ToString()
         {
             return $"LSTime > frameCount: {frameCount}, deltaTime: {deltaTime}, timeSinceLevelLoad: {timeSinceLevelLoad}, realtimeSinceStartup: {realtimeSinceStartup}";
         }

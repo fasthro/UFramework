@@ -11,6 +11,7 @@ namespace Lockstep
         #region public
 
         public LSVector3 position { get; set; }
+        public Fix64 deg { get; set; }
         public GameEntity entity => _entity;
 
         #endregion

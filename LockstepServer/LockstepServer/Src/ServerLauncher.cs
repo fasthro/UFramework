@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lockstep;
+using System;
 using System.Runtime.InteropServices;
 using System.Threading;
 
@@ -100,7 +101,7 @@ namespace LockstepServer.Src
                 Console.WriteLine(string.Format("Hosting ip [{0}] on port [{1}]", host, port));
                 Console.WriteLine("Commands Available\n(s)top - Stops hosting\n(r)estart - Restarts the hosting service even when stopped\n(q)uit - Quits the application\n(h)elp - Get a full list of comands");
                 server = new ServerLauncher(port);
-                var frameTime = (int)(1000 / (float)30);
+                var frameTime = (int)(1000 / (float)Define.FRAME_RATE);
                 while (server.IsRunning)
                 {
                     server.Update();

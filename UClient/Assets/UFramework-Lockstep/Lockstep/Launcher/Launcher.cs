@@ -49,7 +49,8 @@ namespace Lockstep
                 )
                 .Add(new Feature("Movement")
                     .Add(new UpdateMovementSystem(contexts))
-                    .Add(new UpdateViewPositionSystem(contexts)));
+                    .Add(new UpdateViewPositionSystem(contexts))
+                    .Add(new UpdateViewRotationSystem(contexts)));
 
             InitializeSystem();
 

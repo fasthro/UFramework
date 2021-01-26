@@ -11,18 +11,24 @@ public static class GameComponentsLookup {
     public const int CEntityID = 0;
     public const int CLocalId = 1;
     public const int CMovement = 2;
-    public const int CPlayerTag = 3;
-    public const int CPosition = 4;
-    public const int CView = 5;
+    public const int CMoveSpeed = 3;
+    public const int CPlayerTag = 4;
+    public const int CPosition = 5;
+    public const int CRotation = 6;
+    public const int CRotationSpeed = 7;
+    public const int CView = 8;
 
-    public const int TotalComponents = 6;
+    public const int TotalComponents = 9;
 
     public static readonly string[] componentNames = {
         "CEntityID",
         "CLocalId",
         "CMovement",
+        "CMoveSpeed",
         "CPlayerTag",
         "CPosition",
+        "CRotation",
+        "CRotationSpeed",
         "CView"
     };
 
@@ -30,8 +36,11 @@ public static class GameComponentsLookup {
         typeof(Lockstep.CEntityID),
         typeof(Lockstep.CLocalId),
         typeof(Lockstep.CMovement),
+        typeof(Lockstep.CMoveSpeed),
         typeof(Lockstep.CPlayerTag),
         typeof(Lockstep.CPosition),
+        typeof(Lockstep.CRotation),
+        typeof(Lockstep.CRotationSpeed),
         typeof(Lockstep.CView)
     };
 }

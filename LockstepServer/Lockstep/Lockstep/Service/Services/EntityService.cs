@@ -7,6 +7,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Lockstep
 {
@@ -35,20 +36,25 @@ namespace Lockstep
 
             if (entity == null)
                 return null;
-            
+
             entity.AddCEntityID(ENTITY_ID++);
 
-            var t = view.GetType();
-            if (_type2EntityDict.TryGetValue(t, out var lstObj))
+            var ts = view.GetType().FindInterfaces((type, criteria) =>
+                    type.GetInterfaces().Any(t => t == typeof(IView)), view)
+                .ToArray();
+            foreach (var t in ts)
             {
-                if (lstObj is List<GameEntity> lst)
+                if (_type2EntityDict.TryGetValue(t, out var lstObj))
+                {
+                    if (lstObj is List<GameEntity> lst)
+                        lst.Add(entity);
+                }
+                else
+                {
+                    var lst = new List<GameEntity>();
+                    _type2EntityDict.Add(t, lst);
                     lst.Add(entity);
-            }
-            else
-            {
-                var lst = new List<GameEntity>();
-                _type2EntityDict.Add(t, lst);
-                lst.Add(entity);
+                }
             }
 
             _id2EntityDict[entity.cEntityID.id] = entity;
@@ -82,7 +88,11 @@ namespace Lockstep
         private GameEntity CreatePlayer<T>(Contexts contexts, T view) where T : IView
         {
             var entity = contexts.game.CreateEntity();
+
             entity.AddCPosition(LSVector3.zero);
+            entity.AddCRotation(Fix64.Zero);
+            entity.AddCMoveSpeed(Fix64.One * GameDebug.moveSpeedScale);
+            entity.AddCRotationSpeed(Fix64.One);
             entity.AddCMovement(LSVector3.zero);
 
             entity.AddCView(view);

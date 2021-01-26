@@ -2,11 +2,11 @@
 
 namespace Lockstep
 {
-    public class CPosition : IComponent
+    public class CMoveSpeed : IComponent
     {
         /// <summary>
-        /// 位置
+        /// 移动速度
         /// </summary>
-        public LSVector3 value;
+        public Fix64 value;
     }
 }

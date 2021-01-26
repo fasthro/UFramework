@@ -4,9 +4,15 @@ namespace Lockstep
 {
     public struct LSVector3 : IEquatable<LSVector3>
     {
+        #region base
+
         public Fix64 x;
         public Fix64 y;
         public Fix64 z;
+
+        #endregion
+
+        #region base const
 
         public static readonly LSVector3 zero = new LSVector3(0, 0, 0);
         public static readonly LSVector3 one = new LSVector3(1, 1, 1);
@@ -17,6 +23,14 @@ namespace Lockstep
         public static readonly LSVector3 forward = new LSVector3(0, 0, 1);
         public static readonly LSVector3 back = new LSVector3(0, 0, -1);
 
+        #endregion
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
         public LSVector3(int x, int y, int z)
         {
             this.x = (Fix64) x;
@@ -24,6 +38,12 @@ namespace Lockstep
             this.z = (Fix64) z;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
         public LSVector3(Fix64 x, Fix64 y, Fix64 z)
         {
             this.x = x;
@@ -185,7 +205,8 @@ namespace Lockstep
         #endregion
 
 
-        public static Fix64 Magnitude(LSVector3 vector) => Fix64.Sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
+        public static Fix64 Magnitude(LSVector3 vector) => Fix64.Sqrt(LSVector3.SqrMagnitude(vector));
+        public static Fix64 SqrMagnitude(LSVector3 vector) => (vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
 
         public static LSVector3 operator +(LSVector3 value1, LSVector3 value2)
         {
@@ -218,7 +239,7 @@ namespace Lockstep
 
         public bool Equals(LSVector3 other)
         {
-            throw new NotImplementedException();
+            return x.Equals(other.x) && y.Equals(other.y) && z.Equals(other.z);
         }
 
         public override bool Equals(object obj)
@@ -226,7 +247,16 @@ namespace Lockstep
             return obj is LSVector3 other && Equals(other);
         }
 
-        public override int GetHashCode() => x.GetHashCode() ^ y.GetHashCode() << 2 ^ z.GetHashCode() >> 2;
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = x.GetHashCode();
+                hashCode = (hashCode * 397) ^ y.GetHashCode();
+                hashCode = (hashCode * 397) ^ z.GetHashCode();
+                return hashCode;
+            }
+        }
 
         public override string ToString()
         {

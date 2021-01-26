@@ -44,9 +44,13 @@ namespace Lockstep
                 .Add(new Feature("General")
                     .Add(new InitGameSystem(contexts))
                 )
+                .Add(new Feature("Client")
+                    .Add(new UpdateViewSystem(contexts))
+                )
                 .Add(new Feature("Movement")
                     .Add(new UpdateMovementSystem(contexts))
-                    .Add(new UpdateViewPositionSystem(contexts)));
+                    .Add(new UpdateViewPositionSystem(contexts))
+                    .Add(new UpdateViewRotationSystem(contexts)));
 
             InitializeSystem();
 

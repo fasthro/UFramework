@@ -14,8 +14,14 @@ namespace Lockstep.Logic
 
         public LSVector3 position
         {
-            get => entity.cPosition.value;
-            set => _tPos = value.ToVector3();
+            get => transform.position.ToLSVector3();
+            set => _position = value;
+        }
+
+        public Fix64 deg
+        {
+            get => (Fix64) transform.localEulerAngles.y;
+            set => _deg = value;
         }
 
         public GameEntity entity => _entity;
@@ -25,7 +31,8 @@ namespace Lockstep.Logic
         #region private
 
         private GameEntity _entity;
-        private Vector3 _tPos;
+        private LSVector3 _position;
+        private Fix64 _deg;
 
         #endregion
 
@@ -36,7 +43,8 @@ namespace Lockstep.Logic
 
         public void Update()
         {
-            Vector3.MoveTowards(transform.position, _tPos, Time.deltaTime);
+            transform.position = Vector3.Lerp(transform.position, _position.ToVector3(), 0.3f);
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, (float) _deg, 0), 0.3f);
             OnUpdate();
         }
 

@@ -88,8 +88,11 @@ namespace Lockstep
         private GameEntity CreatePlayer<T>(Contexts contexts, T view) where T : IView
         {
             var entity = contexts.game.CreateEntity();
+
             entity.AddCPosition(LSVector3.zero);
-            entity.AddCSpeed(Fix64.One);
+            entity.AddCRotation(Fix64.Zero);
+            entity.AddCMoveSpeed(Fix64.One * GameDebug.moveSpeedScale);
+            entity.AddCRotationSpeed(Fix64.One);
             entity.AddCMovement(LSVector3.zero);
 
             entity.AddCView(view);

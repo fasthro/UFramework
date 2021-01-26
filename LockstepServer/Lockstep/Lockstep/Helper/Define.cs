@@ -6,12 +6,12 @@
 
 namespace Lockstep
 {
-    public class Define
+    public static class Define
     {
         /// <summary>
         /// 帧率
         /// </summary>
-        public const int FRAME_RATE = 1;
+        public const int FRAME_RATE = 30;
 
         /// <summary>
         /// 最大玩家人数

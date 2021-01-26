@@ -8,25 +8,25 @@
 //------------------------------------------------------------------------------
 public partial class GameEntity {
 
-    public Lockstep.CLocalId cLocalId { get { return (Lockstep.CLocalId)GetComponent(GameComponentsLookup.CLocalId); } }
-    public bool hasCLocalId { get { return HasComponent(GameComponentsLookup.CLocalId); } }
+    public Lockstep.CMoveSpeed cMoveSpeed { get { return (Lockstep.CMoveSpeed)GetComponent(GameComponentsLookup.CMoveSpeed); } }
+    public bool hasCMoveSpeed { get { return HasComponent(GameComponentsLookup.CMoveSpeed); } }
 
-    public void AddCLocalId(int newValue) {
-        var index = GameComponentsLookup.CLocalId;
-        var component = (Lockstep.CLocalId)CreateComponent(index, typeof(Lockstep.CLocalId));
+    public void AddCMoveSpeed(Lockstep.Fix64 newValue) {
+        var index = GameComponentsLookup.CMoveSpeed;
+        var component = (Lockstep.CMoveSpeed)CreateComponent(index, typeof(Lockstep.CMoveSpeed));
         component.value = newValue;
         AddComponent(index, component);
     }
 
-    public void ReplaceCLocalId(int newValue) {
-        var index = GameComponentsLookup.CLocalId;
-        var component = (Lockstep.CLocalId)CreateComponent(index, typeof(Lockstep.CLocalId));
+    public void ReplaceCMoveSpeed(Lockstep.Fix64 newValue) {
+        var index = GameComponentsLookup.CMoveSpeed;
+        var component = (Lockstep.CMoveSpeed)CreateComponent(index, typeof(Lockstep.CMoveSpeed));
         component.value = newValue;
         ReplaceComponent(index, component);
     }
 
-    public void RemoveCLocalId() {
-        RemoveComponent(GameComponentsLookup.CLocalId);
+    public void RemoveCMoveSpeed() {
+        RemoveComponent(GameComponentsLookup.CMoveSpeed);
     }
 }
 
@@ -40,17 +40,17 @@ public partial class GameEntity {
 //------------------------------------------------------------------------------
 public sealed partial class GameMatcher {
 
-    static Entitas.IMatcher<GameEntity> _matcherCLocalId;
+    static Entitas.IMatcher<GameEntity> _matcherCMoveSpeed;
 
-    public static Entitas.IMatcher<GameEntity> CLocalId {
+    public static Entitas.IMatcher<GameEntity> CMoveSpeed {
         get {
-            if (_matcherCLocalId == null) {
-                var matcher = (Entitas.Matcher<GameEntity>)Entitas.Matcher<GameEntity>.AllOf(GameComponentsLookup.CLocalId);
+            if (_matcherCMoveSpeed == null) {
+                var matcher = (Entitas.Matcher<GameEntity>)Entitas.Matcher<GameEntity>.AllOf(GameComponentsLookup.CMoveSpeed);
                 matcher.componentNames = GameComponentsLookup.componentNames;
-                _matcherCLocalId = matcher;
+                _matcherCMoveSpeed = matcher;
             }
 
-            return _matcherCLocalId;
+            return _matcherCMoveSpeed;
         }
     }
 }

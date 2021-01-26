@@ -2,11 +2,11 @@
 
 namespace Lockstep
 {
-    public class CPosition : IComponent
+    public class CRotation : IComponent
     {
         /// <summary>
-        /// 位置
+        /// 角度
         /// </summary>
-        public LSVector3 value;
+        public Fix64 value;
     }
 }
