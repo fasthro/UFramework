@@ -20,6 +20,7 @@ namespace Lockstep.Logic
         public void Start(GameStart data)
         {
             int index = 0;
+            IView selfView = null;
             foreach (var user in data.users)
             {
                 var view = _viewService.CreateView<IPlayerView>("Assets/Arts/Player/Player1.prefab", index);
@@ -27,6 +28,7 @@ namespace Lockstep.Logic
                 if (user.id == 1) {
                     _gameService.userId = user.id;
                     _gameService.localId = view.entity.cLocalId.value;
+                    selfView = view;
                 }
                 _agentService.CreateAgent(view.entity);
                 
@@ -34,6 +36,9 @@ namespace Lockstep.Logic
             }
 
             isRunning = true;
+            
+            // 相机跟随
+            RTSCamera.instance.targetFollow = (selfView as BaseGameView)?.gameObject.transform;
         }
 
         public void Step()
