@@ -91,6 +91,8 @@ namespace LockstepServer.Src
             }
         }
 
+        public bool isEmpty => _playerCount == 0;
+
         /// <summary>
         /// 进入房间
         /// </summary>

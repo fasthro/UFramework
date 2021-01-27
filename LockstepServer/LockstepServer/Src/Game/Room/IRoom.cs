@@ -16,6 +16,7 @@ namespace LockstepServer.Src
         int roomId { get; }
         string secretKey { get; }
         int playerCount { get; }
+        bool isEmpty { get; }
 
         void PushMessage(int cmd, IMessage message);
     }

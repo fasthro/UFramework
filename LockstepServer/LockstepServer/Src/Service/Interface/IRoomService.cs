@@ -9,5 +9,6 @@ namespace LockstepServer.Src
     public interface IRoomService : IService
     {
         Room room { get; }
+        void CreateNewRoom();
     }
 }

@@ -12,6 +12,8 @@ namespace LockstepServer.Src
 
         void AddPlayer(Player player);
 
+        void RemovePlayer(long uid);
+
         bool ExistPlayer(long uid);
     }
 }

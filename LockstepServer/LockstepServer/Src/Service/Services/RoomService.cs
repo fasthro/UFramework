@@ -12,6 +12,12 @@ namespace LockstepServer.Src
 
         public override void Initialize()
         {
+            CreateNewRoom();
+        }
+
+        public void CreateNewRoom()
+        {
+            LogHelper.Debug("创建新房间");
             _room = new Room(1);
         }
 

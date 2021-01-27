@@ -16,6 +16,11 @@ namespace LockstepServer.Src
             if (player != null)
             {
                 _roomService.room.Remove(player.uid);
+                if (_roomService.room.isEmpty)
+                {
+                    _roomService.CreateNewRoom();
+                }
+                _playerService.RemovePlayer(player.uid);
             }
         }
 
