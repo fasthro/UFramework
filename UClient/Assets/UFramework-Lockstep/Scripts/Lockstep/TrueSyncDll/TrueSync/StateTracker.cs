@@ -4,10 +4,10 @@ using System.Reflection;
 
 namespace TrueSync
 {
-    // ×´Ì¬×·×ÙÀà
+    // çŠ¶æ€è¿½è¸ªç±»
 	public class StateTracker
     {
-        #region ×´Ì¬Àà
+        #region çŠ¶æ€ç±»
         internal class State
 		{
 			private StateTracker.TrackedInfo trackedInfo;
@@ -67,16 +67,16 @@ namespace TrueSync
 				}
 			}
 		}
-        #endregion ×´Ì¬Àà
+        #endregion çŠ¶æ€ç±»
 
-        #region ×·×ÙĞÅÏ¢Àà
+        #region è¿½è¸ªä¿¡æ¯ç±»
         internal class TrackedInfo
 		{
-			public object relatedObj; // Ïà¹ØµÄ¶ÔÏó
+			public object relatedObj; // ç›¸å…³çš„å¯¹è±¡
 
-			public MemberInfo propInfo; // ³ÉÔ±ĞÅÏ¢
+			public MemberInfo propInfo; // æˆå‘˜ä¿¡æ¯
 		}
-        #endregion ×·×ÙĞÅÏ¢Àà
+        #endregion è¿½è¸ªä¿¡æ¯ç±»
 
         private static ResourcePoolStateTrackerState resourcePool = new ResourcePoolStateTrackerState();
 
@@ -88,21 +88,21 @@ namespace TrueSync
 
 		internal static StateTracker instance;
 
-        #region ¹«¹²·½·¨
-        // ³õÊ¼»¯
+        #region å…¬å…±æ–¹æ³•
+        // åˆå§‹åŒ–
         public static void Init(int rollbackWindow)
 		{
 			StateTracker.instance = new StateTracker();
 			StateTracker.instance.states = new GenericBufferWindow<List<StateTracker.State>>(rollbackWindow);
 		}
 
-        // Çå¿Õ
+        // æ¸…ç©º
 		public static void CleanUp()
 		{
 			StateTracker.instance = null;
 		}
         
-        // Ìí¼Ó×·×Ù
+        // æ·»åŠ è¿½è¸ª
         public static void AddTracking(object obj, string path)
 		{
 			bool flag = StateTracker.instance != null;
@@ -129,7 +129,7 @@ namespace TrueSync
 			}
 		}
 
-        // Ìí¼Ó×·×Ù
+        // æ·»åŠ è¿½è¸ª
 		public static void AddTracking(object obj)
 		{
 			bool flag = StateTracker.instance != null;
@@ -161,10 +161,10 @@ namespace TrueSync
 				}
 			}
 		}
-        #endregion ¹«¹²·½·¨
+        #endregion å…¬å…±æ–¹æ³•
 
-        #region ÄÚ²¿·½·¨
-        // ±£´æ×´Ì¬
+        #region å†…éƒ¨æ–¹æ³•
+        // ä¿å­˜çŠ¶æ€
         internal void SaveState()
 		{
 			List<StateTracker.State> list = this.states.Current();
@@ -178,7 +178,7 @@ namespace TrueSync
 			this.MoveNextState();
 		}
 
-        // ÖØĞÂ±£´æ×´Ì¬
+        // é‡æ–°ä¿å­˜çŠ¶æ€
 		internal void RestoreState()
 		{
 			List<StateTracker.State> list = this.states.Current();
@@ -191,15 +191,15 @@ namespace TrueSync
 			}
 		}
 
-        // ÒÆ¶¯µ½ÏÂÒ»¸ö×´Ì¬
+        // ç§»åŠ¨åˆ°ä¸‹ä¸€ä¸ªçŠ¶æ€
 		internal void MoveNextState()
 		{
 			this.states.MoveNext();
 		}
-        #endregion ÄÚ²¿·½·¨
+        #endregion å†…éƒ¨æ–¹æ³•
 
-        #region Ë½ÓĞ·½·¨
-        // »ñÈ¡×·×ÙĞÅÏ¢
+        #region ç§æœ‰æ–¹æ³•
+        // è·å–è¿½è¸ªä¿¡æ¯
         private static StateTracker.TrackedInfo GetTrackedInfo(object obj, string name)
 		{
 			string[] array = name.Split(new char[]
@@ -254,6 +254,6 @@ namespace TrueSync
 			result = null;
 			return result;
         }
-        #endregion Ë½ÓĞ·½·¨
+        #endregion ç§æœ‰æ–¹æ³•
     }
 }

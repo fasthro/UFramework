@@ -20,7 +20,7 @@ namespace Lockstep
         /// The completion time in seconds since the last frame (Read Only).
         /// </summary>
         /// <value></value>
-        public static Fix64 deltaTime { get; private set; }
+        public static FP deltaTime { get; private set; }
 
         public static long deltaTimeMS { get; private set; }
 
@@ -29,7 +29,7 @@ namespace Lockstep
         /// level has been loaded.
         /// </summary>
         /// <value></value>
-        public static Fix64 timeSinceLevelLoad { get; private set; }
+        public static FP timeSinceLevelLoad { get; private set; }
 
         /// <summary>
         /// The real time in seconds since the game started (Read Only).
@@ -49,10 +49,10 @@ namespace Lockstep
         {
             var now = DateTime.Now;
 
-            deltaTime = (Fix64) (now - _lastFrameTime).TotalSeconds;
+            deltaTime = (FP) (now - _lastFrameTime).TotalSeconds;
             deltaTimeMS = (long) (now - _lastFrameTime).TotalMilliseconds;
 
-            timeSinceLevelLoad = (Fix64) (now - _initTime).TotalSeconds;
+            timeSinceLevelLoad = (FP) (now - _initTime).TotalSeconds;
             frameCount++;
             _lastFrameTime = now;
         }

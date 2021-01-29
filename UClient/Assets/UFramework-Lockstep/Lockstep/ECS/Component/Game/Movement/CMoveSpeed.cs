@@ -7,6 +7,6 @@ namespace Lockstep
         /// <summary>
         /// 移动速度
         /// </summary>
-        public Fix64 value;
+        public FP value;
     }
 }

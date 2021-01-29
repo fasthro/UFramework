@@ -22,8 +22,8 @@ namespace Lockstep.Logic
             var v = Input.GetAxisRaw("Vertical");
 
             var input = ObjectPool<AgentInput>.Instance.Allocate();
-            input.inputDirection.x = (Fix64) h;
-            input.inputDirection.z = (Fix64) v;
+            input.inputDirection.x = (FP) h;
+            input.inputDirection.z = (FP) v;
             _agentService.self.inputs.Clear();
             _agentService.self.inputs.Add(input);
         }

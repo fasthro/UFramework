@@ -18,9 +18,9 @@ namespace Lockstep.Logic
             set => _position = value;
         }
 
-        public Fix64 deg
+        public FP deg
         {
-            get => (Fix64) transform.localEulerAngles.y;
+            get => (FP) transform.localEulerAngles.y;
             set => _deg = value;
         }
 
@@ -32,7 +32,7 @@ namespace Lockstep.Logic
 
         private GameEntity _entity;
         private LSVector3 _position;
-        private Fix64 _deg;
+        private FP _deg;
 
         #endregion
 

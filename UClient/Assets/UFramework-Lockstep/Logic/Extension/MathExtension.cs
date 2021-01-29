@@ -13,7 +13,7 @@ namespace Lockstep.Logic
     {
         public static LSVector3 ToLSVector3(this Vector3 vec)
         {
-            return new LSVector3((Fix64) vec.x, (Fix64) vec.y, (Fix64) vec.z);
+            return new LSVector3((FP) vec.x, (FP) vec.y, (FP) vec.z);
         }
 
         public static Vector3 ToVector3(this LSVector3 vec)

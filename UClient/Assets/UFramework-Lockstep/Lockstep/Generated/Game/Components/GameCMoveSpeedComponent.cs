@@ -11,14 +11,14 @@ public partial class GameEntity {
     public Lockstep.CMoveSpeed cMoveSpeed { get { return (Lockstep.CMoveSpeed)GetComponent(GameComponentsLookup.CMoveSpeed); } }
     public bool hasCMoveSpeed { get { return HasComponent(GameComponentsLookup.CMoveSpeed); } }
 
-    public void AddCMoveSpeed(Lockstep.Fix64 newValue) {
+    public void AddCMoveSpeed(Lockstep.FP newValue) {
         var index = GameComponentsLookup.CMoveSpeed;
         var component = (Lockstep.CMoveSpeed)CreateComponent(index, typeof(Lockstep.CMoveSpeed));
         component.value = newValue;
         AddComponent(index, component);
     }
 
-    public void ReplaceCMoveSpeed(Lockstep.Fix64 newValue) {
+    public void ReplaceCMoveSpeed(Lockstep.FP newValue) {
         var index = GameComponentsLookup.CMoveSpeed;
         var component = (Lockstep.CMoveSpeed)CreateComponent(index, typeof(Lockstep.CMoveSpeed));
         component.value = newValue;

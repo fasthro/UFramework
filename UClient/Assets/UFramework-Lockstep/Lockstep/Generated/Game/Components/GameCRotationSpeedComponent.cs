@@ -11,14 +11,14 @@ public partial class GameEntity {
     public Lockstep.CRotationSpeed cRotationSpeed { get { return (Lockstep.CRotationSpeed)GetComponent(GameComponentsLookup.CRotationSpeed); } }
     public bool hasCRotationSpeed { get { return HasComponent(GameComponentsLookup.CRotationSpeed); } }
 
-    public void AddCRotationSpeed(Lockstep.Fix64 newValue) {
+    public void AddCRotationSpeed(Lockstep.FP newValue) {
         var index = GameComponentsLookup.CRotationSpeed;
         var component = (Lockstep.CRotationSpeed)CreateComponent(index, typeof(Lockstep.CRotationSpeed));
         component.value = newValue;
         AddComponent(index, component);
     }
 
-    public void ReplaceCRotationSpeed(Lockstep.Fix64 newValue) {
+    public void ReplaceCRotationSpeed(Lockstep.FP newValue) {
         var index = GameComponentsLookup.CRotationSpeed;
         var component = (Lockstep.CRotationSpeed)CreateComponent(index, typeof(Lockstep.CRotationSpeed));
         component.value = newValue;

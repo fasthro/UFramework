@@ -11,17 +11,19 @@ public partial class GameEntity {
     public Lockstep.CRotation cRotation { get { return (Lockstep.CRotation)GetComponent(GameComponentsLookup.CRotation); } }
     public bool hasCRotation { get { return HasComponent(GameComponentsLookup.CRotation); } }
 
-    public void AddCRotation(Lockstep.Fix64 newDegValue) {
+    public void AddCRotation(Lockstep.FP newTarget, Lockstep.FP newValue) {
         var index = GameComponentsLookup.CRotation;
         var component = (Lockstep.CRotation)CreateComponent(index, typeof(Lockstep.CRotation));
-        component.value = newDegValue;
+        component.target = newTarget;
+        component.value = newValue;
         AddComponent(index, component);
     }
 
-    public void ReplaceCRotation(Lockstep.Fix64 newDegValue) {
+    public void ReplaceCRotation(Lockstep.FP newTarget, Lockstep.FP newValue) {
         var index = GameComponentsLookup.CRotation;
         var component = (Lockstep.CRotation)CreateComponent(index, typeof(Lockstep.CRotation));
-        component.value = newDegValue;
+        component.target = newTarget;
+        component.value = newValue;
         ReplaceComponent(index, component);
     }
 

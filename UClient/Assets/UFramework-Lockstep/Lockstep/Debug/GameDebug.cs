@@ -5,11 +5,11 @@
         /// <summary>
         /// 移动速度缩放
         /// </summary>
-        public static readonly Fix64 moveSpeedScale = (Fix64)5;
+        public static readonly FP moveSpeedScale = (FP)5;
         
         /// <summary>
         /// 旋转速度缩放
         /// </summary>
-        public static readonly Fix64 rotationSpeedScale = (Fix64)2;
+        public static readonly FP rotationSpeedScale = (FP)2;
     }
 }

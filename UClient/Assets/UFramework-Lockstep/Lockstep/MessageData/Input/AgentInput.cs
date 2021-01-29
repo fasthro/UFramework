@@ -43,9 +43,9 @@ namespace Lockstep.MessageData
         public override void FromMessage(IMessage message)
         {
             var msg = (PBBSCommon.Input) message;
-            inputDirection.x = (Fix64) msg.Px;
-            inputDirection.y = (Fix64) msg.Py;
-            inputDirection.z = (Fix64) msg.Pz;
+            inputDirection.x = (FP) msg.Px;
+            inputDirection.y = (FP) msg.Py;
+            inputDirection.z = (FP) msg.Pz;
         }
 
         #endregion

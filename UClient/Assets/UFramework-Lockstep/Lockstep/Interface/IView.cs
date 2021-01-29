@@ -16,7 +16,7 @@ namespace Lockstep
         /// <summary>
         /// 旋转角度
         /// </summary>
-        Fix64 deg { get; set; }
+        FP deg { get; set; }
 
         /// <summary>
         /// 实体
