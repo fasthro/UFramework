@@ -5,13 +5,13 @@
     <component id="10ewg1" name="Line.xml" path="/Components/Line/" exported="true"/>
     <component id="10ewg2" name="AlertMessageBox.xml" path="/" exported="true"/>
     <component id="10ewg3" name="root.xml" path="/Components/"/>
-    <component id="10ewg4" name="MessageBox-1.xml" path="/Components/MessageBox/" exported="true"/>
-    <component id="10ewg7" name="Center.xml" path="/Components/MessageBox/"/>
-    <image id="10ewg9" name="Dark-Popup-Top.png" path="/Images/MessageBox/" scale="9grid" scale9grid="39,26,78,52"/>
-    <image id="10ewga" name="Alert-Icon-Small.png" path="/Images/MessageBox/"/>
-    <image id="10ewgc" name="Black-Button.png" path="/Images/MessageBox/" scale="9grid" scale9grid="87,25,174,50"/>
-    <image id="10ewge" name="White-Button-Outline.png" path="/Images/MessageBox/" scale="9grid" scale9grid="87,25,174,50"/>
-    <image id="10ewgg" name="Close-Icon-Small.png" path="/Images/MessageBox/"/>
+    <image id="t33ygy" name="MessageBox-Design-2.png" path="/Design/"/>
+    <image id="t33ygz" name="MessageBox-Design-1.png" path="/Design/"/>
+    <component id="t33yh0" name="MessageBox-1.xml" path="/Components/MessageBox/" exported="true"/>
+    <component id="t33yh3" name="Center-1.xml" path="/Components/MessageBox/"/>
+    <image id="t33yh5" name="popup_bg_02.png" path="/Images/MessageBox/" scale="9grid" scale9grid="254,182,508,43"/>
+    <image id="t33yh6" name="popup_bg_03.png" path="/Images/MessageBox/" scale="9grid" scale9grid="254,175,508,60"/>
+    <image id="t33yh7" name="popup_title_01.png" path="/Images/MessageBox/"/>
   </resources>
   <publish name=""/>
 </packageDescription>

@@ -3,18 +3,17 @@
   <resources>
     <component id="8a1u0" name="MessageBox.xml" path="/" exported="true"/>
     <component id="nx0v7" name="Background.xml" path="/Components/"/>
-    <image id="nmjq9" name="Clean-Minimalistic_Info-Alert.png" path="/Design/"/>
     <component id="nmjqc" name="Background-Center.xml" path="/Components/"/>
-    <image id="nmjqd" name="Alert-Icon-Small.png" path="/Images/"/>
-    <image id="nmjqe" name="Close-Icon-Small.png" path="/Images/"/>
-    <component id="nmjqf" name="Close.xml" path="/Components/"/>
-    <image id="nmjqg" name="Black-Button.png" path="/Images/" scale="9grid" scale9grid="87,25,174,50"/>
-    <image id="nmjqh" name="White-Button-Outline.png" path="/Images/" scale="9grid" scale9grid="87,25,174,50"/>
-    <component id="nmjqi" name="OK.xml" path="/Components/"/>
-    <component id="nmjqj" name="Cancel.xml" path="/Components/"/>
+    <component id="nmjqi" name="Button.xml" path="/Components/"/>
     <component id="kivak" name="Center.xml" path="/Components/"/>
-    <image id="o7b2l" name="Dark-Popup-Top.png" path="/Images/" scale="9grid" scale9grid="39,26,78,52"/>
     <image id="hu34m" name="Black.png" path="/Images/" scale="9grid" scale9grid="20,20,24,24"/>
+    <image id="t33yo" name="popup_bg_02.png" path="/Images/" scale="9grid" scale9grid="254,182,508,43"/>
+    <image id="t33yr" name="popup_btn_f.png" path="/Images/"/>
+    <image id="t33ys" name="popup_btn_n.png" path="/Images/"/>
+    <image id="t33yt" name="MessageBox-Design-1.png" path="/Design/"/>
+    <image id="t33yu" name="MessageBox-Design-2.png" path="/Design/"/>
+    <image id="t33yv" name="popup_title_01.png" path="/Images/"/>
+    <image id="t33yw" name="popup_bg_03.png" path="/Images/" scale="9grid" scale9grid="254,175,508,60"/>
   </resources>
   <publish name=""/>
 </packageDescription>

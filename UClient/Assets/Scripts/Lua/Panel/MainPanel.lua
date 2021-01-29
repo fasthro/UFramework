@@ -30,7 +30,7 @@ function panel:onShow()
     EventManager:once(EVENT_NAMES.NET_CONNECTED, self.onConnected, self)
 
     -- 连接战斗服
-    NetManager:connect(NETWORK_CHANNEL_TYPE.BATTLE, "127.0.0.1", 15940)
+    NetManager:connect(NETWORK_CHANNEL_TYPE.BATTLE, ServerManager.battle_server_ip, ServerManager.battle_server_port)
 end
 
 function panel:onHide()

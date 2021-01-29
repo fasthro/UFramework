@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="2048,1152" designImageOffsetX="326" designImageOffsetY="-29">
+<component size="1920,1080" designImage="ui://9a14j3pct33yt">
   <displayList>
-    <component id="n7_nx0v" name="background" src="nx0v7" fileName="Components/Background.xml" xy="0,0">
+    <component id="n7_nx0v" name="background" src="nx0v7" fileName="Components/Background.xml" xy="0,0" size="1920,1080">
       <relation target="" sidePair="width-width,height-height"/>
     </component>
-    <component id="n0_nx0v" name="_center" src="kivak" fileName="Center.xml" xy="614,305" pivot="0.5,0.5">
+    <component id="n0_nx0v" name="_center" src="kivak" fileName="Components/Center.xml" xy="451,211" pivot="0.5,0.5">
       <relation target="" sidePair="center-center,middle-middle"/>
     </component>
   </displayList>
   <transition name="_show" autoPlay="true">
-    <item time="0" type="Scale" target="n0_nx0v" tween="true" startValue="0.8,0.8" endValue="1.1,1.1" duration="5"/>
-    <item time="5" type="Scale" target="n0_nx0v" tween="true" startValue="1.1,1.1" endValue="1,1" duration="3"/>
+    <item time="0" type="Scale" target="n0_nx0v" tween="true" startValue="1,0" endValue="1,1.1" duration="5"/>
+    <item time="5" type="Scale" target="n0_nx0v" tween="true" startValue="1,1.1" endValue="1,1" duration="3"/>
+  </transition>
+  <transition name="_hide">
+    <item time="0" type="Scale" target="n0_nx0v" tween="true" startValue="1,1" endValue="1,1.1" duration="3"/>
+    <item time="3" type="Scale" target="n0_nx0v" tween="true" startValue="1,1.1" endValue="1,0" duration="5"/>
   </transition>
 </component>

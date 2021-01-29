@@ -36,7 +36,6 @@ namespace Lockstep
                     var targetDeg = LSMath.ToDeg(_degV2);
                     var newDeg = LSMath.TurnToward(targetDeg, entity.cRotation.value, LSMath.Value360 * entity.cRotationSpeed.value, out var hasReachDeg);
                     entity.ReplaceCRotation(newDeg);
-                    Logger.Debug(LSMath.Value360 * entity.cRotationSpeed.value);
                 }
             }
         }

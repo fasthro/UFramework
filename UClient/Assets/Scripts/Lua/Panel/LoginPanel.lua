@@ -20,28 +20,36 @@ end
 
 function panel:onShow()
     panel.__super.onShow(self)
-
-    self.view._state:SetSelectedIndex(0)
+    
+    if ServerManager:isUseLocal() then
+        self.view._server:SetSelectedIndex(0)
+    else
+        self.view._server:SetSelectedIndex(1)
+    end
 
     self.view._username._input.text = "fasthro"
     self.view._password._input.text = "password"
+
+    -- 本地服务器
+    local on_click_local = function()
+        ServerManager:useLocalServer()
+    end
+    self:_bindClick(self.view._local, on_click_local)
+
+    -- 远程服务器
+    local on_click_remote = function()
+        ServerManager:useRemoteServer()
+    end
+    self:_bindClick(self.view._remote, on_click_remote)
 
     -- 登录按钮
     local on_click_login = function()
         local username = self.view._username._input.text
         local password = self.view._password._input.text
-        local serverid = "gate_name1"
-        -- LoginCtrl:connectLoginServer("192.168.1.171", 8001, username, password, serverid) -- 本机
-        LoginCtrl:connectLoginServer("39.97.236.132", 8001, username, password, serverid) -- 阿里云
+
+        LoginCtrl:connectLoginServer(ServerManager.login_server_ip, ServerManager.login_server_port, username, password, ServerManager.serverid)
     end
     self:_bindClick(self.view._login, on_click_login)
-
-    -- touch start game
-    local on_click_touch = function()
-        -- LoginCtrl:connectGameServer("192.168.1.171", 9001)
-        LoginCtrl:connectGameServer("39.97.236.132", 9001)  -- 阿里云
-    end
-    self:_bindClick(self.view._touch, on_click_touch)
 
     -- register login succeed
     EventManager:once(EVENT_NAMES.LOGIN_SERVER_AUTH_SUCCEED, self.onLoginServerAuthSucceed, self)
@@ -57,7 +65,7 @@ function panel:onNetReceived(cmd, pack)
 end
 
 function panel:onLoginServerAuthSucceed()
-    self.view._state:SetSelectedIndex(1)
+    LoginCtrl:connectGameServer(ServerManager.game_server_ip, ServerManager.game_server_port)
 end
 
 function panel:onGameServerAuthSucceed()

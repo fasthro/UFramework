@@ -10,6 +10,7 @@ require("Manager.CtrlManager")
 require("Manager.NetManager")
 require("Manager.ResManager")
 require("Manager.EventManager")
+require("Manager.ServerManager")
 
 local Launcher =
     typesys.def.Launcher {
@@ -22,6 +23,7 @@ function Launcher:__ctor(managerContainer)
     _G.PanelManager = self:_addManager(typesys.PanelManager)
     _G.CtrlManager = self:_addManager(typesys.CtrlManager)
     _G.EventManager = self:_addManager(typesys.EventManager)
+    _G.ServerManager = self:_addManager(typesys.ServerManager)
     _G.NetManager = self:_addManager(typesys.NetManager, managerContainer:GetManager("NetworkManager"))
     _G.ResManager = self:_addManager(typesys.ResManager, managerContainer:GetManager("ResManager"))
 end

@@ -1,3 +1,3 @@
 -- uframework automatically generated
-require("FComponent._Text.Input_White_Password")
-require("FComponent._Text.Input_White_Username")
+require("FComponent._Text.Input_Login_Password")
+require("FComponent._Text.Input_Login_User")

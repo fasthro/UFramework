@@ -81,8 +81,13 @@ namespace UFramework
         /// <summary>
         /// 设计分辨率
         /// </summary>
-        public int designResolutionX = 2048;
-        public int designResolutionY = 1152;
+        public int designResolutionX = 1920;
+        public int designResolutionY = 1080;
+        
+        /// <summary>
+        /// 字体列表
+        /// </summary>
+        public List<string> fonts;
 
         /// <summary>
         /// UI 所在目录

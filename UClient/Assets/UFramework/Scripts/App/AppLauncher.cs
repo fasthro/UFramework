@@ -16,9 +16,15 @@ namespace UFramework
     public abstract class AppLauncher : MonoBehaviour
     {
         public static AppLauncher Main { get; private set; }
-        public static GameObject MainGameObject { get { return Main.gameObject; } }
+        public static GameObject MainGameObject => Main.gameObject;
+
         public static bool Develop { get; private set; }
         public ManagerContainer managerContainer { get; private set; }
+        
+        protected BaseManager[] _allManagers;
+        
+        private Launch _launch;
+        private bool _initialized;
 
         public void Initialize()
         {
@@ -26,9 +32,22 @@ namespace UFramework
             _initialized = false;
             var serdata = Core.Serializer<AppConfig>.Instance;
 
-            // FairyGUI
+            #region FairyGUI
+
+            // font
+            foreach (var fontName in serdata.fonts)
+            {
+                var font = Resources.Load<Font>($"Font/{fontName}");
+                if (font != null)
+                    FontManager.RegisterFont(new DynamicFont(fontName, font));
+                else Debug.LogError($"Font {fontName} Registration failed.");
+            }
+
             UIPackage.unloadBundleByFGUI = false;
             GRoot.inst.SetContentScaleFactor(serdata.designResolutionX, serdata.designResolutionY, UIContentScaler.ScreenMatchMode.MatchWidthOrHeight);
+
+            #endregion
+
 
             // launch panel
             _launch = Launch.Create();
@@ -66,9 +85,7 @@ namespace UFramework
                 });
             });
         }
-
-        protected BaseManager[] _allManagers;
-
+        
         protected void DoUpdate(float deltaTime)
         {
             foreach (var manager in _allManagers)
@@ -122,11 +139,7 @@ namespace UFramework
         protected virtual void OnInitialized()
         {
         }
-
-        private Launch _launch;
-
-        private bool _initialized;
-
+        
         private void InitBehaviour()
         {
             InitManager();

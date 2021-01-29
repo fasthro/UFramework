@@ -4,13 +4,18 @@
   "textColor": "#000000",
   "fontAdjustment": false,
   "colorScheme": [
-    "按钮颜色 #F8EEE1"
+    "标题 #B1D8F1",
+    "通用 #00E7FF",
+    "暗色 #586970",
+    "内容 #2C799F"
   ],
   "fontSizeScheme": [
-    "自定义字体大小 30"
+    "48",
+    "40",
+    "36"
   ],
   "fontScheme": [
-    "默认字体"
+    "Electrolize-Regular"
   ],
   "scrollBars": {
     "horizontal": "",

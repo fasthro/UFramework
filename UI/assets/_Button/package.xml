@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <packageDescription id="hamedtby">
   <resources>
-    <image id="unrx0" name="Yellow-Button.png" path="/Images/" scale="9grid" scale9grid="87,25,174,50"/>
-    <component id="unrx1" name="Yellow-Button.xml" path="/Components/" exported="true"/>
-    <component id="10ewg2" name="White-Button-Outline.xml" path="/Components/" exported="true"/>
-    <image id="10ewg3" name="White-Button-Outline.png" path="/Images/" scale="9grid" scale9grid="87,25,174,50"/>
-    <component id="10ewg4" name="Clos-Button.xml" path="/Components/" exported="true"/>
-    <image id="10ewg5" name="Clos-Button.png" path="/Images/"/>
-    <component id="10ewg6" name="Black-Button.xml" path="/Components/" exported="true"/>
-    <image id="10ewg7" name="Black-Button.png" path="/Images/" scale="9grid" scale9grid="87,25,174,50"/>
+    <image id="t33yg9" name="btn_common_f.png" path="/Images/" scale="9grid" scale9grid="89,80,178,34"/>
+    <image id="t33yga" name="btn_common_n.png" path="/Images/" scale="9grid" scale9grid="89,80,178,34"/>
+    <component id="t33ygf" name="Btn-Common.xml" path="/Components/" exported="true"/>
+    <image id="t33ygg" name="btn_hex_large_f.png" path="/Images/" scale9grid="105,30,210,60"/>
+    <image id="t33ygh" name="btn_hex_large_n.png" path="/Images/"/>
+    <component id="t33ygi" name="Btn-Hex-Large.xml" path="/Components/" exported="true"/>
+    <component id="t33ygj" name="Btn-Common-Radio.xml" path="/Components/" exported="true"/>
+    <image id="t33yha" name="btn_hex_small_f.png" path="/Images/"/>
+    <image id="t33yh9" name="btn_hex_small_n.png" path="/Images/"/>
+    <component id="t33yh8" name="Btn-Hex-Small.xml" path="/Components/" exported="true"/>
   </resources>
   <publish name=""/>
 </packageDescription>

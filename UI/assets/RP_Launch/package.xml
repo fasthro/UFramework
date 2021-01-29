@@ -2,15 +2,12 @@
 <packageDescription id="9fwlj8d0">
   <resources>
     <component id="gmfc0" name="Launch.xml" path="/" exported="true"/>
-    <image id="s9qen" name="Dark-Skin-Background.png" path="/Images/"/>
     <component id="s9qeo" name="Backgound.xml" path="/Components/"/>
-    <image id="s9qep" name="Gradient_7.png" path="/Images/ProgressBar/"/>
-    <image id="s9qeq" name="_Progress-Bar-Background.png" path="/Images/ProgressBar/" scale="9grid" scale9grid="150,3,300,6"/>
-    <component id="s9qer" name="ProgressBar.xml" path="/Components/Launch/"/>
-    <image id="s9qes" name="Progress-Bar-Corner-White.png" path="/Images/ProgressBar/"/>
-    <image id="c1ewv" name="Clean-Minimalistic_VideoPlayer.png" path="/Design/"/>
     <image id="kivax" name="logo.png" path="/"/>
-    <image id="o7b2y" name="Logo.png" path="/Images/"/>
+    <image id="t33y10" name="loading_bg.png" path="/Images/ProgressBar/" scale="9grid" scale9grid="89,19,32,38"/>
+    <image id="t33y11" name="loading_bar.png" path="/Images/ProgressBar/" scale="9grid" scale9grid="26,8,1,16"/>
+    <image id="t33y12" name="00_Elements_01.png" path="/Design/"/>
+    <component id="t33y13" name="ProgressBar-Update.xml" path="/Components/"/>
   </resources>
   <publish name=""/>
 </packageDescription>

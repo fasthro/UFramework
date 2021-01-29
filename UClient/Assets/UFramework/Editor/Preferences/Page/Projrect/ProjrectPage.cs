@@ -4,6 +4,7 @@
  * @Description: 项目
  */
 
+using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UFramework.Core;
 using UnityEditor;
@@ -13,7 +14,7 @@ namespace UFramework.Editor.Preferences.Projrect
     public class ProjrectPage : IPage, IPageBar
     {
         public string menuName { get { return "Projrect"; } }
-        static AppConfig Config { get { return Serializer<AppConfig>.Instance; } }
+        static AppConfig config { get { return Serializer<AppConfig>.Instance; } }
 
         /// <summary>
         /// 是否使用系统语言
@@ -49,6 +50,11 @@ namespace UFramework.Editor.Preferences.Projrect
         [LabelText("    Asset Directory")]
         [FolderPath]
         public string uiDirectory;
+        
+        [BoxGroup("Font Settings")]
+        [LabelText("  ")]
+        [ListDrawerSettings(Expanded = true)]
+        public List<string> fonts = new List<string>();
 
         public object GetInstance()
         {
@@ -57,10 +63,11 @@ namespace UFramework.Editor.Preferences.Projrect
 
         public void OnRenderBefore()
         {
-            useFairyGUI = Config.useFairyGUI;
-            designResolutionX = Config.designResolutionX;
-            designResolutionY = Config.designResolutionY;
-            uiDirectory = Config.uiDirectory;
+            useFairyGUI = config.useFairyGUI;
+            designResolutionX = config.designResolutionX;
+            designResolutionY = config.designResolutionY;
+            uiDirectory = config.uiDirectory;
+            fonts = config.fonts;
         }
 
         public void OnPageBarDraw()
@@ -70,12 +77,13 @@ namespace UFramework.Editor.Preferences.Projrect
 
         public void OnSaveDescribe()
         {
-            if (Config == null) return;
-            Config.useFairyGUI = useFairyGUI;
-            Config.designResolutionX = designResolutionX;
-            Config.designResolutionY = designResolutionY;
-            Config.uiDirectory = uiDirectory;
-            Config.Serialize();
+            if (config == null) return;
+            config.useFairyGUI = useFairyGUI;
+            config.designResolutionX = designResolutionX;
+            config.designResolutionY = designResolutionY;
+            config.uiDirectory = uiDirectory;
+            config.fonts = fonts;
+            config.Serialize();
         }
 
         private void UpdateFairyGUISymbols()

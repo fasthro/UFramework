@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <packageDescription id="5w14mmk5">
   <resources>
-    <component id="unrx1" name="Input_White_Username.xml" path="/Components/Input/" exported="true"/>
-    <image id="unrx3" name="Pink-Button-Outline.png" path="/Images/" scale="9grid" scale9grid="87,25,174,50"/>
-    <image id="unrx4" name="White-Button.png" path="/Images/" scale="9grid" scale9grid="87,25,174,50"/>
-    <component id="unrx5" name="Input_White_Password.xml" path="/Components/Input/" exported="true"/>
+    <component id="unrx5" name="Input-Login-Password.xml" path="/Components/Input/" exported="true"/>
+    <image id="t33y5" name="txt_input_f.png" path="/Images/Input/" scale="9grid" scale9grid="4,38,2,46"/>
+    <image id="t33y6" name="txt_input_n.png" path="/Images/Input/" scale="9grid" scale9grid="4,28,2,56"/>
+    <image id="t33y8" name="login_icon_mail_f.png" path="/Images/Input/"/>
+    <image id="t33y9" name="login_icon_mail_n.png" path="/Images/Input/"/>
+    <image id="t33ya" name="login_icon_password_f.png" path="/Images/Input/"/>
+    <image id="t33y7" name="login_icon_password_n.png" path="/Images/Input/"/>
+    <component id="t33yb" name="Input-Login-User.xml" path="/Components/Input/" exported="true"/>
   </resources>
   <publish name=""/>
 </packageDescription>

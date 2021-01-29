@@ -1,26 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="819,489">
+<component size="1018,657" designImage="ui://9a14j3pct33yu" designImageOffsetX="-451" designImageOffsetY="-210">
   <controller name="_btn" pages="0,,1,,2," selected="0">
     <remark page="0" value="All"/>
-    <remark page="1" value="Only OK"/>
-    <remark page="2" value="Only Cancel"/>
+    <remark page="1" value="Only Yes"/>
+    <remark page="2" value="Only No"/>
   </controller>
   <displayList>
-    <component id="n0_nx0v" name="n0" src="nmjqc" fileName="Components/Background-Center.xml" xy="0,0" size="819,489"/>
-    <image id="n11_nmjq" name="n11" src="o7b2l" fileName="Images/Dark-Popup-Top.png" xy="0,0" size="819,106"/>
-    <image id="n12_nmjq" name="n12" src="nmjqd" fileName="Images/Alert-Icon-Small.png" xy="29,27" size="45,45"/>
-    <text id="n3_nx0v" name="_title" xy="94,25" size="112,49" fontSize="36" color="#ffffff" vAlign="middle" shadowColor="#000000" shadowOffset="1,1" autoClearText="true" text="ALERT"/>
-    <richtext id="n4_nx0v" name="_content" xy="31,149" size="758,56" fontSize="42" color="#ffffff" align="center" autoSize="height" autoClearText="true" text="Do you really want to quit the game?"/>
-    <component id="n5_nx0v" name="_ok" src="nmjqi" fileName="Components/OK.xml" xy="82,350" size="281,81">
-      <gearDisplay controller="_btn" pages="0,1"/>
-      <gearXY controller="_btn" pages="1" values="269,350" default="82,350"/>
-      <Button title="OK"/>
-    </component>
-    <component id="n6_nx0v" name="_cancel" src="nmjqj" fileName="Components/Cancel.xml" xy="453,350" size="281,81">
+    <component id="n0_nx0v" name="bg" src="nmjqc" fileName="Components/Background-Center.xml" xy="99,101" size="819,490" alpha="0"/>
+    <image id="n14_t33y" name="bg-center-2" src="t33yo" fileName="Images/New/popup_bg_02.png" xy="0,0" size="1018,657">
+      <gearDisplay controller="_btn" pages="0"/>
+    </image>
+    <image id="n20_t33y" name="n20" src="t33yw" fileName="Images/New/popup_bg_03.png" xy="0,0" size="1018,657">
+      <gearDisplay controller="_btn" pages="1,2"/>
+    </image>
+    <image id="n18_t33y" name="n18" src="t33yv" fileName="Images/New/popup_title_01.png" xy="231,61"/>
+    <text id="n3_nx0v" name="_title" xy="436,61" pivot="0.5,0.5" size="145,64" font="ui://q6ykyrf2t33y0" fontSize="48" color="#b1d8f1" align="center" vAlign="middle" shadowColor="#000000" shadowOffset="1,1" autoClearText="true" text="Notice"/>
+    <richtext id="n4_nx0v" name="_content" xy="130,168" size="758,289" font="ui://q6ykyrf2t33y0" fontSize="48" color="#2c799f" align="center" vAlign="middle" autoSize="none" autoClearText="true" text=""/>
+    <component id="n5_nx0v" name="_no" src="nmjqi" fileName="Components/Button.xml" xy="200,493">
       <gearDisplay controller="_btn" pages="0,2"/>
-      <gearXY controller="_btn" pages="2" values="269,350" default="453,350"/>
-      <Button title="Cancel"/>
+      <gearXY controller="_btn" pages="0,1,2" values="200,493|377,487|377,493"/>
+      <Button title="NO"/>
     </component>
-    <component id="n13_nmjq" name="_close" src="nmjqf" fileName="Components/Close.xml" xy="754,4" size="59,55"/>
+    <component id="n6_nx0v" name="_yes" src="nmjqi" fileName="Components/Button.xml" xy="555,493">
+      <gearDisplay controller="_btn" pages="0,1"/>
+      <gearXY controller="_btn" pages="0,1,2" values="555,493|377,493|269,350"/>
+      <Button title="YES"/>
+    </component>
   </displayList>
 </component>

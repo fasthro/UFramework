@@ -8,46 +8,32 @@
     <component id="n0_elb2" name="n0" src="s9qeo" fileName="Components/Backgound.xml" xy="0,0" size="2048,1152">
       <relation target="" sidePair="width-width,height-height"/>
     </component>
-    <component id="n19_s9qe" name="_bar" src="s9qer" fileName="Components/Launch/ProgressBar.xml" xy="383,1004" size="1280,12" group="n23_s9qe">
+    <component id="n19_s9qe" name="_bar" src="t33y13" fileName="Components/ProgressBar-Update.xml" xy="234,918" size="1580,78" group="n23_s9qe">
       <ProgressBar value="50" max="100"/>
     </component>
-    <text id="n22_s9qe" name="_content" xy="921,941" size="208,36" group="n23_s9qe" fontSize="26" color="#ffffff" align="center" text="Update (100/23)"/>
-    <group id="n23_s9qe" name="bottom" xy="383,941" size="1280,75" advanced="true">
+    <text id="n22_s9qe" name="_content" xy="882,865" size="283,49" group="n23_s9qe" font="ui://q6ykyrf2t33y0" fontSize="36" color="#ffffff" align="center" text="Update (100/23)"/>
+    <group id="n23_s9qe" name="bottom" xy="234,865" size="1580,131" advanced="true">
       <gearDisplay controller="_bar" pages="1"/>
       <relation target="" sidePair="center-center,bottom-bottom"/>
     </group>
-    <image id="n27_o7b2" name="n27" src="o7b2y" fileName="Images/Logo.png" xy="761,516" pivot="0.5,0.5" group="n30_o7b2">
-      <relation target="" sidePair="center-center,middle-middle"/>
-    </image>
-    <text id="n29_o7b2" name="n29" xy="934,640" pivot="0.5,0.5" size="180,52" group="n30_o7b2" fontSize="38" color="#ffffff" align="center" vAlign="middle" shadowColor="#000000" shadowOffset="1,1" text="FASTHRO">
-      <relation target="" sidePair="center-center,middle-middle"/>
-    </text>
-    <group id="n30_o7b2" name="logo" xy="761,516" size="525,176"/>
-    <text id="n32_gwmf" name="version" xy="20,20" size="133,39" group="n33_gwmf" fontSize="28" color="#f8eee1" vAlign="middle" text="VERSION:"/>
-    <text id="n31_gwmf" name="_version" xy="136,20" size="180,39" group="n33_gwmf" fontSize="28" color="#f8eee1" vAlign="middle" autoClearText="true" text="A1.0.0_V5_P3">
+    <text id="n32_gwmf" name="version" xy="20,20" size="166,49" group="n33_gwmf" font="ui://q6ykyrf2t33y0" fontSize="36" color="#586970" vAlign="middle" text="VERSION:"/>
+    <text id="n31_gwmf" name="_version" xy="190,20" size="243,49" group="n33_gwmf" font="ui://q6ykyrf2t33y0" fontSize="36" color="#586970" vAlign="middle" autoClearText="true" text="A1.0.0_V5_P3">
       <relation target="n32_gwmf" sidePair="left-right"/>
     </text>
-    <group id="n33_gwmf" name="version" xy="20,20" size="296,39" advanced="true">
+    <group id="n33_gwmf" name="version" xy="20,20" size="413,49" advanced="true">
       <relation target="" sidePair="left-left,top-top"/>
     </group>
     <component id="n35_gwmf" name="_touch" src="s9qeo" fileName="Components/Backgound.xml" xy="0,0" size="2048,1152" group="n36_gwmf" alpha="0">
       <relation target="" sidePair="width-width,height-height"/>
     </component>
-    <text id="n34_gwmf" name="n34" xy="883,934" pivot="0.5,0.5" size="282,54" group="n36_gwmf" fontSize="40" color="#f8eee1" align="center" vAlign="middle" text="TOUCH BEGIN">
+    <text id="n34_gwmf" name="n34" xy="889,934" pivot="0.5,0.5" size="269,54" group="n36_gwmf" font="ui://q6ykyrf2t33y0" fontSize="40" color="#f8eee1" align="center" vAlign="middle" text="TOUCH BEGIN">
       <relation target="" sidePair="center-center,bottom-bottom"/>
     </text>
     <group id="n36_gwmf" name="touch" xy="0,0" size="2048,1152" advanced="true">
       <gearDisplay controller="_touch" pages="1"/>
     </group>
   </displayList>
-  <transition name="_show" autoPlay="true">
-    <item time="0" type="Alpha" target="n27_o7b2" tween="true" startValue="0" endValue="0.5" duration="22"/>
-    <item time="0" type="Alpha" target="n29_o7b2" tween="true" startValue="0" endValue="0.5" duration="22"/>
-    <item time="22" type="Alpha" target="n27_o7b2" tween="true" startValue="0.5" endValue="1" duration="14"/>
-    <item time="22" type="Alpha" target="n29_o7b2" tween="true" startValue="0.5" endValue="1" duration="14"/>
-    <item time="36" type="Alpha" target="n27_o7b2" tween="true" startValue="1" endValue="0.3" duration="36"/>
-    <item time="36" type="Alpha" target="n29_o7b2" tween="true" startValue="1" endValue="0.3" duration="36"/>
-  </transition>
+  <transition name="_show" autoPlay="true"/>
   <transition name="_touch" autoPlay="true" autoPlayRepeat="-1">
     <item time="0" type="Shake" target="n34_gwmf" value="3,0.5"/>
     <item time="1" type="Shake" target="n34_gwmf" value="3,0.5"/>

@@ -52,11 +52,11 @@ namespace UFramework.UI
         {
             if (package != null)
             {
-                for (int i = 0; i < package.dependencies.Length; i++)
+                foreach (var t in package.dependencies)
                 {
-                    foreach (KeyValuePair<string, string> item in package.dependencies[i])
+                    foreach (var item in t)
                     {
-                        if (item.Key == "name")
+                        if (item.Key == "name" && !item.Value.Equals("_Font"))
                         {
                             if (!_dependences.Contains(item.Value) && !packageName.Equals(item.Value))
                             {

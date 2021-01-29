@@ -1,36 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="2048,1152">
-  <controller name="_state" pages="0,,1," selected="1">
-    <remark page="0" value="login"/>
-    <remark page="1" value="touch"/>
-    <action type="play_transition" fromPage="" toPage="1" transition="touch" repeat="-1"/>
+<component size="1920,1080" designImage="ui://u1w4k91lt33y2">
+  <controller name="_server" pages="0,,1," selected="0">
+    <remark page="0" value="Local"/>
+    <remark page="1" value="Remote"/>
   </controller>
   <displayList>
-    <component id="n0_unrx" name="n0" src="unrx1" fileName="Components/Skin-1.xml" pkg="h49w8gjg" xy="0,0">
+    <component id="n0_unrx" name="bg" src="t33yg5" fileName="Components/BG-2.xml" pkg="h49w8gjg" xy="0,0" size="1920,1080">
       <relation target="" sidePair="width-width,height-height"/>
     </component>
-    <component id="n1_unrx" name="_username" src="unrx1" fileName="Components/Input/Input_White_Username.xml" pkg="5w14mmk5" xy="660,627" size="727,100" group="n4_unrx"/>
-    <component id="n2_unrx" name="_password" src="unrx5" fileName="Components/Input/Input_White_Password.xml" pkg="5w14mmk5" xy="660,758" size="727,100" group="n4_unrx"/>
-    <component id="n3_unrx" name="_login" src="unrx1" fileName="Components/Yellow-Button.xml" pkg="hamedtby" xy="850,909" group="n4_unrx">
-      <Button title="登录"/>
+    <image id="n10_t33y" name="center-bg" src="t33y3" fileName="Images/login_popup.png" xy="456,0" size="1007,1027" group="n14_t33y"/>
+    <text id="n11_t33y" name="n11" xy="877,118" size="165,54" group="n14_t33y" font="ui://q6ykyrf2t33y0" fontSize="40" color="#b1d8f1" align="center" vAlign="middle" autoSize="none" text="SIGN IN"/>
+    <component id="n1_unrx" name="_username" src="t33yb" fileName="Components/Input/Input-Login-User.xml" pkg="5w14mmk5" xy="629,281" group="n14_t33y"/>
+    <component id="n2_unrx" name="_password" src="unrx5" fileName="Components/Input/Input-Login-Password.xml" pkg="5w14mmk5" xy="630,417" group="n14_t33y"/>
+    <component id="n3_unrx" name="_local" src="t33ygj" fileName="Components/Btn-Common-Radio.xml" pkg="hamedtby" xy="627,599" size="330,110" group="n14_t33y">
+      <Button title="Local Server" controller="_server" page="0"/>
     </component>
-    <group id="n4_unrx" name="opt" xy="660,627" size="727,382" advanced="true">
-      <gearDisplay controller="_state" pages="0"/>
-      <relation target="" sidePair="center-center,middle-middle"/>
-    </group>
-    <component id="n7_v4x1" name="_touch" src="10ewg2" fileName="Components/Transparent.xml" pkg="h49w8gjg" xy="0,0" group="n6_v4x1">
-      <relation target="" sidePair="width-width,height-height"/>
+    <component id="n13_t33y" name="_remote" src="t33ygj" fileName="Components/Btn-Common-Radio.xml" pkg="hamedtby" xy="962,599" size="330,110" group="n14_t33y">
+      <Button title="Remote Server" controller="_server" page="1"/>
     </component>
-    <text id="n5_v4x1" name="n5" xy="815,934" pivot="0.5,0.5" size="417,54" group="n6_v4x1" fontSize="40" color="#f8eee1" align="center" vAlign="middle" text="TOUCH ENTER GAME">
-      <relation target="" sidePair="center-center,bottom-bottom"/>
-    </text>
-    <group id="n6_v4x1" name="touch" xy="0,0" size="2048,1152" advanced="true">
-      <gearDisplay controller="_state" pages="1"/>
+    <component id="n12_t33y" name="_login" src="t33ygi" fileName="Components/Btn-Hex-Large.xml" pkg="hamedtby" xy="749,828" group="n14_t33y">
+      <Button title="SIGN IN"/>
+    </component>
+    <group id="n14_t33y" name="center" xy="456,0" size="1007,1027" advanced="true">
+      <relation target="" sidePair="center-center,middle-middle%"/>
     </group>
   </displayList>
-  <transition name="touch" autoPlayRepeat="0">
-    <item time="0" type="Shake" target="n5_v4x1" value="3,0.5"/>
-    <item time="1" type="Shake" target="n5_v4x1" value="3,0.5"/>
-    <item time="48" type="Shake" target="n5_v4x1" value="3,0.5"/>
-  </transition>
+  <transition name="touch" autoPlayRepeat="0"/>
 </component>

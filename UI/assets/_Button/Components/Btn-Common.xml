@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="664,110" pivot="0.5,0.5" extention="Button" designImage="ui://u1w4k91lt33y2" designImageOffsetX="-629" designImageOffsetY="-599">
+  <controller name="button" pages="0,up,1,down,2,over,3,selectedOver" selected="3"/>
+  <displayList>
+    <image id="n1_nmjq" name="n1" src="t33yg9" fileName="Images/New/btn_common_f.png" xy="-40,-39" size="744,190">
+      <gearDisplay controller="button" pages="1"/>
+      <relation target="" sidePair="width-width,height-height"/>
+    </image>
+    <image id="n0_nmjq" name="n0" src="t33yga" fileName="Images/New/btn_common_n.png" xy="-40,-39" size="744,190">
+      <gearDisplay controller="button" pages="0"/>
+      <relation target="" sidePair="width-width,height-height"/>
+    </image>
+    <image id="n2_nmjq" name="n2" src="t33yga" fileName="Images/New/btn_common_n.png" xy="-40,-39" size="744,190">
+      <gearDisplay controller="button" pages="2"/>
+      <relation target="" sidePair="width-width,height-height"/>
+    </image>
+    <image id="n3_nmjq" name="n3" src="t33yg9" fileName="Images/New/btn_common_f.png" xy="-40,-39" size="744,190">
+      <gearDisplay controller="button" pages="3"/>
+      <relation target="" sidePair="width-width,height-height"/>
+    </image>
+    <text id="n4_nmjq" name="title" xy="0,0" size="664,110" font="ui://q6ykyrf2t33y0" fontSize="38" color="#00e7ff" align="center" vAlign="middle" autoSize="none" singleLine="true" autoClearText="true" text="">
+      <relation target="" sidePair="width-width,height-height"/>
+    </text>
+  </displayList>
+  <Button/>
+</component>
