@@ -8,15 +8,8 @@ namespace Lockstep
 {
     public interface IView
     {
-        /// <summary>
-        /// 位置
-        /// </summary>
-        LSVector3 position { get; set; }
-
-        /// <summary>
-        /// 旋转角度
-        /// </summary>
-        FP deg { get; set; }
+        LSVector3 position { get; }
+        LSQuaternion rotation { get; }
 
         /// <summary>
         /// 实体

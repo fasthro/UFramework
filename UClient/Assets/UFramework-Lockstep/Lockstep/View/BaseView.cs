@@ -6,12 +6,13 @@
 
 namespace Lockstep
 {
-    public class BaseView : IView
+    public abstract class BaseView : IView
     {
         #region public
 
-        public LSVector3 position { get; set; }
-        public FP deg { get; set; }
+        public LSVector3 position => _entity.cTransform.position;
+        public LSQuaternion rotation => _entity.cTransform.rotation;
+
         public GameEntity entity => _entity;
 
         #endregion
@@ -21,7 +22,7 @@ namespace Lockstep
         private GameEntity _entity;
 
         #endregion
-        
+
         public void BindEntity(GameEntity entity)
         {
             _entity = entity;

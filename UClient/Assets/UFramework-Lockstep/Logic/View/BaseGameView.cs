@@ -8,21 +8,12 @@ using UnityEngine;
 
 namespace Lockstep.Logic
 {
-    public class BaseGameView : MonoBehaviour, IView
+    public abstract class BaseGameView : MonoBehaviour, IView
     {
         #region public
 
-        public LSVector3 position
-        {
-            get => transform.position.ToLSVector3();
-            set => _position = value;
-        }
-
-        public FP deg
-        {
-            get => (FP) transform.localEulerAngles.y;
-            set => _deg = value;
-        }
+        public LSVector3 position => _entity.cTransform.position;
+        public LSQuaternion rotation => _entity.cTransform.rotation;
 
         public GameEntity entity => _entity;
 
@@ -31,8 +22,6 @@ namespace Lockstep.Logic
         #region private
 
         private GameEntity _entity;
-        private LSVector3 _position;
-        private FP _deg;
 
         #endregion
 
@@ -43,10 +32,13 @@ namespace Lockstep.Logic
 
         public void Update()
         {
-            transform.position = Vector3.Lerp(transform.position, _position.ToVector3(), 0.3f);
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, (float) _deg, 0), 0.3f);
+            transform.position = Vector3.Lerp(transform.position, position.ToVector3(), Time.deltaTime * 3f);
+            transform.rotation = Quaternion.Lerp(transform.rotation, rotation.ToQuaternion(), Time.deltaTime * 3f);
+            if(transform.rotation != transform.rotation)
+            
             OnUpdate();
         }
+
 
         protected virtual void OnUpdate()
         {

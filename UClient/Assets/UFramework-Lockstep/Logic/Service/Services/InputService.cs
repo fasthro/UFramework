@@ -30,7 +30,7 @@ namespace Lockstep.Logic
 
         public void ExecuteInput(GameEntity entity, AgentInput input)
         {
-            entity.ReplaceCMovement(input.inputDirection);
+            entity.ReplaceCMovement(input.inputDirection, false);
         }
     }
 }

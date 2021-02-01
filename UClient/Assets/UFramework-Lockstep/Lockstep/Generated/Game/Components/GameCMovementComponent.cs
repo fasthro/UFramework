@@ -11,17 +11,19 @@ public partial class GameEntity {
     public Lockstep.CMovement cMovement { get { return (Lockstep.CMovement)GetComponent(GameComponentsLookup.CMovement); } }
     public bool hasCMovement { get { return HasComponent(GameComponentsLookup.CMovement); } }
 
-    public void AddCMovement(Lockstep.LSVector3 newInputDirection) {
+    public void AddCMovement(Lockstep.LSVector3 newDir, bool newIsMission) {
         var index = GameComponentsLookup.CMovement;
         var component = (Lockstep.CMovement)CreateComponent(index, typeof(Lockstep.CMovement));
-        component.inputDirection = newInputDirection;
+        component.dir = newDir;
+        component.isMission = newIsMission;
         AddComponent(index, component);
     }
 
-    public void ReplaceCMovement(Lockstep.LSVector3 newInputDirection) {
+    public void ReplaceCMovement(Lockstep.LSVector3 newDir, bool newIsMission) {
         var index = GameComponentsLookup.CMovement;
         var component = (Lockstep.CMovement)CreateComponent(index, typeof(Lockstep.CMovement));
-        component.inputDirection = newInputDirection;
+        component.dir = newDir;
+        component.isMission = newIsMission;
         ReplaceComponent(index, component);
     }
 
