@@ -83,10 +83,13 @@ namespace Lockstep
             data.Inputs.Clear();
             foreach (var input in frame.inputDatas)
             {
-                data.Inputs.Add(new LSMInput()
+                if (input != null)
                 {
-                    MovementDir = input.movementDir.ToLSMVector3()
-                });
+                    data.Inputs.Add(new LSMInput()
+                    {
+                        MovementDir = input.movementDir.ToLSMVector3()
+                    });
+                }
             }
 
             return data;
