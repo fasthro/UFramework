@@ -47,7 +47,7 @@ function ServerManager:useRemoteServer()
     self.game_server_ip = "39.97.236.132"
     self.game_server_port = 9001
 
-    self.battle_server_ip = "39.97.236.132"
+    self.battle_server_ip = "127.0.0.1"
     self.battle_server_port = 15940
 end
 

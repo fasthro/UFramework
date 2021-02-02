@@ -1,14 +1,14 @@
-/*
- * @Author: fasthro
- * @Date: 2021-01-04 15:48:35
- * @Description: 
- */
- using Lockstep.MessageData;
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020/12/29 16:32:13
+// * @Description:
+// --------------------------------------------------------------------------------
 
 namespace Lockstep.Logic
 {
     public interface IInputService : IService
     {
-        void ExecuteInput(GameEntity entity, AgentInput input);
+        InputData inputData { get; }
+        void ExecuteInputData(GameEntity entity, InputData input);
     }
 }

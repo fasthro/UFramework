@@ -22,7 +22,7 @@ namespace Lockstep.Editor
 
         static string SP
         {
-            get { return Path.Combine(PathParent(Environment.CurrentDirectory), "LockstepServer/Lockstep/Lockstep"); }
+            get { return Path.Combine(PathParent(Environment.CurrentDirectory), "LockstepServer/Lockstep/Scripts"); }
         }
 
         [MenuItem("Lockstep/同步代码 -> Client To Server")]

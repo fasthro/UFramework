@@ -1,0 +1,96 @@
+﻿// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020/12/18 14:44:00
+// * @Description:
+// --------------------------------------------------------------------------------
+
+using MongoDB.Driver;
+using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+
+namespace UFramework
+{
+    public class BaseModel : BaseGameBehaviour
+    {
+        public string tableName { get; }
+
+        public BaseModel(string tableName) : base()
+        {
+            this.tableName = tableName;
+        }
+
+        /// <summary>
+        /// 获取文档
+        /// </summary>
+        public T GetDoc<T>(Expression<Func<T, bool>> filter)
+        {
+            return _dataManager.GetDoc(tableName, filter);
+        }
+
+        /// <summary>
+        /// 查询结果集
+        /// </summary>
+        public List<T> Query<T>(Expression<Func<T, bool>> filter = null)
+        {
+            if (string.IsNullOrEmpty(tableName))
+            {
+                throw new Exception();
+            }
+
+            return _dataManager.Query(tableName, filter);
+        }
+
+        /// <summary>
+        /// 是否存在
+        /// </summary>
+        public T Exist<T>(Expression<Func<T, bool>> filter)
+        {
+            if (string.IsNullOrEmpty(tableName))
+            {
+                throw new Exception();
+            }
+
+            return _dataManager.Exist<T>(tableName, filter);
+        }
+
+        /// <summary>
+        /// 添加
+        /// </summary>
+        protected bool Add<T>(T doc)
+        {
+            if (string.IsNullOrEmpty(tableName))
+            {
+                throw new Exception();
+            }
+
+            return _dataManager.Add(tableName, doc);
+        }
+
+        /// <summary>
+        /// 获取
+        /// </summary>
+        protected T Get<T>(string strKey, Expression<Func<T, bool>> filter)
+        {
+            if (string.IsNullOrEmpty(tableName))
+            {
+                throw new Exception();
+            }
+
+            return _dataManager.Get<T>(tableName, strKey, filter);
+        }
+
+        /// <summary>
+        /// 设置
+        /// </summary>
+        protected void Set<T>(UpdateDefinition<T> update, Expression<Func<T, bool>> filter)
+        {
+            if (string.IsNullOrEmpty(tableName))
+            {
+                throw new Exception();
+            }
+
+            _dataManager.Set(tableName, update, filter);
+        }
+    }
+}

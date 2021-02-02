@@ -18,7 +18,10 @@ namespace UFramework.Editor.Preferences.Proto
 {
     public class ProtoPage : IPage, IPageBar
     {
-        public string menuName { get { return "Proto"; } }
+        public string menuName
+        {
+            get { return "Proto"; }
+        }
 
         static string CSOutpath;
         static string PBOutpath;
@@ -27,10 +30,12 @@ namespace UFramework.Editor.Preferences.Proto
         static string PBServerOutpath;
         static string CSServerOutpath;
 
-        static Preferences_Proto_Config Config { get { return Serializer<Preferences_Proto_Config>.Instance; } }
+        static Preferences_Proto_Config Config
+        {
+            get { return Serializer<Preferences_Proto_Config>.Instance; }
+        }
 
-        [ShowInInspector]
-        [ListDrawerSettings(Expanded = true, HideRemoveButton = true, HideAddButton = true)]
+        [ShowInInspector] [ListDrawerSettings(Expanded = true, HideRemoveButton = true, HideAddButton = true)]
         public List<ProtoFile> protos = new List<ProtoFile>();
 
         public object GetInstance()
@@ -47,7 +52,7 @@ namespace UFramework.Editor.Preferences.Proto
             ProtoDir = IOPath.PathCombine(rootDir, "Protos");
             Protogen = IOPath.PathCombine(rootDir, "Tools", "protoc.exe");
             PBServerOutpath = IOPath.PathCombine(rootDir, "UServer/src/proto/pbc");
-            CSServerOutpath = IOPath.PathCombine(rootDir, "LockstepServer/Proto/Src");
+            CSServerOutpath = IOPath.PathCombine(rootDir, "LockstepServer/Proto/Scripts");
 
             protos.Clear();
             var files = IOPath.DirectoryGetFiles(ProtoDir, "*.proto", SearchOption.AllDirectories);
@@ -96,6 +101,7 @@ namespace UFramework.Editor.Preferences.Proto
             {
                 protos[i].orderIndex = i;
             }
+
             Sort();
 
             OnSaveDescribe();
@@ -113,6 +119,7 @@ namespace UFramework.Editor.Preferences.Proto
                 {
                     Compile(proto);
                 }
+
                 CreateLuaPBFile();
                 CreateProtoCMDFile();
                 AssetDatabase.Refresh();
@@ -142,6 +149,7 @@ namespace UFramework.Editor.Preferences.Proto
                     sb.Append(string.Format("\t\"{0}\",", proto.name + ".pb"));
                 sb.Append("\n");
             }
+
             sb.Append("}\n");
             sb.Append("return pb\n");
 
@@ -181,6 +189,7 @@ namespace UFramework.Editor.Preferences.Proto
                                 }
                             }
                         }
+
                         lineIndex++;
                     }
                 }
@@ -197,16 +206,19 @@ namespace UFramework.Editor.Preferences.Proto
             {
                 return match.Groups["name"].Value;
             }
+
             return null;
         }
 
         private int MatchProtoCMDLine(string line)
         {
-            string[] patterns = new string[] {
+            string[] patterns = new string[]
+            {
                 @"^//#\[C2S\]\[\d+\]#$",
                 @"^//#\[S2C\]\[\d+\]#$",
                 @"^//#\[C2S\]\[S2C\]\[\d+\]#$",
-                @"^//#\[S2C\]\[C2S\]\[\d+\]#$" };
+                @"^//#\[S2C\]\[C2S\]\[\d+\]#$"
+            };
 
             for (int i = 0; i < patterns.Length; i++)
             {
@@ -216,6 +228,7 @@ namespace UFramework.Editor.Preferences.Proto
                     return i;
                 }
             }
+
             return -1;
         }
 
@@ -246,13 +259,16 @@ namespace UFramework.Editor.Preferences.Proto
                     match = Regex.Match(cmdStr, @"^//#\[S2C\]\[C2S\]\[(?<cmd>\d+)\]#$");
                     protoCMD.cmdType = ProtoCMDType.All;
                 }
+
                 protoCMD.name = nameMatch.Groups["name"].Value;
                 if (match != null && match.Success)
                 {
                     protoCMD.cmd = int.Parse(match.Groups["cmd"].Value);
                 }
+
                 return protoCMD;
             }
+
             return null;
         }
 
@@ -270,6 +286,7 @@ namespace UFramework.Editor.Preferences.Proto
                     sb.Append(string.Format("\t[{0}] = \"{1}.{2}\",\n", cmd.cmd, cmd.package, cmd.name));
                 }
             }
+
             sb.Append("}\n");
             sb.Append("return cmds\n");
 
@@ -330,7 +347,8 @@ namespace UFramework.Editor.Preferences.Proto
             var incDir = Path.GetDirectoryName(proto.path);
             Utils.ExecuteProcess(Protogen, "--proto_path=" + incDir + " --csharp_out=" + CSOutpath + " " + proto.path, ProtoDir);
             // to server
-            IOPath.FileCopy(outpath, IOPath.PathCombine(CSServerOutpath, proto.name + ".cs"));
+            if (proto.name.Equals("lockstep"))
+                IOPath.FileCopy(outpath, IOPath.PathCombine(CSServerOutpath, proto.name + ".cs"));
         }
 
 

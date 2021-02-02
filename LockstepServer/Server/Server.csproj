@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Library\Library.csproj" />
+      <ProjectReference Include="..\Lockstep\Lockstep.csproj" />
+      <ProjectReference Include="..\Proto\Proto.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="log4net" Version="2.0.12" />
+      <PackageReference Include="MongoDB.Bson" Version="2.12.0-beta1" />
+      <PackageReference Include="MongoDB.Driver" Version="2.12.0-beta1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Entitas, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\Library\Entitas\Entitas.dll</HintPath>
+      </Reference>
+      <Reference Include="Entitas.CodeGeneration.Attributes, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\Library\Entitas\Entitas.CodeGeneration.Attributes.dll</HintPath>
+      </Reference>
+      <Reference Include="Google.Protobuf, Version=3.0.0.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604">
+        <HintPath>..\Library\Google.Protobuf\Google.Protobuf.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+</Project>

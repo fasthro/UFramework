@@ -180,7 +180,7 @@ namespace UFramework
                     }
                     else if (pack.layer == ProcessLayer.CSharp)
                     {
-                        Logger.Debug($"c# socket receive channelId: {cid} cmd: {pack.cmd}");
+                        // Logger.Debug($"c# socket receive channelId: {cid} cmd: {pack.cmd}");
                         Messenger.Broadcast<int, SocketPack>(GlobalEvent.NET_RECEIVED, cid, pack);
                     }
                     pack.Recycle();

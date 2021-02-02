@@ -1,8 +1,7 @@
 -- uframework automatically generated
 local pb = {
 	"addressbook.pb",
+	"lockstep.pb",
 	"sys.pb",
-	"bscommon.pb",
-	"bs.pb",
 }
 return pb

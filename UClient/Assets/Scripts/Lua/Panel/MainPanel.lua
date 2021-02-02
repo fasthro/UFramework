@@ -52,18 +52,11 @@ function panel:onNetReceived(cmd, pack)
 end
 
 function panel:NetCmd_901(msg)
-    if msg.resultCode == 200 then
-        NetManager:sendBattlePBC(902, {roomSecretKey = msg.roomSecretKey})
-    end
+    NetManager:sendBattlePBC(902, {})
 end
 
 function panel:NetCmd_902(msg)
-    if msg.resultCode == 200 then
-        logger.debug("进入房间成功，等待其他玩家加入")
-        NetManager:sendBattlePBC(903, {uid = 1})
-    else
-        logger.debug("进入房间失败 code: " .. tostring(msg.resultCode))
-    end
+    NetManager:sendBattlePBC(903, {uid = 1})
 end
 
 function panel:NetCmd_903(msg)

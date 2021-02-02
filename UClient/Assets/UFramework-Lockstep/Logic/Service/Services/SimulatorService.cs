@@ -4,20 +4,26 @@
  * @Description:
  */
 
-using Lockstep.MessageData;
-
 namespace Lockstep.Logic
 {
     public class SimulatorService : BaseGameBehaviour, ISimulatorService
     {
         #region simulator
 
-        public Simulator simulator { get; private set; }
-
         /// <summary>
         /// 客户端模式
         /// </summary>
         public bool isClientModel = false;
+
+        /// <summary>
+        /// 运行中
+        /// </summary>
+        public bool isRunning { get; private set; }
+
+        /// <summary>
+        /// 当前逻辑镇
+        /// </summary>
+        public int tick { get; private set; }
 
         /// <summary>
         /// 帧记录
@@ -50,42 +56,45 @@ namespace Lockstep.Logic
 
         #endregion simulator
 
-        #region data
-
-        public GameStart gameStart { get; private set; }
-        public GameEntity[] players { get; private set; }
-
-        #endregion data
 
         private FrameBuffer _frameBuffer;
 
-        public void Start(GameStart data)
+        private void InitializeSimulator(GameStartMessage message)
         {
-            Logger.Debug("开始游戏");
-            gameStart = data;
             tickDeltaTime = 1000 / Define.FRAME_RATE;
             _frameBuffer = new FrameBuffer();
-            simulator = new Simulator();
-            simulator.Start(data);
+            isRunning = true;
 
-            var entitys = _entityService.GetEntities<IPlayerView>();
-            players = new GameEntity[entitys.Count];
-            foreach (var entity in entitys)
-                players[entity.cLocalId.value] = entity;
+            // 添加玩家
+            IView self = null;
+            foreach (var playerData in message.playerDatas)
+            {
+                var view = _viewService.CreateView<IPlayerView>("Assets/Arts/Player/Player1.prefab", playerData.oid);
+                // TODO
+                if (playerData.uid == 1)
+                {
+                    _gameService.uid = playerData.uid;
+                    _gameService.oid = playerData.oid;
+                    self = view;
+                }
+
+                _playerService.AddPlayer(view.entity, playerData);
+            }
+
+            // 相机跟随
+            RTSCamera.instance.targetFollow = (self as BaseGameView)?.gameObject.transform;
         }
 
         public override void Update()
         {
-            if (simulator == null || !simulator.isRunning) return;
-
-            simulator.Update();
+            if (!isRunning) return;
 
             tickSinceStart = (int) ((LSTime.realtimeSinceStartupMS - startTime) / tickDeltaTime);
             if (isClientModel)
             {
-                while (simulator.tick < tickSinceStart)
+                while (tick < tickSinceStart)
                 {
-                    var frame = _frameBuffer.GetFrame(simulator.tick);
+                    var frame = _frameBuffer.GetFrame(tick);
                     if (frame != null)
                     {
                         SimulateStep(frame);
@@ -105,9 +114,9 @@ namespace Lockstep.Logic
 
         private void UpdateServer()
         {
-            while (simulator.tick < _frameBuffer.sTick)
+            while (tick < _frameBuffer.sTick)
             {
-                var frame = _frameBuffer.GetFrame(simulator.tick + 1);
+                var frame = _frameBuffer.GetFrame(tick + 1);
                 if (frame != null)
                 {
                     SimulateStep(frame);
@@ -115,40 +124,48 @@ namespace Lockstep.Logic
             }
         }
 
-        private void SimulateStep(Frame frame)
+        private void SimulateStep(FrameData frame)
         {
             ProcessFrame(frame);
-            simulator.Step();
+            tick++;
         }
 
-        private void ProcessFrame(Frame frame)
+        private void ProcessFrame(FrameData frame)
         {
-            foreach (var agent in frame.agents)
+            foreach (var input in frame.inputDatas)
             {
-                if (agent.inputs.Count <= 0) continue;
-                foreach (var input in agent.inputs)
-                    _inputService.ExecuteInput(players[agent.localId], input);
+                var player = _playerService.GetPlayer(input.oid);
+                if (player != null)
+                    _inputService.ExecuteInputData(player.entity, input);
             }
         }
 
         private void SendInputs(int tick)
         {
-            var frame = ObjectPool<Frame>.Instance.Allocate();
+            var frame = ObjectPool<FrameData>.Instance.Allocate();
             frame.tick = tick;
-            frame.AddAgents(_agentService.agents);
-            _networkService.SendFrame(frame);
-            _agentService.self.inputs.Clear();
+            frame.inputDatas = new[] {_inputService.inputData};
+            _networkService.SendFrameData(frame);
         }
 
-        public void OnReceiveFrame(Frame frame)
+        #region receive message
+
+        public void OnReceiveGameStart(GameStartMessage message)
+        {
+            InitializeSimulator(message);
+        }
+
+        public void OnReceiveFrame(FrameData frame)
         {
             _frameBuffer.PushSFrame(frame);
         }
 
-        public void OnReceiveFrames(Frame[] frames)
+        public void OnReceiveFrames(FrameData[] frames)
         {
             for (var i = 0; i < frames.Length; i++)
                 _frameBuffer.PushSFrame(frames[i]);
         }
+
+        #endregion
     }
 }

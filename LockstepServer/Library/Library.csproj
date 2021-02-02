@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Reference Include="Entitas, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>Entitas\Entitas.dll</HintPath>
+      </Reference>
+      <Reference Include="Entitas.CodeGeneration.Attributes, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>Entitas\Entitas.CodeGeneration.Attributes.dll</HintPath>
+      </Reference>
+      <Reference Include="Google.Protobuf, Version=3.0.0.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604">
+        <HintPath>Google.Protobuf\Google.Protobuf.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+</Project>

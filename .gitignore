@@ -1,7 +1,8 @@
 LockstepServer/.vs/
+LockstepServer/.idea/
 
-LockstepServer/3rd/LiteNetLib/bin/
-LockstepServer/3rd/LiteNetLib/obj/
+LockstepServer/Library/bin/
+LockstepServer/Library/obj/
 
 LockstepServer/Proto/bin/
 LockstepServer/Proto/obj/
@@ -10,7 +11,7 @@ LockstepServer/Lockstep/bin/
 LockstepServer/Lockstep/obj/
 
 
-LockstepServer/LockstepServer/bin/
-LockstepServer/LockstepServer/obj/
+LockstepServer/Server/bin/
+LockstepServer/Server/obj/
 
 

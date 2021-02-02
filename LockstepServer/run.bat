@@ -1,1 +1,1 @@
-dotnet run --project LockstepServer
+dotnet run --project Server
