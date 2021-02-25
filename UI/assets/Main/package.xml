@@ -2,6 +2,10 @@
 <packageDescription id="slaudw4w">
   <resources>
     <component id="z4a20" name="Main.xml" path="/" exported="true"/>
+    <image id="hftt1" name="00_Elements_01.png" path="/Design/"/>
+    <image id="hftt2" name="vj_center.png" path="/Images/VirtualJoy/"/>
+    <image id="hftt3" name="vj_bg.png" path="/Images/VirtualJoy/"/>
+    <component id="hftt4" name="VirtualJoyMove.xml" path="/Components/VirtualJoy/"/>
   </resources>
   <publish name=""/>
 </packageDescription>

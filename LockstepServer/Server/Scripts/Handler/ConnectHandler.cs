@@ -10,7 +10,7 @@ namespace GameServer
 {
     public class ConnectHandler : BaseGameHandler
     {
-        public override int cmd => NetwokCmd.CLIENT_CONNECT;
+        public override int cmd => GameConst.NETWORK_CMD_CLIENT_CONNECT;
 
         protected override void OnMessage(byte[] bytes)
         {

@@ -12,20 +12,33 @@ namespace UFramework
     public abstract class BaseBehaviour : IBehaviour
     {
         public static ManagerContainer managerContainer;
+        
+        public static void SetContainer(ManagerContainer mc)
+        {
+            managerContainer = mc;
+        }
+        
+        protected LuaManager _luaManager;
+        protected NetworkManager _networkManager;
+        protected ResManager _resManager;
+        protected AdapterManager _adapterManager;
 
         public BaseBehaviour()
         {
             Initialize();
         }
-
-        public static void SetContainer(ManagerContainer mc)
-        {
-            managerContainer = mc;
-        }
-
+        
         public void Initialize()
         {
             OnInitialize();
+        }
+        
+        public virtual void SetReference()
+        {
+            _luaManager = managerContainer.GetManager<LuaManager>();
+            _networkManager = managerContainer.GetManager<NetworkManager>();
+            _resManager = managerContainer.GetManager<ResManager>();
+            _adapterManager= managerContainer.GetManager<AdapterManager>();
         }
 
         public void Update(float deltaTime)
@@ -52,20 +65,7 @@ namespace UFramework
         {
             OnApplicationQuit();
         }
-
-        public virtual void SetReference()
-        {
-            _luaManager = managerContainer.GetManager<LuaManager>();
-            _networkManager = managerContainer.GetManager<NetworkManager>();
-            _resManager = managerContainer.GetManager<ResManager>();
-        }
-
-        protected LuaManager _luaManager;
-
-        protected NetworkManager _networkManager;
-
-        protected ResManager _resManager;
-
+        
         protected virtual void OnInitialize()
         {
         }
@@ -98,7 +98,7 @@ namespace UFramework
         {
             if (luaTable != null)
             {
-                LuaFunction ctor = luaTable.GetLuaFunction(funcName);
+                var ctor = luaTable.GetLuaFunction(funcName);
                 if (ctor != null)
                 {
                     try

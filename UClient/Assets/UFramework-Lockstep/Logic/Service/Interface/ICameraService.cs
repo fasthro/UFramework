@@ -1,13 +1,13 @@
 ﻿// --------------------------------------------------------------------------------
 // * @Author: fasthro
-// * @Date: 2020/12/29 16:31:41
+// * @Date: 2021/02/25 15:19
 // * @Description:
 // --------------------------------------------------------------------------------
 
-namespace Lockstep
+namespace Lockstep.Logic
 {
-    public interface INetworkService : IService
+    public interface ICameraService: IService
     {
-        void SendFrameData(FrameData frameData);
+        
     }
 }

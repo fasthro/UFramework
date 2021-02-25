@@ -12,7 +12,7 @@ namespace GameServer
 {
     public class FrameHandler : BaseGameHandler
     {
-        public override int cmd => NetwokCmd.AGENT_FRAME;
+        public override int cmd => NetworkCmd.PLAYER_INPUT;
 
         protected override void OnMessage(byte[] bytes)
         {

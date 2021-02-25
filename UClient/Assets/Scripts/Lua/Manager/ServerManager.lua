@@ -28,10 +28,10 @@ end
 function ServerManager:useLocalServer()
     self._use_local = true
 
-    self.login_server_ip = "192.168.1.171"
+    self.login_server_ip = "192.168.1.176"
     self.login_server_port = 8001
 
-    self.game_server_ip = "192.168.1.171"
+    self.game_server_ip = "192.168.1.176"
     self.game_server_port = 9001
 
     self.battle_server_ip = "127.0.0.1"

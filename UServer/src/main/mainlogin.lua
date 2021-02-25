@@ -28,5 +28,9 @@ skynet.start(function()
     -- 启动 pbcloader
     skynet.uniqueservice("pbcloader")
     
+    -- 启动 db
+    local db = skynet.newservice("mongodb")
+    skynet.call(db, "lua", "connect", {host = runconfig.database.host, port = runconfig.database.port})
+    
     skynet.exit()
 end)

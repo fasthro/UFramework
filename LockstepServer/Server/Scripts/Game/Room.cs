@@ -124,7 +124,7 @@ namespace GameServer
             if (frameData.tick < tick)
                 return;
 
-            _inputDatas[player.oid] = frameData.inputDatas[0];
+            _inputDatas[player.oid] = frameData.inputDatas.Length > 0 ? frameData.inputDatas[0] : null;
         }
 
         private void Send_StartGame()
@@ -137,7 +137,7 @@ namespace GameServer
                 s2c.Players.Add(new LSMPlayer() {Uid = player.uid, Oid = i, Name = player.username});
             }
 
-            SendMessage(NetwokCmd.START, s2c);
+            SendMessage(NetworkCmd.START, s2c);
         }
 
         private void Send_Frame()
@@ -150,7 +150,7 @@ namespace GameServer
             }
 
             var s2c = new Frame_S2C {Frame = frame};
-            SendMessage(NetwokCmd.PUSH_FRAME, s2c);
+            SendMessage(NetworkCmd.PUSH_FRAME, s2c);
 
             for (var i = 0; i < _inputDatas.Length; i++)
                 _inputDatas[i] = null;

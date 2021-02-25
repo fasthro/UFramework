@@ -10,7 +10,7 @@ namespace GameServer
 {
     public class DisconnectHandler : BaseGameHandler
     {
-        public override int cmd => NetwokCmd.CLIENT_DISCONNECT;
+        public override int cmd => GameConst.NETWORK_CMD_CLIENT_DISCONNECT;
 
         protected override void OnMessage(byte[] bytes)
         {

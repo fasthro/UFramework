@@ -1,8 +1,8 @@
-﻿/*
- * @Author: fasthro
- * @Date: 2020/12/30 14:57:27
- * @Description:
- */
+﻿// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020/12/30 14:57:27
+// * @Description:
+// --------------------------------------------------------------------------------
 
 using UnityEngine;
 
@@ -32,9 +32,8 @@ namespace Lockstep.Logic
 
         public void Update()
         {
-            transform.position = Vector3.Lerp(transform.position, position.ToVector3(), Time.deltaTime * 3f);
-            transform.rotation = Quaternion.Lerp(transform.rotation, rotation.ToQuaternion(), Time.deltaTime * 3f);
-            if(transform.rotation != transform.rotation)
+            transform.position = Vector3.Lerp(transform.position, position.ToVector3(), Time.deltaTime * 10f);
+            transform.rotation = Quaternion.Lerp(transform.rotation, rotation.ToQuaternion(), Time.deltaTime * 10f);
             
             OnUpdate();
         }

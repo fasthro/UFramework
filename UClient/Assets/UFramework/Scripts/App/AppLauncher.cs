@@ -54,6 +54,8 @@ namespace UFramework
 
             // 日志等级
             Logger.SetLevel(serdata.logLevel);
+            // 帮助
+            Helper.Instance.Default();
             // 线程队列
             ThreadQueue.Instance.Default();
             // Native
@@ -134,6 +136,7 @@ namespace UFramework
             managerContainer.RegisterManager(new LuaManager());
             managerContainer.RegisterManager(new NetworkManager());
             managerContainer.RegisterManager(new ResManager());
+            managerContainer.RegisterManager(new AdapterManager());
         }
 
         protected virtual void OnInitialized()

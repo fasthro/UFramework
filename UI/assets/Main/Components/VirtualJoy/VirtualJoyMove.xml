@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="200,200">
+  <displayList>
+    <image id="n0_hftt" name="_bg" src="hftt3" fileName="Images/VirtualJoy/vj_bg.png" xy="0,0" pivot="0.5,0.5"/>
+    <image id="n1_hftt" name="_touch" src="hftt2" fileName="Images/VirtualJoy/vj_center.png" xy="68,68" size="64,64" aspect="true"/>
+  </displayList>
+  <transition name="_touchBegin">
+    <item time="0" type="Alpha" target="n0_hftt" tween="true" startValue="0.1" endValue="1" duration="6"/>
+    <item time="0" type="Alpha" target="n1_hftt" tween="true" startValue="0.1" endValue="1" duration="6"/>
+  </transition>
+  <transition name="_touchEnd">
+    <item time="0" type="Alpha" target="n0_hftt" tween="true" startValue="1" endValue="0.1" duration="6"/>
+    <item time="0" type="Alpha" target="n1_hftt" tween="true" startValue="1" endValue="0.1" duration="6"/>
+  </transition>
+</component>

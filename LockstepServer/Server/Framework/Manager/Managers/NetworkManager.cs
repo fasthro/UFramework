@@ -63,7 +63,7 @@ namespace UFramework
         {
             // LogHelper.Info("客户端连接断开 [" + peer.EndPoint + "]");
 
-            _handlerManager.OnReceive(peer, NetwokCmd.CLIENT_DISCONNECT, 0, 0, null);
+            _handlerManager.OnReceive(peer, GameConst.NETWORK_CMD_CLIENT_DISCONNECT, 0, 0, null);
         }
 
         #endregion IServerListener

@@ -60,6 +60,23 @@ end
 function panel:onNetReceived(cmd, pack)
 end
 
+function panel:queryObject(path)
+    local names = string.split(path, "/")
+
+    if names == nil or next(names) == nil then
+        return nil
+    end
+
+    local result = self.view:GetChild(names[1])
+    for k = 2, #names do
+        result = result:GetChild(names[k])
+        if result == nil then
+            break
+        end
+    end
+    return result
+end
+
 ------------------------------------
 function panel:_createObject(resName, packageName)
     if packageName == nil then

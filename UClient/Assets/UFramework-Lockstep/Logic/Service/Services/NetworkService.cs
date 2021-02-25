@@ -1,8 +1,8 @@
-﻿/*
- * @Author: fasthro
- * @Date: 2020/12/31 12:07:37
- * @Description:
- */
+﻿// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020/12/31 12:07:37
+// * @Description:
+// --------------------------------------------------------------------------------
 
 using Lockstep.Message;
 using UFramework;
@@ -18,7 +18,17 @@ namespace Lockstep.Logic
             Messenger.AddListener<int, SocketPack>(GlobalEvent.NET_RECEIVED, OnNetReceived);
         }
 
-        public void SendFrameData(FrameData frameData)
+        public void SendPing()
+        {
+            var message = new Ping_C2S()
+            {
+                Oid = _gameService.oid,
+                SendTimestamp = LSTime.realtimeSinceStartupMS
+            };
+            NetworkProxy.Send(NetworkCmd.PING, message);
+        }
+
+        public void SendInput(FrameData frameData)
         {
             var message = new Frame_C2S() {Frame = frameData.ToLSMFrame()};
             frameData.Recycle();
@@ -29,24 +39,18 @@ namespace Lockstep.Logic
         {
             switch (pack.cmd)
             {
+                case NetworkCmd.PING:
+                    _simulatorService.OnReceivePing(Ping_S2C.Parser.ParseFrom(pack.rawData).ToPingMessage());
+                    break;
+
                 case NetworkCmd.START:
-                    OnReceiveStart(GameStart_S2C.Parser.ParseFrom(pack.rawData));
+                    _simulatorService.OnReceiveGameStart(GameStart_S2C.Parser.ParseFrom(pack.rawData).ToGameStartMessage());
                     break;
 
                 case NetworkCmd.PUSH_FRAME:
-                    OnReceivePushFrame(Frame_S2C.Parser.ParseFrom(pack.rawData));
+                    _simulatorService.OnReceiveFrame(Frame_S2C.Parser.ParseFrom(pack.rawData).Frame.ToFrameData());
                     break;
             }
-        }
-
-        private void OnReceiveStart(GameStart_S2C s2c)
-        {
-            _simulatorService.OnReceiveGameStart(s2c.ToGameStartMessage());
-        }
-
-        private void OnReceivePushFrame(Frame_S2C s2c)
-        {
-            _simulatorService.OnReceiveFrame(s2c.Frame.ToFrameData());
         }
     }
 }

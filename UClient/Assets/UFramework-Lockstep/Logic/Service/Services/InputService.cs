@@ -4,32 +4,34 @@
 // * @Description:
 // --------------------------------------------------------------------------------
 
+using UFramework;
+using UFramework.Core;
+using UFramework.Game;
 using UnityEngine;
 
 namespace Lockstep.Logic
 {
     public class InputService : BaseGameService, IInputService
     {
-        public InputData inputData => _inputData;
+        public InputData inputData { get; private set; }
 
-        private InputData _inputData;
-
-        public override void Update()
+        public override void Initialize()
         {
-            if (_playerService.self == null)
-                return;
-
-            var h = Input.GetAxisRaw("Horizontal");
-            var v = Input.GetAxisRaw("Vertical");
-
-            _inputData = ObjectPool<InputData>.Instance.Allocate();
-            _inputData.movementDir.x = (FP) h;
-            _inputData.movementDir.z = (FP) v;
+            Messenger.AddListener(EventDefine.GAME_START, OnGameStart);
         }
 
-        public void ExecuteInputData(GameEntity entity, InputData input)
+        private void OnGameStart()
         {
-            entity.ReplaceCMovement(input.movementDir, false);
+            _virtualJoyService.move.moveListener += OnMoveVirtualJoy;
+        }
+
+        private void OnMoveVirtualJoy(Vector2 value, bool isMove)
+        {
+            if (isMove && _playerService.self == null) return;
+
+            inputData = ObjectPool<InputData>.Instance.Allocate();
+            inputData.movementDir.x = (FP) value.x;
+            inputData.movementDir.z = (FP) value.y;
         }
     }
 }

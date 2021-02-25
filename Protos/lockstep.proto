@@ -73,6 +73,20 @@ message Ready_C2S { int64 uid = 1; }
 //#[S2C][903]#
 message Ready_S2C {}
 
+//---------->>>> 940 <<<<----------
+// Ping
+//#[C2S][940]#
+message Ping_C2S {
+  int32 oid = 1;
+  int64 sendTimestamp = 2;
+}
+
+//#[S2C][940]#
+message Ping_S2C {
+ int64 sendTimestamp = 1;
+ int64 timeSinceServerStart = 2;
+}
+
 //---------->>>> 950 <<<<----------
 // 模拟开始
 //#[S2C][950]#

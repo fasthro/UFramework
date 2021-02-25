@@ -1,13 +1,15 @@
 ﻿// --------------------------------------------------------------------------------
 // * @Author: fasthro
-// * @Date: 2021/01/29 12:39
+// * @Date: 2021/02/25 15:35
 // * @Description:
 // --------------------------------------------------------------------------------
 
-namespace Logic
+using UFramework.Game;
+
+namespace Lockstep.Logic
 {
-    public class d
+    public interface IVirtualJoyService : IService
     {
-        
+        JoyMove move { get; }
     }
 }

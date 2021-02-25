@@ -10,12 +10,17 @@ using UnityEngine;
 
 public class Launcher : AppLauncher
 {
+    public static Launcher instance { get; private set; }
+
     private LauncherClient _lockstepClient;
 
     private void Awake()
     {
+        instance = this;
         Initialize();
         _lockstepClient = new LauncherClient();
+        
+        DontDestroyOnLoad(this);
     }
 
     private void Start()

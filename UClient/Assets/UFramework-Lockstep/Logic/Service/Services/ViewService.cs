@@ -1,12 +1,11 @@
-﻿/*
- * @Author: fasthro
- * @Date: 2020/12/30 19:36:55
- * @Description:
- */
+﻿// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020/12/30 19:36:55
+// * @Description:
+// --------------------------------------------------------------------------------
 
 using Entitas.Unity;
 using UFramework.Core;
-using UnityEngine;
 
 namespace Lockstep.Logic
 {

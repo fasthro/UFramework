@@ -1,16 +1,8 @@
-﻿/*
- * @Author: fasthro
- * @Date: 2020/12/30 16:57:20
- * @Description:
- */
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UFramework.Core;
-using UnityEngine;
+﻿// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020/12/30 16:57:20
+// * @Description:
+// --------------------------------------------------------------------------------
 
 namespace Lockstep.Logic
 {
@@ -18,7 +10,6 @@ namespace Lockstep.Logic
     {
         public override void Initialize()
         {
-            base.Initialize();
         }
     }
 }

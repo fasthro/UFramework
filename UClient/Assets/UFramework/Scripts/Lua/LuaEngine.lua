@@ -3,7 +3,6 @@ Author: fasthro
 Date: 2020-08-28 12:15:46
 Description: main
 --]]
-
 _G.UApplication = UFramework.UApplication
 _G.IOPath = UFramework.IOPath
 _G.AppConfig = nil
@@ -41,10 +40,10 @@ end
 function LuaEngine.initialize(appConfig, managerContainer)
     _G.AppConfig = appConfig
     _managerContainer = managerContainer
-    
+
     logger.setlevel(0)
 
--- 启动LuaEngine
+    -- 启动LuaEngine
     _setRootObject(_new(LuaEngine))
 end
 
@@ -82,4 +81,12 @@ function LuaEngine:onLateUpdate()
 end
 
 function LuaEngine:onFixedUpdate()
+end
+
+--------------------- 扩展方法 --------------------
+-- Fairy 查询面板组件
+-- @param panelname 面板名称
+-- @param path 组件路径
+function LuaEngine.fairyQueryObject(panelname, path)
+    return PanelManager:fairyQueryObject(panelname, path)
 end

@@ -1,8 +1,13 @@
-﻿/*
- * @Author: fasthro
- * @Date: 2020/12/31 11:55:03
- * @Description:
- */
+﻿// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020/12/31 11:55:03
+// * @Description:
+// --------------------------------------------------------------------------------
+
+using System.Collections.Generic;
+using System.Linq;
+using UFramework.Core;
+using UnityEngine;
 
 namespace Lockstep.Logic
 {
@@ -56,17 +61,49 @@ namespace Lockstep.Logic
 
         #endregion simulator
 
+        #region Ping
+
+        /// <summary>
+        /// Ping
+        /// </summary>
+        public int pingValue { get; private set; }
+
+        /// <summary>
+        /// Max Ping
+        /// </summary>
+        public long maxPingValue { get; private set; }
+
+        /// <summary>
+        /// Min Ping
+        /// </summary>
+        public long minPingValue { get; private set; }
+
+        /// <summary>
+        /// 延迟
+        /// </summary>
+        public int delayValue { get; private set; }
+
+
+        #region private
+
+        private float _pingTime;
+        private List<long> _pings = new List<long>();
+        private List<long> _delays = new List<long>();
+
+        #endregion
+
+        #endregion
+
 
         private FrameBuffer _frameBuffer;
 
         private void InitializeSimulator(GameStartMessage message)
         {
-            tickDeltaTime = 1000 / Define.FRAME_RATE;
+            tickDeltaTime = 1000 / LSDefine.FRAME_RATE;
             _frameBuffer = new FrameBuffer();
             isRunning = true;
 
             // 添加玩家
-            IView self = null;
             foreach (var playerData in message.playerDatas)
             {
                 var view = _viewService.CreateView<IPlayerView>("Assets/Arts/Player/Player1.prefab", playerData.oid);
@@ -75,19 +112,45 @@ namespace Lockstep.Logic
                 {
                     _gameService.uid = playerData.uid;
                     _gameService.oid = playerData.oid;
-                    self = view;
                 }
 
                 _playerService.AddPlayer(view.entity, playerData);
             }
 
-            // 相机跟随
-            RTSCamera.instance.targetFollow = (self as BaseGameView)?.gameObject.transform;
+            // 广播游戏初始化
+            Messenger.Broadcast(EventDefine.GAME_INIT);
+
+            // 广播游戏开始
+            Messenger.Broadcast(EventDefine.GAME_START);
         }
 
         public override void Update()
         {
             if (!isRunning) return;
+
+            #region ping && delay
+
+            _networkService.SendPing();
+
+            _pingTime += Time.deltaTime;
+            if (_pingTime > LSDefine.PING_TIME)
+            {
+                _pingTime = 0;
+                
+                // ping
+                pingValue = (int) _pings.Sum() / LSMath.Max(_pings.Count, 1);
+                _pings.Clear();
+
+                // delay
+                delayValue = (int) _delays.Sum() / LSMath.Max(_delays.Count, 1);
+                _delays.Clear();
+
+                _uiService.UpdatePing(pingValue);
+                _uiService.UpdateDelay(delayValue);
+            }
+
+            #endregion
+
 
             tickSinceStart = (int) ((LSTime.realtimeSinceStartupMS - startTime) / tickDeltaTime);
             if (isClientModel)
@@ -135,8 +198,7 @@ namespace Lockstep.Logic
             foreach (var input in frame.inputDatas)
             {
                 var player = _playerService.GetPlayer(input.oid);
-                if (player != null)
-                    _inputService.ExecuteInputData(player.entity, input);
+                player?.entity.ReplaceCMovement(input.movementDir, false);
             }
         }
 
@@ -145,8 +207,17 @@ namespace Lockstep.Logic
             var frame = ObjectPool<FrameData>.Instance.Allocate();
             frame.tick = tick;
             frame.inputDatas = new[] {_inputService.inputData};
-            _networkService.SendFrameData(frame);
+            _networkService.SendInput(frame);
         }
+
+        #region frame
+
+        private void PushSFrame(FrameData frameData)
+        {
+            _frameBuffer.PushSFrame(frameData);
+        }
+
+        #endregion
 
         #region receive message
 
@@ -157,13 +228,19 @@ namespace Lockstep.Logic
 
         public void OnReceiveFrame(FrameData frame)
         {
-            _frameBuffer.PushSFrame(frame);
+            PushSFrame(frame);
         }
 
-        public void OnReceiveFrames(FrameData[] frames)
+        public void OnReceivePing(PingMessage message)
         {
-            for (var i = 0; i < frames.Length; i++)
-                _frameBuffer.PushSFrame(frames[i]);
+            var ping = LSTime.realtimeSinceStartupMS - message.sendTimestamp;
+            _pings.Add(ping);
+
+            if (ping > maxPingValue)
+                maxPingValue = ping;
+
+            if (ping < minPingValue)
+                minPingValue = ping;
         }
 
         #endregion

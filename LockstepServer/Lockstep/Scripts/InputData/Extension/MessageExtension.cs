@@ -109,5 +109,10 @@ namespace Lockstep
 
             return msg;
         }
+
+        public static PingMessage ToPingMessage(this Ping_S2C message)
+        {
+            return new PingMessage {sendTimestamp = message.SendTimestamp};
+        }
     }
 }

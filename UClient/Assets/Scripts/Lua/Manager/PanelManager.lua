@@ -38,4 +38,18 @@ function PanelManager:hidePanel(name)
     self._panels:set(_name, nil)
 end
 
+-- Fairy 查询面板组件
+-- @param panelname 面板名称
+-- @param path 组件路径
+function PanelManager:fairyQueryObject(panelname, path)
+    local panel = self:getPanel(panelname)
+    if panel ~= nil then
+        if path == "" or path == nil then
+            return panel.view
+        end
+        return panel:queryObject(path)
+    end
+    return nil
+end
+
 return PanelManager

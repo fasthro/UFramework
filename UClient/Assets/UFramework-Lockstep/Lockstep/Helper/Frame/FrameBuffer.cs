@@ -1,12 +1,15 @@
-/*
- * @Author: fasthro
- * @Date: 2021-01-06 16:10:08
- * @Description: 
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2021-01-06 16:10:08
+// * @Description:
+// --------------------------------------------------------------------------------
+
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Lockstep
 {
-    public class FrameBuffer
+    public class FrameBuffer : BaseBehaviour
     {
         /// <summary>
         /// 缓冲容量
@@ -26,21 +29,35 @@ namespace Lockstep
         /// <value></value>
         public int cTick { get; private set; }
 
-        #region  private
+        /// <summary>
+        /// 校验完成帧
+        /// </summary>
+        public int vTick { get; private set; }
 
-        // 服务器帧
+        /// <summary>
+        /// 是否回滚
+        /// </summary>
+        public bool isRollback { get; private set; }
+        
+        #region private frame
+
         private FrameData[] _sFrames;
-
-        // 客户端帧
         private FrameData[] _cFrames;
 
         #endregion
 
-        public FrameBuffer(int capacity = 2000)
+        
+
+        public FrameBuffer(int capacity = 2000) : base()
         {
             this.capacity = capacity;
             _sFrames = new FrameData[capacity];
             _cFrames = new FrameData[capacity];
+        }
+
+        public override void Update()
+        {
+            
         }
 
         public void PushCFrame(FrameData frame)
@@ -60,7 +77,7 @@ namespace Lockstep
         public FrameData GetFrame(int tick)
         {
             var frame = GetSFrame(tick);
-            return frame == null ? GetCFrame(tick) : frame;
+            return frame ?? GetCFrame(tick);
         }
 
         public FrameData GetSFrame(int tick)

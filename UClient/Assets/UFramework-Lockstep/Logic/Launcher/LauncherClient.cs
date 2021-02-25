@@ -38,6 +38,9 @@ namespace Lockstep.Logic
             serviceContainer.RegisterService(new SimulatorService());
             serviceContainer.RegisterService(new InputService());
             serviceContainer.RegisterService(new InitService());
+            serviceContainer.RegisterService(new CameraService());
+            serviceContainer.RegisterService(new UIService());
+            serviceContainer.RegisterService(new VirtualJoyService());
 
             _allServices = serviceContainer.GetAllServices();
             foreach (var service in _allServices)

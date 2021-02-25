@@ -48,14 +48,15 @@ namespace GameServer
             base.RegisterHandler();
             var handler = managerContainer.GetManager<IHandlerManager>();
 
-            handler.RegisterHandler(NetwokCmd.CLIENT_CONNECT, new ConnectHandler());
-            handler.RegisterHandler(NetwokCmd.CLIENT_DISCONNECT, new DisconnectHandler());
+            handler.RegisterHandler(GameConst.NETWORK_CMD_CLIENT_CONNECT, new ConnectHandler());
+            handler.RegisterHandler(GameConst.NETWORK_CMD_CLIENT_DISCONNECT, new DisconnectHandler());
             
-            handler.RegisterHandler(NetwokCmd.HANDSHAKE, new HandshakeHandler());
-            handler.RegisterHandler(NetwokCmd.ENTER_ROOM, new EnterRoomHandler());
-            handler.RegisterHandler(NetwokCmd.READY, new ReadyHandler());
-
-            handler.RegisterHandler(NetwokCmd.AGENT_FRAME, new FrameHandler());
+            handler.RegisterHandler(NetworkCmd.HANDSHAKE, new HandshakeHandler());
+            handler.RegisterHandler(NetworkCmd.ENTER_ROOM, new EnterRoomHandler());
+            handler.RegisterHandler(NetworkCmd.READY, new ReadyHandler());
+            
+            handler.RegisterHandler(NetworkCmd.PING, new PingHandler());
+            handler.RegisterHandler(NetworkCmd.PLAYER_INPUT, new FrameHandler());
         }
 
         private static void Main(string[] args)

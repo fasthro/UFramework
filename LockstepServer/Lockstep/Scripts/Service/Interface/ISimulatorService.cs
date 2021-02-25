@@ -10,6 +10,6 @@ namespace Lockstep
     {
         void OnReceiveGameStart(GameStartMessage message);
         void OnReceiveFrame(FrameData frame);
-        void OnReceiveFrames(FrameData[] frames);
+        void OnReceivePing(PingMessage message);
     }
 }

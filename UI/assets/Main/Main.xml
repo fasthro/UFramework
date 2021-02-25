@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="1920,1080">
-  <displayList/>
+<component size="1920,1080" designImage="ui://slaudw4whftt1" designImageAlpha="0">
+  <displayList>
+    <component id="n9_eraj" name="n9" src="10ewg3" fileName="Components/Black.xml" pkg="h49w8gjg" xy="1691,-2" size="228,146" group="n3_hftt" alpha="0.333"/>
+    <text id="n7_hftt" name="fps_title" xy="1696,2" size="59,42" group="n3_hftt" font="ui://q6ykyrf2t33y0" fontSize="30" color="#00e7ff" text="FPS"/>
+    <text id="n1_hftt" name="_fps" xy="1774,2" size="140,42" group="n3_hftt" font="ui://q6ykyrf2t33y0" fontSize="30" color="#00ff00" align="right" autoSize="none" autoClearText="true" text="1000ms"/>
+    <text id="n4_hftt" name="delay_title" xy="1696,49" size="97,42" group="n3_hftt" font="ui://q6ykyrf2t33y0" fontSize="30" color="#00e7ff" text="DELAY"/>
+    <text id="n0_hftt" name="_delay" xy="1774,49" size="140,42" group="n3_hftt" font="ui://q6ykyrf2t33y0" fontSize="30" color="#00ff00" align="right" autoSize="none" autoClearText="true" text="1000ms"/>
+    <text id="n6_hftt" name="ping_title" xy="1696,96" size="74,42" group="n3_hftt" font="ui://q6ykyrf2t33y0" fontSize="30" color="#00e7ff" text="PING"/>
+    <text id="n2_hftt" name="_ping" xy="1774,96" size="140,42" group="n3_hftt" font="ui://q6ykyrf2t33y0" fontSize="30" color="#00ff00" align="right" autoSize="none" autoClearText="true" text="1000ms"/>
+    <group id="n3_hftt" name="info" xy="1691,-2" size="228,146" advanced="true">
+      <relation target="" sidePair="right-right,top-top"/>
+    </group>
+    <component id="n8_hftt" name="_moveJoy" src="hftt4" fileName="Components/VirtualJoy/VirtualJoyMove.xml" xy="77,813" pivot="0.5,0.5"/>
+  </displayList>
 </component>

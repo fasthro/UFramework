@@ -20,6 +20,7 @@ luaservice = concat {
 	"src/main/?.lua",
 	"src/service/?.lua",
 	"src/service/login/?.lua",
+	"src/service/db/?.lua",
 }
 
 lua_path = concat {
@@ -37,6 +38,7 @@ lua_path = concat {
 	"src/main/?.lua",
 	"src/service/?.lua",
 	"src/service/login/?.lua",
+	"src/service/db/?.lua",
 }
 
 lua_cpath  = concat {

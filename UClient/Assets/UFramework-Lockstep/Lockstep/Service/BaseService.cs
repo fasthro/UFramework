@@ -8,6 +8,14 @@ namespace Lockstep
 {
     public abstract class BaseService : IService
     {
+        protected static ServiceContainer _container;
+
+        protected IGameService _gameService;
+        protected IPlayerService _playerService;
+        protected IEntityService _entityService;
+        protected IHelperService _helperService;
+
+
         public BaseService()
         {
             Initialize();
@@ -24,11 +32,6 @@ namespace Lockstep
             _playerService = _container.GetService<IPlayerService>();
             _entityService = _container.GetService<IEntityService>();
             _helperService = _container.GetService<IHelperService>();
-            _viewService = _container.GetService<IViewService>();
-            _initializeService = _container.GetService<IInitializeService>();
-            _networkService = _container.GetService<INetworkService>();
-            _initializeService = _container.GetService<IInitializeService>();
-            _simulatorService = _container.GetService<ISimulatorService>();
         }
 
         public virtual void Initialize()
@@ -42,16 +45,5 @@ namespace Lockstep
         public virtual void Dispose()
         {
         }
-
-        protected IGameService _gameService;
-        protected IPlayerService _playerService;
-        protected IEntityService _entityService;
-        protected IHelperService _helperService;
-        protected IViewService _viewService;
-        protected IInitializeService _initializeService;
-        protected ISimulatorService _simulatorService;
-        protected INetworkService _networkService;
-
-        protected static ServiceContainer _container;
     }
 }

@@ -61,7 +61,7 @@ namespace UFramework
                 catch (Exception ex)
                 {
                     var s2c = new Lockstep.Message.ServerException {Cmd = cmd, Session = session};
-                    _networkManager.Send(peer, NetwokCmd.SERVER_EXCEPTION, 0, NetworkProcessLayer.All, s2c);
+                    _networkManager.Send(peer, GameConst.NETWORK_CMD_SERVER_EXCEPTION, 0, NetworkProcessLayer.All, s2c);
                     LogHelper.Error(ex.Message + "\n" + ex.StackTrace);
                 }
             }

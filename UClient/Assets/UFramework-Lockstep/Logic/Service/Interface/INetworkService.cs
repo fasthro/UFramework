@@ -3,11 +3,12 @@
 // * @Date: 2020/12/29 16:31:41
 // * @Description:
 // --------------------------------------------------------------------------------
-namespace Lockstep
+
+namespace Lockstep.Logic
 {
-    public interface IViewService : IService
+    public interface INetworkService : IService
     {
-        T CreateView<T>(string path) where T : IView;
-        T CreateView<T>(string path, int oid) where T : IView;
+        void SendPing();
+        void SendInput(FrameData frameData);
     }
 }

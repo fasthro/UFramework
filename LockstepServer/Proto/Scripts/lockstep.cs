@@ -32,11 +32,14 @@ namespace Lockstep.Message {
             "B3Nlc3Npb24YAiABKAUiHAoNSGFuZHNoYWtlX0MyUxILCgN1aWQYASABKAMi",
             "IwoNSGFuZHNoYWtlX1MyQxISCgpyZXN1bHRDb2RlGAEgASgFIg8KDUVudGVy",
             "Um9vbV9DMlMiDwoNRW50ZXJSb29tX1MyQyIYCglSZWFkeV9DMlMSCwoDdWlk",
-            "GAEgASgDIgsKCVJlYWR5X1MyQyJLCg1HYW1lU3RhcnRfUzJDEgwKBHNlZWQY",
-            "ASABKAUSLAoHcGxheWVycxgCIAMoCzIbLkxvY2tzdGVwLk1lc3NhZ2UuTFNN",
-            "UGxheWVyIjYKCUZyYW1lX1MyQxIpCgVmcmFtZRgBIAEoCzIaLkxvY2tzdGVw",
-            "Lk1lc3NhZ2UuTFNNRnJhbWUiNgoJRnJhbWVfQzJTEikKBWZyYW1lGAIgASgL",
-            "MhouTG9ja3N0ZXAuTWVzc2FnZS5MU01GcmFtZWIGcHJvdG8z"));
+            "GAEgASgDIgsKCVJlYWR5X1MyQyIuCghQaW5nX0MyUxILCgNvaWQYASABKAUS",
+            "FQoNc2VuZFRpbWVzdGFtcBgCIAEoAyI/CghQaW5nX1MyQxIVCg1zZW5kVGlt",
+            "ZXN0YW1wGAEgASgDEhwKFHRpbWVTaW5jZVNlcnZlclN0YXJ0GAIgASgDIksK",
+            "DUdhbWVTdGFydF9TMkMSDAoEc2VlZBgBIAEoBRIsCgdwbGF5ZXJzGAIgAygL",
+            "MhsuTG9ja3N0ZXAuTWVzc2FnZS5MU01QbGF5ZXIiNgoJRnJhbWVfUzJDEikK",
+            "BWZyYW1lGAEgASgLMhouTG9ja3N0ZXAuTWVzc2FnZS5MU01GcmFtZSI2CglG",
+            "cmFtZV9DMlMSKQoFZnJhbWUYAiABKAsyGi5Mb2Nrc3RlcC5NZXNzYWdlLkxT",
+            "TUZyYW1lYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
@@ -51,6 +54,8 @@ namespace Lockstep.Message {
             new pbr::GeneratedClrTypeInfo(typeof(global::Lockstep.Message.EnterRoom_S2C), global::Lockstep.Message.EnterRoom_S2C.Parser, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Lockstep.Message.Ready_C2S), global::Lockstep.Message.Ready_C2S.Parser, new[]{ "Uid" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Lockstep.Message.Ready_S2C), global::Lockstep.Message.Ready_S2C.Parser, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Lockstep.Message.Ping_C2S), global::Lockstep.Message.Ping_C2S.Parser, new[]{ "Oid", "SendTimestamp" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Lockstep.Message.Ping_S2C), global::Lockstep.Message.Ping_S2C.Parser, new[]{ "SendTimestamp", "TimeSinceServerStart" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Lockstep.Message.GameStart_S2C), global::Lockstep.Message.GameStart_S2C.Parser, new[]{ "Seed", "Players" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Lockstep.Message.Frame_S2C), global::Lockstep.Message.Frame_S2C.Parser, new[]{ "Frame" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Lockstep.Message.Frame_C2S), global::Lockstep.Message.Frame_C2S.Parser, new[]{ "Frame" }, null, null, null)
@@ -1486,6 +1491,304 @@ namespace Lockstep.Message {
   }
 
   /// <summary>
+  /// ---------->>>> 940 &lt;&lt;&lt;&lt;----------
+  ///  Ping
+  /// #[C2S][940]#
+  /// </summary>
+  public sealed partial class Ping_C2S : pb::IMessage<Ping_C2S> {
+    private static readonly pb::MessageParser<Ping_C2S> _parser = new pb::MessageParser<Ping_C2S>(() => new Ping_C2S());
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<Ping_C2S> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Lockstep.Message.LockstepReflection.Descriptor.MessageTypes[11]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Ping_C2S() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Ping_C2S(Ping_C2S other) : this() {
+      oid_ = other.oid_;
+      sendTimestamp_ = other.sendTimestamp_;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Ping_C2S Clone() {
+      return new Ping_C2S(this);
+    }
+
+    /// <summary>Field number for the "oid" field.</summary>
+    public const int OidFieldNumber = 1;
+    private int oid_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int Oid {
+      get { return oid_; }
+      set {
+        oid_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "sendTimestamp" field.</summary>
+    public const int SendTimestampFieldNumber = 2;
+    private long sendTimestamp_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public long SendTimestamp {
+      get { return sendTimestamp_; }
+      set {
+        sendTimestamp_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as Ping_C2S);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(Ping_C2S other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Oid != other.Oid) return false;
+      if (SendTimestamp != other.SendTimestamp) return false;
+      return true;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Oid != 0) hash ^= Oid.GetHashCode();
+      if (SendTimestamp != 0L) hash ^= SendTimestamp.GetHashCode();
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Oid != 0) {
+        output.WriteRawTag(8);
+        output.WriteInt32(Oid);
+      }
+      if (SendTimestamp != 0L) {
+        output.WriteRawTag(16);
+        output.WriteInt64(SendTimestamp);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (Oid != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Oid);
+      }
+      if (SendTimestamp != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(SendTimestamp);
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(Ping_C2S other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Oid != 0) {
+        Oid = other.Oid;
+      }
+      if (other.SendTimestamp != 0L) {
+        SendTimestamp = other.SendTimestamp;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 8: {
+            Oid = input.ReadInt32();
+            break;
+          }
+          case 16: {
+            SendTimestamp = input.ReadInt64();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  /// <summary>
+  /// #[S2C][940]#
+  /// </summary>
+  public sealed partial class Ping_S2C : pb::IMessage<Ping_S2C> {
+    private static readonly pb::MessageParser<Ping_S2C> _parser = new pb::MessageParser<Ping_S2C>(() => new Ping_S2C());
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<Ping_S2C> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Lockstep.Message.LockstepReflection.Descriptor.MessageTypes[12]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Ping_S2C() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Ping_S2C(Ping_S2C other) : this() {
+      sendTimestamp_ = other.sendTimestamp_;
+      timeSinceServerStart_ = other.timeSinceServerStart_;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Ping_S2C Clone() {
+      return new Ping_S2C(this);
+    }
+
+    /// <summary>Field number for the "sendTimestamp" field.</summary>
+    public const int SendTimestampFieldNumber = 1;
+    private long sendTimestamp_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public long SendTimestamp {
+      get { return sendTimestamp_; }
+      set {
+        sendTimestamp_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "timeSinceServerStart" field.</summary>
+    public const int TimeSinceServerStartFieldNumber = 2;
+    private long timeSinceServerStart_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public long TimeSinceServerStart {
+      get { return timeSinceServerStart_; }
+      set {
+        timeSinceServerStart_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as Ping_S2C);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(Ping_S2C other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (SendTimestamp != other.SendTimestamp) return false;
+      if (TimeSinceServerStart != other.TimeSinceServerStart) return false;
+      return true;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (SendTimestamp != 0L) hash ^= SendTimestamp.GetHashCode();
+      if (TimeSinceServerStart != 0L) hash ^= TimeSinceServerStart.GetHashCode();
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (SendTimestamp != 0L) {
+        output.WriteRawTag(8);
+        output.WriteInt64(SendTimestamp);
+      }
+      if (TimeSinceServerStart != 0L) {
+        output.WriteRawTag(16);
+        output.WriteInt64(TimeSinceServerStart);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (SendTimestamp != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(SendTimestamp);
+      }
+      if (TimeSinceServerStart != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(TimeSinceServerStart);
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(Ping_S2C other) {
+      if (other == null) {
+        return;
+      }
+      if (other.SendTimestamp != 0L) {
+        SendTimestamp = other.SendTimestamp;
+      }
+      if (other.TimeSinceServerStart != 0L) {
+        TimeSinceServerStart = other.TimeSinceServerStart;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 8: {
+            SendTimestamp = input.ReadInt64();
+            break;
+          }
+          case 16: {
+            TimeSinceServerStart = input.ReadInt64();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  /// <summary>
   /// ---------->>>> 950 &lt;&lt;&lt;&lt;----------
   ///  模拟开始
   /// #[S2C][950]#
@@ -1497,7 +1800,7 @@ namespace Lockstep.Message {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Lockstep.Message.LockstepReflection.Descriptor.MessageTypes[11]; }
+      get { return global::Lockstep.Message.LockstepReflection.Descriptor.MessageTypes[13]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1639,7 +1942,7 @@ namespace Lockstep.Message {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Lockstep.Message.LockstepReflection.Descriptor.MessageTypes[12]; }
+      get { return global::Lockstep.Message.LockstepReflection.Descriptor.MessageTypes[14]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1767,7 +2070,7 @@ namespace Lockstep.Message {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Lockstep.Message.LockstepReflection.Descriptor.MessageTypes[13]; }
+      get { return global::Lockstep.Message.LockstepReflection.Descriptor.MessageTypes[15]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

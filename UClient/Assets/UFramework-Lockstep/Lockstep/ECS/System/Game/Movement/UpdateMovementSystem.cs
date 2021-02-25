@@ -1,8 +1,8 @@
-﻿/*
- * @Author: fasthro
- * @Date: 2020/12/30 16:02:47
- * @Description:
- */
+﻿// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020/12/30 16:02:47
+// * @Description:
+// --------------------------------------------------------------------------------
 
 using Entitas;
 using System.Collections.Generic;
@@ -33,12 +33,12 @@ namespace Lockstep
                         var ccwDeg = LSMath.Atan2(dir.z, dir.x) * LSMath.Rad2Deg;
                         var deg = (90 - ccwDeg) % 360;
                         entity.cTransform.targetRotation = LSQuaternion.Euler(0, deg, 0);
-                        
+
                         // flag
                         entity.cMovement.isMission = true;
                     }
 
-                    entity.cTransform.rotation = LSQuaternion.Lerp(entity.cTransform.rotation, entity.cTransform.targetRotation, LSTime.deltaTime * entity.cSpeed.rotationSpeed);
+                    entity.cTransform.rotation = LSQuaternion.RotateTowards(entity.cTransform.rotation, entity.cTransform.targetRotation, LSTime.deltaTime * entity.cSpeed.rotationSpeed);
                 }
             }
         }

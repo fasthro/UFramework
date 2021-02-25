@@ -9,6 +9,5 @@ namespace Lockstep.Logic
     public interface IInputService : IService
     {
         InputData inputData { get; }
-        void ExecuteInputData(GameEntity entity, InputData input);
     }
 }
