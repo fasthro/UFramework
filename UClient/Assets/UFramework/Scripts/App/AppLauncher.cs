@@ -20,16 +20,16 @@ namespace UFramework
 
         public static bool Develop { get; private set; }
         public ManagerContainer managerContainer { get; private set; }
+        public bool isInitialized { get; private set; }
         
         protected BaseManager[] _allManagers;
         
         private Launch _launch;
-        private bool _initialized;
 
         public void Initialize()
         {
             Main = this;
-            _initialized = false;
+            isInitialized = false;
             var serdata = Core.Serializer<AppConfig>.Instance;
 
             #region FairyGUI
@@ -64,8 +64,6 @@ namespace UFramework
             Timer.Instance.Default();
             // 下载器
             Downloader.Instance.Default();
-            // Init
-            InitBehaviour();
             // 版本器
             Updater.Instance.StartUpdate(_launch, () =>
             {
@@ -74,7 +72,11 @@ namespace UFramework
                 {
                     if (succeed)
                     {
-                        _initialized = true;
+                        isInitialized = true;
+                        
+                        // Init
+                        InitBehaviour();
+                        
                         managerContainer.GetManager<LuaManager>().LaunchEngine(managerContainer);
 
                         OnInitialized();
@@ -90,6 +92,9 @@ namespace UFramework
         
         protected void DoUpdate(float deltaTime)
         {
+            if(!isInitialized)
+                return;
+            
             foreach (var manager in _allManagers)
             {
                 manager.Update(deltaTime);
@@ -98,6 +103,9 @@ namespace UFramework
 
         protected void DoDispose()
         {
+            if(!isInitialized)
+                return;
+
             foreach (var manager in _allManagers)
             {
                 manager.Dispose();
@@ -106,6 +114,9 @@ namespace UFramework
 
         protected void DoLateUpdate()
         {
+            if(!isInitialized)
+                return;
+
             foreach (var manager in _allManagers)
             {
                 manager.LateUpdate();
@@ -114,6 +125,9 @@ namespace UFramework
 
         protected void FixedUpdate()
         {
+            if(!isInitialized)
+                return;
+
             foreach (var manager in _allManagers)
             {
                 manager.FixedUpdate();
@@ -122,6 +136,9 @@ namespace UFramework
 
         protected void DoApplicationQuit()
         {
+            if(!isInitialized)
+                return;
+
             foreach (var manager in _allManagers)
             {
                 manager.ApplicationQuit();

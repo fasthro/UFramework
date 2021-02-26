@@ -1,8 +1,9 @@
-/*
- * @Author: fasthro
- * @Date: 2020-09-15 16:08:02
- * @Description: asset import
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-09-15 16:08:02
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using UnityEditor;
 using UnityEngine;
 
@@ -12,7 +13,7 @@ namespace UFramework.Editor.Preferences.AssetImporter
     {
         public void OnPreprocessTexture()
         {
-            TexturePreImporter.Preprocess(this.assetPath, (TextureImporter)this.assetImporter);
+            TexturePreImporter.Preprocess(this.assetPath, (TextureImporter) this.assetImporter);
         }
     }
 }

@@ -268,6 +268,7 @@ namespace UFramework.Editor.VersionControl.Version
             ver.timestamp = TimeUtils.UTCTimeStamps();
             CheckVersionFiles(out ver.files);
             CheckVersionScripts(out ver.sDirs, out ver.sFiles);
+            CheckVersionBuildFiles(out ver.bDirs, out ver.bFiles);
             ver.versionDict.Clear();
 
             var vInfo = new VInfo();
@@ -387,14 +388,13 @@ namespace UFramework.Editor.VersionControl.Version
         /// <param name="tFiles"></param>
         public static void CheckVersionScripts(out string[] tDirs, out VScriptFile[] tFiles)
         {
-            List<string> dirs = new List<string>();
-            List<VScriptFile> sFiles = new List<VScriptFile>();
+            var dirs = new List<string>();
+            var sFiles = new List<VScriptFile>();
 
             var tp = IOPath.PathCombine(UApplication.TempDirectory, "Lua");
-            string[] files = IOPath.DirectoryGetFiles(tp, "*.lua", SearchOption.AllDirectories);
-            for (int i = 0; i < files.Length; i++)
+            var files = IOPath.DirectoryGetFiles(tp, "*.lua", SearchOption.AllDirectories);
+            foreach (var fp in files)
             {
-                var fp = files[i];
                 var dir = IOPath.PathUnitySeparator(Path.GetDirectoryName(fp));
                 var index = dirs.FindIndex(o => o.Equals(dir));
                 if (index == -1)
@@ -412,7 +412,45 @@ namespace UFramework.Editor.VersionControl.Version
                 sFiles.Add(file);
             }
 
-            for (int i = 0; i < dirs.Count; i++)
+            for (var i = 0; i < dirs.Count; i++)
+                dirs[i] = dirs[i].Replace(tp, "").TrimStart('/').TrimStart('\\');
+
+            tDirs = dirs.ToArray();
+            tFiles = sFiles.ToArray();
+        }
+        
+        /// <summary>
+        /// 检查版本Build文件
+        /// </summary>
+        /// <param name="tDirs"></param>
+        /// <param name="tFiles"></param>
+        public static void CheckVersionBuildFiles(out string[] tDirs, out VBuildFile[] tFiles)
+        {
+            var dirs = new List<string>();
+            var sFiles = new List<VBuildFile>();
+
+            var tp = IOPath.PathCombine(UApplication.TempDirectory, "Files");
+            var files = IOPath.DirectoryGetFiles(tp, "*.*", SearchOption.AllDirectories);
+            foreach (var fp in files)
+            {
+                var dir = IOPath.PathUnitySeparator(Path.GetDirectoryName(fp));
+                var index = dirs.FindIndex(o => o.Equals(dir));
+                if (index == -1)
+                {
+                    index = dirs.Count;
+                    dirs.Add(dir);
+                }
+
+                var file = new VBuildFile() { name = Path.GetFileName(fp), dirIndex = index };
+                using (var stream = File.OpenRead(fp))
+                {
+                    file.len = stream.Length;
+                    file.hash = HashUtils.GetCRC32Hash(stream);
+                }
+                sFiles.Add(file);
+            }
+
+            for (var i = 0; i < dirs.Count; i++)
                 dirs[i] = dirs[i].Replace(tp, "").TrimStart('/').TrimStart('\\');
 
             tDirs = dirs.ToArray();

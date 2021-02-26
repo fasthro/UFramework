@@ -187,10 +187,10 @@ namespace UFramework.UI
                 var center = _window.contentPane.GetChild("_center").asCom;
                 _title = center.GetChild("_title").asTextField;
                 _content = center.GetChild("_content").asRichTextField;
-                _okBtn = center.GetChild("_ok").asButton;
-                _cancelBtn = center.GetChild("_cancel").asButton;
+                _okBtn = center.GetChild("_yes").asButton;
+                _cancelBtn = center.GetChild("_no").asButton;
                 _closeBtn = center.GetChild("_close").asButton;
-                _closeBtn.visible = true;
+                _closeBtn.visible = false;
 
                 _btn = center.GetController("_btn");
                 _btn.SetSelectedIndex(0);

@@ -16,26 +16,32 @@ public class Launcher : AppLauncher
 
     private void Awake()
     {
+        DontDestroyOnLoad(this);
         instance = this;
         Initialize();
-        _lockstepClient = new LauncherClient();
-        
-        DontDestroyOnLoad(this);
     }
 
-    private void Start()
+    protected override void OnInitialized()
     {
+        base.OnInitialized();
+        _lockstepClient = new LauncherClient();
         _lockstepClient.Initialize();
     }
 
-    private void Update()
+    void Update()
     {
+        if(!isInitialized)
+            return;
+        
         DoUpdate(Time.deltaTime);
         _lockstepClient.Update();
     }
 
-    private void OnDestroy()
+    void OnDestroy()
     {
+        if(!isInitialized)
+            return;
+        
         DoDispose();
         _lockstepClient.Dispose();
     }

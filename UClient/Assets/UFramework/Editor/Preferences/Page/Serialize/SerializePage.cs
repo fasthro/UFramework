@@ -1,8 +1,9 @@
-/*
- * @Author: fasthro
- * @Date: 2020-06-29 08:35:09
- * @Description: Config Page
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-12-10 15:44:58
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -14,16 +15,12 @@ namespace UFramework.Editor.Preferences.Serializable
 {
     public class SerializePage : IPage, IPageBar
     {
-        public string menuName { get { return "Serdata(序列化)"; } }
+        public string menuName => "Serialize Config";
 
-        [ShowInInspector]
-        [TableList(IsReadOnly = true, AlwaysExpanded = true)]
-        [LabelText("Editor")]
+        [ShowInInspector] [TableList(IsReadOnly = true, AlwaysExpanded = true)] [LabelText("Editor")]
         public List<SerializeItem> editors = new List<SerializeItem>();
 
-        [ShowInInspector]
-        [TableList(IsReadOnly = true, AlwaysExpanded = true)]
-        [LabelText("Runtime")]
+        [ShowInInspector] [TableList(IsReadOnly = true, AlwaysExpanded = true)] [LabelText("Runtime")]
         public List<SerializeItem> runtimes = new List<SerializeItem>();
 
         private Dictionary<string, SerializableAssigned> _editorAddressDict = new Dictionary<string, SerializableAssigned>();
@@ -49,7 +46,7 @@ namespace UFramework.Editor.Preferences.Serializable
                     if (name.EndsWith("Config") && !_editorAddressDict.ContainsKey(name))
                     {
                         var ctors = type.GetConstructors();
-                        var st = (SerializableAssigned)type.GetProperty("assigned").GetValue(ctors[0].Invoke(null));
+                        var st = (SerializableAssigned) type.GetProperty("assigned").GetValue(ctors[0].Invoke(null));
                         if (st == SerializableAssigned.Editor)
                         {
                             _editorAddressDict.Add(name, st);
@@ -72,7 +69,7 @@ namespace UFramework.Editor.Preferences.Serializable
                     if (name.EndsWith("Config") && !_runtimeAddressDict.ContainsKey(name))
                     {
                         var ctors = type.GetConstructors();
-                        var st = (SerializableAssigned)type.GetProperty("assigned").GetValue(ctors[0].Invoke(null));
+                        var st = (SerializableAssigned) type.GetProperty("assigned").GetValue(ctors[0].Invoke(null));
                         if (st != SerializableAssigned.Editor && st != SerializableAssigned.User)
                         {
                             _runtimeAddressDict.Add(name, st);
@@ -108,12 +105,10 @@ namespace UFramework.Editor.Preferences.Serializable
 
         public void OnPageBarDraw()
         {
-
         }
 
         public void OnSaveDescribe()
         {
-
         }
     }
 }

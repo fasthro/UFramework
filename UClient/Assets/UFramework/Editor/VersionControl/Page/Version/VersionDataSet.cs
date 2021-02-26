@@ -83,6 +83,9 @@ namespace UFramework.Editor.VersionControl.Version
 
         [HideInInspector]
         public List<VScriptFile> sFiles = new List<VScriptFile>();
+        
+        [HideInInspector]
+        public List<VBuildFile> bFiles = new List<VBuildFile>();
 
         public VEditorPatch()
         {
@@ -91,21 +94,19 @@ namespace UFramework.Editor.VersionControl.Version
 
         public void UpdateDisplay()
         {
-            displayName = string.Format("p{0}.{1}.{2}", aVersion, pVersion, timestamp);
+            displayName = $"p{aVersion}.{pVersion}.{timestamp}";
             displayLen = EditorUtility.FormatBytes(len);
             displayTime = TimeUtils.UTCTimeStampsFormat(timestamp, "yyyy-MM-dd HH:mm:ss");
         }
 
         public string GetStatus()
         {
-            if (isRelease) return "Released";
-            else return "Pending";
+            return isRelease ? "Released" : "Pending";
         }
 
         private Color GetStatusColor()
         {
-            if (isRelease) return Color.green;
-            return Color.red;
+            return isRelease ? Color.green : Color.red;
         }
     }
 

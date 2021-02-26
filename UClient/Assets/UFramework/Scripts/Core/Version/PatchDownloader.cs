@@ -1,13 +1,12 @@
-/*
- * @Author: fasthro
- * @Date: 2020-10-28 18:08:58
- * @Description: 
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-10-28 18:08:58
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using System;
 using System.Collections.Generic;
 using ICSharpCode.SharpZipLib.Zip;
-using UFramework.Core;
-using UnityEngine;
 
 namespace UFramework.Core
 {
@@ -24,7 +23,12 @@ namespace UFramework.Core
         const float BYTES_2_MB = 1f / (1024 * 1024);
 
         public PatchDownloadStep step { get; private set; }
-        public int count { get { return _patchs.Count; } }
+
+        public int count
+        {
+            get { return _patchs.Count; }
+        }
+
         public long downloadSize { get; private set; }
         public float progress { get; private set; }
 
@@ -83,7 +87,7 @@ namespace UFramework.Core
         {
             _dFinishedCount = 0;
             _uFinishedCount = 0;
-            _baseSp = 1f / (float)count;
+            _baseSp = 1f / (float) count;
             step = PatchDownloadStep.Downloading;
             foreach (var item in _patchs)
                 _downloads.Add(Downloader.AddDownload(GetDownloadURL(item), GetFilePath(item), OnDownloaded, OnDownloadProgress, OnDownloadCanceled, OnDownloadFailed));
@@ -107,11 +111,16 @@ namespace UFramework.Core
 
         private void OnDownloadProgress(float value)
         {
-            progress = _baseSp * (float)_dFinishedCount + value * _baseSp;
+            progress = _baseSp * (float) _dFinishedCount + value * _baseSp;
         }
 
-        private void OnDownloadFailed(string error) { }
-        private void OnDownloadCanceled() { }
+        private void OnDownloadFailed(string error)
+        {
+        }
+
+        private void OnDownloadCanceled()
+        {
+        }
 
 
         private void StartUnzip()
@@ -130,13 +139,17 @@ namespace UFramework.Core
             UZip.Unzip(GetFilePath(patch), _basePath, null, this);
         }
 
-        public bool OnPreUnzip(ZipEntry entry) { return true; }
+        public bool OnPreUnzip(ZipEntry entry)
+        {
+            return true;
+        }
+
         public void OnPostUnzip(ZipEntry entry)
         {
             _value++;
 
             var pValue = _value / _maxValue;
-            progress = _baseSp * (float)_uFinishedCount + pValue * _baseSp;
+            progress = _baseSp * (float) _uFinishedCount + pValue * _baseSp;
         }
 
         public void OnUnzipFinished(bool result)
@@ -146,7 +159,7 @@ namespace UFramework.Core
             {
                 step = PatchDownloadStep.Completed;
                 _onCompleted.InvokeGracefully();
-                
+
                 CleanPatch();
             }
             else Unzip(_uFinishedCount);

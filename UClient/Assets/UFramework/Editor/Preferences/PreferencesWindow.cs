@@ -1,12 +1,14 @@
-﻿/*
- * @Author: fasthro
- * @Date: 2020-06-28 14:01:30
- * @Description: framework preferences window
- */
+﻿// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-06-28 14:01:30
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
 using UFramework.Editor.Preferences.AssetBundle;
 using UFramework.Editor.Preferences.AssetImporter;
+using UFramework.Editor.Preferences.BuildFiles;
 using UFramework.Editor.Preferences.Localization;
 using UFramework.Editor.Preferences.Lua;
 using UFramework.Editor.Preferences.Projrect;
@@ -35,6 +37,7 @@ namespace UFramework.Editor.Preferences
             AddPage(new AssetBundlePreferencesPage());
             AddPage(new AssetImporterPage());
             AddPage(new AssetImporterPreferencesPage());
+            AddPage(new BuildFilesPage());
             AddPage(new SerializePage());
             AddPage(new LocalizationPage());
             AddPage(new LuaPage());
@@ -44,4 +47,3 @@ namespace UFramework.Editor.Preferences
         }
     }
 }
-

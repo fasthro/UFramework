@@ -1,8 +1,9 @@
-/*
- * @Author: fasthro
- * @Date: 2020-09-15 16:03:29
- * @Description: 
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-09-15 16:03:29
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using UnityEngine;
 using UnityEditor;
 
@@ -10,11 +11,11 @@ namespace UFramework.Editor.Preferences.AssetImporter
 {
     public class TexturePreImporter
     {
-        static Preferences_AssetImporter_Config Config { get { return Core.Serializer<Preferences_AssetImporter_Config>.Instance; } }
+        static Preferences_AssetImporter_Config Config => Core.Serializer<Preferences_AssetImporter_Config>.Instance;
 
         public static void Execute(TextureItem item)
         {
-            var importer = (TextureImporter)TextureImporter.GetAtPath(item.path);
+            var importer = (TextureImporter) TextureImporter.GetAtPath(item.path);
             importer.mipmapEnabled = false;
             importer.compressionQuality = 50;
             switch (item.textureType)
@@ -60,7 +61,7 @@ namespace UFramework.Editor.Preferences.AssetImporter
         public static void Preprocess(string path, TextureImporter importer)
         {
             var searchItem = AssetImporterPreferencesPage.ContainsTextureSearchPath(path);
-            TextureItem texure = new TextureItem();
+            var texure = new TextureItem();
             if (searchItem == null)
             {
                 texure.path = path;
@@ -77,6 +78,7 @@ namespace UFramework.Editor.Preferences.AssetImporter
                 texure.iosFormat = searchItem.iosFormat;
                 texure.maxSize = searchItem.maxSize;
             }
+
             Execute(texure);
         }
     }

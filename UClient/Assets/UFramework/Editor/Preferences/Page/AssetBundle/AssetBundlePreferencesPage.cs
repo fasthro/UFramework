@@ -1,8 +1,9 @@
-/*
- * @Author: fasthro
- * @Date: 2020-06-29 17:00:30
- * @Description: AssetBundle
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-06-29 17:00:30
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using System.Collections.Generic;
 using System.IO;
 using Sirenix.OdinInspector;
@@ -18,36 +19,27 @@ namespace UFramework.Editor.Preferences.AssetBundle
     /// </summary>
     public class AssetBundlePreferencesPage : IPage, IPageBar
     {
-        public string menuName { get { return "AssetBundle/Preferences"; } }
-        static Preferences_AssetBundle_SearchPathConfig SearchPathConfig
-        {
-            get { return Serializer<Preferences_AssetBundle_SearchPathConfig>.Instance; }
-        }
+        public string menuName => "AssetBundle/Preferences";
+
+        static Preferences_AssetBundle_SearchPathConfig SearchPathConfig => Serializer<Preferences_AssetBundle_SearchPathConfig>.Instance;
 
         #region search pattern
-        [BoxGroup("Pattern")]
-        public string patternAsset = "*.asset";
 
-        [BoxGroup("Pattern")]
-        public string patternController = "*.controller";
+        [BoxGroup("Pattern")] public string patternAsset = "*.asset";
 
-        [BoxGroup("Pattern")]
-        public string patternDir = "*";
+        [BoxGroup("Pattern")] public string patternController = "*.controller";
 
-        [BoxGroup("Pattern")]
-        public string patternMaterial = "*.mat";
+        [BoxGroup("Pattern")] public string patternDir = "*";
 
-        [BoxGroup("Pattern")]
-        public string patternTexture = "*.png";
+        [BoxGroup("Pattern")] public string patternMaterial = "*.mat";
 
-        [BoxGroup("Pattern")]
-        public string patternPrefab = "*.prefab";
+        [BoxGroup("Pattern")] public string patternTexture = "*.png";
 
-        [BoxGroup("Pattern")]
-        public string patternScene = "*.unity";
+        [BoxGroup("Pattern")] public string patternPrefab = "*.prefab";
 
-        [BoxGroup("Pattern")]
-        public string patternText = "*.txt,*.bytes,*.json,*.csv,*.xml,*htm,*.html,*.yaml,*.fnt";
+        [BoxGroup("Pattern")] public string patternScene = "*.unity";
+
+        [BoxGroup("Pattern")] public string patternText = "*.txt,*.bytes,*.json,*.csv,*.xml,*htm,*.html,*.yaml,*.fnt";
 
         #endregion
 
@@ -56,10 +48,7 @@ namespace UFramework.Editor.Preferences.AssetBundle
         /// </summary>
         /// <typeparam name="AssetBundlePathItem"></typeparam>
         /// <returns></returns>
-        [ShowInInspector]
-        [TableList(AlwaysExpanded = true)]
-        [TabGroup("Custom")]
-        [LabelText("Assets Serach Directorys")]
+        [ShowInInspector] [TableList(AlwaysExpanded = true)] [TabGroup("Custom")] [LabelText("Assets Serach Directorys")]
         public List<AssetSearchItem> assetPathItems = new List<AssetSearchItem>();
 
         /// <summary>
@@ -67,10 +56,7 @@ namespace UFramework.Editor.Preferences.AssetBundle
         /// </summary>
         /// <typeparam name="AssetBundlePathItem"></typeparam>
         /// <returns></returns>
-        [ShowInInspector]
-        [TableList(AlwaysExpanded = true)]
-        [TabGroup("Custom")]
-        [LabelText("Assets Serach File Paths")]
+        [ShowInInspector] [TableList(AlwaysExpanded = true)] [TabGroup("Custom")] [LabelText("Assets Serach File Paths")]
         public List<AssetSearchFileItem> assetFileItems = new List<AssetSearchFileItem>();
 
         /// <summary>
@@ -78,10 +64,7 @@ namespace UFramework.Editor.Preferences.AssetBundle
         /// </summary>
         /// <typeparam name="AssetBundleAssetPathItem"></typeparam>
         /// <returns></returns>
-        [ShowInInspector]
-        [TableList(IsReadOnly = true, AlwaysExpanded = true)]
-        [TabGroup("Built-In")]
-        [LabelText("Assets Serach")]
+        [ShowInInspector] [TableList(IsReadOnly = true, AlwaysExpanded = true)] [TabGroup("Built-In")] [LabelText("Assets Serach")]
         public List<AssetSearchItem> builtInAssetPathItems = new List<AssetSearchItem>();
 
         /// <summary>
@@ -89,10 +72,7 @@ namespace UFramework.Editor.Preferences.AssetBundle
         /// </summary>
         /// <typeparam name="AssetBundlePathItem"></typeparam>
         /// <returns></returns>
-        [ShowInInspector]
-        [TableList(IsReadOnly = true, AlwaysExpanded = true)]
-        [TabGroup("Built-In")]
-        [LabelText("Assets Serach File Paths")]
+        [ShowInInspector] [TableList(IsReadOnly = true, AlwaysExpanded = true)] [TabGroup("Built-In")] [LabelText("Assets Serach File Paths")]
         public List<AssetSearchFileItem> builtInAssetFileItems = new List<AssetSearchFileItem>();
 
 
@@ -121,6 +101,7 @@ namespace UFramework.Editor.Preferences.AssetBundle
                 OptimizePaths();
                 OptimizeFiles();
             }
+
             if (SirenixEditorGUI.ToolbarButton(new GUIContent("Remove AssetBundle Name")))
             {
                 RemoveAssetBundleName();
@@ -144,11 +125,11 @@ namespace UFramework.Editor.Preferences.AssetBundle
         private void OptimizePaths()
         {
             // 去重/路径是否
-            List<int> removeEmptyIndexs = new List<int>();
-            List<int> removeDuplicateIndexs = new List<int>();
-            List<int> removeNoExistsIndexs = new List<int>();
-            HashSet<string> paths = new HashSet<string>();
-            for (int i = 0; i < assetPathItems.Count; i++)
+            var removeEmptyIndexs = new List<int>();
+            var removeDuplicateIndexs = new List<int>();
+            var removeNoExistsIndexs = new List<int>();
+            var paths = new HashSet<string>();
+            for (var i = 0; i < assetPathItems.Count; i++)
             {
                 var item = assetPathItems[i];
                 // pattern
@@ -185,26 +166,29 @@ namespace UFramework.Editor.Preferences.AssetBundle
             }
 
             // 移除空路径
-            for (int i = removeEmptyIndexs.Count - 1; i >= 0; i--)
+            for (var i = removeEmptyIndexs.Count - 1; i >= 0; i--)
             {
-                int index = removeEmptyIndexs[i];
+                var index = removeEmptyIndexs[i];
                 EditorUtility.DisplayProgressBar("optimize empty", assetPathItems[index].path, (i + 1) / removeEmptyIndexs.Count);
                 assetPathItems.RemoveAt(index);
             }
+
             // 重复路径
-            for (int i = removeDuplicateIndexs.Count - 1; i >= 0; i--)
+            for (var i = removeDuplicateIndexs.Count - 1; i >= 0; i--)
             {
-                int index = removeDuplicateIndexs[i];
+                var index = removeDuplicateIndexs[i];
                 EditorUtility.DisplayProgressBar("optimize duplicate", assetPathItems[index].path, (i + 1) / removeDuplicateIndexs.Count);
                 assetPathItems.RemoveAt(index);
             }
+
             // 不存在路径
-            for (int i = removeNoExistsIndexs.Count - 1; i >= 0; i--)
+            for (var i = removeNoExistsIndexs.Count - 1; i >= 0; i--)
             {
-                int index = removeNoExistsIndexs[i];
+                var index = removeNoExistsIndexs[i];
                 EditorUtility.DisplayProgressBar("optimize not exists", assetPathItems[index].path, (i + 1) / removeNoExistsIndexs.Count);
                 assetPathItems.RemoveAt(index);
             }
+
             EditorUtility.ClearProgressBar();
         }
 
@@ -213,11 +197,11 @@ namespace UFramework.Editor.Preferences.AssetBundle
         /// </summary>
         private void OptimizeFiles()
         {
-            List<int> removeEmptyIndexs = new List<int>();
-            List<int> removeDuplicateIndexs = new List<int>();
-            List<int> removeNoExistsIndexs = new List<int>();
-            HashSet<string> paths = new HashSet<string>();
-            for (int i = 0; i < assetFileItems.Count; i++)
+            var removeEmptyIndexs = new List<int>();
+            var removeDuplicateIndexs = new List<int>();
+            var removeNoExistsIndexs = new List<int>();
+            var paths = new HashSet<string>();
+            for (var i = 0; i < assetFileItems.Count; i++)
             {
                 var item = assetFileItems[i];
                 // pattern
@@ -252,29 +236,34 @@ namespace UFramework.Editor.Preferences.AssetBundle
                     }
                 }
             }
+
             // 移除空路径
-            for (int i = removeEmptyIndexs.Count - 1; i >= 0; i--)
+            for (var i = removeEmptyIndexs.Count - 1; i >= 0; i--)
             {
-                int index = removeEmptyIndexs[i];
+                var index = removeEmptyIndexs[i];
                 EditorUtility.DisplayProgressBar("optimize empty", assetFileItems[index].path, (i + 1) / removeEmptyIndexs.Count);
                 assetFileItems.RemoveAt(index);
             }
+
             // 重复路径
-            for (int i = removeDuplicateIndexs.Count - 1; i >= 0; i--)
+            for (var i = removeDuplicateIndexs.Count - 1; i >= 0; i--)
             {
-                int index = removeDuplicateIndexs[i];
+                var index = removeDuplicateIndexs[i];
                 EditorUtility.DisplayProgressBar("optimize duplicate", assetFileItems[index].path, (i + 1) / removeDuplicateIndexs.Count);
                 assetFileItems.RemoveAt(index);
             }
+
             // 不存在路径
-            for (int i = removeNoExistsIndexs.Count - 1; i >= 0; i--)
+            for (var i = removeNoExistsIndexs.Count - 1; i >= 0; i--)
             {
-                int index = removeNoExistsIndexs[i];
+                var index = removeNoExistsIndexs[i];
                 EditorUtility.DisplayProgressBar("optimize not exists", assetFileItems[index].path, (i + 1) / removeNoExistsIndexs.Count);
                 assetFileItems.RemoveAt(index);
             }
+
             EditorUtility.ClearProgressBar();
         }
+
         /// <summary>
         /// 构建内部资源路径列表
         /// </summary>
@@ -313,10 +302,11 @@ namespace UFramework.Editor.Preferences.AssetBundle
             AssetDatabase.RemoveUnusedAssetBundleNames();
 
             var bundleNames = AssetDatabase.GetAllAssetBundleNames();
-            for (int i = 0; i < bundleNames.Length; i++)
+            foreach (var t in bundleNames)
             {
-                AssetDatabase.RemoveAssetBundleName(bundleNames[i], true);
+                AssetDatabase.RemoveAssetBundleName(t, true);
             }
+
             AssetDatabase.Refresh();
         }
     }

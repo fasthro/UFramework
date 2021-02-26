@@ -3,6 +3,7 @@
  * @Date: 2020-10-15 12:26:08
  * @Description: 
  */
+
 using System;
 using System.Collections;
 using System.Linq;
@@ -14,6 +15,7 @@ using Unity.EditorCoroutines.Editor;
 using System.IO;
 using UFramework.Editor.Preferences.AssetBundle;
 using System.Collections.Generic;
+using UFramework.Editor.Preferences.BuildFiles;
 using UFramework.Editor.Preferences.Lua;
 using UFramework.Editor.VersionControl.Version;
 
@@ -28,7 +30,10 @@ namespace UFramework.Editor.VersionControl.Build
 
     public class VersionControl_Build_Config : ISerializable
     {
-        public SerializableAssigned assigned { get { return SerializableAssigned.Editor; } }
+        public SerializableAssigned assigned
+        {
+            get { return SerializableAssigned.Editor; }
+        }
 
         /// <summary>
         /// 应用版本
@@ -85,9 +90,7 @@ namespace UFramework.Editor.VersionControl.Build
         /// <summary>
         /// 包类型
         /// </summary>
-        [LabelText("Type")]
-        [OnValueChanged("OnValueChanged_PackageType")]
-        [DisableIf("_isBuild")]
+        [LabelText("Type")] [OnValueChanged("OnValueChanged_PackageType")] [DisableIf("_isBuild")]
         public PACKAGE_TYPE packageType = PACKAGE_TYPE.BASIC;
 
         private void OnValueChanged_PackageType()
@@ -111,9 +114,7 @@ namespace UFramework.Editor.VersionControl.Build
         /// <summary>
         /// IL2CPP
         /// </summary>
-        [LabelText("Scripting Backend")]
-        [OnValueChanged("OnValueChanged_Scripting")]
-        [DisableIf("_isBuild")]
+        [LabelText("Scripting Backend")] [OnValueChanged("OnValueChanged_Scripting")] [DisableIf("_isBuild")]
         public ScriptingImplementation scripting = ScriptingImplementation.Mono2x;
 
         private void OnValueChanged_Scripting()
@@ -133,9 +134,7 @@ namespace UFramework.Editor.VersionControl.Build
         /// <summary>
         /// 是否支持ARM64
         /// </summary>
-        [OnValueChanged("OnValueChanged_SupportARM64")]
-        [DisableIf("_supportARM64")]
-        [DisableIf("_isBuild")]
+        [OnValueChanged("OnValueChanged_SupportARM64")] [DisableIf("_supportARM64")] [DisableIf("_isBuild")]
         public bool supportARM64;
 
 #if UNITY_ANDROID
@@ -158,16 +157,15 @@ namespace UFramework.Editor.VersionControl.Build
         #endregion
 
         private bool _isBuild;
-        private bool _noBuild { get { return !_isBuild; } }
-        public bool isBuild { get { return _isBuild; } }
 
-        [HideIf("_noBuild")]
-        [ProgressBar(0, 100, DrawValueLabel = false, ColorMember = "_progressColor")]
+        private bool _noBuild => !_isBuild;
+
+        public bool isBuild => _isBuild;
+
+        [HideIf("_noBuild")] [ProgressBar(0, 100, DrawValueLabel = false, ColorMember = "_progressColor")]
         public int progress;
 
-        [HideIf("_noBuild")]
-        [ProgressBar(0, 9, 0, 1, 0, Segmented = true, DrawValueLabel = false)]
-        [LabelText("Build Progress")]
+        [HideIf("_noBuild")] [ProgressBar(0, 10, 0, 1, 0, Segmented = true, DrawValueLabel = false)] [LabelText("Build Progress")]
         public int totalProgress;
 
         private Color _progressColor(float value)
@@ -227,8 +225,9 @@ namespace UFramework.Editor.VersionControl.Build
                 var dest = IOPath.PathCombine(assetBundleDataPath, fn);
                 IOPath.FileCopy(files[i], dest);
                 yield return null;
-                progress = (int)((float)(i + 1) / (float)files.Length * 100f);
+                progress = (int) ((float) (i + 1) / (float) files.Length * 100f);
             }
+
             AssetDatabase.Refresh();
         }
 
@@ -276,8 +275,8 @@ namespace UFramework.Editor.VersionControl.Build
             var luaPath = IOPath.PathCombine(UApplication.TempDirectory, "Lua");
             var luaDataPath = IOPath.PathCombine(Application.streamingAssetsPath, "Lua");
             IOPath.DirectoryClear(luaDataPath);
-            string[] files = IOPath.DirectoryGetFiles(luaPath, "*.lua", SearchOption.AllDirectories);
-            for (int i = 0; i < files.Length; i++)
+            var files = IOPath.DirectoryGetFiles(luaPath, "*.lua", SearchOption.AllDirectories);
+            for (var i = 0; i < files.Length; i++)
             {
                 var fp = files[i];
                 var fn = IOPath.FileName(fp, true);
@@ -285,8 +284,58 @@ namespace UFramework.Editor.VersionControl.Build
                 var dest = IOPath.PathCombine(luaDataPath, dn, fn);
                 IOPath.FileCopy(files[i], dest);
                 yield return null;
-                progress = (int)((float)(i + 1) / (float)files.Length * 100f);
+                progress = (int) ((float) (i + 1) / (float) files.Length * 100f);
             }
+
+            AssetDatabase.Refresh();
+        }
+
+        [ShowInInspector, Button, HorizontalGroup]
+        [DisableIf("_isBuild")]
+        public void BuildFiles()
+        {
+            if (_isBuild) return;
+            _BuildFiles();
+        }
+
+        private void _BuildFiles()
+        {
+            var page = new BuildFilesPage();
+            page.OnRenderBefore();
+            page.Build(true);
+        }
+
+        [ShowInInspector, Button, HorizontalGroup]
+        [DisableIf("_isBuild")]
+        public void CopyFiles()
+        {
+            if (_isBuild) return;
+            EditorCoroutineUtility.StartCoroutineOwnerless(_CopyFiles());
+        }
+
+        IEnumerator _CopyFiles()
+        {
+            progress = 0;
+            var filePath = IOPath.PathCombine(UApplication.TempDirectory, "Files");
+            var fileDataPath = IOPath.PathCombine(Application.streamingAssetsPath, "Files");
+            IOPath.DirectoryClear(fileDataPath);
+            var files = IOPath.DirectoryGetFiles(filePath, "*.*", SearchOption.AllDirectories);
+            for (var i = 0; i < files.Length; i++)
+            {
+                var fp = files[i];
+                var fe = IOPath.FileExtensionName(fp);
+
+                if (fe.Equals(".meta"))
+                    continue;
+
+                var fn = IOPath.FileName(fp, true);
+                var dn = IOPath.PathUnitySeparator(Path.GetDirectoryName(fp)).Replace(filePath, "").TrimStart('/').TrimStart('\\').TrimEnd('/').TrimEnd('\\');
+                var dest = IOPath.PathCombine(fileDataPath, dn, fn);
+                IOPath.FileCopy(files[i], dest);
+                yield return null;
+                progress = (int) ((float) (i + 1) / (float) files.Length * 100f);
+            }
+
             AssetDatabase.Refresh();
         }
 
@@ -346,6 +395,16 @@ namespace UFramework.Editor.VersionControl.Build
             yield return new EditorWaitForSeconds(1);
             totalProgress++;
 
+            // build files
+            _BuildFiles();
+            yield return new EditorWaitForSeconds(1);
+            totalProgress++;
+
+            // copy build files
+            yield return _CopyFiles();
+            yield return new EditorWaitForSeconds(1);
+            totalProgress++;
+
             // version
             progress = 0;
             VersionPage.BuildVersion(IOPath.PathCombine(UApplication.TempDirectory, Core.Version.FileName));
@@ -368,6 +427,7 @@ namespace UFramework.Editor.VersionControl.Build
                     PlayerSettings.iOS.buildNumber = buildSerdata.versionCode.ToString();
                     break;
             }
+
             PlayerSettings.bundleVersion = buildSerdata.appVersion;
 
             AssetDatabase.SaveAssets();
@@ -386,6 +446,7 @@ namespace UFramework.Editor.VersionControl.Build
 
                 BuildPipeline.BuildPlayer(scenes, locationPathName, EditorUserBuildSettings.activeBuildTarget, options);
             }
+
             totalProgress++;
             yield return new EditorWaitForSeconds(1);
 
@@ -422,11 +483,11 @@ namespace UFramework.Editor.VersionControl.Build
             switch (target)
             {
                 case BuildTarget.Android:
-                    return string.Format("{0}{1}-{2}.apk", name, version, time);
+                    return $"{name}{version}-{time}.apk";
 
                 case BuildTarget.StandaloneWindows:
                 case BuildTarget.StandaloneWindows64:
-                    return string.Format("{0}{1}-{2}.exe", name, version, time);
+                    return $"{name}{version}-{time}.exe";
 
                 case BuildTarget.StandaloneOSX:
                     return name + ".app";
@@ -491,13 +552,12 @@ namespace UFramework.Editor.VersionControl.Build
             // files
             var oVer = Core.Version.LoadVersion(oVersionPath);
             var fileMap = new Dictionary<string, VFile>();
-            for (int i = 0; i < oVer.files.Length; i++)
+            for (var i = 0; i < oVer.files.Length; i++)
                 fileMap.Add(oVer.files[i].name, oVer.files[i]);
 
             var nPatchFiles = new List<VFile>();
-            VFile[] newFiles;
-            VersionPage.CheckVersionFiles(out newFiles);
-            for (int i = 0; i < newFiles.Length; i++)
+            VersionPage.CheckVersionFiles(out var newFiles);
+            for (var i = 0; i < newFiles.Length; i++)
             {
                 var file = newFiles[i];
                 if (!fileMap.ContainsKey(file.name))
@@ -511,20 +571,18 @@ namespace UFramework.Editor.VersionControl.Build
 
             // sfiles
             var sFileMap = new Dictionary<string, VScriptFile>();
-            for (int i = 0; i < oVer.sFiles.Length; i++)
+            for (var i = 0; i < oVer.sFiles.Length; i++)
             {
-                var index = string.Format("{0}-{1}", oVer.sFiles[i].dirIndex, oVer.sFiles[i].name);
+                var index = $"{oVer.sFiles[i].dirIndex}-{oVer.sFiles[i].name}";
                 sFileMap.Add(index, oVer.sFiles[i]);
             }
 
             var nPatchSFiles = new List<VScriptFile>();
-            string[] newSDirs;
-            VScriptFile[] newSFiles;
-            VersionPage.CheckVersionScripts(out newSDirs, out newSFiles);
-            for (int i = 0; i < newSFiles.Length; i++)
+            VersionPage.CheckVersionScripts(out var newSDirs, out var newSFiles);
+            for (var i = 0; i < newSFiles.Length; i++)
             {
                 var file = newSFiles[i];
-                var index = string.Format("{0}-{1}", file.dirIndex, file.name);
+                var index = $"{file.dirIndex}-{file.name}";
                 if (!sFileMap.ContainsKey(index))
                     nPatchSFiles.Add(file);
                 else
@@ -534,13 +592,39 @@ namespace UFramework.Editor.VersionControl.Build
                 }
             }
 
-            if (nPatchFiles.Count > 0 || nPatchSFiles.Count > 0)
+            // bfiles
+            var bFileMap = new Dictionary<string, VBuildFile>();
+            for (var i = 0; i < oVer.bFiles.Length; i++)
+            {
+                var index = $"{oVer.bFiles[i].dirIndex}-{oVer.bFiles[i].name}";
+                bFileMap.Add(index, oVer.bFiles[i]);
+            }
+
+            var nPatchBFiles = new List<VBuildFile>();
+            VersionPage.CheckVersionBuildFiles(out var newBDirs, out var newBFiles);
+            for (var i = 0; i < newBFiles.Length; i++)
+            {
+                var file = newBFiles[i];
+                var index = $"{file.dirIndex}-{file.name}";
+                if (!bFileMap.ContainsKey(index))
+                    nPatchBFiles.Add(file);
+                else
+                {
+                    if (!file.hash.Equals(bFileMap[index].hash))
+                        nPatchBFiles.Add(file);
+                }
+            }
+
+            if (nPatchFiles.Count > 0 || nPatchSFiles.Count > 0 || nPatchBFiles.Count > 0)
             {
                 foreach (var file in nPatchFiles)
                     Logger.Debug(">> patch file: " + file.name);
 
                 foreach (var file in nPatchSFiles)
                     Logger.Debug(">> patch script file: " + file.name);
+
+                foreach (var file in nPatchBFiles)
+                    Logger.Debug(">> patch build file: " + file.name);
             }
             else
             {
@@ -553,6 +637,7 @@ namespace UFramework.Editor.VersionControl.Build
             var newPatch = new VEditorPatch();
             newPatch.files.AddRange(nPatchFiles);
             newPatch.sFiles.AddRange(nPatchSFiles);
+            newPatch.bFiles.AddRange(nPatchBFiles);
             newPatch.aVersion = versionConfig.version;
             newPatch.pVersion = nPatchVersionCode;
             newPatch = version.UpdatePatch(newPatch);
@@ -565,7 +650,7 @@ namespace UFramework.Editor.VersionControl.Build
             var nPatchPath = IOPath.PathCombine(dataPath, "patch");
             IOPath.DirectoryClear(nPatchPath);
 
-            var fc = nPatchFiles.Count + nPatchSFiles.Count;
+            var fc = nPatchFiles.Count + nPatchSFiles.Count + nPatchBFiles.Count;
             string[] _files = new string[fc];
             string[] _parents = new string[fc];
             int _index = 0;
@@ -591,7 +676,20 @@ namespace UFramework.Editor.VersionControl.Build
                 _parents[_index] = IOPath.PathCombine("Lua", newSDirs[item.dirIndex]);
                 _index++;
             }
-            var zipPath = IOPath.PathCombine(nPathDir, string.Format("{0}.zip", newPatch.displayName));
+
+            foreach (var item in nPatchBFiles)
+            {
+                var tp = IOPath.PathCombine("Files", newBDirs[item.dirIndex], item.name);
+                var source = IOPath.PathCombine(UApplication.TempDirectory, tp);
+                var dest = IOPath.PathCombine(nPatchPath, tp);
+                IOPath.FileCopy(source, dest);
+
+                _files[_index] = dest;
+                _parents[_index] = IOPath.PathCombine("Files", newBDirs[item.dirIndex]);
+                _index++;
+            }
+
+            var zipPath = IOPath.PathCombine(nPathDir, $"{newPatch.displayName}.zip");
             UZip.Zip(_files, _parents, zipPath, null, null);
 
             // 生成版本信息文件
@@ -611,8 +709,7 @@ namespace UFramework.Editor.VersionControl.Build
     [System.Serializable]
     public class BuildSettingPageAndroidTable
     {
-        [BoxGroup("KeyStore")]
-        [OnValueChanged("OnValueChanged_useCustomKeystore")]
+        [BoxGroup("KeyStore")] [OnValueChanged("OnValueChanged_useCustomKeystore")]
         public bool useCustomKeystore;
 
         private void OnValueChanged_useCustomKeystore()
@@ -623,12 +720,9 @@ namespace UFramework.Editor.VersionControl.Build
         }
 
         [HideInInspector]
-        private bool _useCustomKeystore { get { return !useCustomKeystore; } }
+        private bool _useCustomKeystore => !useCustomKeystore;
 
-        [DisableIf("_useCustomKeystore")]
-        [FilePath(Extensions = ".keystore")]
-        [BoxGroup("KeyStore")]
-        [OnValueChanged("OnValueChanged_keystoreName")]
+        [DisableIf("_useCustomKeystore")] [FilePath(Extensions = ".keystore")] [BoxGroup("KeyStore")] [OnValueChanged("OnValueChanged_keystoreName")]
         public string keystoreName;
 
         private void OnValueChanged_keystoreName()
@@ -638,9 +732,7 @@ namespace UFramework.Editor.VersionControl.Build
             AssetDatabase.Refresh();
         }
 
-        [DisableIf("_useCustomKeystore")]
-        [BoxGroup("KeyStore")]
-        [OnValueChanged("OnValueChanged_keystorePass")]
+        [DisableIf("_useCustomKeystore")] [BoxGroup("KeyStore")] [OnValueChanged("OnValueChanged_keystorePass")]
         public string keystorePass;
 
         private void OnValueChanged_keystorePass()
@@ -650,9 +742,7 @@ namespace UFramework.Editor.VersionControl.Build
             AssetDatabase.Refresh();
         }
 
-        [DisableIf("_useCustomKeystore")]
-        [BoxGroup("KeyStore")]
-        [OnValueChanged("OnValueChanged_keyaliasName")]
+        [DisableIf("_useCustomKeystore")] [BoxGroup("KeyStore")] [OnValueChanged("OnValueChanged_keyaliasName")]
         public string keyaliasName;
 
         private void OnValueChanged_keyaliasName()
@@ -662,9 +752,7 @@ namespace UFramework.Editor.VersionControl.Build
             AssetDatabase.Refresh();
         }
 
-        [DisableIf("_useCustomKeystore")]
-        [BoxGroup("KeyStore")]
-        [OnValueChanged("OnValueChanged_keyaliasPass")]
+        [DisableIf("_useCustomKeystore")] [BoxGroup("KeyStore")] [OnValueChanged("OnValueChanged_keyaliasPass")]
         public string keyaliasPass;
 
         private void OnValueChanged_keyaliasPass()
@@ -678,7 +766,6 @@ namespace UFramework.Editor.VersionControl.Build
     [System.Serializable]
     public class BuildSettingPageIOSTable
     {
-        [BoxGroup("Signing")]
-        public string signingTeamID;
+        [BoxGroup("Signing")] public string signingTeamID;
     }
 }

@@ -43,7 +43,7 @@ namespace UFramework
             }
         }
 
-        public static string BuildTargetCurrentName { get { return ToString(BuildTargetCurrent); } }
+        public static string BuildTargetCurrentName => ToString(BuildTargetCurrent);
 
         public static bool Equal(BuildTarget target, int platform)
         {
@@ -100,7 +100,7 @@ namespace UFramework
 #elif UNITY_IOS
                         return iOS;
 #else
-                        return StandaloneOSX;
+                        return StandaloneWindows;
 #endif
                     case RuntimePlatform.OSXPlayer:
                         return StandaloneOSX;
@@ -118,7 +118,7 @@ namespace UFramework
             }
         }
 
-        public static string RuntimePlatformCurrentName { get { return ToString(RuntimePlatformCurrent); } }
+        public static string RuntimePlatformCurrentName => ToString(RuntimePlatformCurrent);
 
         public static bool Equal(RuntimePlatform target, int platform)
         {
@@ -188,11 +188,19 @@ namespace UFramework
 
         public static string ToString(int platform)
         {
-            if (platform == Android) return STR_Android;
-            else if (platform == iOS) return STR_iOS;
-            else if (platform == StandaloneWindows) return STR_StandaloneWindows;
-            else if (platform == StandaloneOSX) return STR_StandaloneOSX;
-            else return STR_Unknow;
+            switch (platform)
+            {
+                case Android:
+                    return STR_Android;
+                case iOS:
+                    return STR_iOS;
+                case StandaloneWindows:
+                    return STR_StandaloneWindows;
+                case StandaloneOSX:
+                    return STR_StandaloneOSX;
+                default:
+                    return STR_Unknow;
+            }
         }
     }
 }

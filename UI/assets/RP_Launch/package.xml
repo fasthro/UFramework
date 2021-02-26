@@ -8,6 +8,7 @@
     <image id="t33y11" name="loading_bar.png" path="/Images/ProgressBar/" scale="9grid" scale9grid="26,8,1,16"/>
     <image id="t33y12" name="00_Elements_01.png" path="/Design/"/>
     <component id="t33y13" name="ProgressBar-Update.xml" path="/Components/"/>
+    <image id="eraj15" name="BG-2.png" path="/Images/"/>
   </resources>
   <publish name=""/>
 </packageDescription>

@@ -1,8 +1,8 @@
-/*
- * @Author: fasthro
- * @Date: 2020-08-08 19:39:10
- * @Description: Lua/ToLua Page
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-08-08 19:39:10
+// * @Description:
+// --------------------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
@@ -23,9 +23,7 @@ namespace UFramework.Editor.Preferences.Lua
 {
     public class LuaPage : IPage, IPageBar
     {
-        [ShowInInspector]
-        [BoxGroup("General Setting")]
-        [LabelText("Build Use Byte Encode")]
+        [ShowInInspector] [BoxGroup("General Setting")] [LabelText("Build Use Byte Encode")]
         public bool byteEncode = true;
 
         /// <summary>
@@ -33,8 +31,7 @@ namespace UFramework.Editor.Preferences.Lua
         /// </summary>
         /// <typeparam name="string"></typeparam>
         /// <returns></returns>
-        [ShowInInspector]
-        [ListDrawerSettings(Expanded = true, CustomRemoveElementFunction = "CustomRemoveElementFunction_searchPaths")]
+        [ShowInInspector] [ListDrawerSettings(Expanded = true, CustomRemoveElementFunction = "CustomRemoveElementFunction_searchPaths")]
         public List<LuaSearchPathItem> searchPaths = new List<LuaSearchPathItem>();
 
         /// <summary>
@@ -42,10 +39,12 @@ namespace UFramework.Editor.Preferences.Lua
         /// </summary>
         /// <typeparam name="LuaWrapBindTypeItem"></typeparam>
         /// <returns></returns>
-        [ShowInInspector]
-        public List<LuaWrapBindTypeItem> wrapBindTypes = new List<LuaWrapBindTypeItem>();
+        [ShowInInspector] public List<LuaWrapBindTypeItem> wrapBindTypes = new List<LuaWrapBindTypeItem>();
 
-        public string menuName { get { return "Lua"; } }
+        public string menuName
+        {
+            get { return "Lua"; }
+        }
 
         public static BindType _GT(Type t)
         {
@@ -101,11 +100,9 @@ namespace UFramework.Editor.Preferences.Lua
 
         private List<BindType> bindTypes = new List<BindType>();
 
-        private static LuaConfig Config
-        { get { return Core.Serializer<LuaConfig>.Instance; } }
+        private static LuaConfig Config => Core.Serializer<LuaConfig>.Instance;
 
-        private static Preferences_Lua_BuildConfig BuildConfig
-        { get { return Core.Serializer<Preferences_Lua_BuildConfig>.Instance; } }
+        private static Preferences_Lua_BuildConfig BuildConfig => Core.Serializer<Preferences_Lua_BuildConfig>.Instance;
 
         private void CustomRemoveElementFunction_searchPaths(LuaSearchPathItem item)
         {
@@ -141,13 +138,12 @@ namespace UFramework.Editor.Preferences.Lua
             searchPaths.Clear();
             if (Config.searchPaths != null)
             {
-                for (int i = 0; i < Config.searchPaths.Length; i++)
+                foreach (var t in Config.searchPaths)
                 {
-                    var item = new LuaSearchPathItem();
-                    item.path = Config.searchPaths[i];
-                    searchPaths.Add(item);
+                    searchPaths.Add(new LuaSearchPathItem {path = t});
                 }
             }
+
             CheckBuiltInSearchPathItem();
         }
 
@@ -156,12 +152,14 @@ namespace UFramework.Editor.Preferences.Lua
         /// </summary>
         private void CheckBuiltInSearchPathItem()
         {
-            string[] builtIns = new string[] {
+            var builtIns = new string[]
+            {
                 "Assets/UFramework/3rd/ToLua/ToLua/Lua",
                 "Assets/UFramework/Scripts/Lua",
                 "Assets/Scripts/Lua",
-                "Assets/Scripts/Automatic/Lua" };
-            for (int i = 0; i < builtIns.Length; i++)
+                "Assets/Scripts/Automatic/Lua"
+            };
+            for (var i = 0; i < builtIns.Length; i++)
             {
                 var path = builtIns[i];
                 foreach (var item in searchPaths)
@@ -174,17 +172,12 @@ namespace UFramework.Editor.Preferences.Lua
                 }
             }
 
-            for (int i = 0; i < builtIns.Length; i++)
+            for (var i = 0; i < builtIns.Length; i++)
             {
-                var item = new LuaSearchPathItem();
-                item.path = builtIns[i];
-                item.order = int.MaxValue - i;
-                searchPaths.Add(item);
+                searchPaths.Add(new LuaSearchPathItem {path = builtIns[i], order = int.MaxValue - i});
             }
-            searchPaths.Sort((left, right) =>
-            {
-                return right.order.CompareTo(left.order);
-            });
+
+            searchPaths.Sort((left, right) => right.order.CompareTo(left.order));
         }
 
         /// <summary>
@@ -194,7 +187,7 @@ namespace UFramework.Editor.Preferences.Lua
         {
             var count = searchPaths.Count;
             Config.searchPaths = new string[count];
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
                 Config.searchPaths[i] = searchPaths[i].path;
             }
@@ -220,7 +213,7 @@ namespace UFramework.Editor.Preferences.Lua
             {
                 var bc = CustomSettings.customTypeList.Length;
                 baseBindTypes = new BindType[bc];
-                for (int i = 0; i < bc; i++)
+                for (var i = 0; i < bc; i++)
                 {
                     baseBindTypes[i] = CustomSettings.customTypeList[i];
                 }
@@ -229,17 +222,12 @@ namespace UFramework.Editor.Preferences.Lua
             wrapBindTypes.Clear();
             if (Config.wrapClassNames != null)
             {
-                for (int i = 0; i < Config.wrapClassNames.Length; i++)
+                foreach (var t in Config.wrapClassNames)
                 {
-                    var item = new LuaWrapBindTypeItem();
-                    item.className = Config.wrapClassNames[i];
-                    wrapBindTypes.Add(item);
+                    wrapBindTypes.Add( new LuaWrapBindTypeItem {className = t});
                 }
 
-                wrapBindTypes.Sort((left, right) =>
-                {
-                    return left.className.CompareTo(right.className);
-                });
+                wrapBindTypes.Sort((left, right) => string.Compare(left.className, right.className, StringComparison.Ordinal));
             }
         }
 
@@ -254,6 +242,7 @@ namespace UFramework.Editor.Preferences.Lua
             {
                 bindTypes.Add(wrapBindTypes[i].bindType);
             }
+
             // fairyGUI
             if (Core.Serializer<AppConfig>.Instance.useFairyGUI)
             {
@@ -300,6 +289,7 @@ namespace UFramework.Editor.Preferences.Lua
                 bindTypes.Add(_GT(typeof(UFramework.UI.UIPanel)));
                 bindTypes.Add(_GT(typeof(UFramework.UI.FiaryPanel)));
             }
+
             bindTypes.Add(_GT(typeof(UFramework.UI.Layer)));
 
             bindTypes.Add(_GT(typeof(UFramework.Network.PackType)));
@@ -351,9 +341,9 @@ namespace UFramework.Editor.Preferences.Lua
             sb.AppendLineEx("\t}");
             sb.AppendLineEx("}");
 
-            string file = CustomSettings.saveDir + "LuaBinder.cs";
+            var file = CustomSettings.saveDir + "LuaBinder.cs";
 
-            using (StreamWriter textWriter = new StreamWriter(file, false, Encoding.UTF8))
+            using (var textWriter = new StreamWriter(file, false, Encoding.UTF8))
             {
                 textWriter.Write(sb.ToString());
                 textWriter.Flush();
@@ -369,9 +359,9 @@ namespace UFramework.Editor.Preferences.Lua
         private void WrapDescribeSave()
         {
             var count = wrapBindTypes.Count;
-            HashSet<string> tbs = new HashSet<string>();
-            int num = 0;
-            for (int i = 0; i < count; i++)
+            var tbs = new HashSet<string>();
+            var num = 0;
+            for (var i = 0; i < count; i++)
             {
                 var className = wrapBindTypes[i].className;
                 if (!tbs.Contains(className))
@@ -398,7 +388,7 @@ namespace UFramework.Editor.Preferences.Lua
         /// </summary>
         public void BuildScripts(bool encode, bool clean)
         {
-            string[] patterns = new string[] { "*.lua", "*.pb" };
+            var patterns = new string[] {"*.lua"};
             var outPath = IOPath.PathCombine(UApplication.TempDirectory, "Lua");
             if (clean)
             {
@@ -406,29 +396,29 @@ namespace UFramework.Editor.Preferences.Lua
                 BuildConfig.files.Clear();
             }
 
-            Dictionary<string, LuaBuildFile> fileMap = new Dictionary<string, LuaBuildFile>();
+            var fileMap = new Dictionary<string, LuaBuildFile>();
             foreach (var item in BuildConfig.files)
             {
                 if (!fileMap.ContainsKey(item.sourcePath))
                     fileMap.Add(item.sourcePath, item);
             }
 
-            HashSet<string> nFileMap = new HashSet<string>();
-            List<LuaBuildFile> nFiles = new List<LuaBuildFile>();
-            for (int i = 0; i < searchPaths.Count; i++)
+            var nFileMap = new HashSet<string>();
+            var nFiles = new List<LuaBuildFile>();
+            for (var i = 0; i < searchPaths.Count; i++)
             {
                 var searchItem = searchPaths[i];
-                for (int p = 0; p < patterns.Length; p++)
+                for (var p = 0; p < patterns.Length; p++)
                 {
                     var files = IOPath.DirectoryGetFiles(searchItem.path, patterns[p], SearchOption.AllDirectories);
-                    for (int k = 0; k < files.Length; k++)
+                    for (var k = 0; k < files.Length; k++)
                     {
                         var file = IOPath.PathUnitySeparator(files[k]);
 
                         var newFile = searchItem.pathMD5 + IOPath.PathReplace(file, searchItem.path);
                         var newFullFile = IOPath.PathCombine(outPath, newFile);
 
-                        var bFile = new LuaBuildFile() { sourcePath = file, destPath = newFile };
+                        var bFile = new LuaBuildFile() {sourcePath = file, destPath = newFile};
                         using (var stream = File.OpenRead(file))
                         {
                             bFile.len = stream.Length;
@@ -445,12 +435,13 @@ namespace UFramework.Editor.Preferences.Lua
                             if (bFile.len != sourceFile.len || !bFile.hash.Equals(sourceFile.hash))
                                 nFiles.Add(bFile);
                         }
+
                         nFileMap.Add(file);
                     }
                 }
             }
 
-            for (int i = 0; i < nFiles.Count; i++)
+            for (var i = 0; i < nFiles.Count; i++)
             {
                 var file = nFiles[i];
                 var fullFile = IOPath.PathCombine(outPath, file.destPath);
@@ -461,7 +452,7 @@ namespace UFramework.Editor.Preferences.Lua
                 if (encode && isLuaFile) EncodeLuaFile(file.sourcePath, fullFile);
                 else IOPath.FileCopy(file.sourcePath, fullFile);
 
-                string title = "Processing...[" + i + " - " + nFiles.Count + "]";
+                var title = "Processing...[" + i + " - " + nFiles.Count + "]";
                 Utils.UpdateProgress(title, file.destPath, i, nFiles.Count);
 
                 if (fileMap.ContainsKey(file.sourcePath))
@@ -478,6 +469,7 @@ namespace UFramework.Editor.Preferences.Lua
                 else
                     IOPath.FileDelete(IOPath.PathCombine(outPath, file.destPath));
             }
+
             BuildConfig.Serialize();
 
             fileMap.Clear();
@@ -501,11 +493,12 @@ namespace UFramework.Editor.Preferences.Lua
                 File.Copy(srcFile, outFile, true);
                 return;
             }
-            bool isWin = true;
-            string luaexe = string.Empty;
-            string args = string.Empty;
-            string exedir = string.Empty;
-            string currDir = Directory.GetCurrentDirectory();
+
+            var isWin = true;
+            var luaexe = string.Empty;
+            var args = string.Empty;
+            var exedir = string.Empty;
+            var currDir = Directory.GetCurrentDirectory();
             if (Application.platform == RuntimePlatform.WindowsEditor)
             {
                 isWin = true;
@@ -520,16 +513,16 @@ namespace UFramework.Editor.Preferences.Lua
                 args = "-b -g " + srcFile + " " + outFile;
                 exedir = IOPath.PathCombine(Environment.CurrentDirectory, "LuaEncoder", "luajit_mac");
             }
+
             Directory.SetCurrentDirectory(exedir);
-            ProcessStartInfo info = new ProcessStartInfo();
+            var info = new ProcessStartInfo();
             info.FileName = luaexe;
             info.Arguments = args;
             info.WindowStyle = ProcessWindowStyle.Hidden;
             info.UseShellExecute = isWin;
             info.ErrorDialog = true;
 
-            Process pro = Process.Start(info);
-            pro.WaitForExit();
+            Process.Start(info)?.WaitForExit();
             Directory.SetCurrentDirectory(currDir);
         }
 

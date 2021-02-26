@@ -1,21 +1,15 @@
-/*
- * @Author: fasthro
- * @Date: 2020-09-29 18:00:13
- * @Description: Welcome
- */
-
-using System.Collections.Generic;
-using Sirenix.OdinInspector;
-using Sirenix.Utilities.Editor;
-using UnityEditor;
-using UnityEngine;
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-06-28 14:01:30
+// * @Description:
+// --------------------------------------------------------------------------------
 
 namespace UFramework.Editor.Preferences
 {
     public class WelcomePage : IPage, IPageBar
     {
-        public string menuName { get { return "Welcome"; } }
-   
+        public string menuName => "Welcome";
+
         public object GetInstance()
         {
             return this;

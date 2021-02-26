@@ -14,6 +14,9 @@
     <image id="t33yu" name="MessageBox-Design-2.png" path="/Design/"/>
     <image id="t33yv" name="popup_title_01.png" path="/Images/"/>
     <image id="t33yw" name="popup_bg_03.png" path="/Images/" scale="9grid" scale9grid="254,175,508,60"/>
+    <image id="erajx" name="btn_close_f.png" path="/Images/"/>
+    <image id="erajy" name="btn_close_n.png" path="/Images/"/>
+    <component id="erajz" name="Button-Close.xml" path="/Components/"/>
   </resources>
   <publish name=""/>
 </packageDescription>

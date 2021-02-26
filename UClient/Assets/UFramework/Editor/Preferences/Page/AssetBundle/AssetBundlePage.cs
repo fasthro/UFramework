@@ -1,8 +1,9 @@
-/*
- * @Author: fasthro
- * @Date: 2020-06-29 17:00:30
- * @Description: AssetBundle
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-06-29 17:00:30
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,24 +17,21 @@ namespace UFramework.Editor.Preferences.AssetBundle
 {
     public class AssetBundlePage : IPage, IPageBar
     {
-        public string menuName { get { return "AssetBundle"; } }
-        static Preferences_AssetBundle_AssetConfig AssetConfig { get { return Serializer<Preferences_AssetBundle_AssetConfig>.Instance; } }
-        static Preferences_AssetBundle_SearchPathConfig SearchPathConfig { get { return Serializer<Preferences_AssetBundle_SearchPathConfig>.Instance; } }
+        public string menuName => "AssetBundle";
 
-        [BoxGroup("General Setting")]
-        public bool buildNameHash = true;
-        [BoxGroup("General Setting")]
-        public bool importerBundleName = false;
+        static Preferences_AssetBundle_AssetConfig AssetConfig => Serializer<Preferences_AssetBundle_AssetConfig>.Instance;
+
+        static Preferences_AssetBundle_SearchPathConfig SearchPathConfig => Serializer<Preferences_AssetBundle_SearchPathConfig>.Instance;
+
+        [BoxGroup("General Setting")] public bool buildNameHash = true;
+        [BoxGroup("General Setting")] public bool importerBundleName = false;
 
         /// <summary>
         /// AssetBundle列表
         /// </summary>
         /// <typeparam name="BundleItem"></typeparam>
         /// <returns></returns>
-        [ShowInInspector]
-        [TabGroup("AssetBundle")]
-        [ListDrawerSettings(HideRemoveButton = true, HideAddButton = true, OnTitleBarGUI = "OnBundlesTitleBarGUI")]
-        [LabelText("AssetBundles")]
+        [ShowInInspector] [TabGroup("AssetBundle")] [ListDrawerSettings(HideRemoveButton = true, HideAddButton = true, OnTitleBarGUI = "OnBundlesTitleBarGUI")] [LabelText("AssetBundles")]
         public List<BundleItem> bundles = new List<BundleItem>();
 
         /// <summary>
@@ -41,10 +39,7 @@ namespace UFramework.Editor.Preferences.AssetBundle
         /// </summary>
         /// <typeparam name="BundleAssetItem"></typeparam>
         /// <returns></returns>
-        [ShowInInspector]
-        [TabGroup("Assets")]
-        [ListDrawerSettings(HideRemoveButton = true, HideAddButton = true, OnTitleBarGUI = "OnAssetsTitleBarGUI")]
-        [LabelText("All Assets")]
+        [ShowInInspector] [TabGroup("Assets")] [ListDrawerSettings(HideRemoveButton = true, HideAddButton = true, OnTitleBarGUI = "OnAssetsTitleBarGUI")] [LabelText("All Assets")]
         public List<BundleAssetItem> assets = new List<BundleAssetItem>();
 
         /// <summary>
@@ -52,10 +47,7 @@ namespace UFramework.Editor.Preferences.AssetBundle
         /// </summary>
         /// <typeparam name="BundleAssetItem"></typeparam>
         /// <returns></returns>
-        [ShowInInspector]
-        [TabGroup("Assets")]
-        [ListDrawerSettings(HideRemoveButton = true, HideAddButton = true, OnTitleBarGUI = "OnDependenciesTitleBarGUI")]
-        [LabelText("Dependencies Assets")]
+        [ShowInInspector] [TabGroup("Assets")] [ListDrawerSettings(HideRemoveButton = true, HideAddButton = true, OnTitleBarGUI = "OnDependenciesTitleBarGUI")] [LabelText("Dependencies Assets")]
         public List<BundleAssetItem> dependencieAssets = new List<BundleAssetItem>();
 
         /// <summary>
@@ -63,10 +55,7 @@ namespace UFramework.Editor.Preferences.AssetBundle
         /// </summary>
         /// <typeparam name="BundleAssetItem"></typeparam>
         /// <returns></returns>
-        [ShowInInspector]
-        [TabGroup("Assets")]
-        [ListDrawerSettings(HideRemoveButton = true, HideAddButton = true, OnTitleBarGUI = "OnBuiltInTitleBarGUI")]
-        [LabelText("Built-In Assets")]
+        [ShowInInspector] [TabGroup("Assets")] [ListDrawerSettings(HideRemoveButton = true, HideAddButton = true, OnTitleBarGUI = "OnBuiltInTitleBarGUI")] [LabelText("Built-In Assets")]
         public List<BundleAssetItem> builtInAssets = new List<BundleAssetItem>();
 
         // shader bundle
@@ -92,6 +81,7 @@ namespace UFramework.Editor.Preferences.AssetBundle
         {
             return this;
         }
+
         public void OnRenderBefore()
         {
             assetBundlePath = IOPath.PathCombine(UApplication.TempDirectory, Platform.BuildTargetCurrentName);
@@ -212,18 +202,18 @@ namespace UFramework.Editor.Preferences.AssetBundle
             }
 
             // progress
-            int progress = 0;
-            string progressTitle = "";
-            string progressDes = "";
+            var progress = 0;
+            var progressTitle = "";
+            var progressDes = "";
 
             // analysis search path
             assets.Clear();
             assetTracker.Clear();
 
-            for (int i = 0; i < SearchPathConfig.assetPathItems.Count; i++)
+            for (var i = 0; i < SearchPathConfig.assetPathItems.Count; i++)
             {
                 var items = ParsePathItem(SearchPathConfig.assetPathItems[i]);
-                for (int k = 0; k < items.Count; k++)
+                for (var k = 0; k < items.Count; k++)
                 {
                     var item = items[k];
                     item.path = IOPath.PathUnitySeparator(item.path);
@@ -242,7 +232,7 @@ namespace UFramework.Editor.Preferences.AssetBundle
                 }
             }
 
-            for (int i = 0; i < SearchPathConfig.assetFileItems.Count; i++)
+            for (var i = 0; i < SearchPathConfig.assetFileItems.Count; i++)
             {
                 var fileItem = SearchPathConfig.assetFileItems[i];
                 if (ValidateAssetPath(fileItem.path))
@@ -271,10 +261,10 @@ namespace UFramework.Editor.Preferences.AssetBundle
 
             // analysis built-in
             builtInAssets.Clear();
-            for (int i = 0; i < SearchPathConfig.builtInAssetPathItems.Count; i++)
+            for (var i = 0; i < SearchPathConfig.builtInAssetPathItems.Count; i++)
             {
                 var items = ParsePathItem(SearchPathConfig.builtInAssetPathItems[i]);
-                for (int k = 0; k < items.Count; k++)
+                for (var k = 0; k < items.Count; k++)
                 {
                     var item = items[k];
                     item.path = IOPath.PathUnitySeparator(item.path);
@@ -289,7 +279,7 @@ namespace UFramework.Editor.Preferences.AssetBundle
             }
 
             // analysis built-in file
-            for (int i = 0; i < SearchPathConfig.builtInAssetFileItems.Count; i++)
+            for (var i = 0; i < SearchPathConfig.builtInAssetFileItems.Count; i++)
             {
                 var fileItem = SearchPathConfig.builtInAssetFileItems[i];
                 if (ValidateAssetPath(fileItem.path))
@@ -315,11 +305,10 @@ namespace UFramework.Editor.Preferences.AssetBundle
             // analysis bundles
             bundleTracker.Clear();
             bundles.Clear();
-            for (int i = 0; i < assets.Count; i++)
+            for (var i = 0; i < assets.Count; i++)
             {
                 var asset = assets[i];
-                BundleItem bundle;
-                if (!bundleTracker.TryGetValue(asset.bundleName, out bundle))
+                if (!bundleTracker.TryGetValue(asset.bundleName, out var bundle))
                 {
                     bundle = new BundleItem();
                     bundle.bundleName = asset.bundleName;
@@ -329,6 +318,7 @@ namespace UFramework.Editor.Preferences.AssetBundle
 
                     bundles.Add(bundle);
                 }
+
                 bundle.fileSize += asset.size;
                 bundle.assets.Add(asset);
 
@@ -342,7 +332,7 @@ namespace UFramework.Editor.Preferences.AssetBundle
             dependencieAssets.Clear();
             dependenciesTracker.Clear();
             dependenciesAnalysisTracker.Clear();
-            for (int i = 0; i < bundles.Count; i++)
+            for (var i = 0; i < bundles.Count; i++)
             {
                 progress = 0;
 
@@ -354,18 +344,17 @@ namespace UFramework.Editor.Preferences.AssetBundle
                     {
                         if (ValidateAssetPath(asset))
                         {
-                            HashSet<string> temps;
-                            if (!dependenciesAnalysisTracker.TryGetValue(asset, out temps))
+                            if (!dependenciesAnalysisTracker.TryGetValue(asset, out var temps))
                             {
                                 temps = new HashSet<string>();
                                 dependenciesAnalysisTracker.Add(asset, temps);
                             }
+
                             temps.Add(bundle.bundleName);
                             if (temps.Count > 1)
                             {
                                 if (!dependenciesTracker.Contains(asset))
                                 {
-
                                     var pathItem = new AssetSearchItem();
                                     pathItem.path = asset;
                                     pathItem.nameType = NameType.Path;
@@ -394,14 +383,13 @@ namespace UFramework.Editor.Preferences.AssetBundle
 
             // analysis dependencies bundles
             dependenciesBundleAnalysisTracker.Clear();
-            for (int i = 0; i < dependencieAssets.Count; i++)
+            for (var i = 0; i < dependencieAssets.Count; i++)
             {
                 progress = 0;
 
                 var asset = dependencieAssets[i];
                 var dependencies = AssetDatabase.GetDependencies(asset.path, true);
-                HashSet<string> temps;
-                if (!dependenciesBundleAnalysisTracker.TryGetValue(asset.path, out temps))
+                if (!dependenciesBundleAnalysisTracker.TryGetValue(asset.path, out var temps))
                 {
                     temps = new HashSet<string>();
                     dependenciesBundleAnalysisTracker.Add(asset.path, temps);
@@ -423,14 +411,14 @@ namespace UFramework.Editor.Preferences.AssetBundle
 
             // 合并依赖资源
             // 如果有材质球引用贴图资源，那么贴图资源不会单独打包
-            List<BundleAssetItem> removeDps = new List<BundleAssetItem>();
-            for (int i = 0; i < dependencieAssets.Count; i++)
+            var removeDps = new List<BundleAssetItem>();
+            for (var i = 0; i < dependencieAssets.Count; i++)
             {
                 var tAsset = dependencieAssets[i];
                 if (tAsset.isTexture)
                 {
-                    int refCount = 0;
-                    foreach (KeyValuePair<string, HashSet<string>> asset in dependenciesBundleAnalysisTracker)
+                    var refCount = 0;
+                    foreach (var asset in dependenciesBundleAnalysisTracker)
                     {
                         foreach (var item in asset.Value)
                         {
@@ -440,6 +428,7 @@ namespace UFramework.Editor.Preferences.AssetBundle
                             }
                         }
                     }
+
                     if (refCount == 1 && !dependenciesRefTracker.Contains(tAsset.path))
                     {
                         removeDps.Add(tAsset);
@@ -448,13 +437,13 @@ namespace UFramework.Editor.Preferences.AssetBundle
             }
 
             // 如果有Prefab引用材质球，那么材质球不会单独打包
-            for (int i = 0; i < dependencieAssets.Count; i++)
+            for (var i = 0; i < dependencieAssets.Count; i++)
             {
                 var tAsset = dependencieAssets[i];
                 if (tAsset.isMaterial)
                 {
-                    int refCount = 0;
-                    foreach (KeyValuePair<string, HashSet<string>> asset in dependenciesBundleAnalysisTracker)
+                    var refCount = 0;
+                    foreach (var asset in dependenciesBundleAnalysisTracker)
                     {
                         foreach (var item in asset.Value)
                         {
@@ -464,6 +453,7 @@ namespace UFramework.Editor.Preferences.AssetBundle
                             }
                         }
                     }
+
                     if (refCount == 1 && !dependenciesRefTracker.Contains(tAsset.path))
                     {
                         removeDps.Add(tAsset);
@@ -522,6 +512,7 @@ namespace UFramework.Editor.Preferences.AssetBundle
 
                     bundles.Add(bundleItem);
                 }
+
                 bundleItem.fileSize += asset.size;
                 bundleItem.bundleSize = GetBuildBundleSize(bundleItem);
                 bundleItem.assets.Add(asset);
@@ -568,6 +559,7 @@ namespace UFramework.Editor.Preferences.AssetBundle
                     Utils.UpdateProgress(progressTitle, progressDes, progress, dependencieAssets.Count);
                 }
             }
+
             shaderBundle.bundleSize = GetBuildBundleSize(shaderBundle);
             if (shaderBundle.assets.Count > 0)
             {
@@ -575,7 +567,7 @@ namespace UFramework.Editor.Preferences.AssetBundle
             }
 
             // remove empty bundle
-            List<BundleItem> removes = new List<BundleItem>();
+            var removes = new List<BundleItem>();
             foreach (var bundle in bundles)
             {
                 if (bundle.assets.Count <= 0)
@@ -583,6 +575,7 @@ namespace UFramework.Editor.Preferences.AssetBundle
                     removes.Add(bundle);
                 }
             }
+
             foreach (var bundle in removes)
             {
                 removes.Remove(bundle);
@@ -592,10 +585,10 @@ namespace UFramework.Editor.Preferences.AssetBundle
             // bundle name
             if (importerBundleName)
             {
-                for (int i = 0; i < assets.Count; i++)
+                for (var i = 0; i < assets.Count; i++)
                 {
                     var assetItem = assets[i];
-                    UnityEditor.AssetImporter assetImporter = UnityEditor.AssetImporter.GetAtPath(assetItem.path);
+                    var assetImporter = UnityEditor.AssetImporter.GetAtPath(assetItem.path);
                     assetImporter.assetBundleName = GetBuildBundleName(assetItem.bundleName);
 
                     progressTitle = "bundle name";
@@ -615,7 +608,7 @@ namespace UFramework.Editor.Preferences.AssetBundle
         private List<BundleAssetItem> ParsePathItem(AssetSearchItem pathItem)
         {
             List<BundleAssetItem> assetItems = new List<BundleAssetItem>();
-            var patterns = pathItem.pattern.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            var patterns = pathItem.pattern.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
             foreach (var item in patterns)
             {
                 var files = Directory.GetFiles(pathItem.path, item, SearchOption.AllDirectories);
@@ -675,6 +668,7 @@ namespace UFramework.Editor.Preferences.AssetBundle
             {
                 return searchPath;
             }
+
             return string.Empty;
         }
 
@@ -721,8 +715,8 @@ namespace UFramework.Editor.Preferences.AssetBundle
                 }
             }
 
-            BuildAssetBundleOptions options = BuildAssetBundleOptions.ChunkBasedCompression;
-            AssetBundleBuild[] builds = GetAssetBundleBuilds();
+            var options = BuildAssetBundleOptions.ChunkBasedCompression;
+            var builds = GetAssetBundleBuilds();
             var assetBundleManifest = BuildPipeline.BuildAssetBundles(assetBundlePath, builds, options, EditorUserBuildSettings.activeBuildTarget);
             if (assetBundleManifest == null) return;
 
@@ -731,13 +725,13 @@ namespace UFramework.Editor.Preferences.AssetBundle
 
             var bundle2Ids = new Dictionary<string, int>();
             var assetBundles = assetBundleManifest.GetAllAssetBundles();
-            for (int i = 0; i < assetBundles.Length; i++)
+            for (var i = 0; i < assetBundles.Length; i++)
             {
                 bundle2Ids[assetBundles[i]] = i;
             }
 
             var bundleRefs = new List<BundleRef>();
-            for (int i = 0; i < assetBundles.Length; i++)
+            for (var i = 0; i < assetBundles.Length; i++)
             {
                 var bundle = assetBundles[i];
                 var dependencies = assetBundleManifest.GetAllDependencies(bundle);
@@ -775,8 +769,9 @@ namespace UFramework.Editor.Preferences.AssetBundle
                     index = dirs.Count;
                     dirs.Add(dir);
                 }
+
                 Logger.Debug(">> bundle: " + item.bundleName + "-> " + GetBuildBundleName(item.bundleName));
-                var asset = new AssetRef { bundle = bundle2Ids[GetBuildBundleName(item.bundleName)], dirIndex = index, name = Path.GetFileName(path) };
+                var asset = new AssetRef {bundle = bundle2Ids[GetBuildBundleName(item.bundleName)], dirIndex = index, name = Path.GetFileName(path)};
                 assetRefs.Add(asset);
             }
 
@@ -791,7 +786,8 @@ namespace UFramework.Editor.Preferences.AssetBundle
                     index = dirs.Count;
                     dirs.Add(dir);
                 }
-                var asset = new AssetRef { bundle = bundle2Ids[GetBuildBundleName(item.bundleName)], dirIndex = index, name = Path.GetFileName(path) };
+
+                var asset = new AssetRef {bundle = bundle2Ids[GetBuildBundleName(item.bundleName)], dirIndex = index, name = Path.GetFileName(path)};
                 assetRefs.Add(asset);
             }
 
@@ -804,9 +800,11 @@ namespace UFramework.Editor.Preferences.AssetBundle
             AssetDatabase.Refresh();
 
             // build manifest
-            builds = new[] {
-                new AssetBundleBuild {
-                    assetNames = new[] { AssetDatabase.GetAssetPath (manifest), },
+            builds = new[]
+            {
+                new AssetBundleBuild
+                {
+                    assetNames = new[] {AssetDatabase.GetAssetPath(manifest),},
                     assetBundleName = AssetManifest.AssetBundleFileName
                 }
             };
@@ -836,11 +834,10 @@ namespace UFramework.Editor.Preferences.AssetBundle
             // analysis bundles
             var _builtInBundleTracker = new Dictionary<string, BundleItem>();
             var _builtInBundles = new List<BundleItem>();
-            for (int i = 0; i < builtInAssets.Count; i++)
+            for (var i = 0; i < builtInAssets.Count; i++)
             {
                 var asset = builtInAssets[i];
-                BundleItem bundle;
-                if (!_builtInBundleTracker.TryGetValue(asset.bundleName, out bundle))
+                if (!_builtInBundleTracker.TryGetValue(asset.bundleName, out var bundle))
                 {
                     bundle = new BundleItem();
                     bundle.bundleName = asset.bundleName;
@@ -849,8 +846,10 @@ namespace UFramework.Editor.Preferences.AssetBundle
 
                     _builtInBundles.Add(bundle);
                 }
+
                 bundle.assets.Add(asset);
             }
+
             foreach (var bundle in _builtInBundles)
             {
                 builds.Add(new AssetBundleBuild

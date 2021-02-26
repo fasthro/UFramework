@@ -1,8 +1,9 @@
-﻿/*
- * @Author: fasthro
- * @Date: 2020-06-14 20:11:16
- * @Description: UFramework App
- */
+﻿// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-06-14 20:11:16
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using System;
 using UFramework.Core;
 using UnityEngine;
@@ -33,6 +34,7 @@ namespace UFramework
                      _assetsDirectory = IOPath.PathUnitySeparator(IOPath.PathCombine("Assets", "UAssets"));
 #endif
                 }
+
                 return _assetsDirectory;
             }
         }
@@ -70,15 +72,10 @@ namespace UFramework
         /// PB
         /// </summary>
         /// <value></value>
-        public static string PBDirectory
-        {
-            get
-            {
-                if (Core.Serializer<AppConfig>.Instance.isDevelopmentVersion)
-                    return IOPath.PathCombine(Application.dataPath, "Scripts/Automatic/Lua/PB");
-                else return IOPath.PathCombine(Application.persistentDataPath, "Lua/9eb42865081803c085ef7ce653312ab8/PB");
-            }
-        }
+        public static string PBDirectory =>
+            Serializer<AppConfig>.Instance.isDevelopmentVersion
+                ? IOPath.PathCombine(Application.dataPath, "Scripts/Automatic/PB")
+                : IOPath.PathCombine(Application.persistentDataPath, "Files/PB");
 
         #endregion
 
@@ -92,8 +89,7 @@ namespace UFramework
             {
                 var pvc = Updater.Instance.patchVersionCode;
                 var vc = Updater.Instance.versionCode;
-                if (pvc == -1) return string.Format("A{0}_V{1}_PE", Application.version, vc);
-                else return string.Format("A{0}_V{1}_P{2}", Application.version, vc, pvc);
+                return pvc == -1 ? $"A{Application.version}_V{vc}_PE" : $"A{Application.version}_V{vc}_P{pvc}";
             }
         }
     }

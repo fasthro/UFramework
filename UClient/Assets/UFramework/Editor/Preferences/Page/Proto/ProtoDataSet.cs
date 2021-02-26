@@ -1,8 +1,9 @@
-/*
- * @Author: fasthro
- * @Date: 2020-11-30 14:23:23
- * @Description: proto dataset
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-11-30 14:23:23
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UFramework.Core;
@@ -30,26 +31,22 @@ namespace UFramework.Editor.Preferences.Proto
         /// <summary>
         /// 名称
         /// </summary>
-        [ReadOnly, HideLabel, HorizontalGroup]
-        public string name;
+        [ReadOnly, HideLabel, HorizontalGroup] public string name;
 
         /// <summary>
         /// 生成类型
         /// </summary>
-        [HideLabel, HorizontalGroup(200)]
-        public ProtoGenerateType genType;
+        [HideLabel, HorizontalGroup(200)] public ProtoGenerateType genType;
 
         /// <summary>
         /// 路径
         /// </summary>
-        [HideInInspector]
-        public string path;
+        [HideInInspector] public string path;
 
         /// <summary>
         /// 顺序
         /// </summary>
-        [HideInInspector]
-        public int orderIndex;
+        [HideInInspector] public int orderIndex;
 
         /// <summary>
         /// 生成方法
@@ -78,8 +75,7 @@ namespace UFramework.Editor.Preferences.Proto
             _page?.DownOrder(this);
         }
 
-        [HideInInspector]
-        private ProtoPage _page;
+        [HideInInspector] private ProtoPage _page;
 
         public void setPage(ProtoPage page)
         {
@@ -107,7 +103,7 @@ namespace UFramework.Editor.Preferences.Proto
 
     public class Preferences_Proto_Config : ISerializable
     {
-        public SerializableAssigned assigned { get { return SerializableAssigned.Editor; } }
+        public SerializableAssigned assigned => SerializableAssigned.Editor;
 
         public List<ProtoFile> protos = new List<ProtoFile>();
 

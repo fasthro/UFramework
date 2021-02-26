@@ -7,13 +7,13 @@
   </controller>
   <displayList>
     <component id="n0_nx0v" name="bg" src="nmjqc" fileName="Components/Background-Center.xml" xy="99,101" size="819,490" alpha="0"/>
-    <image id="n14_t33y" name="bg-center-2" src="t33yo" fileName="Images/New/popup_bg_02.png" xy="0,0" size="1018,657">
+    <image id="n14_t33y" name="bg-center-2" src="t33yo" fileName="Images/popup_bg_02.png" xy="0,0" size="1018,657">
       <gearDisplay controller="_btn" pages="0"/>
     </image>
-    <image id="n20_t33y" name="n20" src="t33yw" fileName="Images/New/popup_bg_03.png" xy="0,0" size="1018,657">
+    <image id="n20_t33y" name="n20" src="t33yw" fileName="Images/popup_bg_03.png" xy="0,0" size="1018,657">
       <gearDisplay controller="_btn" pages="1,2"/>
     </image>
-    <image id="n18_t33y" name="n18" src="t33yv" fileName="Images/New/popup_title_01.png" xy="231,61"/>
+    <image id="n18_t33y" name="n18" src="t33yv" fileName="Images/popup_title_01.png" xy="231,61"/>
     <text id="n3_nx0v" name="_title" xy="436,61" pivot="0.5,0.5" size="145,64" font="ui://q6ykyrf2t33y0" fontSize="48" color="#b1d8f1" align="center" vAlign="middle" shadowColor="#000000" shadowOffset="1,1" autoClearText="true" text="Notice"/>
     <richtext id="n4_nx0v" name="_content" xy="130,168" size="758,289" font="ui://q6ykyrf2t33y0" fontSize="48" color="#2c799f" align="center" vAlign="middle" autoSize="none" autoClearText="true" text=""/>
     <component id="n5_nx0v" name="_no" src="nmjqi" fileName="Components/Button.xml" xy="200,493">
@@ -26,5 +26,6 @@
       <gearXY controller="_btn" pages="0,1,2" values="555,493|377,493|269,350"/>
       <Button title="YES"/>
     </component>
+    <component id="n21_eraj" name="_close" src="erajz" fileName="Components/Button-Close.xml" xy="832,108"/>
   </displayList>
 </component>

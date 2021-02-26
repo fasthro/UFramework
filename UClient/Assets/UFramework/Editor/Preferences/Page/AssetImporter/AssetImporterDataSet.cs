@@ -1,8 +1,8 @@
-/*
- * @Author: fasthro
- * @Date: 2020-09-15 16:15:16
- * @Description: 
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-09-15 16:15:16
+// * @Description:
+// --------------------------------------------------------------------------------
 
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
@@ -46,40 +46,31 @@ namespace UFramework.Editor.Preferences.AssetImporter
         /// <summary>
         /// 路径
         /// </summary>
-        [ShowInInspector, HideLabel, FolderPath]
-        [HorizontalGroup("Search Path")]
+        [ShowInInspector, HideLabel, FolderPath] [HorizontalGroup("Search Path")]
         public string path;
 
         /// <summary>
         /// Texture Type
         /// </summary>
-        [ShowInInspector, HideLabel]
-        [HorizontalGroup("Texture Type")]
-        [TableColumnWidth(100, false)]
+        [ShowInInspector, HideLabel] [HorizontalGroup("Texture Type")] [TableColumnWidth(100, false)]
         public TextureType textureType = TextureType.Default;
 
         /// <summary>
         /// Android Format
         /// </summary>
-        [ShowInInspector, HideLabel]
-        [HorizontalGroup("Android Format")]
-        [TableColumnWidth(120, false)]
+        [ShowInInspector, HideLabel] [HorizontalGroup("Android Format")] [TableColumnWidth(120, false)]
         public TextureImporterFormat androidFormat = TextureImporterFormat.ETC2_RGBA8;
 
         /// <summary>
         /// iOS Format
         /// </summary>
-        [ShowInInspector, HideLabel]
-        [HorizontalGroup("iOS Format")]
-        [TableColumnWidth(120, false)]
+        [ShowInInspector, HideLabel] [HorizontalGroup("iOS Format")] [TableColumnWidth(120, false)]
         public TextureImporterFormat iosFormat = TextureImporterFormat.ASTC_6x6;
 
         /// <summary>
         /// Max Size
         /// </summary>
-        [ShowInInspector, HideLabel]
-        [HorizontalGroup("Max Size")]
-        [TableColumnWidth(120, false)]
+        [ShowInInspector, HideLabel] [HorizontalGroup("Max Size")] [TableColumnWidth(120, false)]
         public TextureMaxSize maxSize = TextureMaxSize.MaxSize_1024;
 
         /// <summary>
@@ -89,7 +80,10 @@ namespace UFramework.Editor.Preferences.AssetImporter
         [HorizontalGroup("Operation")]
         [LabelText("Reimport")]
         [TableColumnWidth(80, false)]
-        public void Reimport() { AssetImporterPage.ReimportTexture(this); }
+        public void Reimport()
+        {
+            AssetImporterPage.ReimportTexture(this);
+        }
 
         /// <summary>
         /// TextureMaxSize to int
@@ -108,6 +102,7 @@ namespace UFramework.Editor.Preferences.AssetImporter
                 case TextureMaxSize.MaxSize_64: return 64;
                 case TextureMaxSize.MaxSize_32: return 32;
             }
+
             return 1024;
         }
     }
@@ -121,48 +116,37 @@ namespace UFramework.Editor.Preferences.AssetImporter
         /// <summary>
         /// 路径
         /// </summary>
-        [ShowInInspector, HideLabel, ReadOnly]
-        [HorizontalGroup("Path")]
+        [ShowInInspector, HideLabel, ReadOnly] [HorizontalGroup("Path")]
         public string path;
 
         /// <summary>
         /// target
         /// </summary>
-        [ShowInInspector, HideLabel]
-        [HorizontalGroup("Target")]
-        [TableColumnWidth(100, false)]
+        [ShowInInspector, HideLabel] [HorizontalGroup("Target")] [TableColumnWidth(100, false)]
         private UnityEngine.Object target;
 
         /// <summary>
         /// Texture Type
         /// </summary>
-        [ShowInInspector, HideLabel, ReadOnly]
-        [HorizontalGroup("Texture Type")]
-        [TableColumnWidth(100, false)]
+        [ShowInInspector, HideLabel, ReadOnly] [HorizontalGroup("Texture Type")] [TableColumnWidth(100, false)]
         public TextureType textureType = TextureType.Default;
 
         /// <summary>
         /// Android Format
         /// </summary>
-        [ShowInInspector, HideLabel, ReadOnly]
-        [HorizontalGroup("Android Format")]
-        [TableColumnWidth(120, false)]
+        [ShowInInspector, HideLabel, ReadOnly] [HorizontalGroup("Android Format")] [TableColumnWidth(120, false)]
         public TextureImporterFormat androidFormat = TextureImporterFormat.ETC2_RGBA8;
 
         /// <summary>
         /// iOS Format
         /// </summary>
-        [ShowInInspector, HideLabel, ReadOnly]
-        [HorizontalGroup("iOS Format")]
-        [TableColumnWidth(120, false)]
+        [ShowInInspector, HideLabel, ReadOnly] [HorizontalGroup("iOS Format")] [TableColumnWidth(120, false)]
         public TextureImporterFormat iosFormat = TextureImporterFormat.ASTC_6x6;
 
         /// <summary>
         /// Max Size
         /// </summary>
-        [ShowInInspector, HideLabel, ReadOnly]
-        [HorizontalGroup("Texture Max Size")]
-        [TableColumnWidth(120, false)]
+        [ShowInInspector, HideLabel, ReadOnly] [HorizontalGroup("Texture Max Size")] [TableColumnWidth(120, false)]
         public TextureMaxSize maxSize = TextureMaxSize.MaxSize_1024;
 
         /// <summary>
@@ -171,20 +155,9 @@ namespace UFramework.Editor.Preferences.AssetImporter
         [ShowInInspector, HideLabel, ReadOnly]
         [HorizontalGroup("File Size")]
         [TableColumnWidth(70, false)]
-        public string fileSizeStr
-        {
-            get
-            {
-                if (fileSize == 0)
-                {
-                    return "--";
-                }
-                return EditorUtility.FormatBytes(fileSize);
-            }
-        }
+        public string fileSizeStr => fileSize == 0 ? "--" : EditorUtility.FormatBytes(fileSize);
 
-        [HideInInspector]
-        public long fileSize;
+        [HideInInspector] public long fileSize;
 
         /// <summary>
         /// 内存占用大小
@@ -192,20 +165,9 @@ namespace UFramework.Editor.Preferences.AssetImporter
         [ShowInInspector, HideLabel, ReadOnly]
         [HorizontalGroup("Memory")]
         [TableColumnWidth(70, false)]
-        public string memorySizeStr
-        {
-            get
-            {
-                if (memorySize == 0)
-                {
-                    return "--";
-                }
-                return EditorUtility.FormatBytes(memorySize);
-            }
-        }
+        public string memorySizeStr => memorySize == 0 ? "--" : EditorUtility.FormatBytes(memorySize);
 
-        [HideInInspector]
-        public long memorySize;
+        [HideInInspector] public long memorySize;
 
         /// <summary>
         /// TextureMaxSize to int
@@ -224,6 +186,7 @@ namespace UFramework.Editor.Preferences.AssetImporter
                 case TextureMaxSize.MaxSize_64: return 64;
                 case TextureMaxSize.MaxSize_32: return 32;
             }
+
             return 1024;
         }
 
@@ -240,7 +203,7 @@ namespace UFramework.Editor.Preferences.AssetImporter
 
     public class Preferences_AssetImporter_Config : ISerializable
     {
-        public SerializableAssigned assigned { get { return SerializableAssigned.Editor; } }
+        public SerializableAssigned assigned => SerializableAssigned.Editor;
 
         public string texturePattern = "*.png,*.tga";
         public string modePattern = "*.fbx";

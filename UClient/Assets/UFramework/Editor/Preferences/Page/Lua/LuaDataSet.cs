@@ -1,11 +1,13 @@
-/*
- * @Author: fasthro
- * @Date: 2020-08-26 10:40:22
- * @Description: lua config
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-08-26 10:40:22
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using UFramework.Core;
 using UnityEngine;
@@ -23,11 +25,7 @@ namespace UFramework.Editor.Preferences.Lua
         /// <summary>
         /// 资源路径/资源目录
         /// </summary>
-        [ShowInInspector]
-        [HideLabel]
-        [HorizontalGroup]
-        [ValidateInput("ValidateInputPath", "$validateInputPathError", InfoMessageType.Error)]
-        [FolderPath]
+        [ShowInInspector] [HideLabel] [HorizontalGroup] [ValidateInput("ValidateInputPath", "$validateInputPathError", InfoMessageType.Error)] [FolderPath]
         public string path;
 
         /// <summary>
@@ -47,11 +45,12 @@ namespace UFramework.Editor.Preferences.Lua
         /// <summary>
         /// 用于排序
         /// </summary>
-        [HideInInspector]
-        public int order = 0;
+        [HideInInspector] public int order = 0;
 
         #region 路径验证
+
         private string validateInputPathError;
+
         private bool ValidateInputPath(string value)
         {
             if (string.IsNullOrEmpty(value))
@@ -62,6 +61,7 @@ namespace UFramework.Editor.Preferences.Lua
             {
                 validateInputPathError = "error: path not exists.";
             }
+
             return !string.IsNullOrEmpty(value) && (IOPath.FileExists(value) || IOPath.DirectoryExists(value));
         }
 
@@ -77,15 +77,13 @@ namespace UFramework.Editor.Preferences.Lua
         /// <summary>
         /// 类名
         /// </summary>
-        [ShowInInspector]
-        [HideLabel]
-        [HorizontalGroup]
-        [ValidateInput("ValidateClassName", "$validateClassNameError", InfoMessageType.Error)]
+        [ShowInInspector] [HideLabel] [HorizontalGroup] [ValidateInput("ValidateClassName", "$validateClassNameError", InfoMessageType.Error)]
         public string className;
 
         #region 验证
 
         private string validateClassNameError;
+
         private bool ValidateClassName(string value)
         {
             if (string.IsNullOrEmpty(value))
@@ -93,6 +91,7 @@ namespace UFramework.Editor.Preferences.Lua
                 validateClassNameError = "class name is empty. please input class name.";
                 return false;
             }
+
             var result = GetClassType(value) != null;
             if (!result) validateClassNameError = "[" + value + "] class not find.";
             return result;
@@ -105,13 +104,8 @@ namespace UFramework.Editor.Preferences.Lua
         /// </summary>
         /// <value></value>
         [HideInInspector]
-        public BindType bindType
-        {
-            get
-            {
-                return new BindType(GetClassType(className));
-            }
-        }
+        [CanBeNull]
+        public BindType bindType => new BindType(GetClassType(className));
 
         /// <summary>
         /// 获取 Class Name 类型
@@ -126,6 +120,7 @@ namespace UFramework.Editor.Preferences.Lua
                 var targetType = assembly.GetType(value);
                 return targetType;
             }
+
             return null;
         }
     }
@@ -159,7 +154,7 @@ namespace UFramework.Editor.Preferences.Lua
 
     public class Preferences_Lua_BuildConfig : ISerializable
     {
-        public SerializableAssigned assigned { get { return SerializableAssigned.Editor; } }
+        public SerializableAssigned assigned => SerializableAssigned.Editor;
 
         /// <summary>
         /// 文件列表

@@ -1,8 +1,8 @@
-/*
- * @Author: fasthro
- * @Date: 2020-09-29 18:00:13
- * @Description: proto
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-09-29 18:00:13
+// * @Description:
+// --------------------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
@@ -18,10 +18,7 @@ namespace UFramework.Editor.Preferences.Proto
 {
     public class ProtoPage : IPage, IPageBar
     {
-        public string menuName
-        {
-            get { return "Proto"; }
-        }
+        public string menuName => "Proto";
 
         static string CSOutpath;
         static string PBOutpath;
@@ -30,10 +27,7 @@ namespace UFramework.Editor.Preferences.Proto
         static string PBServerOutpath;
         static string CSServerOutpath;
 
-        static Preferences_Proto_Config Config
-        {
-            get { return Serializer<Preferences_Proto_Config>.Instance; }
-        }
+        static Preferences_Proto_Config Config => Serializer<Preferences_Proto_Config>.Instance;
 
         [ShowInInspector] [ListDrawerSettings(Expanded = true, HideRemoveButton = true, HideAddButton = true)]
         public List<ProtoFile> protos = new List<ProtoFile>();
@@ -56,7 +50,7 @@ namespace UFramework.Editor.Preferences.Proto
 
             protos.Clear();
             var files = IOPath.DirectoryGetFiles(ProtoDir, "*.proto", SearchOption.AllDirectories);
-            for (int i = 0; i < files.Length; i++)
+            for (var i = 0; i < files.Length; i++)
             {
                 var file = files[i];
                 var fileName = IOPath.FileName(file);
@@ -68,15 +62,15 @@ namespace UFramework.Editor.Preferences.Proto
                 protos.Add(proto);
             }
 
-            Dictionary<string, ProtoFile> protoDic = new Dictionary<string, ProtoFile>();
-            for (int i = 0; i < Config.protos.Count; i++)
+            var protoDic = new Dictionary<string, ProtoFile>();
+            for (var i = 0; i < Config.protos.Count; i++)
             {
                 var proto = Config.protos[i];
                 protoDic.Add(proto.path, proto);
             }
 
-            List<int> removes = new List<int>();
-            for (int i = 0; i < protos.Count; i++)
+            var removes = new List<int>();
+            for (var i = 0; i < protos.Count; i++)
             {
                 var proto = protos[i];
                 ProtoFile op = null;
@@ -91,13 +85,13 @@ namespace UFramework.Editor.Preferences.Proto
                 protos[i].setPage(this);
             }
 
-            for (int i = removes.Count - 1; i >= 0; i--)
+            for (var i = removes.Count - 1; i >= 0; i--)
             {
                 protos.RemoveAt(i);
             }
 
             Sort();
-            for (int i = 0; i < protos.Count; i++)
+            for (var i = 0; i < protos.Count; i++)
             {
                 protos[i].orderIndex = i;
             }
@@ -140,13 +134,13 @@ namespace UFramework.Editor.Preferences.Proto
 
         public void CreateLuaPBFile()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.AppendLine("-- uframework automatically generated");
             sb.Append("local pb = {\n");
             foreach (var proto in protos)
             {
                 if (proto.genType == ProtoGenerateType.All || proto.genType == ProtoGenerateType.PB)
-                    sb.Append(string.Format("\t\"{0}\",", proto.name + ".pb"));
+                    sb.Append($"\t\"{proto.name + ".pb"}\",");
                 sb.Append("\n");
             }
 
@@ -160,14 +154,14 @@ namespace UFramework.Editor.Preferences.Proto
 
         public void CreateProtoCMDFile()
         {
-            List<ProtoCMD> cmds = new List<ProtoCMD>();
+            var cmds = new List<ProtoCMD>();
             foreach (var proto in protos)
             {
                 if (proto.genType == ProtoGenerateType.All || proto.genType == ProtoGenerateType.PB)
                 {
-                    string packName = "";
+                    var packName = "";
                     var lines = File.ReadAllLines(proto.path);
-                    int lineIndex = 0;
+                    var lineIndex = 0;
                     while (lineIndex < lines.Length)
                     {
                         var line = lines[lineIndex];
@@ -212,7 +206,7 @@ namespace UFramework.Editor.Preferences.Proto
 
         private int MatchProtoCMDLine(string line)
         {
-            string[] patterns = new string[]
+            var patterns = new string[]
             {
                 @"^//#\[C2S\]\[\d+\]#$",
                 @"^//#\[S2C\]\[\d+\]#$",
@@ -237,7 +231,7 @@ namespace UFramework.Editor.Preferences.Proto
             var nameMatch = Regex.Match(nameStr, @"^message (?<name>.*) \{");
             if (nameMatch.Success)
             {
-                ProtoCMD protoCMD = new ProtoCMD();
+                var protoCMD = new ProtoCMD();
                 Match match = null;
                 if (matchIndex == 0)
                 {
@@ -274,7 +268,7 @@ namespace UFramework.Editor.Preferences.Proto
 
         private void WriteProtoCMDSFile(List<ProtoCMD> cmds, ProtoCMDType cmdType)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.AppendLine("-- uframework automatically generated");
             sb.Append("local cmds = {\n");
 
@@ -283,7 +277,7 @@ namespace UFramework.Editor.Preferences.Proto
                 var cmd = cmds[i];
                 if (cmd.cmdType == cmdType || cmd.cmdType == ProtoCMDType.All)
                 {
-                    sb.Append(string.Format("\t[{0}] = \"{1}.{2}\",\n", cmd.cmd, cmd.package, cmd.name));
+                    sb.Append($"\t[{cmd.cmd}] = \"{cmd.package}.{cmd.name}\",\n");
                 }
             }
 

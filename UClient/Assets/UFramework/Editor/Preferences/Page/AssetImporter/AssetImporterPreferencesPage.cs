@@ -1,22 +1,21 @@
-/*
- * @Author: fasthro
- * @Date: 2020-09-15 15:49:23
- * @Description: texture preferences
- */
-using System;
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-09-15 15:49:23
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using System.Collections.Generic;
 using System.IO;
 using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace UFramework.Editor.Preferences.AssetImporter
 {
     public class AssetImporterPreferencesPage : IPage, IPageBar
     {
-        public string menuName { get { return "AssetImporter/Preferences"; } }
-        static Preferences_AssetImporter_Config Config { get { return Core.Serializer<Preferences_AssetImporter_Config>.Instance; } }
+        public string menuName => "AssetImporter/Preferences";
+        static Preferences_AssetImporter_Config Config => Core.Serializer<Preferences_AssetImporter_Config>.Instance;
 
         /// <summary>
         /// texture pattern
@@ -123,15 +122,15 @@ namespace UFramework.Editor.Preferences.AssetImporter
         public static TextureSearchPathItem ContainsTextureSearchPath(string path)
         {
             path = IOPath.PathUnitySeparator(path);
-            string[] parts = path.Split(Path.AltDirectorySeparatorChar);
+            var parts = path.Split(Path.AltDirectorySeparatorChar);
 
-            Dictionary<int, int> results = new Dictionary<int, int>();
-            int index = 0;
+            var results = new Dictionary<int, int>();
+            var index = 0;
             foreach (var item in Config.texturePaths)
             {
-                string[] cparts = item.path.Split(Path.AltDirectorySeparatorChar);
+                var cparts = item.path.Split(Path.AltDirectorySeparatorChar);
                 var count = Mathf.Max(parts.Length, cparts.Length);
-                for (int i = 0; i < count; i++)
+                for (var i = 0; i < count; i++)
                 {
                     if (i < parts.Length && i < cparts.Length)
                     {
@@ -152,8 +151,8 @@ namespace UFramework.Editor.Preferences.AssetImporter
             }
 
             index = -1;
-            int num = -1;
-            foreach (KeyValuePair<int, int> item in results)
+            var num = -1;
+            foreach (var item in results)
             {
                 if (item.Value > num)
                 {
@@ -162,8 +161,7 @@ namespace UFramework.Editor.Preferences.AssetImporter
                 }
             }
 
-            if (index == -1) return null;
-            else return Config.texturePaths[index];
+            return index == -1 ? null : Config.texturePaths[index];
         }
     }
 }

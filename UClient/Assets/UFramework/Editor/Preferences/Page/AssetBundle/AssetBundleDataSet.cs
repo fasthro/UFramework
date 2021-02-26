@@ -1,8 +1,9 @@
-/*
- * @Author: fasthro
- * @Date: 2020-06-30 11:55:50
- * @Description: 
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-06-30 11:55:50
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,9 +29,9 @@ namespace UFramework.Editor.Preferences.AssetBundle
     /// </summary>
     public enum SortType
     {
-        Title,          // 按照标题字母
-        FileSize,       // 按照文件尺寸
-        BundleSize,     // 按照bundle尺寸
+        Title, // 按照标题字母
+        FileSize, // 按照文件尺寸
+        BundleSize, // 按照bundle尺寸
     }
 
     /// <summary>
@@ -45,7 +46,7 @@ namespace UFramework.Editor.Preferences.AssetBundle
         /// </summary>
         public SortType sortType
         {
-            get { return _sortType; }
+            get => _sortType;
             set
             {
                 _sortType = value;
@@ -65,7 +66,7 @@ namespace UFramework.Editor.Preferences.AssetBundle
         /// </summary>
         public bool ascendingOrderActive
         {
-            get { return _ascendingOrderActive; }
+            get => _ascendingOrderActive;
             set
             {
                 _ascendingOrderActive = value;
@@ -86,7 +87,7 @@ namespace UFramework.Editor.Preferences.AssetBundle
         /// </summary>
         public bool descendingOrderActive
         {
-            get { return _ascendingOrderActive; }
+            get => _ascendingOrderActive;
             set
             {
                 _ascendingOrderActive = value;
@@ -181,29 +182,25 @@ namespace UFramework.Editor.Preferences.AssetBundle
         /// <summary>
         /// 目录
         /// </summary>
-        [ShowInInspector, HideLabel, FolderPath]
-        [HorizontalGroup("Search Path")]
-        [ValidateInput("ValidateInputPath", "$_validateInputPathMsg", InfoMessageType.Error)]
+        [ShowInInspector, HideLabel, FolderPath] [HorizontalGroup("Search Path")] [ValidateInput("ValidateInputPath", "$_validateInputPathMsg", InfoMessageType.Error)]
         public string path;
 
         /// <summary>
         /// Name类型
         /// </summary>
-        [ShowInInspector, HideLabel]
-        [HorizontalGroup("Name Type")]
-        [TableColumnWidth(140, false)]
+        [ShowInInspector, HideLabel] [HorizontalGroup("Name Type")] [TableColumnWidth(140, false)]
         public NameType nameType;
 
         /// <summary>
         /// 匹配模式
         /// </summary>
-        [ShowInInspector, HideLabel]
-        [HorizontalGroup("Pattern")]
-        [TableColumnWidth(150, false)]
+        [ShowInInspector, HideLabel] [HorizontalGroup("Pattern")] [TableColumnWidth(150, false)]
         public string pattern = "*";
 
         #region 路径验证
+
         private string _validateInputPathMsg;
+
         private bool ValidateInputPath(string value)
         {
             if (string.IsNullOrEmpty(value) || !IOPath.DirectoryExists(value))
@@ -211,8 +208,10 @@ namespace UFramework.Editor.Preferences.AssetBundle
                 _validateInputPathMsg = "error: directory not exists.";
                 return false;
             }
+
             return true;
         }
+
         #endregion
     }
 
@@ -225,29 +224,25 @@ namespace UFramework.Editor.Preferences.AssetBundle
         /// <summary>
         /// 文件路径
         /// </summary>
-        [ShowInInspector, HideLabel, FilePath]
-        [HorizontalGroup("File Path")]
-        [ValidateInput("ValidateInputPath", "$_validateInputPathMsg", InfoMessageType.Error)]
+        [ShowInInspector, HideLabel, FilePath] [HorizontalGroup("File Path")] [ValidateInput("ValidateInputPath", "$_validateInputPathMsg", InfoMessageType.Error)]
         public string path;
 
         /// <summary>
         /// Name类型
         /// </summary>
-        [ShowInInspector, HideLabel, ReadOnly]
-        [HorizontalGroup("Name Type")]
-        [TableColumnWidth(140, false)]
+        [ShowInInspector, HideLabel, ReadOnly] [HorizontalGroup("Name Type")] [TableColumnWidth(140, false)]
         public NameType nameType = NameType.Path;
 
         /// <summary>
         /// 匹配模式
         /// </summary>
-        [ShowInInspector, HideLabel, ReadOnly]
-        [HorizontalGroup("Pattern")]
-        [TableColumnWidth(150, false)]
+        [ShowInInspector, HideLabel, ReadOnly] [HorizontalGroup("Pattern")] [TableColumnWidth(150, false)]
         public string pattern = "*";
 
         #region 路径验证
+
         private string _validateInputPathMsg;
+
         private bool ValidateInputPath(string value)
         {
             if (string.IsNullOrEmpty(value) || !IOPath.FileExists(value))
@@ -255,8 +250,10 @@ namespace UFramework.Editor.Preferences.AssetBundle
                 _validateInputPathMsg = "error: file path not exists.";
                 return false;
             }
+
             return true;
         }
+
         #endregion
     }
 
@@ -275,52 +272,42 @@ namespace UFramework.Editor.Preferences.AssetBundle
         /// <summary>
         /// 目标对象
         /// </summary>
-        [ShowInInspector, HideLabel]
-        [HorizontalGroup(200)]
+        [ShowInInspector, HideLabel] [HorizontalGroup(200)]
         private UnityEngine.Object target;
-        public UnityEngine.Object GetTarget() { return target; }
+
+        public UnityEngine.Object GetTarget()
+        {
+            return target;
+        }
 
         /// <summary>
         /// display bundle name
         /// </summary>
-        [HideInInspector]
-        public string bundleName;
+        [HideInInspector] public string bundleName;
 
         /// <summary>
         /// 资源大小
         /// </summary>
-        [HideInInspector]
-        public long size;
+        [HideInInspector] public long size;
 
         /// <summary>
         /// 资源大小文本
         /// </summary>
         [ShowInInspector, HideLabel, ReadOnly]
         [HorizontalGroup(70f)]
-        public string sizeString
-        {
-            get
-            {
-                if (size == 0)
-                {
-                    return "--";
-                }
-                return EditorUtility.FormatBytes(size);
-            }
-        }
+        public string sizeString => size == 0 ? "--" : EditorUtility.FormatBytes(size);
 
         /// <summary>
         /// 是否为依赖资源
         /// </summary>
-        [HideInInspector]
-        public bool IsDependencies = false;
+        [HideInInspector] public bool IsDependencies = false;
 
         /// <summary>
         /// 是否为Prefab资源
         /// </summary>
         /// <returns></returns>
         [HideInInspector]
-        public bool isPrefab { get { return Path.GetExtension(path).Equals(".prefab"); } }
+        public bool isPrefab => Path.GetExtension(path).Equals(".prefab");
 
 
         /// <summary>
@@ -328,7 +315,7 @@ namespace UFramework.Editor.Preferences.AssetBundle
         /// </summary>
         /// <returns></returns>
         [HideInInspector]
-        public bool isMaterial { get { return Path.GetExtension(path).Equals(".mat"); } }
+        public bool isMaterial => Path.GetExtension(path).Equals(".mat");
 
         /// <summary>
         /// 是否为贴图资源
@@ -349,7 +336,7 @@ namespace UFramework.Editor.Preferences.AssetBundle
         /// </summary>
         /// <returns></returns>
         [HideInInspector]
-        public bool isShader { get { return Path.GetExtension(path).Equals(".shader"); } }
+        public bool isShader => Path.GetExtension(path).Equals(".shader");
 
         /// <summary>
         /// update
@@ -380,62 +367,37 @@ namespace UFramework.Editor.Preferences.AssetBundle
         /// <summary>
         /// 资源
         /// </summary>
-        [ShowInInspector, HideLabel, HorizontalGroup]
-        [ListDrawerSettings(HideAddButton = true, HideRemoveButton = true)]
-        [LabelText("Assets")]
+        [ShowInInspector, HideLabel, HorizontalGroup] [ListDrawerSettings(HideAddButton = true, HideRemoveButton = true)] [LabelText("Assets")]
         public List<BundleAssetItem> assets;
 
         /// <summary>
         /// 资源总大小
         /// </summary>
-        [HideInInspector]
-        public long fileSize;
+        [HideInInspector] public long fileSize;
 
         /// <summary>
         /// 资源总大小文本
         /// </summary>
         [ShowInInspector, HideLabel, ReadOnly]
         [HorizontalGroup(70f)]
-        public string fileSizeString
-        {
-            get
-            {
-                if (fileSize == 0)
-                {
-                    return "--";
-                }
-                return EditorUtility.FormatBytes(fileSize);
-            }
-        }
+        public string fileSizeString => fileSize == 0 ? "--" : EditorUtility.FormatBytes(fileSize);
 
         /// <summary>
         /// assetBundle大小
         /// </summary>
-        [HideInInspector]
-        public long bundleSize;
+        [HideInInspector] public long bundleSize;
 
         /// <summary>
         /// assetBundle大小文本
         /// </summary>
         [ShowInInspector, HideLabel, ReadOnly]
         [HorizontalGroup(70f)]
-        public string bundleSizeString
-        {
-            get
-            {
-                if (bundleSize == 0)
-                {
-                    return "--";
-                }
-                return EditorUtility.FormatBytes(bundleSize);
-            }
-        }
+        public string bundleSizeString => bundleSize == 0 ? "--" : EditorUtility.FormatBytes(bundleSize);
 
         /// <summary>
         /// 是否为依赖bundle
         /// </summary>
-        [HideInInspector]
-        public bool IsDependencies = false;
+        [HideInInspector] public bool IsDependencies = false;
 
         /// <summary>
         /// 获取资源路径列表
@@ -443,18 +405,19 @@ namespace UFramework.Editor.Preferences.AssetBundle
         /// <returns></returns>
         public List<string> GetAssetPaths()
         {
-            List<string> paths = new List<string>();
+           var paths = new List<string>();
             foreach (var item in assets)
             {
                 paths.Add(item.path);
             }
+
             return paths;
         }
     }
 
     public class Preferences_AssetBundle_SearchPathConfig : ISerializable
     {
-        public SerializableAssigned assigned { get { return SerializableAssigned.Editor; } }
+        public SerializableAssigned assigned => SerializableAssigned.Editor;
 
         public List<AssetSearchItem> assetPathItems = new List<AssetSearchItem>();
         public List<AssetSearchFileItem> assetFileItems = new List<AssetSearchFileItem>();
@@ -469,7 +432,7 @@ namespace UFramework.Editor.Preferences.AssetBundle
 
     public class Preferences_AssetBundle_AssetConfig : ISerializable
     {
-        public SerializableAssigned assigned { get { return SerializableAssigned.Editor; } }
+        public SerializableAssigned assigned => SerializableAssigned.Editor;
 
         public List<BundleItem> bundles = new List<BundleItem>();
         public List<BundleAssetItem> assets = new List<BundleAssetItem>();

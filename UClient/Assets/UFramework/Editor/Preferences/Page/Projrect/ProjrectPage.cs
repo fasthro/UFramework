@@ -1,8 +1,8 @@
-/*
- * @Author: fasthro
- * @Date: 2020-09-29 18:00:13
- * @Description: 项目
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-09-29 18:00:13
+// * @Description:
+// --------------------------------------------------------------------------------
 
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
@@ -13,15 +13,14 @@ namespace UFramework.Editor.Preferences.Projrect
 {
     public class ProjrectPage : IPage, IPageBar
     {
-        public string menuName { get { return "Projrect"; } }
-        static AppConfig config { get { return Serializer<AppConfig>.Instance; } }
+        public string menuName => "Projrect";
+
+        static AppConfig config => Serializer<AppConfig>.Instance;
 
         /// <summary>
         /// 是否使用系统语言
         /// </summary>
-        [BoxGroup("UI Settings")]
-        [LabelText("    Use FairyGUI")]
-        [OnValueChanged("OnValueChanged_useFairyGUI")]
+        [BoxGroup("UI Settings")] [LabelText("    Use FairyGUI")] [OnValueChanged("OnValueChanged_useFairyGUI")]
         public bool useFairyGUI;
 
         private void OnValueChanged_useFairyGUI()
@@ -32,28 +31,22 @@ namespace UFramework.Editor.Preferences.Projrect
         /// <summary>
         /// 设计分辨率
         /// </summary>
-        [BoxGroup("UI Settings")]
-        [LabelText("    Design Resolution X")]
+        [BoxGroup("UI Settings")] [LabelText("    Design Resolution X")]
         public int designResolutionX = 2048;
 
         /// <summary>
         /// 设计分辨率
         /// </summary>
-        [BoxGroup("UI Settings")]
-        [LabelText("    Design Resolution Y")]
+        [BoxGroup("UI Settings")] [LabelText("    Design Resolution Y")]
         public int designResolutionY = 1152;
 
         /// <summary>
         /// UI 资源目录
         /// </summary>
-        [BoxGroup("UI Settings")]
-        [LabelText("    Asset Directory")]
-        [FolderPath]
+        [BoxGroup("UI Settings")] [LabelText("    Asset Directory")] [FolderPath]
         public string uiDirectory;
-        
-        [BoxGroup("Font Settings")]
-        [LabelText("  ")]
-        [ListDrawerSettings(Expanded = true)]
+
+        [BoxGroup("Font Settings")] [LabelText("  ")] [ListDrawerSettings(Expanded = true)]
         public List<string> fonts = new List<string>();
 
         public object GetInstance()
@@ -72,7 +65,6 @@ namespace UFramework.Editor.Preferences.Projrect
 
         public void OnPageBarDraw()
         {
-
         }
 
         public void OnSaveDescribe()
@@ -88,7 +80,7 @@ namespace UFramework.Editor.Preferences.Projrect
 
         private void UpdateFairyGUISymbols()
         {
-            string symbol = "FAIRYGUI_TOLUA";
+            var symbol = "FAIRYGUI_TOLUA";
             if (useFairyGUI)
             {
                 Utils.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone, symbol);
@@ -105,7 +97,7 @@ namespace UFramework.Editor.Preferences.Projrect
 
         private void UpdateOtherSymbols()
         {
-            string symbol = "LUAC_5_3";
+            var symbol = "LUAC_5_3";
             Utils.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone, symbol);
             Utils.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Android, symbol);
             Utils.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.iOS, symbol);

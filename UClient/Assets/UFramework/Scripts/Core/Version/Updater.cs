@@ -1,17 +1,16 @@
-/*
- * @Author: fasthro
- * @Date: 2020-10-16 12:43:57
- * @Description: update(app/res patch)
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-10-16 12:43:57
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using System.Collections;
 using System.IO;
-using ICSharpCode.SharpZipLib.Zip;
 using UFramework.UI;
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections.Generic;
 using System;
-using Coroutine = UFramework.Core.Coroutine;
 
 namespace UFramework.Core
 {
@@ -60,8 +59,8 @@ namespace UFramework.Core
     [MonoSingletonPath("UFramework/Updater")]
     public class Updater : MonoSingleton<Updater>
     {
-
         const string LUA_DIR_NAME = "Lua";
+        const string BUILD_FILE_DIR_NAME = "Files";
 
         static string StreamingAssetsPath;
         static string AssetBundlePath;
@@ -69,13 +68,11 @@ namespace UFramework.Core
         static string VersionOriginalPath;
         static string VersionStreamingPath;
         static string LuaPath;
+        static string BuildFilePath;
 
         static string BaseURL;
 
-        public float progress
-        {
-            get { return ((float)_value / (float)_maxValue); }
-        }
+        public float progress => ((float) _value / (float) _maxValue);
 
         public int versionCode
         {
@@ -91,7 +88,7 @@ namespace UFramework.Core
         {
             get
             {
-                var v = _newVersion != null ? _newVersion : _appVersion;
+                var v = _newVersion ?? _appVersion;
                 if (v != null)
                 {
                     var c = v.GetVersionInfo(v.version).patchs.Length;
@@ -116,6 +113,7 @@ namespace UFramework.Core
 
         private List<VFile> _repairFiles = new List<VFile>();
         private List<VScriptFile> _repairSFiles = new List<VScriptFile>();
+        private List<VBuildFile> _repairBFiles = new List<VBuildFile>();
 
         private PatchDownloader _downloader;
 
@@ -134,6 +132,7 @@ namespace UFramework.Core
             VersionOriginalPath = VersionPath + ".original";
             VersionStreamingPath = IOPath.PathCombine(StreamingAssetsPath, Version.FileName, false);
             LuaPath = IOPath.PathCombine(Application.persistentDataPath, LUA_DIR_NAME);
+            BuildFilePath = IOPath.PathCombine(Application.persistentDataPath, BUILD_FILE_DIR_NAME);
 
             _downloader = new PatchDownloader(BaseURL, Application.persistentDataPath, this.OnCompleted, this.OnPatchDownloadFailed);
         }
@@ -212,11 +211,11 @@ namespace UFramework.Core
             if (request.isDone && string.IsNullOrEmpty(request.error))
             {
                 var version = Version.LoadVersion(VersionOriginalPath);
-                _maxValue = version.files.Length + version.sFiles.Length;
+                _maxValue = version.files.Length + version.sFiles.Length + version.bFiles.Length;
                 _value = 0;
                 _step = UpdaterStep.Copy;
 
-                _newVersion = _newVersion == null ? version : _newVersion;
+                _newVersion = _newVersion ?? version;
                 _appVersion = version;
                 request.Dispose();
 
@@ -225,7 +224,7 @@ namespace UFramework.Core
             }
             else
             {
-                var mb = MessageBox.Allocate().Show("提示", string.Format("内部版本信息读取错误， 联系开发人员\n{0}", request.error), "重试", "退出");
+                var mb = MessageBox.Allocate().Show("提示", $"内部版本信息读取错误， 联系开发人员\n{request.error}", "重试", "退出");
                 yield return mb;
                 if (mb.isOk)
                 {
@@ -235,6 +234,7 @@ namespace UFramework.Core
                 {
                     Quit();
                 }
+
                 request.Dispose();
                 yield break;
             }
@@ -262,7 +262,17 @@ namespace UFramework.Core
                 _value++;
             }
 
-            if (_repairFiles.Count > 0 || _repairSFiles.Count > 0)
+            for (var index = 0; index < _appVersion.bFiles.Length; index++)
+            {
+                var item = _appVersion.bFiles[index];
+                var file = IOPath.PathCombine(BuildFilePath, _appVersion.bDirs[item.dirIndex], item.name);
+                if (!IOPath.FileExists(file))
+                    _repairBFiles.Add(item);
+                yield return null;
+                _value++;
+            }
+
+            if (_repairFiles.Count > 0 || _repairSFiles.Count > 0 || _repairBFiles.Count > 0)
                 _step = UpdaterStep.Copy;
             else _step = UpdaterStep.RequestVersion;
 
@@ -277,10 +287,12 @@ namespace UFramework.Core
         {
             if (_repairFiles.Count == 0) _repairFiles.AddRange(_appVersion.files);
             if (_repairSFiles.Count == 0) _repairSFiles.AddRange(_appVersion.sFiles);
+            if (_repairBFiles.Count == 0) _repairBFiles.AddRange(_appVersion.bFiles);
 
             _value = 0;
-            _maxValue = _repairFiles.Count + _repairSFiles.Count;
-
+            _maxValue = _repairFiles.Count + _repairSFiles.Count + _repairBFiles.Count;
+        
+            // res files
             for (var index = 0; index < _repairFiles.Count; index++)
             {
                 var item = _repairFiles[index];
@@ -290,13 +302,26 @@ namespace UFramework.Core
                 request.Dispose();
                 _value++;
             }
-
+            
+            // script files
             for (var index = 0; index < _repairSFiles.Count; index++)
             {
                 var item = _repairSFiles[index];
                 var filePath = IOPath.PathCombine(_appVersion.sDirs[item.dirIndex], item.name);
                 var request = UnityWebRequest.Get(IOPath.PathCombine(StreamingAssetsPath, LUA_DIR_NAME, filePath, false));
                 request.downloadHandler = new DownloadHandlerFile(IOPath.PathCombine(LuaPath, filePath));
+                yield return request.SendWebRequest();
+                request.Dispose();
+                _value++;
+            }
+            
+            // build files
+            for (var index = 0; index < _repairBFiles.Count; index++)
+            {
+                var item = _repairBFiles[index];
+                var filePath = IOPath.PathCombine(_appVersion.bDirs[item.dirIndex], item.name);
+                var request = UnityWebRequest.Get(IOPath.PathCombine(StreamingAssetsPath, BUILD_FILE_DIR_NAME, filePath, false));
+                request.downloadHandler = new DownloadHandlerFile(IOPath.PathCombine(BuildFilePath, filePath));
                 yield return request.SendWebRequest();
                 request.Dispose();
                 _value++;
@@ -323,6 +348,7 @@ namespace UFramework.Core
                 {
                     Quit();
                 }
+
                 yield break;
             }
 
@@ -334,7 +360,7 @@ namespace UFramework.Core
             request.Dispose();
             if (!string.IsNullOrEmpty(error))
             {
-                var mb = MessageBox.Allocate().Show("提示", string.Format("获取服务器版本失败：{0}", error), "重试", "退出");
+                var mb = MessageBox.Allocate().Show("提示", $"获取服务器版本失败：{error}", "重试", "退出");
                 yield return mb;
                 if (mb.isOk)
                 {
@@ -344,7 +370,6 @@ namespace UFramework.Core
                 {
                     Quit();
                 }
-                yield break;
             }
             else
             {
@@ -363,7 +388,6 @@ namespace UFramework.Core
                     {
                         Quit();
                     }
-                    yield break;
                 }
                 else
                 {
@@ -408,7 +432,6 @@ namespace UFramework.Core
                 {
                     Quit();
                 }
-                yield break;
             }
             else StepChecking(UpdaterStep.CheckDownload);
         }
@@ -423,17 +446,18 @@ namespace UFramework.Core
 
             var versionInfo = _newVersion.GetVersionInfo(_app.version);
 
-            _maxValue = _newVersion.files.Length + _newVersion.sFiles.Length;
+            _maxValue = _newVersion.files.Length + _newVersion.sFiles.Length + _newVersion.bFiles.Length;
             _value = 0;
 
             // files
-            List<VFile> downloadFiles = new List<VFile>();
-            for (int i = 0; i < _newVersion.files.Length; i++)
+            var downloadFiles = new List<VFile>();
+            for (var i = 0; i < _newVersion.files.Length; i++)
             {
                 var file = _newVersion.files[i];
                 var fp = IOPath.PathCombine(AssetBundlePath, file.name);
                 if (!IOPath.FileExists(fp))
                 {
+                    Logger.Debug("add download file not exist: " + fp);
                     downloadFiles.Add(file);
                 }
                 else
@@ -442,21 +466,24 @@ namespace UFramework.Core
                     {
                         if (stream.Length != file.len)
                         {
+                            Logger.Debug("add download file len: " + fp);
                             downloadFiles.Add(file);
                         }
                         else if (!HashUtils.GetCRC32Hash(stream).Equals(file.hash, StringComparison.OrdinalIgnoreCase))
                         {
+                            Logger.Debug("add download file hash: " + fp);
                             downloadFiles.Add(file);
                         }
                     }
                 }
+
                 yield return null;
                 _value++;
             }
 
             // sfiles
-            List<VScriptFile> downloadSFiles = new List<VScriptFile>();
-            for (int i = 0; i < _newVersion.sFiles.Length; i++)
+            var downloadSFiles = new List<VScriptFile>();
+            for (var i = 0; i < _newVersion.sFiles.Length; i++)
             {
                 var file = _newVersion.sFiles[i];
                 var fp = IOPath.PathCombine(LuaPath, _newVersion.sDirs[file.dirIndex], file.name);
@@ -478,69 +505,115 @@ namespace UFramework.Core
                         }
                     }
                 }
+
+                yield return null;
+                _value++;
+            }
+
+            // bfiles
+            var downloadBFiles = new List<VBuildFile>();
+            for (var i = 0; i < _newVersion.bFiles.Length; i++)
+            {
+                var file = _newVersion.bFiles[i];
+                var fp = IOPath.PathCombine(BuildFilePath, _newVersion.bDirs[file.dirIndex], file.name);
+                if (!IOPath.FileExists(fp))
+                {
+                    downloadBFiles.Add(file);
+                }
+                else
+                {
+                    using (var stream = File.OpenRead(fp))
+                    {
+                        if (stream.Length != file.len)
+                        {
+                            downloadBFiles.Add(file);
+                        }
+                        else if (!HashUtils.GetCRC32Hash(stream).Equals(file.hash, StringComparison.OrdinalIgnoreCase))
+                        {
+                            downloadBFiles.Add(file);
+                        }
+                    }
+                }
+
                 yield return null;
                 _value++;
             }
 
             Logger.Debug("download res file count: " + downloadFiles.Count);
             Logger.Debug("download script file count: " + downloadSFiles.Count);
+            Logger.Debug("download build file count: " + downloadBFiles.Count);
 
-            Dictionary<string, VPatch> map = new Dictionary<string, VPatch>();
-            for (int i = 0; i < downloadFiles.Count; i++)
+            var map = new Dictionary<string, VPatch>();
+            for (var i = 0; i < downloadFiles.Count; i++)
             {
                 var dfile = downloadFiles[i];
-                for (int k = 0; k < versionInfo.patchs.Length; k++)
+                for (var k = 0; k < versionInfo.patchs.Length; k++)
                 {
                     var patch = versionInfo.patchs[k];
-                    var isChecked = false;
-                    for (int n = 0; n < patch.files.Length; n++)
+                    for (var n = 0; n < patch.files.Length; n++)
                     {
                         var pfile = patch.files[n];
                         if (dfile.name.Equals(pfile.name))
                         {
-                            VPatch npatch = null;
-                            if (map.TryGetValue(dfile.name, out npatch))
+                            if (map.TryGetValue(dfile.name, out var npatch))
                             {
                                 if (patch.timestamp > npatch.timestamp)
                                     map[dfile.name] = patch;
                             }
                             else map.Add(dfile.name, patch);
-                            isChecked = true;
                             break;
                         }
-                        if (isChecked) break;
                     }
                 }
             }
 
-            for (int i = 0; i < downloadSFiles.Count; i++)
+            for (var i = 0; i < downloadSFiles.Count; i++)
             {
                 var dfile = downloadSFiles[i];
-                for (int k = 0; k < versionInfo.patchs.Length; k++)
+                for (var k = 0; k < versionInfo.patchs.Length; k++)
                 {
                     var patch = versionInfo.patchs[k];
-                    var isChecked = false;
-                    for (int n = 0; n < patch.sFiles.Length; n++)
+                    for (var n = 0; n < patch.sFiles.Length; n++)
                     {
                         var pfile = patch.sFiles[n];
                         if (dfile.key.Equals(pfile.key))
                         {
-                            VPatch npatch = null;
-                            if (map.TryGetValue(dfile.key, out npatch))
+                            if (map.TryGetValue(dfile.key, out var npatch))
                             {
                                 if (patch.timestamp > npatch.timestamp)
                                     map[dfile.key] = patch;
                             }
                             else map.Add(dfile.key, patch);
-                            isChecked = true;
                             break;
                         }
-                        if (isChecked) break;
                     }
                 }
             }
 
-            HashSet<string> dpVersions = new HashSet<string>();
+            for (var i = 0; i < downloadBFiles.Count; i++)
+            {
+                var dfile = downloadBFiles[i];
+                for (var k = 0; k < versionInfo.patchs.Length; k++)
+                {
+                    var patch = versionInfo.patchs[k];
+                    for (var n = 0; n < patch.sFiles.Length; n++)
+                    {
+                        var pfile = patch.sFiles[n];
+                        if (dfile.key.Equals(pfile.key))
+                        {
+                            if (map.TryGetValue(dfile.key, out var npatch))
+                            {
+                                if (patch.timestamp > npatch.timestamp)
+                                    map[dfile.key] = patch;
+                            }
+                            else map.Add(dfile.key, patch);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            var dpVersions = new HashSet<string>();
             foreach (var item in map)
             {
                 if (!dpVersions.Contains(item.Value.key))
@@ -556,6 +629,7 @@ namespace UFramework.Core
             map.Clear();
             downloadFiles.Clear();
             downloadSFiles.Clear();
+            downloadBFiles.Clear();
 
             if (_downloader.count > 0) StepChecking(UpdaterStep.OptionDownload);
             else OnCompleted();
@@ -567,7 +641,7 @@ namespace UFramework.Core
         /// <returns></returns>
         private IEnumerator OptionDownloadPatch()
         {
-            var mb = MessageBox.Allocate().Show("提示", string.Format("有新资源更新，是否下载新资源\n资源大小：{0}", _downloader.GetFormatDownloadSize()), "更新", "退出");
+            var mb = MessageBox.Allocate().Show("提示", $"有新资源更新，是否下载新资源\n资源大小：{_downloader.GetFormatDownloadSize()}", "更新", "退出");
             yield return mb;
             if (mb.isOk)
             {
@@ -575,6 +649,7 @@ namespace UFramework.Core
                 _downloader.StartDownload();
             }
             else Quit();
+
             yield break;
         }
 
@@ -590,6 +665,7 @@ namespace UFramework.Core
             {
                 Quit();
             }
+
             yield break;
         }
 
