@@ -1,12 +1,10 @@
-/*
- * @Author: fasthro
- * @Date: 2020-12-10 13:51:28
- * @Description: 序列化
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-12-10 13:51:28
+// * @Description:
+// --------------------------------------------------------------------------------
 
-using System;
 using LitJson;
-using UFramework.Core;
 using UnityEngine;
 
 namespace UFramework.Core
@@ -41,6 +39,7 @@ namespace UFramework.Core
                 {
                     _Instance = Deserialize();
                 }
+
                 return _Instance;
             }
         }
@@ -51,14 +50,16 @@ namespace UFramework.Core
             var obj = new T();
             var type = obj.GetType();
             string content = null;
-            string fileName = name + ".json";
+            var fileName = name + ".json";
 #if UNITY_EDITOR
             content = IOPath.FileReadText(IOPath.PathCombine(RootPath, obj.assigned.ToString(), fileName));
 #else
             if (obj.assigned == SerializableAssigned.Resources)
             {
                 var asset = Assets.LoadResourceAsset(name, typeof(TextAsset));
+                Debug.Log($"{name} {asset}");
                 content = asset.GetAsset<TextAsset>().text;
+                Debug.Log($"{content}");
                 asset.Unload();
             }
             else if (obj.assigned == SerializableAssigned.AssetBundle)
@@ -76,6 +77,7 @@ namespace UFramework.Core
             {
                 obj = JsonMapper.ToObject<T>(content);
             }
+
             return obj;
         }
 
@@ -83,11 +85,11 @@ namespace UFramework.Core
         {
 #if UNITY_EDITOR
             var type = typeof(T);
-            string name = type.Name;
+            var name = type.Name;
 
-            string fileName = name + ".json";
-            string content = JsonMapper.ToJson(obj);
-            string path = IOPath.PathCombine(RootPath, obj.assigned.ToString(), fileName);
+            var fileName = name + ".json";
+            var content = JsonMapper.ToJson(obj);
+            var path = IOPath.PathCombine(RootPath, obj.assigned.ToString(), fileName);
             IOPath.FileCreateText(path, content);
 #endif
         }

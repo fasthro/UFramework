@@ -1,13 +1,12 @@
-/*
- * @Author: fasthro
- * @Date: 2020-09-29 11:36:31
- * @Description: panel base
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-09-29 11:36:31
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using System;
 using System.Collections.Generic;
 using LuaInterface;
-using UFramework.Core;
-using UnityEngine;
 
 namespace UFramework.UI
 {
@@ -58,7 +57,7 @@ namespace UFramework.UI
         private int _packageCount;
         private bool _inited;
         private LuaTable _lua;
-        
+
         #endregion
 
         /// <summary>
@@ -135,7 +134,6 @@ namespace UFramework.UI
 
         protected virtual void OnShowAnimation()
         {
-
         }
 
         public void Hide()
@@ -158,7 +156,7 @@ namespace UFramework.UI
         {
             if (_lua != null)
             {
-                LuaFunction ctor = _lua.GetLuaFunction(funcName);
+                var ctor = _lua.GetLuaFunction(funcName);
                 if (ctor != null)
                 {
                     try
@@ -176,10 +174,12 @@ namespace UFramework.UI
                     {
                         Logger.Error(err);
                     }
+
                     ctor.Dispose();
                     return true;
                 }
             }
+
             return false;
         }
 

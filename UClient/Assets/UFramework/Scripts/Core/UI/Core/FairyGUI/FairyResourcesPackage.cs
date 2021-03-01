@@ -1,14 +1,14 @@
-/*
- * @Author: fasthro
- * @Date: 2020-09-29 11:20:22
- * @Description: fiary resource package
- */
-using System.Collections.Generic;
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-09-29 11:20:22
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using FairyGUI;
 #if UNITY_EDITOR
 using UnityEditor;
+
 #endif
-using UnityEngine;
 
 namespace UFramework.UI
 {
@@ -18,12 +18,11 @@ namespace UFramework.UI
 
         public FairyResourcesPackage(string packageName) : base(packageName)
         {
-
         }
 
         protected override void LoadMain()
         {
-            package = UIPackage.AddPackage(string.Format("UI/{0}/{1}", packageName, packageName));
+            package = UIPackage.AddPackage($"UI/{packageName}/{packageName}");
             LoadDependen();
         }
 

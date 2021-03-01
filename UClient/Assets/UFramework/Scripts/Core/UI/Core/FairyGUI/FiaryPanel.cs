@@ -1,11 +1,9 @@
-/*
- * @Author: fasthro
- * @Date: 2020-09-29 11:20:22
- * @Description: fiary panel
- */
-using System.Collections.Generic;
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-09-29 11:20:22
+// * @Description:
+// --------------------------------------------------------------------------------
 using FairyGUI;
-using LuaInterface;
 
 namespace UFramework.UI
 {

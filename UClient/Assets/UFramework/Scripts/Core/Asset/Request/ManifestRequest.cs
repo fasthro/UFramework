@@ -51,7 +51,7 @@ namespace UFramework.Core
 
         public override void Load()
         {
-            if (Assets.Develop)
+            if (Assets.isDevelop)
             {
 #if UNITY_EDITOR
                 manifest = AssetDatabase.LoadAssetAtPath<AssetManifest>(AssetManifest.AssetPath);

@@ -30,7 +30,7 @@ namespace UFramework.Core
             base.Load();
             if (loadState != LoadState.Init) return;
 
-            if (Assets.Develop)
+            if (Assets.isDevelop)
             {
 #if UNITY_EDITOR
                 asset = AssetDatabase.LoadAssetAtPath(url, assetType);

@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-09-29 13:22:48
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using System.Collections.Generic;
 
 namespace UFramework.UI
@@ -33,7 +39,7 @@ namespace UFramework.UI
         public LayerGroup(Layer layer)
         {
             this.layer = layer;
-            this._layerIndex = (int)layer + LAYER_INTERVAL;
+            this._layerIndex = (int) layer + LAYER_INTERVAL;
             this._panels = new HashSet<UIPanel>();
         }
 
@@ -43,6 +49,7 @@ namespace UFramework.UI
             {
                 _panels.Add(panel);
             }
+
             Update();
             return _layerIndex + _panels.Count;
         }
@@ -57,7 +64,7 @@ namespace UFramework.UI
 
         public void Update()
         {
-            int index = 0;
+            var index = 0;
             foreach (var panel in _panels)
             {
                 index++;
@@ -76,23 +83,22 @@ namespace UFramework.UI
     /// </summary>
     public static class LayerAgents
     {
-        readonly static Dictionary<Layer, LayerGroup> layerDict = new Dictionary<Layer, LayerGroup>();
+        static readonly Dictionary<Layer, LayerGroup> layerDict = new Dictionary<Layer, LayerGroup>();
 
         public static int Register(UIPanel panel)
         {
-            LayerGroup group;
-            if (!layerDict.TryGetValue(panel.layer, out group))
+            if (!layerDict.TryGetValue(panel.layer, out var @group))
             {
                 group = new LayerGroup(panel.layer);
                 layerDict.Add(panel.layer, group);
             }
+
             return group.Register(panel);
         }
 
         public static void Remove(UIPanel panel)
         {
-            LayerGroup group;
-            if (layerDict.TryGetValue(panel.layer, out group))
+            if (layerDict.TryGetValue(panel.layer, out var @group))
             {
                 group.Remove(panel);
             }
@@ -100,7 +106,7 @@ namespace UFramework.UI
 
         public static void Update()
         {
-            foreach (KeyValuePair<Layer, LayerGroup> item in layerDict)
+            foreach (var item in layerDict)
             {
                 item.Value.Update();
             }
@@ -108,7 +114,7 @@ namespace UFramework.UI
 
         public static void Release()
         {
-            foreach (KeyValuePair<Layer, LayerGroup> item in layerDict)
+            foreach (var item in layerDict)
             {
                 item.Value.Release();
             }

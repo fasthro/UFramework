@@ -1,8 +1,8 @@
-/*
- * @Author: fasthro
- * @Date: 2020-07-13 23:51:59
- * @Description: App Launch
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-07-13 23:51:59
+// * @Description:
+// --------------------------------------------------------------------------------
 
 using FairyGUI;
 using System.Collections;
@@ -20,17 +20,17 @@ namespace UFramework
 
         public static bool Develop { get; private set; }
         public ManagerContainer managerContainer { get; private set; }
-        public bool isInitialized { get; private set; }
-        
+        protected bool isInitialized { get; private set; }
+
         protected BaseManager[] _allManagers;
-        
+
         private Launch _launch;
 
-        public void Initialize()
+        protected void Initialize()
         {
             Main = this;
             isInitialized = false;
-            var serdata = Core.Serializer<AppConfig>.Instance;
+            var serdata = Serializer<AppConfig>.Instance;
 
             #region FairyGUI
 
@@ -47,7 +47,6 @@ namespace UFramework
             GRoot.inst.SetContentScaleFactor(serdata.designResolutionX, serdata.designResolutionY, UIContentScaler.ScreenMatchMode.MatchWidthOrHeight);
 
             #endregion
-
 
             // launch panel
             _launch = Launch.Create();
@@ -67,18 +66,17 @@ namespace UFramework
             // 版本器
             Updater.Instance.StartUpdate(_launch, () =>
             {
+                Logger.Debug("UFramework Initialized.1");
                 // 资源
                 Assets.Instance.Initialize((succeed) =>
                 {
                     if (succeed)
                     {
+                        Logger.Debug("UFramework Initialized.");
                         isInitialized = true;
-                        
                         // Init
                         InitBehaviour();
-                        
                         managerContainer.GetManager<LuaManager>().LaunchEngine(managerContainer);
-
                         OnInitialized();
 
                         _launch.Hide();
@@ -89,12 +87,12 @@ namespace UFramework
                 });
             });
         }
-        
+
         protected void DoUpdate(float deltaTime)
         {
-            if(!isInitialized)
+            if (!isInitialized)
                 return;
-            
+
             foreach (var manager in _allManagers)
             {
                 manager.Update(deltaTime);
@@ -103,7 +101,7 @@ namespace UFramework
 
         protected void DoDispose()
         {
-            if(!isInitialized)
+            if (!isInitialized)
                 return;
 
             foreach (var manager in _allManagers)
@@ -114,7 +112,7 @@ namespace UFramework
 
         protected void DoLateUpdate()
         {
-            if(!isInitialized)
+            if (!isInitialized)
                 return;
 
             foreach (var manager in _allManagers)
@@ -123,9 +121,9 @@ namespace UFramework
             }
         }
 
-        protected void FixedUpdate()
+        protected void DoFixedUpdate()
         {
-            if(!isInitialized)
+            if (!isInitialized)
                 return;
 
             foreach (var manager in _allManagers)
@@ -136,7 +134,7 @@ namespace UFramework
 
         protected void DoApplicationQuit()
         {
-            if(!isInitialized)
+            if (!isInitialized)
                 return;
 
             foreach (var manager in _allManagers)
@@ -159,7 +157,7 @@ namespace UFramework
         protected virtual void OnInitialized()
         {
         }
-        
+
         private void InitBehaviour()
         {
             InitManager();
@@ -167,7 +165,7 @@ namespace UFramework
             _allManagers = managerContainer.GetAllManagers();
             foreach (var manager in _allManagers)
             {
-                (manager as BaseBehaviour).SetReference();
+                ((BaseBehaviour) manager).SetReference();
             }
         }
 

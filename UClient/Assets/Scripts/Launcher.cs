@@ -1,8 +1,8 @@
-/*
- * @Author: fasthro
- * @Date: 2020-12-15 14:35:37
- * @Description: Lockstep Launcher
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-12-15 14:35:37
+// * @Description:
+// --------------------------------------------------------------------------------
 
 using Lockstep.Logic;
 using UFramework;
@@ -16,6 +16,9 @@ public class Launcher : AppLauncher
 
     private void Awake()
     {
+        if (Platform.RuntimePlatformCurrent == Platform.StandaloneWindows)
+            Screen.fullScreen = false;
+        
         DontDestroyOnLoad(this);
         instance = this;
         Initialize();
@@ -30,18 +33,18 @@ public class Launcher : AppLauncher
 
     void Update()
     {
-        if(!isInitialized)
+        if (!isInitialized)
             return;
-        
+
         DoUpdate(Time.deltaTime);
         _lockstepClient.Update();
     }
 
     void OnDestroy()
     {
-        if(!isInitialized)
+        if (!isInitialized)
             return;
-        
+
         DoDispose();
         _lockstepClient.Dispose();
     }

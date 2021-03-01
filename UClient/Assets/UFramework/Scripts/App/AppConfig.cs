@@ -1,8 +1,9 @@
-/*
- * @Author: fasthro
- * @Date: 2020-07-01 19:51:50
- * @Description: Application Config
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-07-01 19:51:50
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using System.Collections.Generic;
 using UFramework.Core;
 using UnityEngine;
@@ -17,7 +18,7 @@ namespace UFramework
 
     public class AppConfig : ISerializable
     {
-        public SerializableAssigned assigned { get { return SerializableAssigned.Resources; } }
+        public SerializableAssigned assigned => SerializableAssigned.Resources;
 
         #region version
 
@@ -73,6 +74,7 @@ namespace UFramework
         #endregion
 
         #region UI
+
         /// <summary>
         /// 使用 FairyGUI
         /// </summary>
@@ -82,12 +84,13 @@ namespace UFramework
         /// 设计分辨率
         /// </summary>
         public int designResolutionX = 1920;
+
         public int designResolutionY = 1080;
-        
+
         /// <summary>
         /// 字体列表
         /// </summary>
-        public List<string> fonts;
+        public List<string> fonts = new List<string>();
 
         /// <summary>
         /// UI 所在目录
@@ -98,6 +101,11 @@ namespace UFramework
 
         #region project
 
+        /// <summary>
+        /// AssetBundle 构建Hash名称
+        /// </summary>
+        public bool isBuildAssetBunldeNameHash = true;
+        
         /// <summary>
         /// 包 id
         /// </summary>

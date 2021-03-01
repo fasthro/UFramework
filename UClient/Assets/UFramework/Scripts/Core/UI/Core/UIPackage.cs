@@ -1,8 +1,9 @@
-/*
- * @Author: fasthro
- * @Date: 2020-09-29 13:22:48
- * @Description: package
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-09-29 13:22:48
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using System.Collections.Generic;
 using UFramework.Core;
 
@@ -75,12 +76,16 @@ namespace UFramework.UI
         /// <summary>
         /// 加载主包
         /// </summary>
-        protected virtual void LoadMain() { }
+        protected virtual void LoadMain()
+        {
+        }
 
         /// <summary>
         /// 加载依赖包
         /// </summary>
-        protected virtual void LoadDependen() { }
+        protected virtual void LoadDependen()
+        {
+        }
 
 
         /// <summary>
@@ -134,7 +139,7 @@ namespace UFramework.UI
         /// <typeparam name="string"></typeparam>
         /// <typeparam name="Package"></typeparam>
         /// <returns></returns>
-        readonly static Dictionary<string, Package> packageDictonary = new Dictionary<string, Package>();
+        static readonly Dictionary<string, Package> packageDictonary = new Dictionary<string, Package>();
 
         /// <summary>
         /// 未加载完成，直接被卸载包映射
@@ -143,7 +148,7 @@ namespace UFramework.UI
         /// <typeparam name="string"></typeparam>
         /// <typeparam name="Package"></typeparam>
         /// <returns></returns>
-        readonly static Dictionary<string, Package> standbyDictonary = new Dictionary<string, Package>();
+        static readonly Dictionary<string, Package> standbyDictonary = new Dictionary<string, Package>();
 
         /// <summary>
         /// 加载 Fairy Resource 包
@@ -174,8 +179,7 @@ namespace UFramework.UI
         /// <param name="isResourcesPackage"></param>
         private static void _Load(string packageName, UCallback onCompleted, bool isResourcesPackage)
         {
-            Package package;
-            if (standbyDictonary.TryGetValue(packageName, out package))
+            if (standbyDictonary.TryGetValue(packageName, out var package))
             {
                 if (package.loadState == LoadState.Loading)
                 {
@@ -198,6 +202,7 @@ namespace UFramework.UI
                     packageDictonary.Add(packageName, package);
                 }
             }
+
             package.Load(onCompleted);
         }
 
@@ -207,8 +212,7 @@ namespace UFramework.UI
         /// <param name="packageName"></param>
         public static void Unload(string packageName)
         {
-            Package package;
-            if (packageDictonary.TryGetValue(packageName, out package))
+            if (packageDictonary.TryGetValue(packageName, out var package))
             {
                 if (package.loadState == LoadState.Loading)
                 {

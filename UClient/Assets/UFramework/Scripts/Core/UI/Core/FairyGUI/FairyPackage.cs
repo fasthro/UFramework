@@ -1,15 +1,16 @@
-/*
- * @Author: fasthro
- * @Date: 2020-09-29 11:20:22
- * @Description: fiary package
- */
-using System.Collections.Generic;
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-09-29 11:20:22
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using FairyGUI;
 using UFramework.Core;
+using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
+
 #endif
-using UnityEngine;
 
 namespace UFramework.UI
 {
@@ -21,13 +22,12 @@ namespace UFramework.UI
 
         public FairyPackage(string packageName) : base(packageName)
         {
-
         }
 
         protected override void LoadMain()
         {
 #if UNITY_EDITOR
-            package = UIPackage.AddPackage(IOPath.PathCombine(Core.Serializer<AppConfig>.Instance.uiDirectory, string.Format("{0}/{1}", packageName, packageName)),
+            package = UIPackage.AddPackage(IOPath.PathCombine(Serializer<AppConfig>.Instance.uiDirectory, $"{packageName}/{packageName}"),
                 (string name, string extension, System.Type type, out DestroyMethod destroyMethod) =>
                 {
                     destroyMethod = DestroyMethod.Unload;
@@ -36,8 +36,11 @@ namespace UFramework.UI
             );
             LoadDependen();
 #else
-            _bundleRequest = Assets.LoadBundleAsync(IOPath.PathCombine(Core.Serializer<AppConfig>.Instance.uiDirectory, packageName), (request) =>
+            var bundleName = Assets.BundlePath2BundleName(IOPath.PathCombine(Serializer<AppConfig>.Instance.uiDirectory, packageName));
+            // Debug.Log($"fairy pack load mian: {packageName}>{bundleName}");
+            _bundleRequest = Assets.LoadBundleAsync(bundleName, (request) =>
             {
+                // Debug.Log($"fairy pack loaded mian: {request.name}");
                 if (!_isStandby)
                 {
                     package = UIPackage.AddPackage(request.asset as AssetBundle);
@@ -103,8 +106,7 @@ namespace UFramework.UI
                 PackageAgents.Unload(item);
             _dependences.Clear();
 
-            if (_bundleRequest != null)
-                _bundleRequest.Unload();
+            _bundleRequest?.Unload();
             _bundleRequest = null;
         }
     }

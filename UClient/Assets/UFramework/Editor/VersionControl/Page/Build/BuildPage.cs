@@ -1,34 +1,29 @@
-/*
- * @Author: fasthro
- * @Date: 2020-09-16 18:51:28
- * @Description: build
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-09-16 18:51:28
+// * @Description:
+// --------------------------------------------------------------------------------
 
-using System.Collections.Generic;
 using Sirenix.OdinInspector;
-using Sirenix.Utilities.Editor;
 using UnityEditor;
-using UnityEngine;
 
 namespace UFramework.Editor.VersionControl.Build
 {
     public class BuilderPage : IPage, IPageBar
     {
-        public string menuName { get { return "Build"; } }
-        static VersionControl_Build_Config Config { get { return Core.Serializer<VersionControl_Build_Config>.Instance; } }
+        public string menuName => "Build";
+
+        static VersionControl_Build_Config Config => Core.Serializer<VersionControl_Build_Config>.Instance;
 
         /// <summary>
         /// 版本
         /// </summary>
-        [OnValueChanged("OnSaveDescribe")]
-        [DisableIf("_isBuild")]
-        [LabelText("App Version (Only Display)")]
+        [OnValueChanged("OnSaveDescribe")] [DisableIf("_isBuild")] [LabelText("App Version (Only Display)")]
         public string appVersion;
 
-        [ShowInInspector, HideLabel]
-        public BuildPageBuildTable buildTable = new BuildPageBuildTable();
+        [ShowInInspector, HideLabel] public BuildPageBuildTable buildTable = new BuildPageBuildTable();
 
-        private bool _isBuild { get { return buildTable.isBuild; } }
+        private bool _isBuild => buildTable.isBuild;
 
         public object GetInstance()
         {
@@ -52,7 +47,6 @@ namespace UFramework.Editor.VersionControl.Build
 
         public void OnPageBarDraw()
         {
-
         }
 
         private void ApplySetting()

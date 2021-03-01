@@ -1,8 +1,8 @@
-/*
- * @Author: fasthro
- * @Date: 2020-10-15 12:26:08
- * @Description: 
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-10-15 12:26:08
+// * @Description:
+// --------------------------------------------------------------------------------
 
 using System;
 using System.Collections;
@@ -30,10 +30,7 @@ namespace UFramework.Editor.VersionControl.Build
 
     public class VersionControl_Build_Config : ISerializable
     {
-        public SerializableAssigned assigned
-        {
-            get { return SerializableAssigned.Editor; }
-        }
+        public SerializableAssigned assigned => SerializableAssigned.Editor;
 
         /// <summary>
         /// 应用版本
@@ -217,8 +214,8 @@ namespace UFramework.Editor.VersionControl.Build
             var assetBundlePath = IOPath.PathCombine(UApplication.TempDirectory, Platform.BuildTargetCurrentName);
             var assetBundleDataPath = IOPath.PathCombine(Application.streamingAssetsPath, Platform.BuildTargetCurrentName);
             IOPath.DirectoryClear(assetBundleDataPath);
-            string[] files = IOPath.DirectoryGetFiles(assetBundlePath, "*" + Assets.Extension, SearchOption.AllDirectories);
-            for (int i = 0; i < files.Length; i++)
+            var files = IOPath.DirectoryGetFiles(assetBundlePath, "*" + Assets.Extension, SearchOption.AllDirectories);
+            for (var i = 0; i < files.Length; i++)
             {
                 var fp = files[i];
                 var fn = IOPath.FileName(fp, true);
@@ -345,9 +342,21 @@ namespace UFramework.Editor.VersionControl.Build
         [DisableIf("_isBuild")]
         public void BuildApplication()
         {
+            _BuildApplication(false);
+        }
+
+        [ShowInInspector, Button, HorizontalGroup("build")]
+        [DisableIf("_isBuild")]
+        public void BuildApplicationWithAll()
+        {
+            _BuildApplication(true);
+        }
+
+        private void _BuildApplication(bool isBuildAll)
+        {
             if (_isBuild) return;
 
-            if (Core.Serializer<AppConfig>.Instance.isDevelopmentVersion)
+            if (Serializer<AppConfig>.Instance.isDevelopmentVersion)
             {
                 EditorUtility.DisplayDialog("Build", "当前为开发环境, 无法构建应用. 请切换到 Version Contorl -> Application 页进行环境切换.", "确定");
                 return;
@@ -357,13 +366,13 @@ namespace UFramework.Editor.VersionControl.Build
             {
                 if (EditorUtility.DisplayDialog("Build", "当前版本已经存在，是否重新构建版本?", "重新构建", "取消"))
                 {
-                    EditorCoroutineUtility.StartCoroutineOwnerless(_BuildApplication());
+                    EditorCoroutineUtility.StartCoroutineOwnerless(_BuildApplicationAsync(isBuildAll));
                 }
             }
-            else EditorCoroutineUtility.StartCoroutineOwnerless(_BuildApplication());
+            else EditorCoroutineUtility.StartCoroutineOwnerless(_BuildApplicationAsync(isBuildAll));
         }
 
-        IEnumerator _BuildApplication()
+        IEnumerator _BuildApplicationAsync(bool isBuildAll)
         {
             _isBuild = true;
             totalProgress = 0;
@@ -377,31 +386,37 @@ namespace UFramework.Editor.VersionControl.Build
             totalProgress++;
             yield return new EditorWaitForSeconds(1);
 
-            _BuildAssetBundle();
+            if (isBuildAll) _BuildAssetBundle();
             yield return new EditorWaitForSeconds(1);
 
             // copy bundle
-            yield return _CopyAssetBundle();
+            if (isBuildAll)
+                yield return _CopyAssetBundle();
+
             yield return new EditorWaitForSeconds(1);
             totalProgress++;
 
             // lua script
-            _BuildScripts();
+            if (isBuildAll) _BuildScripts();
             yield return new EditorWaitForSeconds(1);
             totalProgress++;
 
             // copy lua script
-            yield return _CopyScripts();
+            if (isBuildAll)
+                yield return _CopyScripts();
+
             yield return new EditorWaitForSeconds(1);
             totalProgress++;
 
             // build files
-            _BuildFiles();
+            if (isBuildAll) _BuildFiles();
             yield return new EditorWaitForSeconds(1);
             totalProgress++;
 
             // copy build files
-            yield return _CopyFiles();
+            if (isBuildAll)
+                yield return _CopyFiles();
+
             yield return new EditorWaitForSeconds(1);
             totalProgress++;
 
@@ -719,8 +734,7 @@ namespace UFramework.Editor.VersionControl.Build
             AssetDatabase.Refresh();
         }
 
-        [HideInInspector]
-        private bool _useCustomKeystore => !useCustomKeystore;
+        [HideInInspector] private bool _useCustomKeystore => !useCustomKeystore;
 
         [DisableIf("_useCustomKeystore")] [FilePath(Extensions = ".keystore")] [BoxGroup("KeyStore")] [OnValueChanged("OnValueChanged_keystoreName")]
         public string keystoreName;

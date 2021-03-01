@@ -19,6 +19,8 @@ namespace UFramework.Editor.Preferences.AssetBundle
     {
         public string menuName => "AssetBundle";
 
+        static AppConfig AppConfig => Serializer<AppConfig>.Instance;
+        
         static Preferences_AssetBundle_AssetConfig AssetConfig => Serializer<Preferences_AssetBundle_AssetConfig>.Instance;
 
         static Preferences_AssetBundle_SearchPathConfig SearchPathConfig => Serializer<Preferences_AssetBundle_SearchPathConfig>.Instance;
@@ -92,6 +94,8 @@ namespace UFramework.Editor.Preferences.AssetBundle
                 AssetDatabase.SaveAssets();
             }
 
+            buildNameHash = AppConfig.isBuildAssetBunldeNameHash;
+
             bundleSortRuler = new SortRuler(bundles);
             assetSortRuler = new SortRuler(assets);
             dependenciesAssetSortRuler = new SortRuler(dependencieAssets);
@@ -137,6 +141,9 @@ namespace UFramework.Editor.Preferences.AssetBundle
             AssetConfig.dependencieAssets = dependencieAssets;
             AssetConfig.builtInAssets = builtInAssets;
             AssetConfig.Serialize();
+            
+            AppConfig.isBuildAssetBunldeNameHash = buildNameHash;
+            AppConfig.Serialize();
         }
 
         private void OnBundlesTitleBarGUI()
@@ -679,8 +686,8 @@ namespace UFramework.Editor.Preferences.AssetBundle
         /// <returns></returns>
         private string GetBuildBundleName(string bundle)
         {
-            if (buildNameHash) return HashUtils.GetMD5Hash(bundle) + Core.Assets.Extension;
-            return bundle.ToLower() + Core.Assets.Extension;
+            if (buildNameHash) return HashUtils.GetMD5Hash(bundle) + Assets.Extension;
+            return bundle.ToLower() + Assets.Extension;
         }
 
         /// <summary>

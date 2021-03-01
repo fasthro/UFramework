@@ -14,48 +14,141 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dirs:
   - Assets/Arts/Player
+  - Assets/Arts/UI/Alert
+  - Assets/Arts/UI/Login
+  - Assets/Arts/UI/Main
+  - Assets/Arts/UI/_Background
+  - Assets/Arts/UI/_Button
+  - Assets/Arts/UI/_Font
+  - Assets/Arts/UI/_Panel
+  - Assets/Arts/UI/_Text
   - Assets/UAssets/Serializable/AssetBundle
   - Assets/UAssets/Language/Data/ChineseSimplified
   - Assets/UAssets/Table/Data
   assets:
   - name: Player1.prefab
-    bundle: 2
-    dirIndex: 0
-  - name: TableConfig.json
-    bundle: 4
-    dirIndex: 1
-  - name: 0.txt
-    bundle: 1
-    dirIndex: 2
-  - name: 1.txt
     bundle: 3
+    dirIndex: 0
+  - name: Alert_atlas0.png
+    bundle: 7
+    dirIndex: 1
+  - name: Alert_fui.bytes
+    bundle: 7
+    dirIndex: 1
+  - name: Login_atlas0.png
+    bundle: 5
     dirIndex: 2
-  - name: Template.csv
-    bundle: 0
+  - name: Login_fui.bytes
+    bundle: 5
+    dirIndex: 2
+  - name: Main_atlas0.png
+    bundle: 11
     dirIndex: 3
+  - name: Main_fui.bytes
+    bundle: 11
+    dirIndex: 3
+  - name: _Background_atlas0.png
+    bundle: 4
+    dirIndex: 4
+  - name: _Background_atlas0_1.png
+    bundle: 4
+    dirIndex: 4
+  - name: _Background_fui.bytes
+    bundle: 4
+    dirIndex: 4
+  - name: _Button_atlas0.png
+    bundle: 9
+    dirIndex: 5
+  - name: _Button_fui.bytes
+    bundle: 9
+    dirIndex: 5
+  - name: _Font_fui.bytes
+    bundle: 0
+    dirIndex: 6
+  - name: _Panel_fui.bytes
+    bundle: 12
+    dirIndex: 7
+  - name: _Text_atlas0.png
+    bundle: 6
+    dirIndex: 8
+  - name: _Text_fui.bytes
+    bundle: 6
+    dirIndex: 8
+  - name: TableConfig.json
+    bundle: 10
+    dirIndex: 9
+  - name: 0.txt
+    bundle: 2
+    dirIndex: 10
+  - name: 1.txt
+    bundle: 8
+    dirIndex: 10
+  - name: Template.csv
+    bundle: 1
+    dirIndex: 11
   bundles:
-  - name: 2038ca226310debdde227b05e104e969.unity3d
+  - name: 0b4ac500f42128bab1da5d69c2f80c2e.unity3d
     id: 0
+    dependencies: 
+    size: 1234
+    hash: ef50fcf650128ae1a47878c2d1c5d825
+  - name: 2038ca226310debdde227b05e104e969.unity3d
+    id: 1
     dependencies: 
     size: 1462
     hash: 0689f4ddf9f395fc95bd04f390743f33
   - name: 2e8b0eb683f58e1884b970a3282272cf.unity3d
-    id: 1
+    id: 2
     dependencies: 
     size: 1204
     hash: 4a59a9ce988064bbc2f3945263800a5f
   - name: 37cdb46aab5f2608c6421202a6e5ecba.unity3d
-    id: 2
+    id: 3
     dependencies: 
     size: 42215
-    hash: 07e3cf15d8716ccb91417bb157f23859
+    hash: 56ae9b0b54c3f2c5d2071f089380eb27
+  - name: 3f2ae1b0a8e1a492ec40ef6f16938581.unity3d
+    id: 4
+    dependencies: 
+    size: 224589
+    hash: 778460b0d5431bbed4d0120dd0e7cb23
+  - name: 61486fa3f9209a0b6259481ce52af134.unity3d
+    id: 5
+    dependencies: 
+    size: 44576
+    hash: 044f138fa36b95caf6c99565c117a1df
+  - name: 73e8edb200050e7039116ca5939d3ff0.unity3d
+    id: 6
+    dependencies: 
+    size: 6003
+    hash: aa9a830db3ff819798a39bb32b358683
+  - name: 9294ffd44514c4137cadf66bc327df0a.unity3d
+    id: 7
+    dependencies: 
+    size: 66408
+    hash: 21078aa62fd5fe12678bc6704d3df6cb
   - name: 97e43a8abac9eae00e8a5a7916f6948c.unity3d
-    id: 3
+    id: 8
     dependencies: 
     size: 1203
     hash: 213c4578960d96469016c611c6ad9142
+  - name: 9df812fc51aac5f0499c0e999471512f.unity3d
+    id: 9
+    dependencies: 
+    size: 36026
+    hash: ce7dac4fe57adfccc3d64d3b76dd3ea1
   - name: c602351bf196a0728f54d9aaa569027f.unity3d
-    id: 4
+    id: 10
     dependencies: 
     size: 1265
     hash: fdc46f71958abbde6bc60962386295a5
+  - name: c9f75271ea0ae10a08191ed858b2a901.unity3d
+    id: 11
+    dependencies: 
+    size: 16315
+    hash: 00c52775e9410ca92e1664d1623edafa
+  - name: db38afd48a8fd6d4ad3536353382bbd0.unity3d
+    id: 12
+    dependencies: 
+    size: 1247
+    hash: c0a58c8f8b95746429c6f77bbf8c9266

@@ -12,8 +12,8 @@ namespace UFramework.Core
 {
     public class BundleAsyncRequest : AssetRequest
     {
-        public AssetBundle assetBundle { get { return asset as AssetBundle; } }
-        public override bool isAsset { get { return false; } }
+        public AssetBundle assetBundle => asset as AssetBundle;
+        public override bool isAsset => false;
 
         private AssetBundleCreateRequest _request;
         private List<BundleAsyncRequest> _dependencies = new List<BundleAsyncRequest>();
@@ -29,7 +29,6 @@ namespace UFramework.Core
 
             _request = AssetBundle.LoadFromFileAsync(url);
             yield return _request;
-
             if (loadState == LoadState.LoadBundle && _request.isDone)
             {
                 asset = _request.assetBundle;
@@ -49,7 +48,7 @@ namespace UFramework.Core
             if (loadState != LoadState.Init) return;
 
             var bundles = Assets.Instance.GetDependencies(url);
-            for (int i = 0; i < bundles.Length; i++)
+            for (var i = 0; i < bundles.Length; i++)
             {
                 var bundle = Assets.Instance.GetBundle<BundleAsyncRequest>(url, true);
                 bundle.AddCallback(OnBundleDone);
@@ -69,7 +68,7 @@ namespace UFramework.Core
         public override void Unload()
         {
             base.Unload();
-            for (int i = 0; i < _dependencies.Count; i++)
+            for (var i = 0; i < _dependencies.Count; i++)
                 _dependencies[i].Unload();
         }
 

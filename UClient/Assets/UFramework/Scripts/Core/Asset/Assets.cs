@@ -1,8 +1,8 @@
-/*
- * @Author: fasthro
- * @Date: 2020-09-17 15:33:31
- * @Description: uasset
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-09-17 15:33:31
+// * @Description:
+// --------------------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
@@ -18,13 +18,19 @@ namespace UFramework.Core
         /// <summary>
         /// AssetBundle 后缀
         /// </summary>
-        readonly public static string Extension = ".unity3d";
+        public static readonly string Extension = ".unity3d";
 
         /// <summary>
         /// 开发模式
         /// </summary>
         /// <value></value>
-        public static bool Develop { get; private set; }
+        public static bool isDevelop { get; private set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <value></value>
+        public static bool isBuildNameHash { get; private set; }
 
         /// <summary>
         /// AssetBundlePath
@@ -73,8 +79,9 @@ namespace UFramework.Core
         /// <param name="onCompleted"></param>
         public void Initialize(Action<bool> onCompleted)
         {
-            Develop = Core.Serializer<AppConfig>.Instance.isDevelopmentVersion;
-            AssetBundlePath = IOPath.PathCombine(Develop ? UApplication.TempDirectory : Application.persistentDataPath, Platform.RuntimePlatformCurrentName);
+            isDevelop = Serializer<AppConfig>.Instance.isDevelopmentVersion;
+            isBuildNameHash = Serializer<AppConfig>.Instance.isBuildAssetBunldeNameHash;
+            AssetBundlePath = IOPath.PathCombine(isDevelop ? UApplication.TempDirectory : Application.persistentDataPath, Platform.RuntimePlatformCurrentName);
             _onInitializeCompleted = onCompleted;
             ManifestRequest.Allocate().AddCallback(OnInitialize).Load();
         }
@@ -87,28 +94,28 @@ namespace UFramework.Core
                 return;
             }
 
-            AssetManifest manifest = request.GetRequest<ManifestRequest>().manifest;
+            var manifest = request.GetRequest<ManifestRequest>().manifest;
             var directorys = manifest.dirs;
             var assets = manifest.assets;
             var bundles = manifest.bundles;
 
-            for (int i = 0; i < bundles.Length; i++)
+            for (var i = 0; i < bundles.Length; i++)
             {
                 var bundle = bundles[i];
                 Bundle2DependencieDict[bundle.name] = Array.ConvertAll(bundle.dependencies, id => bundles[id].name);
             }
 
-            for (int i = 0; i < assets.Length; i++)
+            for (var i = 0; i < assets.Length; i++)
             {
                 var asset = assets[i];
-                var path = string.Format("{0}/{1}", directorys[asset.dirIndex], asset.name);
+                var path = $"{directorys[asset.dirIndex]}/{asset.name}";
                 if (asset.bundle >= 0 && asset.bundle < bundles.Length)
                 {
                     Asset2BundleDict[path] = bundles[asset.bundle].name;
                 }
                 else
                 {
-                    Logger.Error(string.Format("{0} bundle {1} not exist.", path, asset.bundle));
+                    Logger.Error($"{path} bundle {asset.bundle} not exist.");
                 }
             }
 
@@ -125,19 +132,18 @@ namespace UFramework.Core
         /// <returns></returns>
         public T GetBundle<T>(string bundleName, bool async) where T : AssetRequest
         {
-            string bundleUrl = bundleName;
-            AssetRequest bundle;
-            if (_bundleDict.TryGetValue(bundleName, out bundle))
+            var bundleUrl = bundleName;
+            if (_bundleDict.TryGetValue(bundleName, out var bundle))
             {
                 return bundle as T;
             }
+
             if (bundleName.StartsWith("http://", StringComparison.Ordinal) ||
                 bundleName.StartsWith("https://", StringComparison.Ordinal) ||
                 bundleName.StartsWith("file://", StringComparison.Ordinal) ||
                 bundleName.StartsWith("ftp://", StringComparison.Ordinal))
             {
-                bundle = new WebBundleRequest();
-                bundle.url = bundleName;
+                bundle = new WebBundleRequest {url = bundleName};
             }
             else
             {
@@ -162,11 +168,11 @@ namespace UFramework.Core
         /// <returns></returns>
         public T GetAsset<T>(string url, Type type, bool async) where T : AssetRequest
         {
-            AssetRequest asset;
-            if (_assetDict.TryGetValue(url, out asset))
+            if (_assetDict.TryGetValue(url, out var asset))
             {
                 return asset as T;
             }
+
             // bundle asset
             if (Asset2BundleDict.ContainsKey(url))
             {
@@ -175,10 +181,10 @@ namespace UFramework.Core
             }
             // web asset
             else if (url.StartsWith("http://", StringComparison.Ordinal) ||
-                    url.StartsWith("https://", StringComparison.Ordinal) ||
-                    url.StartsWith("file://", StringComparison.Ordinal) ||
-                    url.StartsWith("ftp://", StringComparison.Ordinal) ||
-                    url.StartsWith("jar:file://", StringComparison.Ordinal))
+                     url.StartsWith("https://", StringComparison.Ordinal) ||
+                     url.StartsWith("file://", StringComparison.Ordinal) ||
+                     url.StartsWith("ftp://", StringComparison.Ordinal) ||
+                     url.StartsWith("jar:file://", StringComparison.Ordinal))
             {
                 asset = WebAssetRequest.Allocate();
             }
@@ -188,6 +194,7 @@ namespace UFramework.Core
                 if (async) asset = ResourceAssetAsyncRequest.Allocate();
                 else asset = ResourceAssetRequest.Allocate();
             }
+
             asset.name = name;
             asset.url = url;
             asset.assetType = type;
@@ -222,10 +229,9 @@ namespace UFramework.Core
         /// <returns></returns>
         public string GetBundleNameWithAssetName(string asset)
         {
-            string bundle;
-            if (Asset2BundleDict.TryGetValue(asset, out bundle))
+            if (Asset2BundleDict.TryGetValue(asset, out var bundle))
                 return bundle;
-            Logger.Error(string.Format("{0} not exist.", asset));
+            Logger.Error($"{asset} not exist.");
             return null;
         }
 
@@ -236,11 +242,11 @@ namespace UFramework.Core
         /// <returns></returns>
         public string[] GetDependencies(string bundle)
         {
-            string[] dependencies;
-            if (Bundle2DependencieDict.TryGetValue(bundle, out dependencies))
+            if (Bundle2DependencieDict.TryGetValue(bundle, out var dependencies))
             {
                 return dependencies;
             }
+
             return _dependencies;
         }
 
@@ -256,8 +262,8 @@ namespace UFramework.Core
         public static AssetRequest LoadBundleAsync(string path, UCallback<AssetRequest> callback)
         {
             var asset = Instance.GetBundle<BundleAsyncRequest>(path, true);
-            asset.AddCallback(callback);
-            asset.Load();
+            asset?.AddCallback(callback);
+            asset?.Load();
             return asset;
         }
 
@@ -271,7 +277,7 @@ namespace UFramework.Core
         public static AssetRequest LoadBundle(string path)
         {
             var asset = Instance.GetBundle<BundleRequest>(path, false);
-            asset.Load();
+            asset?.Load();
             return asset;
         }
 
@@ -285,8 +291,8 @@ namespace UFramework.Core
         public static AssetRequest LoadAssetAsync(string path, Type type, UCallback<AssetRequest> callback)
         {
             var asset = Instance.GetAsset<BundleAssetAsyncRequest>(path, type, true);
-            asset.AddCallback(callback);
-            asset.Load();
+            asset?.AddCallback(callback);
+            asset?.Load();
             return asset;
         }
 
@@ -299,7 +305,7 @@ namespace UFramework.Core
         public static AssetRequest LoadAsset(string path, Type type)
         {
             var asset = Instance.GetAsset<BundleAssetRequest>(path, type, false);
-            asset.Load();
+            asset?.Load();
             return asset;
         }
 
@@ -313,8 +319,8 @@ namespace UFramework.Core
         public static AssetRequest LoadResourceAssetAsync(string path, Type type, UCallback<AssetRequest> callback)
         {
             var asset = Instance.GetAsset<ResourceAssetAsyncRequest>(path, type, true);
-            asset.AddCallback(callback);
-            asset.Load();
+            asset?.AddCallback(callback);
+            asset?.Load();
             return asset;
         }
 
@@ -327,7 +333,7 @@ namespace UFramework.Core
         public static AssetRequest LoadResourceAsset(string path, Type type)
         {
             var asset = Instance.GetAsset<ResourceAssetRequest>(path, type, false);
-            asset.Load();
+            asset?.Load();
             return asset;
         }
 
@@ -340,8 +346,8 @@ namespace UFramework.Core
         public static AssetRequest LoadWebAsset(string path, Type type, UCallback<AssetRequest> callback)
         {
             var asset = Instance.GetAsset<WebAssetRequest>(path, type, true);
-            asset.AddCallback(callback);
-            asset.Load();
+            asset?.AddCallback(callback);
+            asset?.Load();
             return asset;
         }
 
@@ -351,8 +357,19 @@ namespace UFramework.Core
         /// <param name="asset"></param>
         public static void UnloadAsset(AssetRequest asset)
         {
-            asset.Unload();
+            asset?.Unload();
         }
+
+        /// <summary>
+        /// bundle path 2 bundle name(hash)
+        /// </summary>
+        /// <param name="bundlePath"></param>
+        /// <returns></returns>
+        public static string BundlePath2BundleName(string bundlePath)
+        {
+            return (isBuildNameHash ? HashUtils.GetMD5Hash(bundlePath) : bundlePath) + Extension;
+        }
+
         #endregion
     }
 }
