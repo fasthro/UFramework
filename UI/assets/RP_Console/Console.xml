@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1920,1080" designImage="ui://8qajrhcwqhv90">
+  <displayList>
+    <component id="n0_qhv9" name="n0" src="qhv92" fileName="Components/BG.xml" xy="0,0" size="1920,1080">
+      <relation target="" sidePair="width-width,height-height"/>
+    </component>
+    <component id="n1_qhv9" name="n1" src="qhv93" fileName="Components/BG-2.xml" xy="0,80" size="1920,1000">
+      <relation target="" sidePair="width-width,topext-top,bottomext-bottom"/>
+    </component>
+    <component id="n2_qhv9" name="_function" src="qhv96" fileName="Components/ComboBox/Function_ComboBox.xml" xy="0,0" size="200,80">
+      <relation target="" sidePair="left-left,top-top"/>
+      <ComboBox visibleItemCount="10">
+        <item title="Console" value="0"/>
+        <item title="Command" value="1"/>
+        <item title="Setting" value="2"/>
+      </ComboBox>
+    </component>
+    <component id="n3_qhv9" name="_close" src="qhv99" fileName="Components/Button/Close-Button.xml" xy="1840,0">
+      <relation target="" sidePair="right-right,top-top"/>
+    </component>
+    <component id="n4_qhv9" name="_consoleTab" src="qhv9a" fileName="Components/Console/ConsoleTab.xml" xy="0,0">
+      <relation target="" sidePair="width-width,height-height"/>
+    </component>
+  </displayList>
+</component>

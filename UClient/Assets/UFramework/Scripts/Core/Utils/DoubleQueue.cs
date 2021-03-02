@@ -1,8 +1,9 @@
-/*
- * @Author: fasthro
- * @Date: 2019-10-22 16:20:49
- * @Description: 双队列(多线程编程中，能保证生产者线程的写入和消费者的读出尽量做到最低的影响，避免了共享队列的锁开销)
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2019-10-22 16:20:49
+// * @Description: 双队列(多线程编程中，能保证生产者线程的写入和消费者的读出尽量做到最低的影响，避免了共享队列的锁开销)
+// --------------------------------------------------------------------------------
+
 using System.Collections;
 
 namespace UFramework.Core
@@ -26,21 +27,18 @@ namespace UFramework.Core
             }
         }
 
-        public T Dequeue()
-        {
-            return _consume.Dequeue() as T;
-        }
+        public T Dequeue() => _consume.Dequeue() as T;
 
         public void Swap()
         {
             lock (_produce)
             {
-                if (_produce.Count > 0)
-                {
-                    Queue temp = _consume;
-                    _consume = _produce;
-                    _produce = temp;
-                }
+                if (_produce.Count <= 0)
+                    return;
+
+                var temp = _consume;
+                _consume = _produce;
+                _produce = temp;
             }
         }
 
@@ -53,9 +51,6 @@ namespace UFramework.Core
             }
         }
 
-        public bool IsEmpty()
-        {
-            return _consume.Count == 0;
-        }
+        public bool IsEmpty() => _consume.Count == 0;
     }
 }

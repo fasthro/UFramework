@@ -142,8 +142,7 @@ namespace UFramework.Game
                     keyUpListener?.Invoke();
                 }
             }
-
-#if UNITY_EDITOR
+            
             if (isMoveJoy && Application.isPlaying)
             {
                 var x = Input.GetAxis("Horizontal");
@@ -179,7 +178,6 @@ namespace UFramework.Game
                     BroadcastEvent(TouchEvent.Moving, _touchMovePosition);
                 }
             }
-#endif
         }
 
         public void OnTouchBegin(Gesture gesture)

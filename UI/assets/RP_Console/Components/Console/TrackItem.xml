@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1920,200" overflow="scroll" scroll="both" margin="10,10,10,10">
+  <displayList>
+    <richtext id="n0_qhv9" name="_text" xy="10,10" size="1900,642" font="ui://q6ykyrf2t33y0" fontSize="30" color="#ffffff" autoSize="height" autoClearText="true" text=" var pack = channel.packQueue.Dequeue();&#xD;&#xA;                    if (pack.layer == ProcessLayer.All)&#xD;&#xA;                    {&#xD;&#xA;                        Messenger.Broadcast&lt;int, SocketPack&gt;(GlobalEvent.NET_RECEIVED, cid, pack);&#xD;&#xA;                        CallLuaFunction(&quot;onSocketReceive&quot;, cid, pack);&#xD;&#xA;                    }&#xD;&#xA;                    else if (pack.layer == ProcessLayer.Lua)&#xD;&#xA;                    {&#xD;&#xA;                        CallLuaFunction(&quot;onSocketReceive&quot;, cid, pack);&#xD;&#xA;                    }&#xD;&#xA;                    else if (pack.layer == ProcessLayer.CSharp)&#xD;&#xA;                    {&#xD;&#xA;                        // Logger.Debug($&quot;c# socket receive channelId: {cid} cmd: {pack.cmd}&quot;);&#xD;&#xA;                        Messenger.Broadcast&lt;int, SocketPack&gt;(GlobalEvent.NET_RECEIVED, cid, pack);&#xD;&#xA;                    }&#xD;&#xA;                    pack.Recycle();">
+      <relation target="" sidePair="width-width"/>
+    </richtext>
+  </displayList>
+</component>

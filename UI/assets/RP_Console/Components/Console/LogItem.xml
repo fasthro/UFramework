@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1920,80">
+  <controller name="_selected" pages="0,,1," selected="0"/>
+  <controller name="_logType" pages="0,,1,,2," selected="0"/>
+  <displayList>
+    <graph id="n0_qhv9" name="n0" xy="0,0" size="1920,80" type="rect" lineSize="0" fillColor="#c62c2c2c">
+      <gearColor controller="_selected" pages="1" values="#3e5f95" default="#2c2c2c"/>
+    </graph>
+    <richtext id="n1_qhv9" name="_text" xy="50,0" size="1860,42" font="ui://q6ykyrf2t33y0" fontSize="30" color="#ffffff" vAlign="middle" autoSize="none" autoClearText="true" text="[Debug]"/>
+    <image id="n2_qhv9" name="n2" src="qhv9c" fileName="Images/Circle.png" xy="15,30" size="20,20" color="#f45b57">
+      <gearColor controller="_logType" pages="0,1,2" values="#f45b57|#f4c257|#57b3f4"/>
+    </image>
+    <richtext id="n3_qhv9" name="_stackText" xy="50,42" size="1860,34" font="ui://q6ykyrf2t33y0" fontSize="24" color="#b4b4b4" vAlign="middle" autoSize="none" autoClearText="true" text="UnityEngine.Debug"/>
+  </displayList>
+</component>

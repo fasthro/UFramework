@@ -43,6 +43,11 @@ namespace UFramework.UI
         /// <value></value>
         public bool isHidden { get; protected set; }
 
+        /// <summary>
+        /// 是否采用Resource方式加载包
+        /// </summary>
+        public bool isResourceLoad = false;
+
         #endregion
 
         #region protected
@@ -88,7 +93,8 @@ namespace UFramework.UI
                 _packageCount = _packages.Count;
                 foreach (var package in _packages)
                 {
-                    PackageAgents.Load(package, OnPackageLoaded);
+                    if (isResourceLoad) PackageAgents.LoadFairyResource(package, OnPackageLoaded);
+                    else PackageAgents.Load(package, OnPackageLoaded);
                 }
             }
             else if (isLoaded)
@@ -138,6 +144,8 @@ namespace UFramework.UI
 
         public void Hide()
         {
+            foreach (var package in _packages)
+                PackageAgents.Unload(package);
             OnHide();
         }
 

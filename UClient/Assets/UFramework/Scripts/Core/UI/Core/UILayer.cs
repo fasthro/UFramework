@@ -21,6 +21,7 @@ namespace UFramework.UI
         NETWORK,
         LOADER,
         TOP,
+        Console,
     }
 
     /// <summary>

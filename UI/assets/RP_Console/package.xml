@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="8qajrhcw">
+  <resources>
+    <image id="qhv90" name="Console.png" path="/Design/"/>
+    <component id="qhv91" name="Console.xml" path="/" exported="true"/>
+    <component id="qhv92" name="BG.xml" path="/Components/"/>
+    <component id="qhv93" name="BG-2.xml" path="/Components/"/>
+    <component id="qhv94" name="Function_ComboBox_item.xml" path="/Components/ComboBox/"/>
+    <component id="qhv95" name="Function_ComboBox_popup.xml" path="/Components/ComboBox/"/>
+    <component id="qhv96" name="Function_ComboBox.xml" path="/Components/ComboBox/" exported="true"/>
+    <image id="qhv97" name="close-50.png" path="/Images/Icons/"/>
+    <component id="qhv99" name="Close-Button.xml" path="/Components/Button/"/>
+    <component id="qhv9a" name="ConsoleTab.xml" path="/Components/Console/"/>
+    <component id="qhv9b" name="border.xml" path="/Components/"/>
+    <image id="qhv9c" name="Circle.png" path="/Images/"/>
+    <component id="qhv9d" name="LogType1-Button.xml" path="/Components/Button/"/>
+    <component id="qhv9e" name="LogType2-Button.xml" path="/Components/Button/"/>
+    <component id="qhv9f" name="LogType3-Button.xml" path="/Components/Button/"/>
+    <image id="qhv9g" name="trash2-50.png" path="/Images/Icons/"/>
+    <component id="qhv9h" name="Trash-Button.xml" path="/Components/Button/"/>
+    <component id="qhv9i" name="Filter-Button.xml" path="/Components/Button/"/>
+    <image id="qhv9j" name="Filter-50.png" path="/Images/Icons/"/>
+    <component id="qhv9k" name="Input.xml" path="/Components/Input/"/>
+    <component id="qhv9l" name="LogItem.xml" path="/Components/Console/"/>
+    <component id="qhv9m" name="TrackItem.xml" path="/Components/Console/"/>
+  </resources>
+  <publish name=""/>
+</packageDescription>

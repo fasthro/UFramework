@@ -17,7 +17,7 @@ namespace UFramework.UI
         #region IEnumerator
         public bool isOk { get; private set; }
 
-        public object Current { get { return null; } }
+        public object Current => null;
 
         public bool MoveNext()
         {
@@ -70,13 +70,7 @@ namespace UFramework.UI
         /// 是否显示
         /// </summary>
         /// <value></value>
-        public bool isShowing
-        {
-            get
-            {
-                return _window != null && _window.isShowing;
-            }
-        }
+        public bool isShowing => _window != null && _window.isShowing;
 
         /// <summary>
         /// 完成事件
@@ -89,7 +83,7 @@ namespace UFramework.UI
         /// </summary>
         /// <typeparam name="MessageBox"></typeparam>
         /// <returns></returns>
-        readonly static List<MessageBox> showeds = new List<MessageBox>();
+        static readonly List<MessageBox> showeds = new List<MessageBox>();
 
         #endregion
 
@@ -128,7 +122,7 @@ namespace UFramework.UI
         /// </summary>
         public static void HideAll()
         {
-            for (int i = 0; i < showeds.Count; i++)
+            for (var i = 0; i < showeds.Count; i++)
             {
                 showeds[0].Hide();
             }

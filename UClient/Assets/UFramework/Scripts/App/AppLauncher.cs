@@ -24,7 +24,7 @@ namespace UFramework
 
         protected BaseManager[] _allManagers;
 
-        private Launch _launch;
+        private LaunchPanel _launchPanel;
 
         protected void Initialize()
         {
@@ -49,8 +49,11 @@ namespace UFramework
             #endregion
 
             // launch panel
-            _launch = Launch.Create();
-
+            _launchPanel = LaunchPanel.Create();
+            _launchPanel.Show();
+            
+            // Console
+            Console.Instance.Default();
             // 日志等级
             Logger.SetLevel(serdata.logLevel);
             // 帮助
@@ -64,7 +67,7 @@ namespace UFramework
             // 下载器
             Downloader.Instance.Default();
             // 版本器
-            Updater.Instance.StartUpdate(_launch, () =>
+            Updater.Instance.StartUpdate(_launchPanel, () =>
             {
                 Logger.Debug("UFramework Initialized.1");
                 // 资源
@@ -79,9 +82,9 @@ namespace UFramework
                         managerContainer.GetManager<LuaManager>().LaunchEngine(managerContainer);
                         OnInitialized();
 
-                        _launch.Hide();
-                        _launch.Dispose();
-                        _launch = null;
+                        _launchPanel.Hide();
+                        _launchPanel.window.Dispose();
+                        _launchPanel = null;
                     }
                     else Core.Coroutine.Allocate(OnAssetFailed());
                 });

@@ -1,8 +1,9 @@
-/*
- * @Author: fasthro
- * @Date: 2019-10-24 17:08:12
- * @Description: 协同程序包装 (支持停止，暂停，取消暂停)，扩展了Unity自带的协同程序
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2019-10-24 17:08:12
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using System.Collections;
 using UnityEngine;
 
@@ -19,6 +20,7 @@ namespace UFramework.Core
     public class Coroutine : IPoolBehaviour
     {
         static CoroutineHelper _Helper;
+
         static CoroutineHelper Helper
         {
             get
@@ -76,6 +78,7 @@ namespace UFramework.Core
             {
                 Start();
             }
+
             return this;
         }
 
@@ -104,7 +107,7 @@ namespace UFramework.Core
         IEnumerator CallWrapper()
         {
             yield return null;
-            IEnumerator e = this._routine;
+            var e = this._routine;
             while (running)
             {
                 if (paused)
@@ -115,6 +118,7 @@ namespace UFramework.Core
                     else running = false;
                 }
             }
+
             _completeCallback.InvokeGracefully(stopped);
         }
     }
