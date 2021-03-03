@@ -4,8 +4,11 @@
     <graph id="n1_qhv9" name="n1" xy="0,0" size="200,60" type="rect" lineSize="0" fillColor="#ff424242">
       <relation target="" sidePair="width-width,height-height"/>
     </graph>
-    <text id="n3_qhv9" name="n3" xy="5,0" size="190,60" font="ui://q6ykyrf2t33y0" fontSize="30" color="#ffffff" vAlign="middle" autoSize="none" singleLine="true" text="" input="true" prompt="&lt;none&gt;">
+    <text id="n3_qhv9" name="_input" xy="5,0" size="132,60" font="ui://q6ykyrf2t33y0" fontSize="30" color="#ffffff" vAlign="middle" autoSize="none" singleLine="true" text="" input="true" prompt="&lt;none&gt;">
       <relation target="" sidePair="width-width,height-height"/>
     </text>
+    <image id="n4_qhv9" name="n4" src="qhv9p" fileName="Images/Icons/search-50.png" xy="144,6">
+      <relation target="" sidePair="middle-middle,right-right"/>
+    </image>
   </displayList>
 </component>

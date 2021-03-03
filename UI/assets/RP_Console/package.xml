@@ -10,7 +10,7 @@
     <component id="qhv96" name="Function_ComboBox.xml" path="/Components/ComboBox/" exported="true"/>
     <image id="qhv97" name="close-50.png" path="/Images/Icons/"/>
     <component id="qhv99" name="Close-Button.xml" path="/Components/Button/"/>
-    <component id="qhv9a" name="ConsoleTab.xml" path="/Components/Console/"/>
+    <component id="qhv9a" name="LogMaximizeTab.xml" path="/Components/LogTable/"/>
     <component id="qhv9b" name="border.xml" path="/Components/"/>
     <image id="qhv9c" name="Circle.png" path="/Images/"/>
     <component id="qhv9d" name="LogType1-Button.xml" path="/Components/Button/"/>
@@ -21,8 +21,21 @@
     <component id="qhv9i" name="Filter-Button.xml" path="/Components/Button/"/>
     <image id="qhv9j" name="Filter-50.png" path="/Images/Icons/"/>
     <component id="qhv9k" name="Input.xml" path="/Components/Input/"/>
-    <component id="qhv9l" name="LogItem.xml" path="/Components/Console/"/>
-    <component id="qhv9m" name="TrackItem.xml" path="/Components/Console/"/>
+    <component id="qhv9l" name="LogItem.xml" path="/Components/LogTable/"/>
+    <component id="qhv9m" name="TrackItem.xml" path="/Components/LogTable/"/>
+    <image id="qhv9n" name="minimize-50.png" path="/Images/Icons/"/>
+    <component id="qhv9o" name="Minimize-Button.xml" path="/Components/Button/"/>
+    <image id="qhv9p" name="search-50.png" path="/Images/Icons/"/>
+    <component id="qhv9q" name="LogMinimizeTab.xml" path="/Components/LogTable/"/>
+    <image id="qhv9r" name="maximize-50.png" path="/Images/Icons/"/>
+    <component id="qhv9s" name="Maximize-Button.xml" path="/Components/Button/"/>
+    <image id="qhv9t" name="open-dropdown-50.png" path="/Images/Icons/"/>
+    <component id="qhv9u" name="Dropdown-Button.xml" path="/Components/Button/"/>
+    <image id="qhv9v" name="down-50.png" path="/Images/Icons/"/>
+    <component id="qhv9w" name="Down-Button.xml" path="/Components/Button/"/>
+    <image id="qhv9x" name="RoundedCorner.png" path="/Images/" scale="9grid" scale9grid="16,16,32,32"/>
+    <component id="qhv9y" name="Drag-Button.xml" path="/Components/Button/"/>
+    <image id="qhv9z" name="drag-50.png" path="/Images/Icons/"/>
   </resources>
   <publish name=""/>
 </packageDescription>

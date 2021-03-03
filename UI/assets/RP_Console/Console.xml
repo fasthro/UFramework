@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="1920,1080" designImage="ui://8qajrhcwqhv90">
+<component size="1920,1080" opaque="false" designImage="ui://8qajrhcwqhv90">
+  <controller name="_state" pages="0,,1," selected="0">
+    <remark page="0" value="maximize"/>
+    <remark page="1" value="minimize"/>
+  </controller>
+  <controller name="_tab" pages="0,,1," selected="0">
+    <remark page="0" value="console-max"/>
+    <remark page="1" value="console-min"/>
+  </controller>
   <displayList>
-    <component id="n0_qhv9" name="n0" src="qhv92" fileName="Components/BG.xml" xy="0,0" size="1920,1080">
+    <component id="n0_qhv9" name="n0" src="qhv92" fileName="Components/BG.xml" xy="0,0" size="1920,1080" group="n6_qhv9">
       <relation target="" sidePair="width-width,height-height"/>
     </component>
-    <component id="n1_qhv9" name="n1" src="qhv93" fileName="Components/BG-2.xml" xy="0,80" size="1920,1000">
+    <component id="n1_qhv9" name="n1" src="qhv93" fileName="Components/BG-2.xml" xy="0,80" size="1920,1000" group="n6_qhv9">
       <relation target="" sidePair="width-width,topext-top,bottomext-bottom"/>
     </component>
-    <component id="n2_qhv9" name="_function" src="qhv96" fileName="Components/ComboBox/Function_ComboBox.xml" xy="0,0" size="200,80">
+    <component id="n2_qhv9" name="_function" src="qhv96" fileName="Components/ComboBox/Function_ComboBox.xml" xy="0,0" size="200,80" group="n6_qhv9">
       <relation target="" sidePair="left-left,top-top"/>
       <ComboBox visibleItemCount="10">
         <item title="Console" value="0"/>
@@ -15,10 +23,27 @@
         <item title="Setting" value="2"/>
       </ComboBox>
     </component>
-    <component id="n3_qhv9" name="_close" src="qhv99" fileName="Components/Button/Close-Button.xml" xy="1840,0">
+    <group id="n6_qhv9" name="maxmize" xy="0,0" size="1920,1080" group="n5_qhv9" advanced="true">
+      <gearDisplay controller="_state" pages="0"/>
+    </group>
+    <component id="n7_qhv9" name="n7" src="qhv92" fileName="Components/BG.xml" xy="0,0" size="1920,80" group="n8_qhv9">
+      <relation target="" sidePair="width-width,height-height"/>
+    </component>
+    <group id="n8_qhv9" name="minimize" xy="0,0" size="1920,80" group="n5_qhv9" advanced="true">
+      <gearDisplay controller="_state" pages="1"/>
+    </group>
+    <component id="n3_qhv9" name="_close" src="qhv99" fileName="Components/Button/Close-Button.xml" xy="1840,0" group="n5_qhv9">
       <relation target="" sidePair="right-right,top-top"/>
     </component>
-    <component id="n4_qhv9" name="_consoleTab" src="qhv9a" fileName="Components/Console/ConsoleTab.xml" xy="0,0">
+    <group id="n5_qhv9" name="main" xy="0,0" size="1920,1080"/>
+    <component id="n4_qhv9" name="_consoleMaxTab" src="qhv9a" fileName="Components/LogTable/LogMaximizeTab.xml" xy="0,0">
+      <gearDisplay controller="_state" pages="0"/>
+      <gearDisplay2 controller="_tab" pages="0" condition="0"/>
+      <relation target="" sidePair="width-width,height-height"/>
+    </component>
+    <component id="n9_qhv9" name="_consoleMinTab" src="qhv9q" fileName="Components/LogTable/LogMinimizeTab.xml" xy="0,0">
+      <gearDisplay controller="_state" pages="1"/>
+      <gearDisplay2 controller="_tab" pages="1" condition="0"/>
       <relation target="" sidePair="width-width,height-height"/>
     </component>
   </displayList>

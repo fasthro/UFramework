@@ -51,7 +51,7 @@ namespace UFramework.Consoles
 
         protected override void OnInitialized()
         {
-            _collapseEnabled = false;
+            _collapseEnabled = true;
             _allEntries = new CircularBuffer<LogEntry>(2048);
             Application.logMessageReceivedThreaded += LogMessageReceivedThreaded;
         }

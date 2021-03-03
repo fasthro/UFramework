@@ -12,8 +12,9 @@ using Console = UFramework.Core.Console;
 
 namespace UFramework.Consoles
 {
-    public class ConsolePanel_LogTab : IConsolePanelTab
+    public class LogMaximizeTab : IConsolePanelTab
     {
+        public bool isInitComponent { get; private set; }
         private static LogService logService => Console.Instance.logService;
 
         private ConsolePanel _consolePanel;
@@ -24,11 +25,14 @@ namespace UFramework.Consoles
         private GButton _errorButton;
 
         private GButton _trashButton;
-        private GButton _filterButton;
+        private GButton _minimizeButton;
+        private GButton _downButton;
 
         private GList _logList;
         private GComponent _stackCom;
         private GRichTextField _stackText;
+
+        private GTextInput _inputText;
 
         private CircularBuffer<LogEntry> _entries;
 
@@ -40,7 +44,7 @@ namespace UFramework.Consoles
 
         private bool _isUpdateDirty;
 
-        public ConsolePanel_LogTab(ConsolePanel consolePanel)
+        public LogMaximizeTab(ConsolePanel consolePanel)
         {
             _consolePanel = consolePanel;
             _entries = new CircularBuffer<LogEntry>(2048);
@@ -53,40 +57,60 @@ namespace UFramework.Consoles
 
         public void DoShow()
         {
-            logService.refreshListener += OnLogRefresh;
+            if (!isInitComponent)
+            {
+                _view = _consolePanel.view.GetChild("_consoleMaxTab").asCom;
 
-            _view = _consolePanel.view.GetChild("_consoleTab").asCom;
+                _debugButton = _view.GetChild("_debug").asButton;
+                _debugButton.onClick.Set(OnDebugClick);
 
-            _debugButton = _view.GetChild("_debug").asButton;
-            _debugButton.onClick.Set(OnDebugClick);
-            _debugButton.selected = _isShowDebug;
+                _warnButton = _view.GetChild("_warn").asButton;
+                _warnButton.onClick.Set(OnWarnClick);
 
-            _warnButton = _view.GetChild("_warn").asButton;
-            _warnButton.onClick.Set(OnWarnClick);
-            _warnButton.selected = _isShowWarn;
+                _errorButton = _view.GetChild("_error").asButton;
+                _errorButton.onClick.Set(OnErrorClick);
 
-            _errorButton = _view.GetChild("_error").asButton;
-            _errorButton.onClick.Set(OnErrorClick);
-            _errorButton.selected = _isShowError;
+                _trashButton = _view.GetChild("_trash").asButton;
+                _trashButton.onClick.Set(OnTrashClick);
 
-            _trashButton = _view.GetChild("_trash").asButton;
-            _trashButton.onClick.Set(OnTrashClick);
+                _minimizeButton = _view.GetChild("_minimize").asButton;
+                _minimizeButton.onClick.Set(OnMinimizeClick);
 
-            _filterButton = _view.GetChild("_filter").asButton;
-            _filterButton.onClick.Set(OnFilterClick);
+                _inputText = _view.GetChild("_filterInput").asCom.GetChild("_input").asTextInput;
+                _inputText.onChanged.Set(OnInputChanged);
 
-            _logList = _view.GetChild("_loglist").asList;
-            _logList.RemoveChildrenToPool();
-            _logList.SetVirtual();
-            _logList.itemRenderer = OnItemRenderer;
-            _logList.onClickItem.Set(OnItemClick);
+                _downButton = _view.GetChild("_down").asButton;
+                _downButton.onClick.Set(OnDownClick);
 
-            _stackCom = _view.GetChild("_stack").asCom;
-            _stackText = _stackCom.GetChild("_text").asRichTextField;
+                _logList = _view.GetChild("_logList").asList;
+                _logList.RemoveChildrenToPool();
+                _logList.SetVirtual();
+                _logList.itemRenderer = OnItemRenderer;
+                _logList.onClickItem.Set(OnItemClick);
+
+                _stackCom = _view.GetChild("_stack").asCom;
+                _stackText = _stackCom.GetChild("_text").asRichTextField;
+
+                isInitComponent = true;
+            }
 
             _isUpdateDirty = true;
+
+            _isShowDebug = true;
+            _isShowWarn = true;
+            _isShowError = true;
+
+            logService.refreshListener += OnLogRefresh;
+
+            _debugButton.selected = _isShowDebug;
+            _warnButton.selected = _isShowWarn;
+            _errorButton.selected = _isShowError;
+            
+            _selectedEntry = null;
+            
+            SetStackTrace(null);
         }
-        
+
         public void DoRefresh()
         {
             _isUpdateDirty = false;
@@ -97,12 +121,14 @@ namespace UFramework.Consoles
 
             _entries.Clear();
             var allEntries = logService.entries;
+            var filterText = _inputText.text;
             for (var i = 0; i < allEntries.Size; i++)
             {
                 var e = allEntries[i];
 
                 if ((e.logType == LogType.Error || e.logType == LogType.Exception || e.logType == LogType.Assert) && !_isShowError)
                 {
+                    continue;
                 }
 
                 if (e.logType == LogType.Warning && !_isShowWarn)
@@ -115,30 +141,40 @@ namespace UFramework.Consoles
                     continue;
                 }
 
-                // if (!string.IsNullOrEmpty(Filter))
-                // {
-                //     if (e.message.IndexOf(Filter, StringComparison.OrdinalIgnoreCase) < 0)
-                //     {
-                //         continue;
-                //     }
-                // }
+                if (!string.IsNullOrEmpty(filterText))
+                {
+                    if (e.message.IndexOf(filterText, StringComparison.OrdinalIgnoreCase) < 0)
+                    {
+                        continue;
+                    }
+                }
 
                 _entries.PushBack(e);
             }
 
+            var isBottomMost = _logList.scrollPane.isBottomMost;
             _logList.numItems = _entries.Size;
+            if (isBottomMost)
+                _logList.scrollPane.ScrollBottom();
         }
 
         public void DoUpdate()
         {
-            if (!_isUpdateDirty)
-                return;
-            DoRefresh();
+            if (_isUpdateDirty)
+                DoRefresh();
+
+            if (isInitComponent)
+            {
+                _downButton.visible = !_logList.scrollPane.isBottomMost;
+            }
         }
 
         public void DoHide()
         {
             logService.refreshListener -= OnLogRefresh;
+            
+            if (_selectedEntry != null)
+                _selectedEntry.isSelected = false;
         }
 
         #region log list
@@ -166,7 +202,15 @@ namespace UFramework.Consoles
 
             item.GetChild("_text").asRichTextField.text = data.messagePreview;
             item.GetChild("_stackText").asRichTextField.text = data.stackTracePreview;
-            item.GetController("_selected").SetSelectedIndex(data.isSelected ? 1 : 0);
+            item.GetController("_count").SetSelectedIndex(data.count > 1 ? 1 : 0);
+            if (data.isSelected)
+            {
+                item.GetController("_state").SetSelectedIndex(2);
+            }
+            else
+            {
+                item.GetController("_state").SetSelectedIndex(index % 2 == 0 ? 0 : 1);
+            }
 
             obj.data = data;
         }
@@ -181,6 +225,36 @@ namespace UFramework.Consoles
             _selectedEntry.isSelected = true;
 
             _logList.RefreshVirtualList();
+            
+            SetStackTrace(_selectedEntry);
+        }
+
+        #endregion
+
+        #region stack trace
+
+        private void SetStackTrace(LogEntry entry)
+        {
+            if (entry == null)
+            {
+                _stackText.text = "";
+            }
+            else
+            {
+                var text = entry.message + Environment.NewLine +
+                           (!string.IsNullOrEmpty(entry.stackTrace)
+                               ? entry.stackTrace
+                               : "No Stack Trace Available");
+
+                if (text.Length > 2000)
+                {
+                    text = text.Substring(0, 2000);
+                    text += "\nMessage Truncated";
+                }
+
+                _stackText.text = text;
+            }
+            _stackCom.container.SetXY(0, 0);
         }
 
         #endregion
@@ -211,8 +285,19 @@ namespace UFramework.Consoles
             logService.Clear();
         }
 
-        private void OnFilterClick()
+        private void OnMinimizeClick()
         {
+            _consolePanel.ShowTab(ConsolePanelTab.LogMinimize);
+        }
+
+        private void OnDownClick()
+        {
+            _logList.scrollPane.ScrollBottom();
+        }
+
+        private void OnInputChanged()
+        {
+            _isUpdateDirty = true;
         }
 
         #endregion

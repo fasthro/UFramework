@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1920,1080" opaque="false">
+  <controller name="_visible" pages="0,,1," selected="0"/>
+  <displayList>
+    <component id="n11_qhv9" name="n11" src="qhv93" fileName="Components/BG-2.xml" xy="0,80" size="1920,344">
+      <gearDisplay controller="_visible" pages="0"/>
+      <relation target="" sidePair="width-width"/>
+      <relation target="n0_qhv9" sidePair="height-height,top-top,bottom-bottom"/>
+    </component>
+    <list id="n0_qhv9" name="_logList" xy="0,80" size="1920,350" overflow="scroll" lineGap="2" defaultItem="ui://8qajrhcwqhv9l" autoClearItems="true">
+      <gearDisplay controller="_visible" pages="0"/>
+      <relation target="" sidePair="width-width,top-top"/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+    </list>
+    <component id="n1_qhv9" name="_border1" src="qhv9b" fileName="Components/border.xml" xy="0,80" size="1920,2">
+      <relation target="" sidePair="width-width,top-top"/>
+    </component>
+    <component id="n4_qhv9" name="_debug" src="qhv9f" fileName="Components/Button/LogType3-Button.xml" xy="1680,0">
+      <relation target="" sidePair="right-right,top-top"/>
+    </component>
+    <component id="n5_qhv9" name="_warn" src="qhv9e" fileName="Components/Button/LogType2-Button.xml" xy="1600,0">
+      <relation target="" sidePair="right-right,top-top"/>
+    </component>
+    <component id="n6_qhv9" name="_error" src="qhv9d" fileName="Components/Button/LogType1-Button.xml" xy="1520,0">
+      <relation target="" sidePair="right-right,top-top"/>
+    </component>
+    <component id="n7_qhv9" name="_trash" src="qhv9h" fileName="Components/Button/Trash-Button.xml" xy="1440,0">
+      <relation target="" sidePair="right-right,top-top"/>
+    </component>
+    <component id="n9_qhv9" name="_filterInput" src="qhv9k" fileName="Components/Input/Input.xml" xy="87,10" size="1342,60">
+      <relation target="" sidePair="left-left,top-top,rightext-right"/>
+    </component>
+    <component id="n10_qhv9" name="_maximize" src="qhv9s" fileName="Components/Button/Maximize-Button.xml" xy="1760,0">
+      <relation target="" sidePair="right-right,top-top"/>
+    </component>
+    <component id="n12_qhv9" name="_dropdown" src="qhv9u" fileName="Components/Button/Dropdown-Button.xml" xy="0,0"/>
+    <component id="n13_qhv9" name="_drag" src="qhv9y" fileName="Components/Button/Drag-Button.xml" xy="0,430" size="1920,30">
+      <gearDisplay controller="_visible" pages="0"/>
+      <relation target="n0_qhv9" sidePair="top-bottom"/>
+      <relation target="" sidePair="width-width"/>
+    </component>
+  </displayList>
+</component>
