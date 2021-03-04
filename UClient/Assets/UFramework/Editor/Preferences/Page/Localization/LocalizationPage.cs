@@ -1,11 +1,13 @@
-/*
- * @Author: fasthro
- * @Date: 2020-07-01 20:01:09
- * @Description: Language Page
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-07-01 20:01:09
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
+using UFramework.Core;
 using UnityEditor;
 using UnityEngine;
 
@@ -13,29 +15,26 @@ namespace UFramework.Editor.Preferences.Localization
 {
     public class LocalizationPage : IPage, IPageBar
     {
-        public string menuName { get { return "Localization"; } }
+        public string menuName => "Localization";
 
-        static AppConfig Config { get { return Core.Serializer<AppConfig>.Instance; } }
+        static AppConfig Config => Serializer<AppConfig>.Instance;
 
         /// <summary>
         /// 是否使用系统语言
         /// </summary>
-        [BoxGroup("General Settings")]
-        [LabelText("    Use System Language")]
+        [BoxGroup("General Settings")] [LabelText("    Use System Language")]
         public bool useSystemLanguage;
 
         /// <summary>
         /// 默认语言
         /// </summary>
-        [BoxGroup("General Settings")]
-        [LabelText("    Default Language")]
+        [BoxGroup("General Settings")] [LabelText("    Default Language")]
         public SystemLanguage defaultLanguage = SystemLanguage.ChineseSimplified;
 
         /// <summary>
         /// 支持的语言列表
         /// </summary>
-        [ListDrawerSettings(Expanded = true)]
-        public List<SystemLanguage> supportedLanguages = new List<SystemLanguage>();
+        [ListDrawerSettings(Expanded = true)] public List<SystemLanguage> supportedLanguages = new List<SystemLanguage>();
 
         public object GetInstance()
         {
@@ -65,8 +64,7 @@ namespace UFramework.Editor.Preferences.Localization
         {
             if (SirenixEditorGUI.ToolbarButton(new GUIContent("Generate")))
             {
-                var opt = new ExcelReaderOptions();
-                opt.languages = Config.supportedLanguages;
+                var opt = new ExcelReaderOptions {languages = Config.supportedLanguages};
                 var reader = new ExcelReader(opt);
                 reader.Read();
 

@@ -41,15 +41,8 @@ namespace UFramework.Editor.Preferences.Lua
         /// <returns></returns>
         [ShowInInspector] public List<LuaWrapBindTypeItem> wrapBindTypes = new List<LuaWrapBindTypeItem>();
 
-        public string menuName
-        {
-            get { return "Lua"; }
-        }
+        public string menuName => "Lua";
 
-        public static BindType _GT(Type t)
-        {
-            return new BindType(t);
-        }
 
         public object GetInstance()
         {
@@ -224,7 +217,7 @@ namespace UFramework.Editor.Preferences.Lua
             {
                 foreach (var t in Config.wrapClassNames)
                 {
-                    wrapBindTypes.Add( new LuaWrapBindTypeItem {className = t});
+                    wrapBindTypes.Add(new LuaWrapBindTypeItem {className = t});
                 }
 
                 wrapBindTypes.Sort((left, right) => string.Compare(left.className, right.className, StringComparison.Ordinal));
@@ -377,6 +370,11 @@ namespace UFramework.Editor.Preferences.Lua
                 num--;
                 Config.wrapClassNames[num] = className;
             }
+        }
+
+        public static BindType _GT(Type t)
+        {
+            return new BindType(t);
         }
 
         #endregion wrap

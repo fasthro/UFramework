@@ -1,8 +1,9 @@
-/*
- * @Author: fasthro
- * @Date: 2020-01-04 17:52:23
- * @Description: excel 2 c# index
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-07-01 20:01:09
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using System.Text;
 
 namespace UFramework.Editor.Preferences.Localization
@@ -30,10 +31,10 @@ namespace UFramework.Editor.Preferences.Localization
             Builder.AppendLine("\tpublic class Lang");
             Builder.AppendLine("\t{");
 
-            for (int i = 0; i < reader.sheets.Count; i++)
+            for (var i = 0; i < reader.sheets.Count; i++)
             {
                 var modelName = reader.sheets[i].name;
-                Builder.AppendLine(string.Format("\t\tpublic static int {0} = {1};", modelName, i));
+                Builder.AppendLine($"\t\tpublic static int {modelName} = {i};");
 
                 var template = string.Copy(FuncTemplate);
                 template = template.Replace("$model1$", "Get" + modelName.FirstCharToUpper());
@@ -45,7 +46,7 @@ namespace UFramework.Editor.Preferences.Localization
             // key
             Builder.AppendLine("");
 
-            for (int i = 0; i < reader.sheets.Count; i++)
+            for (var i = 0; i < reader.sheets.Count; i++)
             {
                 Builder.AppendLine(reader.sheets[i].ToCSharpKeyString());
             }

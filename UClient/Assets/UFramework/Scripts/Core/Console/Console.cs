@@ -16,6 +16,7 @@ namespace UFramework.Core
         #region service
 
         public LogService logService { get; private set; }
+        public TriggerService triggerService { get; private set; }
 
         #endregion
 
@@ -28,12 +29,21 @@ namespace UFramework.Core
 
         protected override void OnSingletonStart()
         {
-            ShowConsolePanel();
+            triggerService = CreateService<TriggerService>();
         }
 
         protected override void OnSingletonUpdate(float deltaTime)
         {
+            triggerService.Update();
+
             consolePanel?.DoUpdate();
+        }
+
+        public void ToggleConsolePanel()
+        {
+            if (consolePanel == null || !consolePanel.isShowed)
+                ShowConsolePanel();
+            else consolePanel.Hide();
         }
 
         public void ShowConsolePanel()

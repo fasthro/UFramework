@@ -1,8 +1,9 @@
-/*
- * @Author: fasthro
- * @Date: 2020-01-04 17:52:23
- * @Description: excel 2 text data
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-07-01 20:01:09
+// * @Description:
+// --------------------------------------------------------------------------------
+
 namespace UFramework.Editor.Preferences.Localization
 {
     public class Excel2Text

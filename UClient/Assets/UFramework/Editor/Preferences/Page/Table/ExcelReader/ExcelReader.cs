@@ -1,8 +1,9 @@
-/*
- * @Author: fasthro
- * @Date: 2019-12-17 20:45:12
- * @Description: excel reader
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-06-29 11:26:04
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using System.Collections.Generic;
 using System.IO;
 using ExcelDataReader;
@@ -92,6 +93,7 @@ namespace UFramework.Editor.Preferences.Table
                                 types = RemoveIgnore<TableFieldType>(types, ignoreIndexs);
                                 removeIgnore = true;
                             }
+
                             row.descriptions = descriptions;
                             row.fields = fields;
                             row.types = types;
@@ -99,7 +101,6 @@ namespace UFramework.Editor.Preferences.Table
                             rows.Add(row);
                         }
                     }
-
                 }
             }
         }

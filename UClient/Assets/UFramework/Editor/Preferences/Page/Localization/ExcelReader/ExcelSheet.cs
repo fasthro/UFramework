@@ -1,8 +1,9 @@
-/*
- * @Author: fasthro
- * @Date: 2019-11-11 13:40:19
- * @Description:  excel sheet data
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-07-01 20:01:09
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using System.Text;
 
 namespace UFramework.Editor.Preferences.Localization
@@ -14,11 +15,12 @@ namespace UFramework.Editor.Preferences.Localization
 
         public string ToLuaKeyString()
         {
-            StringBuilder builder = new StringBuilder();
-            for (int i = 1; i < columns.Length; i++)
+            var builder = new StringBuilder();
+            for (var i = 1; i < columns.Length; i++)
             {
-                builder.AppendLine(string.Format("\t\t{0}_{1} = {2},", name, columns[i].key, i - 1));
+                builder.AppendLine($"\t\t{name}_{columns[i].key} = {i - 1},");
             }
+
             return builder.ToString().Trim('\r', '\n');
         }
 
@@ -27,18 +29,20 @@ namespace UFramework.Editor.Preferences.Localization
             StringBuilder builder = new StringBuilder();
             for (int i = 1; i < columns.Length; i++)
             {
-                builder.AppendLine(string.Format("\t\tpublic static int {0}_{1} = {2};", name, columns[i].key, i - 1));
+                builder.AppendLine($"\t\tpublic static int {name}_{columns[i].key} = {i - 1};");
             }
+
             return builder.ToString().Trim('\r', '\n');
         }
 
         public string ToValueString(int index)
         {
-            StringBuilder builder = new StringBuilder();
-            for (int i = 1; i < columns.Length; i++)
+            var builder = new StringBuilder();
+            for (var i = 1; i < columns.Length; i++)
             {
                 builder.Append(columns[i].values[index] + "\n");
             }
+
             return builder.ToString().Trim('\r', '\n');
         }
 

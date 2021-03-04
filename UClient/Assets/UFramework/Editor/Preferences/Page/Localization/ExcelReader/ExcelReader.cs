@@ -1,8 +1,9 @@
-/*
- * @Author: fasthro
- * @Date: 2020-01-04 17:31:06
- * @Description: excel reader
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-07-01 20:01:09
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using System.Collections.Generic;
 using System.IO;
 using ExcelDataReader;
@@ -65,8 +66,10 @@ namespace UFramework.Editor.Preferences.Localization
                         }
                     }
                 }
+
                 sheets.Add(sheet);
             }
+
             stream.Flush();
             stream.Close();
         }

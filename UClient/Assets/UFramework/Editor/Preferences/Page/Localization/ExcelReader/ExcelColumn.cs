@@ -1,8 +1,9 @@
-/*
- * @Author: fasthro
- * @Date: 2019-11-11 13:36:06
- * @Description: excel column data
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-07-01 20:01:09
+// * @Description:
+// --------------------------------------------------------------------------------
+
 namespace UFramework.Editor.Preferences.Localization
 {
     public class ExcelColumn

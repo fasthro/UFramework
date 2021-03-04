@@ -1,8 +1,9 @@
-/*
- * @Author: fasthro
- * @Date: 2020-06-29 11:26:04
- * @Description: Table Page
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-06-29 11:26:04
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using System.Collections.Generic;
 using System.IO;
 using Sirenix.OdinInspector;
@@ -14,16 +15,15 @@ namespace UFramework.Editor.Preferences.Table
 {
     public class TablePage : IPage, IPageBar
     {
-        public string menuName { get { return "Table"; } }
+        public string menuName => "Table";
 
         static string RootPath;
         static string DataPath;
         static string ExcelPath;
 
-        static TableConfig Config { get { return Serializer<TableConfig>.Instance; } }
+        static TableConfig Config => Serializer<TableConfig>.Instance;
 
-        [ShowInInspector]
-        [TableList(IsReadOnly = true, AlwaysExpanded = true, HideToolbar = true)]
+        [ShowInInspector] [TableList(IsReadOnly = true, AlwaysExpanded = true, HideToolbar = true)]
         public List<TableItem> tables = new List<TableItem>();
 
         private Dictionary<string, TableDataIndexFormat> _tableDict = new Dictionary<string, TableDataIndexFormat>();
@@ -39,12 +39,12 @@ namespace UFramework.Editor.Preferences.Table
             DataPath = IOPath.PathCombine(RootPath, "Data");
             ExcelPath = IOPath.PathCombine(RootPath, "Excel");
 
-            bool hasNew = false;
+            var hasNew = false;
             if (Directory.Exists(ExcelPath))
             {
                 var files = Directory.GetFiles(ExcelPath, "*.xlsx", SearchOption.AllDirectories);
-                HashSet<string> fileHashSet = new HashSet<string>();
-                for (int i = 0; i < files.Length; i++)
+                var fileHashSet = new HashSet<string>();
+                for (var i = 0; i < files.Length; i++)
                 {
                     var fileName = IOPath.FileName(files[i], false);
                     fileHashSet.Add(fileName);
@@ -55,7 +55,7 @@ namespace UFramework.Editor.Preferences.Table
                     }
                 }
 
-                List<string> removes = new List<string>();
+                var removes = new List<string>();
                 Config.tableDict.ForEach((item) =>
                 {
                     if (!fileHashSet.Contains(item.Key))
@@ -64,12 +64,13 @@ namespace UFramework.Editor.Preferences.Table
                     }
                 });
 
-                for (int i = 0; i < removes.Count; i++)
+                for (var i = 0; i < removes.Count; i++)
                 {
                     hasNew = true;
                     Config.tableDict.Remove(removes[i]);
                 }
             }
+
             if (hasNew)
             {
                 Config.Serialize();
@@ -78,13 +79,9 @@ namespace UFramework.Editor.Preferences.Table
             _tableDict = Config.tableDict;
 
             tables.Clear();
-            foreach (KeyValuePair<string, TableDataIndexFormat> item in _tableDict)
+            foreach (var item in _tableDict)
             {
-                var tItem = new TableItem();
-                tItem.name = item.Key;
-                tItem.format = item.Value;
-
-                tables.Add(tItem);
+                tables.Add(new TableItem {name = item.Key, format = item.Value});
             }
         }
 
@@ -97,16 +94,18 @@ namespace UFramework.Editor.Preferences.Table
                 IOPath.DirectoryClear(modePath);
                 IOPath.DirectoryClear(DataPath);
 
-                Config.tableDict.ForEach((System.Action<KeyValuePair<string, TableDataIndexFormat>>)((item) =>
+                Config.tableDict.ForEach((System.Action<KeyValuePair<string, TableDataIndexFormat>>) ((item) =>
                 {
                     Logger.Debug("Table Export: " + item.Key);
-                    var options = new ExcelReaderOptions();
-                    options.tableName = item.Key;
-                    options.outFormatOptions = Config.outFormatOptions;
-                    options.dataFormatOptions = item.Value;
-                    options.dataOutDirectory = DataPath;
-                    options.tableModelOutDirectory = modePath;
-                    var reader = new ExcelReader(string.Format("{0}/{1}.xlsx", ExcelPath, item.Key), options);
+                    var options = new ExcelReaderOptions
+                    {
+                        tableName = item.Key,
+                        outFormatOptions = Config.outFormatOptions,
+                        dataFormatOptions = item.Value,
+                        dataOutDirectory = DataPath,
+                        tableModelOutDirectory = modePath
+                    };
+                    var reader = new ExcelReader($"{ExcelPath}/{item.Key}.xlsx", options);
                     reader.Read();
                     switch (Config.outFormatOptions)
                     {
@@ -120,6 +119,7 @@ namespace UFramework.Editor.Preferences.Table
                             new Excel2Lua(reader);
                             break;
                     }
+
                     new Excel2TableObject(reader);
                 }));
 
@@ -134,6 +134,7 @@ namespace UFramework.Editor.Preferences.Table
             {
                 _tableDict[item.name] = item.format;
             }
+
             Config.tableDict = _tableDict;
             Config.Serialize();
         }

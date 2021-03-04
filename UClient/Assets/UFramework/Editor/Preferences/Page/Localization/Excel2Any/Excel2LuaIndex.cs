@@ -1,8 +1,9 @@
-/*
- * @Author: fasthro
- * @Date: 2020-01-04 17:52:23
- * @Description: excel 2 lua index
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-07-01 20:01:09
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using System.Text;
 using UnityEngine;
 
@@ -24,21 +25,23 @@ namespace UFramework.Editor.Preferences.Localization
 
             // model
             _builder.AppendLine("language_model = {");
-            for (int i = 0; i < reader.sheets.Count; i++)
+            for (var i = 0; i < reader.sheets.Count; i++)
             {
-                _builder.AppendLine(string.Format("\t{0} = {1},", reader.sheets[i].name, i));
+                _builder.AppendLine($"\t{reader.sheets[i].name} = {i},");
             }
+
             _builder.AppendLine("}");
 
             // key
             _builder.AppendLine("language_key = {");
 
-            for (int i = 0; i < reader.sheets.Count; i++)
+            for (var i = 0; i < reader.sheets.Count; i++)
             {
                 _builder.AppendLine(reader.sheets[i].ToLuaKeyString());
             }
+
             _builder.AppendLine("}");
-            
+
             // TODO
             // FilePathUtils.FileWriteAllText(FilePathUtils.Combine(Application.dataPath, "LuaScripts/language.lua"), m_builder.ToString());
         }

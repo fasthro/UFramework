@@ -9,6 +9,7 @@ using Sirenix.Utilities.Editor;
 using UFramework.Editor.Preferences.AssetBundle;
 using UFramework.Editor.Preferences.AssetImporter;
 using UFramework.Editor.Preferences.BuildFiles;
+using UFramework.Editor.Preferences.Consoles;
 using UFramework.Editor.Preferences.Localization;
 using UFramework.Editor.Preferences.Lua;
 using UFramework.Editor.Preferences.Projrect;
@@ -38,6 +39,7 @@ namespace UFramework.Editor.Preferences
             AddPage(new AssetImporterPage());
             AddPage(new AssetImporterPreferencesPage());
             AddPage(new BuildFilesPage());
+            AddPage(new ConsolePage(this));
             AddPage(new SerializePage());
             AddPage(new LocalizationPage());
             AddPage(new LuaPage());

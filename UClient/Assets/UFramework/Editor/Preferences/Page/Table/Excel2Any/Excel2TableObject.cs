@@ -1,12 +1,11 @@
-/*
- * @Author: fasthro
- * @Date: 2019-12-17 20:45:12
- * @Description: excel 2 csharp object
- */
-using System.Collections.Generic;
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-06-29 11:26:04
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using System.Text;
 using UFramework.Core;
-using UnityEngine;
 
 namespace UFramework.Editor.Preferences.Table
 {
@@ -130,9 +129,12 @@ $variable$
             Template = Template.Replace("$tableNameStr$", string.Format("\"{0}\"", reader.options.tableName));
             Template = Template.Replace("$dataFormat$", reader.options.dataFormatOptions.ToString());
             Template = Template.Replace("$GetIndexDataError$", string.Format("Debug.LogError(\"[{0}Table] TableDataIndexFormat: {1}. Please use the GetKeyData(index)\");", reader.options.tableName, TableDataIndexFormat.Array.ToString()));
-            Template = Template.Replace("$GetIntKeyDataError$", string.Format("Debug.LogError(\"[{0}Table] TableDataIndexFormat: {1}. Please use the GetKeyData(int-key)\");", reader.options.tableName, TableDataIndexFormat.IntDictionary.ToString()));
-            Template = Template.Replace("$GetStringKeyDataError$", string.Format("Debug.LogError(\"[{0}Table] TableDataIndexFormat: {1}. Please use the GetKeyData(string-key)\");", reader.options.tableName, TableDataIndexFormat.StringDictionary.ToString()));
-            Template = Template.Replace("$GetInt2IntKeyDataError$", string.Format("Debug.LogError(\"[{0}Table] TableDataIndexFormat: {1}. Please use the GetKeyData(int-key, int-key)\");", reader.options.tableName, TableDataIndexFormat.Int2IntDictionary.ToString()));
+            Template = Template.Replace("$GetIntKeyDataError$",
+                string.Format("Debug.LogError(\"[{0}Table] TableDataIndexFormat: {1}. Please use the GetKeyData(int-key)\");", reader.options.tableName, TableDataIndexFormat.IntDictionary.ToString()));
+            Template = Template.Replace("$GetStringKeyDataError$",
+                string.Format("Debug.LogError(\"[{0}Table] TableDataIndexFormat: {1}. Please use the GetKeyData(string-key)\");", reader.options.tableName, TableDataIndexFormat.StringDictionary.ToString()));
+            Template = Template.Replace("$GetInt2IntKeyDataError$",
+                string.Format("Debug.LogError(\"[{0}Table] TableDataIndexFormat: {1}. Please use the GetKeyData(int-key, int-key)\");", reader.options.tableName, TableDataIndexFormat.Int2IntDictionary.ToString()));
 
             for (int i = 0; i < reader.fields.Count; i++)
             {
@@ -144,6 +146,7 @@ $variable$
                     _sb.AppendLine(string.Format("        public string {0}_language {{ get {{ return {1} != null ? {2}.ToString() : string.Empty; }} }}", reader.fields[i], reader.fields[i], reader.fields[i]));
                 }
             }
+
             Template = Template.Replace("$variable$", _sb.ToString());
 
             IOPath.FileCreateText(reader.options.tableModelOutFilePath, Template);

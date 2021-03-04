@@ -24,12 +24,13 @@ namespace UFramework.Editor
         protected OdinMenuItem menuItem;
         protected IPage page;
         protected IPageUpdate pageUpdate;
+        protected IPageGUI pageGUI;
         protected bool isShowing;
 
         /// <summary>
         /// 自动保存描述时间
         /// </summary>
-        readonly static float AUTO_SAVE_DESCREIBE_TIME = 1f;
+        static readonly float AUTO_SAVE_DESCREIBE_TIME = 1f;
         private float m_autoSaveDescribeTime = 0f;
 
         /// <summary>
@@ -62,7 +63,7 @@ namespace UFramework.Editor
 
         protected override OdinMenuTree BuildMenuTree()
         {
-            OdinMenuTree tree = new OdinMenuTree(false);
+            var tree = new OdinMenuTree(false);
 
             if (drawSearchToolbar)
             {
@@ -70,7 +71,7 @@ namespace UFramework.Editor
                 tree.Config.DrawSearchToolbar = true;
             }
 
-            for (int i = 0; i < m_pages.Count; i++)
+            for (var i = 0; i < m_pages.Count; i++)
             {
                 var page = m_pages[i];
                 tree.Add(page.menuName, page.GetInstance());
@@ -97,13 +98,17 @@ namespace UFramework.Editor
                         GUILayout.Label(page.menuName);
                     }
                     var pageBar = selection.Value as IPageBar;
-                    if (pageBar != null)
-                    {
-                        pageBar.OnPageBarDraw();
-                    }
+                    pageBar?.OnPageBarDraw();
                 }
                 SirenixEditorGUI.EndHorizontalToolbar();
             }
+        }
+
+        protected override void OnGUI()
+        {
+            if (!isShowing) return;
+            base.OnGUI();
+            pageGUI?.OnGUI();
         }
 
         private void Update()
@@ -113,18 +118,9 @@ namespace UFramework.Editor
             if (Time.realtimeSinceStartup - m_autoSaveDescribeTime >= AUTO_SAVE_DESCREIBE_TIME)
             {
                 m_autoSaveDescribeTime = Time.realtimeSinceStartup;
-                if (page != null)
-                {
-                    page.OnSaveDescribe();
-                }
+                page?.OnSaveDescribe();
             }
-
-            // page update
-            if (pageUpdate != null)
-            {
-                pageUpdate.OnUpdate();
-            }
-
+            pageUpdate?.OnUpdate();
             OnUpdate();
         }
 
@@ -134,13 +130,11 @@ namespace UFramework.Editor
         {
             if (type == SelectionChangedType.ItemAdded)
             {
-                if (page != null)
-                {
-                    page.OnSaveDescribe();
-                }
+                page?.OnSaveDescribe();
                 menuItem = this.MenuTree.Selection.FirstOrDefault();
                 page = menuItem.Value as IPage;
                 pageUpdate = menuItem.Value as IPageUpdate;
+                pageGUI = menuItem.Value as IPageGUI;
                 page.OnRenderBefore();
             }
         }
@@ -148,10 +142,7 @@ namespace UFramework.Editor
         protected override void OnDestroy()
         {
             isShowing = false;
-            if (page != null)
-            {
-                page.OnSaveDescribe();
-            }
+            page?.OnSaveDescribe();
             EditorApplication.update -= Update;
         }
 

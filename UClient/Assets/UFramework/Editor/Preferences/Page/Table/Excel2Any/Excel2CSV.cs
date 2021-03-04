@@ -1,8 +1,9 @@
-/*
- * @Author: fasthro
- * @Date: 2019-12-17 20:45:12
- * @Description: excel 2 csv
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-06-29 11:26:04
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,9 +24,16 @@ namespace UFramework.Editor.Preferences.Table
             _sb.Clear();
             for (int i = 0; i < reader.fields.Count; i++)
             {
-                if (i == reader.fields.Count - 1) { _sb.Append(reader.fields[i]); }
-                else { _sb.Append(reader.fields[i] + ","); }
+                if (i == reader.fields.Count - 1)
+                {
+                    _sb.Append(reader.fields[i]);
+                }
+                else
+                {
+                    _sb.Append(reader.fields[i] + ",");
+                }
             }
+
             _sb.Append("\r\n");
 
             // data
@@ -34,11 +42,19 @@ namespace UFramework.Editor.Preferences.Table
                 Dictionary<string, object> data = new Dictionary<string, object>();
                 for (int k = 0; k < reader.fields.Count; k++)
                 {
-                    if (k == reader.fields.Count - 1) { _sb.Append(WrapContext(reader.rows[i].datas[k], reader.types[k])); }
-                    else { _sb.Append(WrapContext(reader.rows[i].datas[k], reader.types[k]) + ","); }
+                    if (k == reader.fields.Count - 1)
+                    {
+                        _sb.Append(WrapContext(reader.rows[i].datas[k], reader.types[k]));
+                    }
+                    else
+                    {
+                        _sb.Append(WrapContext(reader.rows[i].datas[k], reader.types[k]) + ",");
+                    }
                 }
+
                 _sb.Append("\r\n");
             }
+
             IOPath.FileCreateText(reader.options.dataOutFilePath, _sb.ToString());
         }
 
@@ -82,7 +98,7 @@ namespace UFramework.Editor.Preferences.Table
 
         private string WrapLanguageContext(string content)
         {
-            char[] separator = new char[] { ':' };
+            char[] separator = new char[] {':'};
             string[] datas = content.Split(separator, StringSplitOptions.RemoveEmptyEntries);
             if (datas.Length == 2)
             {
@@ -92,7 +108,7 @@ namespace UFramework.Editor.Preferences.Table
 
                 if (modelField != null && keyField != null)
                 {
-                    return string.Format("{0}:{1}", (int)modelField.GetValue(null), (int)keyField.GetValue(null));
+                    return string.Format("{0}:{1}", (int) modelField.GetValue(null), (int) keyField.GetValue(null));
                 }
                 else
                 {
@@ -109,7 +125,7 @@ namespace UFramework.Editor.Preferences.Table
 
         private string WrapArrayLanguageContext(string content)
         {
-            char[] separator = new char[] { ',' };
+            char[] separator = new char[] {','};
             string[] datas = content.Split(separator, StringSplitOptions.RemoveEmptyEntries);
             string result = "";
             for (int i = 0; i < datas.Length; i++)
@@ -120,6 +136,7 @@ namespace UFramework.Editor.Preferences.Table
                     result += ",";
                 }
             }
+
             return string.Format("\"{0}\"", result);
         }
     }
