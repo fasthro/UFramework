@@ -25,7 +25,7 @@ namespace UFramework.Editor.Preferences.Consoles
 
         [Title("Trigger")] [HorizontalGroup("Trigger1", 550)] [LabelWidth(200)]
         public TriggerAlignment triggerAlignment;
-        
+
         [HorizontalGroup("Trigger2", 550)] [UnityEngine.Range(1, 10)] [LabelWidth(202)] [LabelText(" Trigger Time")]
         public int triggerTime;
 
@@ -37,19 +37,25 @@ namespace UFramework.Editor.Preferences.Consoles
 
         #endregion
 
-        #region adv
+        #region Log
 
-        [Title("Advanced")] [HorizontalGroup("Adv1", 550)] [LabelWidth(200)]
+        [Title("Log")] [HorizontalGroup("Log1", 550)] [LabelWidth(200)]
         public bool collapseLogEntries = true;
 
-        [HorizontalGroup("Adv2", 550)] [LabelWidth(202)] [LabelText(" Save Log File")]
-        public bool saveLogFile = true;
-
-        [HorizontalGroup("Adv3", 550)] [LabelWidth(202)] [UnityEngine.Range(0, 6000)] [LabelText(" Max Log Entries")]
+        [HorizontalGroup("Log2", 550)] [LabelWidth(202)] [UnityEngine.Range(0, 6000)] [LabelText(" Max Log Entries")]
         public int maxLogEntries = 2000;
 
         #endregion
 
+        #region writer File
+
+        [Title("Writer Log File")] [HorizontalGroup("Writer", 550)] [LabelWidth(202)] [LabelText("Enabled Writer File")]
+        public bool enabledWriteFile = true;
+        
+        [HorizontalGroup("Writer1", 550)] [LabelWidth(202)] [LabelText(" Writer Interval Time(s)")][UnityEngine.Range(1, 600)]
+        public int writeIntervalTime = 1;
+        
+        #endregion
 
         public ConsolePage(OdinMenuWindow window) : base(window)
         {
@@ -68,8 +74,10 @@ namespace UFramework.Editor.Preferences.Consoles
             triggerVScreenAspect = consoleConfig.triggerVScreenAspect / 100f;
 
             collapseLogEntries = consoleConfig.collapseLogEntries;
-            saveLogFile = consoleConfig.saveLogFile;
             maxLogEntries = consoleConfig.maxLogEntries;
+            
+            enabledWriteFile = consoleConfig.enabledWriteFile;
+            writeIntervalTime = consoleConfig.writeIntervalTime;
         }
 
         public void OnPageBarDraw()
@@ -86,11 +94,14 @@ namespace UFramework.Editor.Preferences.Consoles
             consoleConfig.triggerAlignment = triggerAlignment;
             consoleConfig.triggerTime = triggerTime;
             consoleConfig.triggerHScreenAspect = Mathf.RoundToInt(triggerHScreenAspect * 100f);
-            consoleConfig.triggerVScreenAspect = Mathf.RoundToInt(triggerVScreenAspect* 100f);
+            consoleConfig.triggerVScreenAspect = Mathf.RoundToInt(triggerVScreenAspect * 100f);
 
             consoleConfig.collapseLogEntries = collapseLogEntries;
-            consoleConfig.saveLogFile = saveLogFile;
             consoleConfig.maxLogEntries = maxLogEntries;
+            
+            consoleConfig.enabledWriteFile = enabledWriteFile;
+            consoleConfig.writeIntervalTime = writeIntervalTime;
+            
             consoleConfig.Serialize();
         }
 

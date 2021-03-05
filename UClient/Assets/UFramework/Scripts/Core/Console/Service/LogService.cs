@@ -12,7 +12,7 @@ namespace UFramework.Consoles
 {
     public class LogService : BaseConsoleService
     {
-        public delegate void RefreshEvent();
+        public delegate void LogEvent(LogEntry entry);
 
         /// <summary>
         /// error count
@@ -28,7 +28,7 @@ namespace UFramework.Consoles
         /// debug count
         /// </summary>
         public int debugCount { get; private set; }
-        
+
         /// <summary>
         /// 日志
         /// </summary>
@@ -38,9 +38,9 @@ namespace UFramework.Consoles
         private CircularBuffer<LogEntry> _entries;
 
         /// <summary>
-        /// 刷新监听
+        /// 日志监听
         /// </summary>
-        public event RefreshEvent refreshListener;
+        public event LogEvent logListener;
 
 
         private bool _collapseEnabled;
@@ -74,7 +74,7 @@ namespace UFramework.Consoles
                 errorCount = warningCount = debugCount = 0;
             }
 
-            refreshListener?.Invoke();
+            logListener?.Invoke(null);
         }
 
         private void LogMessageReceivedThreaded(string condition, string stackTrace, LogType type)
@@ -119,14 +119,14 @@ namespace UFramework.Consoles
 
             _allEntries.PushBack(entry);
 
-            refreshListener?.Invoke();
+            logListener?.Invoke(entry);
         }
 
         private void DuplicatedEntry(LogEntry entry)
         {
             entry.RetainCount();
 
-            refreshListener?.Invoke();
+            logListener?.Invoke(entry);
 
             if (_hasCleared && _entries.IsEmpty)
             {

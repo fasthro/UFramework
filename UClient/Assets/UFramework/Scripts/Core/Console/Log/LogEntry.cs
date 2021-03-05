@@ -4,6 +4,7 @@
 // * @Description:
 // --------------------------------------------------------------------------------
 
+using System;
 using UnityEngine;
 
 namespace UFramework.Consoles
@@ -46,12 +47,17 @@ namespace UFramework.Consoles
         public string stackTracePreview { get; private set; }
 
         /// <summary>
+        /// 时间
+        /// </summary>
+        public DateTime dateTime { get; private set; }
+
+        /// <summary>
         /// 相同日志出现次数
         /// </summary>
         public int count { get; private set; }
 
         public bool isSelected;
-        
+
         public LogEntry(LogType logType, string message, string stackTrace)
         {
             this.logType = logType;
@@ -60,6 +66,7 @@ namespace UFramework.Consoles
             this.stackTrace = stackTrace;
             this.stackTracePreview = SubPreview(stackTrace, LogStackTracePreviewLength);
             this.count = 1;
+            this.dateTime = DateTime.Now;
         }
 
         public LogEntry(LogEntry entry)
@@ -70,6 +77,7 @@ namespace UFramework.Consoles
             stackTracePreview = entry.stackTracePreview;
             logType = entry.logType;
             count = entry.count;
+            dateTime = entry.dateTime;
         }
 
         public void RetainCount()
@@ -80,6 +88,11 @@ namespace UFramework.Consoles
         public void ResetCount()
         {
             count = 1;
+        }
+
+        public override string ToString()
+        {
+            return $"{dateTime:yyyy/MM/dd HH:mm:ss} [{logType.ToString().ToUpper()}] -> {message}{Environment.NewLine}{stackTrace}";
         }
 
         static string SubPreview(string str, int previewLength)

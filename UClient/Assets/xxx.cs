@@ -15,11 +15,11 @@ public class xxx : MonoBehaviour
 
      void Update()
     {
-        // t += Time.deltaTime;
-        // if (t > 0.5f)
-        // {
-        //     Debug.Log(Random.Range(1, 100).ToString());
-        //     t = 0;
-        // }
+        t += Time.deltaTime;
+        if (t > 1f)
+        {
+            Debug.Log(Random.Range(1, 100).ToString());
+            t = 0;
+        }
     }
 }

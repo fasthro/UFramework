@@ -56,14 +56,52 @@ namespace UFramework.Consoles
             _entries = new CircularBuffer<LogEntry>(2048);
         }
 
-        private void OnLogRefresh()
+        private void OnLog(LogEntry entry)
         {
+            if (entry == null) 
+                return;
+            
             _isUpdateDirty = true;
+            
+            if (!Filter(entry, _inputText.text))
+                _entries.PushBack(entry);
+        }
+        
+        private void ReCheckLog()
+        {
+            _entries.Clear();
+            var allEntries = logService.entries;
+            var filterText = _inputText.text;
+            for (var i = 0; i < allEntries.Size; i++)
+            {
+                var e = allEntries[i];
+                if (!Filter(e, filterText))
+                    _entries.PushBack(e);
+            }
+        }
+
+        private bool Filter(LogEntry entry, string filterText)
+        {
+            if ((entry.logType == LogType.Error || entry.logType == LogType.Exception || entry.logType == LogType.Assert) && !_isShowError)
+                return true;
+
+            if (entry.logType == LogType.Warning && !_isShowWarn)
+                return true;
+
+            if (entry.logType == LogType.Log && !_isShowDebug)
+                return true;
+
+            if (!string.IsNullOrEmpty(filterText))
+            {
+                if (entry.message.IndexOf(filterText, StringComparison.OrdinalIgnoreCase) < 0)
+                    return true;
+            }
+
+            return false;
         }
 
         public void DoShow()
         {
-            logService.refreshListener += OnLogRefresh;
             if (!isInitComponent)
             {
                 _view = _consolePanel.view.GetChild("_consoleMinTab").asCom;
@@ -92,7 +130,6 @@ namespace UFramework.Consoles
                 _dragButton = _view.GetChild("_drag").asButton;
                 _dragButton.onTouchBegin.Set(OnDragBegin);
                 _dragButton.onTouchMove.Set(OnDragMove);
-                _dragButton.onTouchEnd.Set(OnDragEnd);
 
                 _inputText = _view.GetChild("_filterInput").asCom.GetChild("_input").asTextInput;
                 _inputText.onChanged.Set(OnInputChanged);
@@ -113,7 +150,7 @@ namespace UFramework.Consoles
             _isShowWarn = true;
             _isShowError = true;
 
-            logService.refreshListener += OnLogRefresh;
+            logService.logListener += OnLog;
 
             _debugButton.selected = _isShowDebug;
             _warnButton.selected = _isShowWarn;
@@ -179,7 +216,7 @@ namespace UFramework.Consoles
 
         public void DoHide()
         {
-            logService.refreshListener -= OnLogRefresh;
+            logService.logListener -= OnLog;
         }
 
         #region log list
@@ -208,6 +245,8 @@ namespace UFramework.Consoles
             item.GetChild("_text").asRichTextField.text = data.messagePreview;
             item.GetChild("_stackText").asRichTextField.text = data.stackTracePreview;
             item.GetController("_count").SetSelectedIndex(data.count > 1 ? 1 : 0);
+            item.GetChild("_count").asTextField.text = data.count.ToString();
+            
             item.GetController("_state").SetSelectedIndex(index % 2 == 0 ? 0 : 1);
 
             obj.data = data;
@@ -222,23 +261,28 @@ namespace UFramework.Consoles
         {
             _isShowDebug = _debugButton.selected;
             _isUpdateDirty = true;
+            ReCheckLog();
         }
 
         private void OnWarnClick()
         {
             _isShowWarn = _warnButton.selected;
             _isUpdateDirty = true;
+            ReCheckLog();
         }
 
         private void OnErrorClick()
         {
             _isShowError = _errorButton.selected;
             _isUpdateDirty = true;
+            ReCheckLog();
         }
 
         private void OnTrashClick()
         {
+            _isUpdateDirty = true;
             logService.Clear();
+            ReCheckLog();
         }
 
         private void OnMaximizeClick()
@@ -256,6 +300,7 @@ namespace UFramework.Consoles
         private void OnInputChanged()
         {
             _isUpdateDirty = true;
+            ReCheckLog();
         }
 
         private void OnDragBegin()
@@ -275,10 +320,6 @@ namespace UFramework.Consoles
                 newHeight = max;
 
             _logList.height = newHeight;
-        }
-
-        private void OnDragEnd()
-        {
         }
 
         #endregion

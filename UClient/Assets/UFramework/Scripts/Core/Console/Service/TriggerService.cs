@@ -105,7 +105,7 @@ namespace UFramework.Consoles
                     if (_timeTemp > _time)
                     {
                         _timeTemp = 0;
-                        Console.Instance.ToggleConsolePanel();
+                        Console.Instance.TriggerConsolePanel();
                     }
                 }
             }

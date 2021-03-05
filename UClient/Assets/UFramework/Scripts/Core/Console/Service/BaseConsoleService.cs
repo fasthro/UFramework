@@ -25,5 +25,15 @@ namespace UFramework.Consoles
         protected virtual void OnUpdate()
         {
         }
+
+        public void Dispose()
+        {
+            OnDispose();
+        }
+
+        protected virtual void OnDispose()
+        {
+            
+        }
     }
 }

@@ -21,11 +21,13 @@ namespace UFramework.Consoles
 
         #endregion
 
-        #region adv
+        #region log
 
         public bool collapseLogEntries = true;
-        public bool saveLogFile = true;
         public int maxLogEntries = 2000;
+        
+        public bool enabledWriteFile = true;
+        public int writeIntervalTime = 1;
         
         #endregion
 

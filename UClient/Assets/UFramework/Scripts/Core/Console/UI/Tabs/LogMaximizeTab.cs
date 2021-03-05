@@ -50,9 +50,48 @@ namespace UFramework.Consoles
             _entries = new CircularBuffer<LogEntry>(2048);
         }
 
-        private void OnLogRefresh()
+        private void OnLog(LogEntry entry)
         {
+            if (entry == null)
+                return;
+
             _isUpdateDirty = true;
+
+            if (!Filter(entry, _inputText.text))
+                _entries.PushBack(entry);
+        }
+
+        private void ReCheckLog()
+        {
+            _entries.Clear();
+            var allEntries = logService.entries;
+            var filterText = _inputText.text;
+            for (var i = 0; i < allEntries.Size; i++)
+            {
+                var e = allEntries[i];
+                if (!Filter(e, filterText))
+                    _entries.PushBack(e);
+            }
+        }
+
+        private bool Filter(LogEntry entry, string filterText)
+        {
+            if ((entry.logType == LogType.Error || entry.logType == LogType.Exception || entry.logType == LogType.Assert) && !_isShowError)
+                return true;
+
+            if (entry.logType == LogType.Warning && !_isShowWarn)
+                return true;
+
+            if (entry.logType == LogType.Log && !_isShowDebug)
+                return true;
+
+            if (!string.IsNullOrEmpty(filterText))
+            {
+                if (entry.message.IndexOf(filterText, StringComparison.OrdinalIgnoreCase) < 0)
+                    return true;
+            }
+
+            return false;
         }
 
         public void DoShow()
@@ -100,14 +139,15 @@ namespace UFramework.Consoles
             _isShowWarn = true;
             _isShowError = true;
 
-            logService.refreshListener += OnLogRefresh;
+            logService.logListener += OnLog;
 
             _debugButton.selected = _isShowDebug;
             _warnButton.selected = _isShowWarn;
             _errorButton.selected = _isShowError;
-            
+
             _selectedEntry = null;
-            
+
+            ReCheckLog();
             SetStackTrace(null);
         }
 
@@ -118,39 +158,6 @@ namespace UFramework.Consoles
             _debugButton.title = GetNumberString(logService.debugCount, 999, "999+");
             _warnButton.title = GetNumberString(logService.warningCount, 999, "999+");
             _errorButton.title = GetNumberString(logService.errorCount, 999, "999+");
-
-            _entries.Clear();
-            var allEntries = logService.entries;
-            var filterText = _inputText.text;
-            for (var i = 0; i < allEntries.Size; i++)
-            {
-                var e = allEntries[i];
-
-                if ((e.logType == LogType.Error || e.logType == LogType.Exception || e.logType == LogType.Assert) && !_isShowError)
-                {
-                    continue;
-                }
-
-                if (e.logType == LogType.Warning && !_isShowWarn)
-                {
-                    continue;
-                }
-
-                if (e.logType == LogType.Log && !_isShowDebug)
-                {
-                    continue;
-                }
-
-                if (!string.IsNullOrEmpty(filterText))
-                {
-                    if (e.message.IndexOf(filterText, StringComparison.OrdinalIgnoreCase) < 0)
-                    {
-                        continue;
-                    }
-                }
-
-                _entries.PushBack(e);
-            }
 
             var isBottomMost = _logList.scrollPane.isBottomMost;
             _logList.numItems = _entries.Size;
@@ -171,8 +178,8 @@ namespace UFramework.Consoles
 
         public void DoHide()
         {
-            logService.refreshListener -= OnLogRefresh;
-            
+            logService.logListener -= OnLog;
+
             if (_selectedEntry != null)
                 _selectedEntry.isSelected = false;
         }
@@ -203,6 +210,7 @@ namespace UFramework.Consoles
             item.GetChild("_text").asRichTextField.text = data.messagePreview;
             item.GetChild("_stackText").asRichTextField.text = data.stackTracePreview;
             item.GetController("_count").SetSelectedIndex(data.count > 1 ? 1 : 0);
+            item.GetChild("_count").asTextField.text = data.count.ToString();
             if (data.isSelected)
             {
                 item.GetController("_state").SetSelectedIndex(2);
@@ -225,7 +233,7 @@ namespace UFramework.Consoles
             _selectedEntry.isSelected = true;
 
             _logList.RefreshVirtualList();
-            
+
             SetStackTrace(_selectedEntry);
         }
 
@@ -254,6 +262,7 @@ namespace UFramework.Consoles
 
                 _stackText.text = text;
             }
+
             _stackCom.container.SetXY(0, 0);
         }
 
@@ -266,23 +275,28 @@ namespace UFramework.Consoles
         {
             _isShowDebug = _debugButton.selected;
             _isUpdateDirty = true;
+            ReCheckLog();
         }
 
         private void OnWarnClick()
         {
             _isShowWarn = _warnButton.selected;
             _isUpdateDirty = true;
+            ReCheckLog();
         }
 
         private void OnErrorClick()
         {
             _isShowError = _errorButton.selected;
             _isUpdateDirty = true;
+            ReCheckLog();
         }
 
         private void OnTrashClick()
         {
             logService.Clear();
+            _isUpdateDirty = true;
+            ReCheckLog();
         }
 
         private void OnMinimizeClick()
@@ -298,6 +312,7 @@ namespace UFramework.Consoles
         private void OnInputChanged()
         {
             _isUpdateDirty = true;
+            ReCheckLog();
         }
 
         #endregion
