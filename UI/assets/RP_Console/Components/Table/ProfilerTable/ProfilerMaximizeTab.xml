@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1920,1080" opaque="false">
+  <displayList>
+    <richtext id="n0_qhv9" name="_fps" xy="766,328" pivot="0.5,0.5" size="388,104" font="ui://q6ykyrf2t33y0" fontSize="80" color="#ffffff" text="FPS:228.5">
+      <relation target="" sidePair="center-center,middle-middle"/>
+    </richtext>
+    <component id="n1_qhv9" name="_usage" src="qhv915" fileName="Components/Table/ProfilerTable/ProfilerMemory.xml" xy="1030,600" group="n6_qhv9"/>
+    <component id="n2_qhv9" name="_mono" src="qhv915" fileName="Components/Table/ProfilerTable/ProfilerMemory.xml" xy="120,600" group="n6_qhv9"/>
+    <group id="n6_qhv9" name="memory" xy="120,600" size="1711,349" advanced="true">
+      <relation target="" sidePair="center-center,middle-middle"/>
+    </group>
+    <component id="n7_qhv9" name="_minimize" src="qhv9o" fileName="Components/Button/Minimize-Button.xml" xy="1760,0">
+      <relation target="" sidePair="right-right,top-top"/>
+    </component>
+  </displayList>
+</component>

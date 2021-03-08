@@ -1,33 +1,37 @@
 ﻿// --------------------------------------------------------------------------------
 // * @Author: fasthro
-// * @Date: 2021/02/25 16:27
+// * @Date: 2021/03/08 14:32
 // * @Description:
 // --------------------------------------------------------------------------------
 
 using UnityEngine;
 
-namespace UFramework
+namespace UFramework.Consoles
 {
-    public static class FPSHelper
+    public class FPSService : BaseConsoleService
     {
-        /// <summary>
-        /// FPS (string)
-        /// </summary>
-        public static string fps { get; private set; }
-
         /// <summary>
         /// FPS (value)
         /// </summary>
         public static float fpsValue { get; private set; }
-        
+
         const float frequency = 0.5f; // 更新频率
-        const int nbDecimal = 0; // fps精度
 
         static float _accum;
         static int _frame;
         static float _accumTime;
 
-        public static void Update()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nbDecimal">精度</param>
+        /// <returns></returns>
+        public string GetFPS(int nbDecimal = 0)
+        {
+            return fpsValue.ToString("f" + Mathf.Clamp(nbDecimal, 0, 10));
+        }
+
+        protected override void OnUpdate()
         {
             _accumTime += Time.deltaTime;
             _accum += Time.timeScale / Time.deltaTime;
@@ -35,7 +39,6 @@ namespace UFramework
             if (_accumTime >= frequency)
             {
                 fpsValue = _accum / (float) _frame;
-                fps = fpsValue.ToString("f" + Mathf.Clamp(nbDecimal, 0, 10));
                 _accumTime = 0f;
                 _accum = 0f;
                 _frame = 0;

@@ -12,13 +12,9 @@ using Console = UFramework.Core.Console;
 
 namespace UFramework.Consoles
 {
-    public class LogMaximizeTab : IConsolePanelTab
+    public class LogMaximizeTab : BaseConsoleTab, IConsolePanelTab
     {
-        public bool isInitComponent { get; private set; }
-        private static LogService logService => Console.Instance.logService;
-
-        private ConsolePanel _consolePanel;
-        private GComponent _view;
+        private static LogService logService;
 
         private GButton _debugButton;
         private GButton _warnButton;
@@ -44,10 +40,10 @@ namespace UFramework.Consoles
 
         private bool _isUpdateDirty;
 
-        public LogMaximizeTab(ConsolePanel consolePanel)
+        public LogMaximizeTab(ConsolePanel consolePanel) : base(consolePanel)
         {
-            _consolePanel = consolePanel;
             _entries = new CircularBuffer<LogEntry>(2048);
+            logService = Console.Instance.GetService<LogService>();
         }
 
         private void OnLog(LogEntry entry)
@@ -94,44 +90,44 @@ namespace UFramework.Consoles
             return false;
         }
 
+        protected override void OnInitialize()
+        {
+            _view = _consolePanel.view.GetChild("_consoleMaxTab").asCom;
+
+            _debugButton = _view.GetChild("_debug").asButton;
+            _debugButton.onClick.Set(OnDebugClick);
+
+            _warnButton = _view.GetChild("_warn").asButton;
+            _warnButton.onClick.Set(OnWarnClick);
+
+            _errorButton = _view.GetChild("_error").asButton;
+            _errorButton.onClick.Set(OnErrorClick);
+
+            _trashButton = _view.GetChild("_trash").asButton;
+            _trashButton.onClick.Set(OnTrashClick);
+
+            _minimizeButton = _view.GetChild("_minimize").asButton;
+            _minimizeButton.onClick.Set(OnMinimizeClick);
+
+            _inputText = _view.GetChild("_filterInput").asCom.GetChild("_input").asTextInput;
+            _inputText.onChanged.Set(OnInputChanged);
+
+            _downButton = _view.GetChild("_down").asButton;
+            _downButton.onClick.Set(OnDownClick);
+
+            _logList = _view.GetChild("_logList").asList;
+            _logList.RemoveChildrenToPool();
+            _logList.SetVirtual();
+            _logList.itemRenderer = OnItemRenderer;
+            _logList.onClickItem.Set(OnItemClick);
+
+            _stackCom = _view.GetChild("_stack").asCom;
+            _stackText = _stackCom.GetChild("_text").asRichTextField;
+        }
+
         public void DoShow()
         {
-            if (!isInitComponent)
-            {
-                _view = _consolePanel.view.GetChild("_consoleMaxTab").asCom;
-
-                _debugButton = _view.GetChild("_debug").asButton;
-                _debugButton.onClick.Set(OnDebugClick);
-
-                _warnButton = _view.GetChild("_warn").asButton;
-                _warnButton.onClick.Set(OnWarnClick);
-
-                _errorButton = _view.GetChild("_error").asButton;
-                _errorButton.onClick.Set(OnErrorClick);
-
-                _trashButton = _view.GetChild("_trash").asButton;
-                _trashButton.onClick.Set(OnTrashClick);
-
-                _minimizeButton = _view.GetChild("_minimize").asButton;
-                _minimizeButton.onClick.Set(OnMinimizeClick);
-
-                _inputText = _view.GetChild("_filterInput").asCom.GetChild("_input").asTextInput;
-                _inputText.onChanged.Set(OnInputChanged);
-
-                _downButton = _view.GetChild("_down").asButton;
-                _downButton.onClick.Set(OnDownClick);
-
-                _logList = _view.GetChild("_logList").asList;
-                _logList.RemoveChildrenToPool();
-                _logList.SetVirtual();
-                _logList.itemRenderer = OnItemRenderer;
-                _logList.onClickItem.Set(OnItemClick);
-
-                _stackCom = _view.GetChild("_stack").asCom;
-                _stackText = _stackCom.GetChild("_text").asRichTextField;
-
-                isInitComponent = true;
-            }
+            Initialize();
 
             _isUpdateDirty = true;
 
@@ -170,10 +166,8 @@ namespace UFramework.Consoles
             if (_isUpdateDirty)
                 DoRefresh();
 
-            if (isInitComponent)
-            {
+            if (initialized)
                 _downButton.visible = !_logList.scrollPane.isBottomMost;
-            }
         }
 
         public void DoHide()

@@ -34,5 +34,16 @@ namespace UFramework
             string str = input.First().ToString().ToUpper() + input.Substring(1);
             return str;
         }
+        
+        /// <summary>
+        /// 格式化
+        /// </summary>
+        /// <param name="formatString"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static string Fmt(this string formatString, params object[] args)
+        {
+            return string.Format(formatString, args);
+        }
     }
 }

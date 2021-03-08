@@ -12,13 +12,9 @@ using Console = UFramework.Core.Console;
 
 namespace UFramework.Consoles
 {
-    public class LogMinimizeTab : IConsolePanelTab
+    public class LogMinimizeTab : BaseConsoleTab, IConsolePanelTab
     {
-        public bool isInitComponent { get; private set; }
-        private static LogService logService => Console.Instance.logService;
-
-        private ConsolePanel _consolePanel;
-        private GComponent _view;
+        private static LogService logService;
 
         private GButton _debugButton;
         private GButton _warnButton;
@@ -50,23 +46,23 @@ namespace UFramework.Consoles
         private Vector2 _dragStartPos;
         private float _listHeight;
 
-        public LogMinimizeTab(ConsolePanel consolePanel)
+        public LogMinimizeTab(ConsolePanel consolePanel) : base(consolePanel)
         {
-            _consolePanel = consolePanel;
             _entries = new CircularBuffer<LogEntry>(2048);
+            logService = Console.Instance.GetService<LogService>();
         }
 
         private void OnLog(LogEntry entry)
         {
-            if (entry == null) 
+            if (entry == null)
                 return;
-            
+
             _isUpdateDirty = true;
-            
+
             if (!Filter(entry, _inputText.text))
                 _entries.PushBack(entry);
         }
-        
+
         private void ReCheckLog()
         {
             _entries.Clear();
@@ -100,47 +96,47 @@ namespace UFramework.Consoles
             return false;
         }
 
+        protected override void OnInitialize()
+        {
+            _view = _consolePanel.view.GetChild("_consoleMinTab").asCom;
+
+            _visibleController = _view.GetController("_visible");
+
+            _debugButton = _view.GetChild("_debug").asButton;
+            _debugButton.onClick.Set(OnDebugClick);
+
+            _warnButton = _view.GetChild("_warn").asButton;
+            _warnButton.onClick.Set(OnWarnClick);
+
+            _errorButton = _view.GetChild("_error").asButton;
+            _errorButton.onClick.Set(OnErrorClick);
+
+            _trashButton = _view.GetChild("_trash").asButton;
+            _trashButton.onClick.Set(OnTrashClick);
+
+            _maximizeButton = _view.GetChild("_maximize").asButton;
+            _maximizeButton.onClick.Set(OnMaximizeClick);
+
+            _dropdownButton = _view.GetChild("_dropdown").asButton;
+            _dropdownButton.onClick.Set(OnDropdownClick);
+            _dropdownController = _dropdownButton.GetController("_state");
+
+            _dragButton = _view.GetChild("_drag").asButton;
+            _dragButton.onTouchBegin.Set(OnDragBegin);
+            _dragButton.onTouchMove.Set(OnDragMove);
+
+            _inputText = _view.GetChild("_filterInput").asCom.GetChild("_input").asTextInput;
+            _inputText.onChanged.Set(OnInputChanged);
+
+            _logList = _view.GetChild("_logList").asList;
+            _logList.RemoveChildrenToPool();
+            _logList.SetVirtual();
+            _logList.itemRenderer = OnItemRenderer;
+        }
+
         public void DoShow()
         {
-            if (!isInitComponent)
-            {
-                _view = _consolePanel.view.GetChild("_consoleMinTab").asCom;
-
-                _visibleController = _view.GetController("_visible");
-
-                _debugButton = _view.GetChild("_debug").asButton;
-                _debugButton.onClick.Set(OnDebugClick);
-
-                _warnButton = _view.GetChild("_warn").asButton;
-                _warnButton.onClick.Set(OnWarnClick);
-
-                _errorButton = _view.GetChild("_error").asButton;
-                _errorButton.onClick.Set(OnErrorClick);
-
-                _trashButton = _view.GetChild("_trash").asButton;
-                _trashButton.onClick.Set(OnTrashClick);
-
-                _maximizeButton = _view.GetChild("_maximize").asButton;
-                _maximizeButton.onClick.Set(OnMaximizeClick);
-
-                _dropdownButton = _view.GetChild("_dropdown").asButton;
-                _dropdownButton.onClick.Set(OnDropdownClick);
-                _dropdownController = _dropdownButton.GetController("_state");
-
-                _dragButton = _view.GetChild("_drag").asButton;
-                _dragButton.onTouchBegin.Set(OnDragBegin);
-                _dragButton.onTouchMove.Set(OnDragMove);
-
-                _inputText = _view.GetChild("_filterInput").asCom.GetChild("_input").asTextInput;
-                _inputText.onChanged.Set(OnInputChanged);
-
-                _logList = _view.GetChild("_logList").asList;
-                _logList.RemoveChildrenToPool();
-                _logList.SetVirtual();
-                _logList.itemRenderer = OnItemRenderer;
-
-                isInitComponent = true;
-            }
+            Initialize();
 
             _isUpdateDirty = true;
 
@@ -246,7 +242,7 @@ namespace UFramework.Consoles
             item.GetChild("_stackText").asRichTextField.text = data.stackTracePreview;
             item.GetController("_count").SetSelectedIndex(data.count > 1 ? 1 : 0);
             item.GetChild("_count").asTextField.text = data.count.ToString();
-            
+
             item.GetController("_state").SetSelectedIndex(index % 2 == 0 ? 0 : 1);
 
             obj.data = data;

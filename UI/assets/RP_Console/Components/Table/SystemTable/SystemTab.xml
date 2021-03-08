@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1920,1080" opaque="false">
+  <displayList>
+    <component id="n0_qhv9" name="_refresh" src="qhv913" fileName="Components/Button/Refresh-Button.xml" xy="1760,0">
+      <relation target="" sidePair="right-right,top-top"/>
+    </component>
+    <list id="n1_qhv9" name="_list" xy="0,80" size="1920,1000" overflow="scroll" defaultItem="ui://8qajrhcwqhv911" autoClearItems="true">
+      <item/>
+      <item/>
+      <item/>
+    </list>
+  </displayList>
+</component>

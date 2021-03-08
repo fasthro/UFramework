@@ -4,49 +4,48 @@
 // * @Description:
 // --------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
 using FairyGUI;
 using UFramework.Consoles;
 using UFramework.UI;
+using UnityEngine;
 
 namespace UFramework.Core
 {
     [MonoSingletonPath("UFramework/Console")]
     public class Console : MonoSingleton<Console>
     {
-        #region service
-
-        public LogService logService { get; private set; }
-        public LogFileService logFileService { get; private set; }
-        public TriggerService triggerService { get; private set; }
-
-        #endregion
-
+        private Dictionary<Type, BaseConsoleService> _serviceDict;
         public ConsolePanel consolePanel { get; private set; }
 
         protected override void OnSingletonAwake()
         {
-            logService = CreateService<LogService>();
-        }
+            _serviceDict = new Dictionary<Type, BaseConsoleService>();
+         
+            CreateService<LogService>();
+            CreateService<TriggerService>();
+            CreateService<LogFileService>();
+            CreateService<FPSService>();
+            CreateService<SystemService>();
+            CreateService<MemoryService>();
 
-        protected override void OnSingletonStart()
-        {
-            triggerService = CreateService<TriggerService>();
-            logFileService = CreateService<LogFileService>();
+            foreach (var service in _serviceDict)
+                service.Value.Initialize();
         }
 
         protected override void OnSingletonUpdate(float deltaTime)
         {
-            triggerService.Update();
-            logFileService.Update();
+            foreach (var service in _serviceDict)
+                service.Value.Update();
 
             consolePanel?.DoUpdate();
         }
 
         protected override void OnSingletonDestory()
         {
-            logService.Dispose();
-            triggerService.Dispose();
-            logFileService.Dispose();
+            foreach (var service in _serviceDict)
+                service.Value.Dispose();
         }
 
         public void TriggerConsolePanel()
@@ -69,11 +68,17 @@ namespace UFramework.Core
             }
         }
 
-        static T CreateService<T>() where T : BaseConsoleService, new()
+        private void CreateService<T>() where T : BaseConsoleService, new()
         {
             var service = new T();
-            service.Initialize();
-            return service;
+            _serviceDict.Add(service.GetType(), service);
+        }
+
+        public T GetService<T>() where T : BaseConsoleService, new()
+        {
+            var type = typeof(T);
+            _serviceDict.TryGetValue(type, out var service);
+            return service as T;
         }
     }
 }

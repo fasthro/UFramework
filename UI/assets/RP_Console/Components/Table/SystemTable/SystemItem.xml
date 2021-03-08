@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1920,130">
+  <displayList>
+    <richtext id="n0_qhv9" name="_header" xy="11,5" size="177,64" font="ui://q6ykyrf2t33y0" fontSize="48" color="#ffffff" vAlign="middle" autoSize="none" bold="true" autoClearText="true" text="System"/>
+    <richtext id="n1_qhv9" name="_text" xy="10,75" size="1900,42" font="ui://q6ykyrf2t33y0" fontSize="30" color="#ffffff" autoSize="height" autoClearText="true" text=""/>
+  </displayList>
+  <relation target="n1_qhv9" sidePair="width-width,bottomext-bottom"/>
+</component>

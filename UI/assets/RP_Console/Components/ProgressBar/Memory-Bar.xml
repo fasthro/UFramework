@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="100,30" extention="ProgressBar">
+  <displayList>
+    <graph id="n0_qhv9" name="n0" xy="0,0" size="100,30" type="rect" lineSize="0" lineColor="#ffa0a0a0" fillColor="#ff444444">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <graph id="n1_qhv9" name="bar" xy="0,0" size="100,30" type="rect" lineSize="0" fillColor="#ff949494">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <text id="n3_qhv9" name="_total" xy="19,-44" pivot="1,1" size="80,42" font="ui://q6ykyrf2t33y0" fontSize="30" color="#ffffff" align="right" vAlign="middle" autoClearText="true" text="173M">
+      <relation target="" sidePair="right-right"/>
+    </text>
+    <text id="n4_qhv9" name="n4" xy="-60,-44" size="78,42" font="ui://q6ykyrf2t33y0" fontSize="30" color="#bcbcbc" vAlign="middle" text="Total:">
+      <relation target="n3_qhv9" sidePair="middle-middle,right-left"/>
+    </text>
+    <text id="n5_qhv9" name="_cur" xy="30,32" size="69,42" fontSize="30" color="#ffffff" align="right" autoClearText="true" text="16M">
+      <relation target="n1_qhv9" sidePair="right-right,top-bottom"/>
+    </text>
+  </displayList>
+  <ProgressBar/>
+</component>

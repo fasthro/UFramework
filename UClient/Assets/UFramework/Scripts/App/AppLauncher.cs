@@ -30,12 +30,12 @@ namespace UFramework
         {
             Main = this;
             isInitialized = false;
-            var serdata = Serializer<AppConfig>.Instance;
+            var appConfig = Serializer<AppConfig>.Instance;
 
             #region FairyGUI
 
             // font
-            foreach (var fontName in serdata.fonts)
+            foreach (var fontName in appConfig.fonts)
             {
                 var font = Resources.Load<Font>($"Font/{fontName}");
                 if (font != null)
@@ -44,7 +44,7 @@ namespace UFramework
             }
 
             UIPackage.unloadBundleByFGUI = false;
-            GRoot.inst.SetContentScaleFactor(serdata.designResolutionX, serdata.designResolutionY, UIContentScaler.ScreenMatchMode.MatchWidthOrHeight);
+            GRoot.inst.SetContentScaleFactor(appConfig.designResolutionX, appConfig.designResolutionY, UIContentScaler.ScreenMatchMode.MatchWidthOrHeight);
 
             #endregion
 
@@ -55,9 +55,7 @@ namespace UFramework
             // Console
             Console.Instance.Default();
             // 日志等级
-            Logger.SetLevel(serdata.logLevel);
-            // 帮助
-            Helper.Instance.Default();
+            Logger.SetLevel(appConfig.logLevel);
             // 线程队列
             ThreadQueue.Instance.Default();
             // Native

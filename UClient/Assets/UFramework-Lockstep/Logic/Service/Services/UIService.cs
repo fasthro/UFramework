@@ -6,6 +6,7 @@
 
 using FairyGUI;
 using UFramework;
+using UFramework.Consoles;
 using UFramework.Core;
 
 namespace Lockstep.Logic
@@ -13,6 +14,7 @@ namespace Lockstep.Logic
     public class UIService : BaseGameService, IUIService
     {
         private static AdapterManager adapterManager;
+        private static FPSService fpsService;
 
         public GComponent view { get; private set; }
 
@@ -27,14 +29,15 @@ namespace Lockstep.Logic
         public override void Initialize()
         {
             adapterManager = global::Launcher.instance.managerContainer.GetManager<AdapterManager>();
-
+            fpsService = Console.Instance.GetService<FPSService>();
+            
             Messenger.AddListener(EventDefine.GAME_INIT, OnGameInit);
         }
 
         public override void Update()
         {
             if (_fpsText != null)
-                _fpsText.text = FPSHelper.fps;
+                _fpsText.text = fpsService.GetFPS(0);
         }
 
         private void OnGameInit()

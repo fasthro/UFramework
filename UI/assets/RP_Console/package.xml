@@ -10,7 +10,7 @@
     <component id="qhv96" name="Function_ComboBox.xml" path="/Components/ComboBox/" exported="true"/>
     <image id="qhv97" name="close-50.png" path="/Images/Icons/"/>
     <component id="qhv99" name="Close-Button.xml" path="/Components/Button/"/>
-    <component id="qhv9a" name="LogMaximizeTab.xml" path="/Components/LogTable/"/>
+    <component id="qhv9a" name="LogMaximizeTab.xml" path="/Components/Table/LogTable/"/>
     <component id="qhv9b" name="border.xml" path="/Components/"/>
     <image id="qhv9c" name="Circle.png" path="/Images/"/>
     <component id="qhv9d" name="LogType1-Button.xml" path="/Components/Button/"/>
@@ -21,12 +21,12 @@
     <component id="qhv9i" name="Filter-Button.xml" path="/Components/Button/"/>
     <image id="qhv9j" name="Filter-50.png" path="/Images/Icons/"/>
     <component id="qhv9k" name="Input.xml" path="/Components/Input/"/>
-    <component id="qhv9l" name="LogItem.xml" path="/Components/LogTable/"/>
-    <component id="qhv9m" name="TrackItem.xml" path="/Components/LogTable/"/>
+    <component id="qhv9l" name="LogItem.xml" path="/Components/Table/LogTable/"/>
+    <component id="qhv9m" name="TrackItem.xml" path="/Components/Table/LogTable/"/>
     <image id="qhv9n" name="minimize-50.png" path="/Images/Icons/"/>
     <component id="qhv9o" name="Minimize-Button.xml" path="/Components/Button/"/>
     <image id="qhv9p" name="search-50.png" path="/Images/Icons/"/>
-    <component id="qhv9q" name="LogMinimizeTab.xml" path="/Components/LogTable/"/>
+    <component id="qhv9q" name="LogMinimizeTab.xml" path="/Components/Table/LogTable/"/>
     <image id="qhv9r" name="maximize-50.png" path="/Images/Icons/"/>
     <component id="qhv9s" name="Maximize-Button.xml" path="/Components/Button/"/>
     <image id="qhv9t" name="open-dropdown-50.png" path="/Images/Icons/"/>
@@ -36,6 +36,16 @@
     <image id="qhv9x" name="RoundedCorner.png" path="/Images/" scale="9grid" scale9grid="16,16,32,32"/>
     <component id="qhv9y" name="Drag-Button.xml" path="/Components/Button/"/>
     <image id="qhv9z" name="drag-50.png" path="/Images/Icons/"/>
+    <component id="qhv910" name="SystemTab.xml" path="/Components/Table/SystemTable/"/>
+    <component id="qhv911" name="SystemItem.xml" path="/Components/Table/SystemTable/"/>
+    <image id="qhv912" name="refresh-50.png" path="/Images/Icons/"/>
+    <component id="qhv913" name="Refresh-Button.xml" path="/Components/Button/"/>
+    <component id="qhv914" name="ProfilerMaximizeTab.xml" path="/Components/Table/ProfilerTable/"/>
+    <component id="qhv915" name="ProfilerMemory.xml" path="/Components/Table/ProfilerTable/"/>
+    <component id="qhv916" name="Memory-Bar.xml" path="/Components/ProgressBar/"/>
+    <component id="qhv917" name="Title-Button.xml" path="/Components/Button/"/>
+    <component id="qhv918" name="ProfilerMinimizeTab.xml" path="/Components/Table/ProfilerTable/"/>
+    <component id="qhv919" name="Memory-Bar2.xml" path="/Components/ProgressBar/"/>
   </resources>
   <publish name=""/>
 </packageDescription>

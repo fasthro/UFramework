@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1920,1080" opaque="false">
+  <displayList>
+    <richtext id="n0_qhv9" name="_fps" xy="579,13" pivot="1,0" size="162,54" font="ui://q6ykyrf2t33y0" fontSize="40" color="#ffffff" align="right" vAlign="middle" singleLine="true" text="FPS:255">
+      <relation target="" sidePair="right-right,top-top"/>
+    </richtext>
+    <component id="n7_qhv9" name="_usage" src="qhv919" fileName="Components/ProgressBar/Memory-Bar2.xml" xy="1255,0" size="500,80">
+      <relation target="" sidePair="right-right,top-top"/>
+      <ProgressBar max="100"/>
+    </component>
+    <component id="n8_qhv9" name="_mono" src="qhv919" fileName="Components/ProgressBar/Memory-Bar2.xml" xy="750,0" size="500,80">
+      <relation target="" sidePair="right-right,top-top"/>
+      <ProgressBar max="100"/>
+    </component>
+    <component id="n9_qhv9" name="_maximize" src="qhv9s" fileName="Components/Button/Maximize-Button.xml" xy="1760,0">
+      <relation target="" sidePair="right-right,top-top"/>
+    </component>
+  </displayList>
+</component>

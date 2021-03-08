@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="801,349">
+  <displayList>
+    <text id="n0_qhv9" name="_title" xy="0,0" size="494,64" font="ui://q6ykyrf2t33y0" fontSize="48" color="#ffffff" bold="true" autoClearText="true" text="Mono Memory Usage"/>
+    <component id="n2_qhv9" name="n2" src="qhv916" fileName="Components/ProgressBar/Memory-Bar.xml" xy="0,114" size="800,50">
+      <ProgressBar max="100"/>
+    </component>
+    <component id="n3_qhv9" name="_btn" src="qhv917" fileName="Components/Button/Title-Button.xml" xy="150,243" size="500,100"/>
+  </displayList>
+</component>

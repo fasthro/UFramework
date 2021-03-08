@@ -16,6 +16,8 @@ namespace UFramework.Consoles
 {
     public class LogFileService : BaseConsoleService
     {
+        private static LogService logService;
+
         private Thread _thread;
         private DoubleQueue<LogEntry> _logQueue;
 
@@ -31,17 +33,16 @@ namespace UFramework.Consoles
 
         protected override void OnInitialized()
         {
+            logService = Console.Instance.GetService<LogService>();
+
             var consoleConfig = Serializer<ConsoleConfig>.Instance;
-            _enabled = consoleConfig.enabledWriteFile;
-            
-            if (!_enabled)
+            if (!consoleConfig.enabledWriteFile)
                 return;
 
             _intervalTime = consoleConfig.writeIntervalTime;
 
             _logQueue = new DoubleQueue<LogEntry>();
-
-            Console.Instance.logService.logListener += OnLog;
+            logService.logListener += OnLog;
 
             var now = DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss");
 #if UNITY_EDITOR
@@ -69,7 +70,7 @@ namespace UFramework.Consoles
             if (!_isFirst)
             {
                 _isFirst = true;
-                var allEntries = Console.Instance.logService.entries;
+                var allEntries = logService.entries;
                 for (var i = 0; i < allEntries.Size; i++)
                     _logQueue.Enqueue(allEntries[i]);
             }
@@ -114,7 +115,7 @@ namespace UFramework.Consoles
                 if (_intervalTimeTemp <= 0)
                 {
                     _intervalTimeTemp = _intervalTime;
-                    
+
                     _logQueue.Swap();
                     if (!_logQueue.IsEmpty())
                     {
@@ -127,6 +128,8 @@ namespace UFramework.Consoles
         protected override void OnDispose()
         {
             base.OnDispose();
+
+            logService.logListener -= OnLog;
 
             _thread?.Abort();
             _thread = null;
