@@ -11,7 +11,7 @@ using UFramework.Core;
 
 namespace UFramework.Consoles
 {
-    public class SystemTab : BaseConsoleTab, IConsolePanelTab
+    public class SystemTab : BaseConsoleTab
     {
         private static SystemService systemService;
 
@@ -47,17 +47,12 @@ namespace UFramework.Consoles
             _refreshBtn.onClick.Set(OnRefreshClick);
         }
 
-        public void DoShow()
+        protected override void OnShow()
         {
-            Initialize();
-            DoRefresh();
+            Refresh();
         }
 
-        public void DoHide()
-        {
-        }
-
-        public void DoRefresh()
+        protected override void OnRefresh()
         {
             _reportDict = systemService.CreateReport();
 
@@ -73,10 +68,6 @@ namespace UFramework.Consoles
             _list.scrollPane.ScrollTop();
         }
 
-        public void DoUpdate()
-        {
-        }
-
         private void OnItemRenderer(int index, GObject obj)
         {
             var item = obj.asCom;
@@ -88,7 +79,7 @@ namespace UFramework.Consoles
             _stringBuilder.Clear();
             foreach (var value in values)
                 _stringBuilder.AppendLine($"<font color=#BCBCBC>{value.Key}:</font>  {value.Value.ToString()}");
-            
+
             item.GetChild("_text").text = _stringBuilder.ToString();
         }
 
@@ -97,7 +88,7 @@ namespace UFramework.Consoles
         private void OnRefreshClick()
         {
             systemService.CreateSystemInfo();
-            DoRefresh();
+            Refresh();
         }
 
         #endregion

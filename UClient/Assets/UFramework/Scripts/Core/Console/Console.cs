@@ -6,10 +6,7 @@
 
 using System;
 using System.Collections.Generic;
-using FairyGUI;
 using UFramework.Consoles;
-using UFramework.UI;
-using UnityEngine;
 
 namespace UFramework.Core
 {
@@ -29,6 +26,7 @@ namespace UFramework.Core
             CreateService<FPSService>();
             CreateService<SystemService>();
             CreateService<MemoryService>();
+            CreateService<CommandService>();
 
             foreach (var service in _serviceDict)
                 service.Value.Initialize();

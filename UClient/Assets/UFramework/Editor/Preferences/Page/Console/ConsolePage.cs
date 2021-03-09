@@ -51,10 +51,20 @@ namespace UFramework.Editor.Preferences.Consoles
 
         [Title("Writer Log File")] [HorizontalGroup("Writer", 550)] [LabelWidth(202)] [LabelText("Enabled Writer File")]
         public bool enabledWriteFile = true;
-        
-        [HorizontalGroup("Writer1", 550)] [LabelWidth(202)] [LabelText(" Writer Interval Time(s)")][UnityEngine.Range(1, 600)]
+
+        [HorizontalGroup("Writer1", 550)] [LabelWidth(202)] [LabelText(" Writer Interval Time(s)")] [UnityEngine.Range(1, 600)]
         public int writeIntervalTime = 1;
-        
+
+        #endregion
+
+        #region profiler
+
+        [Title("Profiler")] [HorizontalGroup("Profiler", 550)] [LabelWidth(202)] [LabelText("Enabled Memory")]
+        public bool enabledMemory = true;
+
+        [HorizontalGroup("Profiler1", 550)] [LabelWidth(202)] [LabelText(" Memory Refresh Interval Time(s)")] [UnityEngine.Range(1, 600)]
+        public int memoryIntervalTime = 1;
+
         #endregion
 
         public ConsolePage(OdinMenuWindow window) : base(window)
@@ -75,9 +85,12 @@ namespace UFramework.Editor.Preferences.Consoles
 
             collapseLogEntries = consoleConfig.collapseLogEntries;
             maxLogEntries = consoleConfig.maxLogEntries;
-            
+
             enabledWriteFile = consoleConfig.enabledWriteFile;
             writeIntervalTime = consoleConfig.writeIntervalTime;
+
+            enabledMemory = consoleConfig.enabledMemory;
+            memoryIntervalTime = consoleConfig.memoryIntervalTime;
         }
 
         public void OnPageBarDraw()
@@ -98,10 +111,13 @@ namespace UFramework.Editor.Preferences.Consoles
 
             consoleConfig.collapseLogEntries = collapseLogEntries;
             consoleConfig.maxLogEntries = maxLogEntries;
-            
+
             consoleConfig.enabledWriteFile = enabledWriteFile;
             consoleConfig.writeIntervalTime = writeIntervalTime;
             
+            consoleConfig.enabledMemory = enabledMemory;
+            consoleConfig.memoryIntervalTime = memoryIntervalTime;
+
             consoleConfig.Serialize();
         }
 

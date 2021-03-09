@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1920,1080" opaque="false">
+  <displayList>
+    <component id="n1_qhv9" name="_maximize" src="qhv9s" fileName="Components/Button/Maximize-Button.xml" xy="1760,0">
+      <relation target="" sidePair="right-right,top-top"/>
+    </component>
+    <component id="n2_qhv9" name="_input" src="qhv91g" fileName="Components/Input/Input-Command-Minimize.xml" xy="10,10" size="1740,60">
+      <relation target="" sidePair="width-width,top-top"/>
+    </component>
+  </displayList>
+</component>

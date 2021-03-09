@@ -8,30 +8,71 @@ using FairyGUI;
 
 namespace UFramework.Consoles
 {
-    public class BaseConsoleTab
+    public class BaseConsoleTab : IConsolePanelTab
     {
-        protected ConsolePanel _consolePanel;
+        protected readonly ConsolePanel _consolePanel;
         protected GComponent _view;
-        
-        public bool initialized { get; protected set; }
 
-        public BaseConsoleTab(ConsolePanel consolePanel)
+        public bool initialized { get; protected set; }
+        public bool isShowing { get; protected set; }
+
+        protected BaseConsoleTab(ConsolePanel consolePanel)
         {
             _consolePanel = consolePanel;
         }
 
-        protected void Initialize()
+        protected virtual void OnInitialize()
+        {
+        }
+
+        public void Show()
         {
             if (!initialized)
             {
                 OnInitialize();
                 initialized = true;
             }
+
+            isShowing = true;
+            OnShow();
         }
 
-        protected virtual void OnInitialize()
+        protected virtual void OnShow()
         {
-            
+        }
+
+        public void Hide()
+        {
+            isShowing = false;
+            OnHide();
+        }
+
+        protected virtual void OnHide()
+        {
+        }
+
+        public void Refresh()
+        {
+            if (!initialized || !isShowing)
+                return;
+
+            OnRefresh();
+        }
+
+        protected virtual void OnRefresh()
+        {
+        }
+
+        public void Update()
+        {
+            if (!initialized || !isShowing)
+                return;
+
+            OnUpdate();
+        }
+
+        protected virtual void OnUpdate()
+        {
         }
     }
 }

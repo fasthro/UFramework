@@ -31,6 +31,13 @@ namespace UFramework.Consoles
         
         #endregion
 
+        #region profiler
+
+        public bool enabledMemory = true;
+        public int memoryIntervalTime = 1;
+        
+        #endregion
+
         public void Serialize()
         {
             Serializer<ConsoleConfig>.Serialize(this);

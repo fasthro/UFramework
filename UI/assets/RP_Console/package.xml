@@ -46,6 +46,13 @@
     <component id="qhv917" name="Title-Button.xml" path="/Components/Button/"/>
     <component id="qhv918" name="ProfilerMinimizeTab.xml" path="/Components/Table/ProfilerTable/"/>
     <component id="qhv919" name="Memory-Bar2.xml" path="/Components/ProgressBar/"/>
+    <component id="qhv91a" name="CommandMaximizeTab.xml" path="/Components/Table/CommandTable/"/>
+    <component id="qhv91b" name="CommandItem.xml" path="/Components/Table/CommandTable/"/>
+    <component id="qhv91c" name="CommandMinimizeTab.xml" path="/Components/Table/CommandTable/"/>
+    <component id="qhv91d" name="Input-Command-Maximize.xml" path="/Components/Input/"/>
+    <image id="qhv91e" name="clear-50.png" path="/Images/Icons/"/>
+    <component id="qhv91f" name="Clear-Button.xml" path="/Components/Button/"/>
+    <component id="qhv91g" name="Input-Command-Minimize.xml" path="/Components/Input/"/>
   </resources>
   <publish name=""/>
 </packageDescription>

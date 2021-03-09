@@ -111,11 +111,10 @@ namespace UFramework.Consoles
         {
             if (!_canWrite)
             {
-                _intervalTimeTemp -= Time.deltaTime;
-                if (_intervalTimeTemp <= 0)
+                if (Time.realtimeSinceStartup - _intervalTimeTemp > _intervalTime)
                 {
-                    _intervalTimeTemp = _intervalTime;
-
+                    _intervalTimeTemp = Time.realtimeSinceStartup;
+                    
                     _logQueue.Swap();
                     if (!_logQueue.IsEmpty())
                     {

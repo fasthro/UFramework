@@ -3,6 +3,7 @@
  * @Date: 2020-07-01 08:59:25
  * @Description: Utils
  */
+
 using System.Security.Cryptography;
 
 namespace UFramework
@@ -16,7 +17,7 @@ namespace UFramework
         /// <param name="i"></param>
         /// <remarks>http://stackoverflow.com/a/281684/147003</remarks>
         /// <returns></returns>
-        public static string FormatBytes(long i)
+        public static string FormatBytes(long i, string fmt)
         {
             var sign = (i < 0 ? "-" : "");
             double readable = (i < 0 ? -i : i);
@@ -55,9 +56,16 @@ namespace UFramework
             {
                 return i.ToString(sign + "0 B"); // Byte
             }
-            readable /= 1024;
 
-            return sign + readable.ToString("0.### ") + suffix;
+            readable /= 1024;
+            if (string.IsNullOrEmpty(fmt))
+                return sign + readable.ToString("0.### ") + suffix;
+            return fmt.Fmt(sign + readable.ToString("0.### "), suffix);
+        }
+
+        public static string FormatBytes(long i)
+        {
+            return FormatBytes(i, string.Empty);
         }
 
         /// <summary>
@@ -77,6 +85,7 @@ namespace UFramework
             {
                 destString += System.Convert.ToString(md5Data[i], 16).PadLeft(2, '0');
             }
+
             destString = destString.PadLeft(32, '0');
             return destString;
         }

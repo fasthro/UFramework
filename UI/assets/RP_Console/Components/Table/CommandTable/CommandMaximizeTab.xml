@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1920,1080" opaque="false">
+  <displayList>
+    <list id="n0_qhv9" name="_list" xy="0,80" size="1920,811" overflow="scroll" defaultItem="ui://8qajrhcwqhv91b">
+      <relation target="" sidePair="width-width,top-top,topext-top"/>
+      <relation target="n3_qhv9" sidePair="bottomext-top"/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+    </list>
+    <component id="n1_qhv9" name="_input" src="qhv91d" fileName="Components/Input/Input-Command.xml" xy="0,990" size="1920,90">
+      <relation target="" sidePair="width-width,bottom-bottom"/>
+    </component>
+    <component id="n2_qhv9" name="_minimize" src="qhv9o" fileName="Components/Button/Minimize-Button.xml" xy="1760,0">
+      <relation target="" sidePair="right-right,top-top"/>
+    </component>
+    <list id="n3_qhv9" name="n3" xy="0,906" size="1920,75" overflow="scroll">
+      <relation target="n1_qhv9" sidePair="bottomext-top"/>
+      <relation target="" sidePair="top-top"/>
+    </list>
+  </displayList>
+</component>

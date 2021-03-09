@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1760,60">
+  <displayList>
+    <graph id="n1_qhv9" name="n1" xy="0,0" size="1760,60" type="rect" lineSize="0" fillColor="#ff424242">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <text id="n3_qhv9" name="_input" xy="5,0" size="1659,60" font="ui://q6ykyrf2t33y0" fontSize="40" color="#ffffff" vAlign="middle" autoSize="none" singleLine="true" text="" input="true" prompt="&lt;none command&gt;">
+      <relation target="" sidePair="width-width,height-height"/>
+    </text>
+    <component id="n5_qhv9" name="_clear" src="qhv91f" fileName="Components/Button/Clear-Button.xml" xy="1701,0" size="60,60">
+      <relation target="" sidePair="middle-middle,right-right"/>
+    </component>
+  </displayList>
+</component>

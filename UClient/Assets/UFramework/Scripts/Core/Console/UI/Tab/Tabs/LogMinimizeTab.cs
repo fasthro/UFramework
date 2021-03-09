@@ -12,7 +12,7 @@ using Console = UFramework.Core.Console;
 
 namespace UFramework.Consoles
 {
-    public class LogMinimizeTab : BaseConsoleTab, IConsolePanelTab
+    public class LogMinimizeTab : BaseConsoleTab
     {
         private static LogService logService;
 
@@ -134,10 +134,8 @@ namespace UFramework.Consoles
             _logList.itemRenderer = OnItemRenderer;
         }
 
-        public void DoShow()
+        protected override void OnShow()
         {
-            Initialize();
-
             _isUpdateDirty = true;
 
             _isVisible = true;
@@ -156,7 +154,7 @@ namespace UFramework.Consoles
             _visibleController.SetSelectedIndex(0);
         }
 
-        public void DoRefresh()
+        protected override void OnRefresh()
         {
             _isUpdateDirty = false;
 
@@ -203,14 +201,15 @@ namespace UFramework.Consoles
                 _logList.scrollPane.ScrollBottom();
         }
 
-        public void DoUpdate()
+        protected override void OnUpdate()
         {
             if (!_isUpdateDirty)
                 return;
-            DoRefresh();
+            
+            Refresh();
         }
 
-        public void DoHide()
+        protected override void OnHide()
         {
             logService.logListener -= OnLog;
         }

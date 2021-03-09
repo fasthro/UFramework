@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="1920,1080" opaque="false" designImage="ui://8qajrhcwqhv90">
-  <controller name="_state" pages="0,,1," selected="1">
+  <controller name="_state" pages="0,,1," selected="0">
     <remark page="0" value="maximize"/>
     <remark page="1" value="minimize"/>
   </controller>
-  <controller name="_tab" pages="0,,1,,2,,3,,4," selected="4">
-    <remark page="0" value="log-max"/>
-    <remark page="1" value="log-min"/>
-    <remark page="2" value="system"/>
-    <remark page="3" value="profiler-max"/>
-    <remark page="4" value="profiler-min"/>
+  <controller name="_tab" pages="0,,1,,2,,3," selected="0">
+    <remark page="0" value="log"/>
+    <remark page="1" value="system"/>
+    <remark page="2" value="profiler"/>
+    <remark page="3" value="command"/>
   </controller>
   <displayList>
     <component id="n0_qhv9" name="n0" src="qhv92" fileName="Components/BG.xml" xy="0,0" size="1920,1080" group="n6_qhv9">
@@ -47,21 +46,31 @@
     </component>
     <component id="n9_qhv9" name="_consoleMinTab" src="qhv9q" fileName="Components/Table/LogTable/LogMinimizeTab.xml" xy="0,0">
       <gearDisplay controller="_state" pages="1"/>
-      <gearDisplay2 controller="_tab" pages="1" condition="0"/>
+      <gearDisplay2 controller="_tab" pages="0" condition="0"/>
       <relation target="" sidePair="width-width,height-height"/>
     </component>
     <component id="n10_qhv9" name="_systemTab" src="qhv910" fileName="Components/Table/SystemTable/SystemTab.xml" xy="0,0">
-      <gearDisplay controller="_tab" pages="2"/>
+      <gearDisplay controller="_tab" pages="1"/>
       <relation target="" sidePair="width-width,height-height"/>
     </component>
     <component id="n11_qhv9" name="_profilerMaxTab" src="qhv914" fileName="Components/Table/ProfilerTable/ProfilerMaximizeTab.xml" xy="0,0">
       <gearDisplay controller="_state" pages="0"/>
-      <gearDisplay2 controller="_tab" pages="3" condition="0"/>
+      <gearDisplay2 controller="_tab" pages="2" condition="0"/>
       <relation target="" sidePair="width-width,height-height"/>
     </component>
     <component id="n12_qhv9" name="_profilerMinTab" src="qhv918" fileName="Components/Table/ProfilerTable/ProfilerMinimizeTab.xml" xy="0,0">
       <gearDisplay controller="_state" pages="1"/>
-      <gearDisplay2 controller="_tab" pages="4" condition="0"/>
+      <gearDisplay2 controller="_tab" pages="2" condition="0"/>
+      <relation target="" sidePair="width-width,height-height"/>
+    </component>
+    <component id="n13_qhv9" name="_commandMaxTab" src="qhv91a" fileName="Components/Table/CommandTable/CommandMaximizeTab.xml" xy="0,0">
+      <gearDisplay controller="_state" pages="0"/>
+      <gearDisplay2 controller="_tab" pages="3" condition="0"/>
+      <relation target="" sidePair="width-width,height-height"/>
+    </component>
+    <component id="n14_qhv9" name="_commandMinTab" src="qhv91c" fileName="Components/Table/CommandTable/CommandMinimizeTab.xml" xy="0,0">
+      <gearDisplay controller="_state" pages="1"/>
+      <gearDisplay2 controller="_tab" pages="3" condition="0"/>
       <relation target="" sidePair="width-width,height-height"/>
     </component>
   </displayList>

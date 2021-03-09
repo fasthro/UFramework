@@ -5,6 +5,7 @@
 // --------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using FairyGUI;
 using UFramework.UI;
 
@@ -18,11 +19,14 @@ namespace UFramework.Consoles
         System,
         ProfilerMaximize,
         ProfilerMinimize,
-        Command,
+        CommandMaximize,
+        CommandMinimize
     }
 
     public class ConsolePanel : FiaryPanel
     {
+        private Dictionary<ConsolePanelTab, BaseConsoleTab> _tabDict = new Dictionary<ConsolePanelTab, BaseConsoleTab>();
+
         #region component
 
         private Controller _stateController;
@@ -33,21 +37,8 @@ namespace UFramework.Consoles
 
         #endregion
 
-        #region tabs
-
-        private LogMaximizeTab _logMaximizeTab;
-        private LogMinimizeTab _logMinimizeTab;
-
-        private SystemTab _systemTab;
-
-        private ProfilerMaximizeTab _profilerMaximizeTab;
-        private ProfilerMinimizeTab _profilerMinimizeTab;
-
-        private CommandTab _commandTab;
-
-        #endregion
-
-        private ConsolePanelTab _curShowTab = ConsolePanelTab.None;
+        private ConsolePanelTab _tabType = ConsolePanelTab.None;
+        private BaseConsoleTab _tab;
 
         public static ConsolePanel Create()
         {
@@ -58,80 +49,59 @@ namespace UFramework.Consoles
 
         public ConsolePanel() : base("Console", "RP_Console", Layer.Console)
         {
-            _logMaximizeTab = new LogMaximizeTab(this);
-            _logMinimizeTab = new LogMinimizeTab(this);
-
-            _systemTab = new SystemTab(this);
-
-            _profilerMaximizeTab = new ProfilerMaximizeTab(this);
-            _profilerMinimizeTab = new ProfilerMinimizeTab(this);
-
-            _commandTab = new CommandTab(this);
+            AddTab(ConsolePanelTab.LogMaximize, new LogMaximizeTab(this));
+            AddTab(ConsolePanelTab.LogMinimize, new LogMinimizeTab(this));
+            AddTab(ConsolePanelTab.System, new SystemTab(this));
+            AddTab(ConsolePanelTab.ProfilerMaximize, new ProfilerMaximizeTab(this));
+            AddTab(ConsolePanelTab.ProfilerMinimize, new ProfilerMinimizeTab(this));
+            AddTab(ConsolePanelTab.CommandMaximize, new CommandMaximizeTab(this));
+            AddTab(ConsolePanelTab.CommandMinimize, new CommandMinimizeTab(this));
         }
 
-        public void ShowTab(ConsolePanelTab tab)
+        public void ShowTab(ConsolePanelTab tabType)
         {
             HideTab();
 
-            _curShowTab = tab;
-            switch (tab)
+            switch (tabType)
             {
                 case ConsolePanelTab.LogMaximize:
                     _stateController.SetSelectedIndex(0);
                     _tabController.SetSelectedIndex(0);
-                    _logMaximizeTab.DoShow();
                     break;
                 case ConsolePanelTab.LogMinimize:
                     _stateController.SetSelectedIndex(1);
-                    _tabController.SetSelectedIndex(1);
-                    _logMinimizeTab.DoShow();
+                    _tabController.SetSelectedIndex(0);
                     break;
                 case ConsolePanelTab.System:
                     _stateController.SetSelectedIndex(0);
-                    _tabController.SetSelectedIndex(2);
-                    _systemTab.DoShow();
+                    _tabController.SetSelectedIndex(1);
                     break;
                 case ConsolePanelTab.ProfilerMaximize:
                     _stateController.SetSelectedIndex(0);
-                    _tabController.SetSelectedIndex(3);
-                    _profilerMaximizeTab.DoShow();
+                    _tabController.SetSelectedIndex(2);
                     break;
                 case ConsolePanelTab.ProfilerMinimize:
                     _stateController.SetSelectedIndex(1);
-                    _tabController.SetSelectedIndex(4);
-                    _profilerMinimizeTab.DoShow();
+                    _tabController.SetSelectedIndex(2);
                     break;
-                case ConsolePanelTab.Command:
+                case ConsolePanelTab.CommandMaximize:
                     _stateController.SetSelectedIndex(0);
-                    _tabController.SetSelectedIndex(5);
-                    _commandTab.DoShow();
+                    _tabController.SetSelectedIndex(3);
+                    break;
+                case ConsolePanelTab.CommandMinimize:
+                    _stateController.SetSelectedIndex(1);
+                    _tabController.SetSelectedIndex(3);
                     break;
             }
+
+            _tabType = tabType;
+            _tab = GetTab(_tabType);
+            _tab.Show();
         }
 
         private void HideTab()
         {
-            switch (_curShowTab)
-            {
-                case ConsolePanelTab.LogMaximize:
-                    _logMaximizeTab.DoHide();
-                    break;
-                case ConsolePanelTab.LogMinimize:
-                    _logMinimizeTab.DoHide();
-                    break;
-                case ConsolePanelTab.System:
-                    _systemTab.DoHide();
-                    break;
-                case ConsolePanelTab.ProfilerMaximize:
-                    _profilerMaximizeTab.DoHide();
-                    break;
-                case ConsolePanelTab.ProfilerMinimize:
-                    _profilerMinimizeTab.DoHide();
-                    break;
-                case ConsolePanelTab.Command:
-                    _commandTab.DoHide();
-                    break;
-            }
+            GetTab(_tabType)?.Hide();
         }
 
         protected override void OnShow()
@@ -160,30 +130,30 @@ namespace UFramework.Consoles
         {
             if (_functionComboBox.selectedIndex == 0)
             {
-                if (_curShowTab != ConsolePanelTab.LogMaximize)
+                if (_tabType != ConsolePanelTab.LogMaximize)
                 {
                     ShowTab(ConsolePanelTab.LogMaximize);
                 }
             }
             else if (_functionComboBox.selectedIndex == 1)
             {
-                if (_curShowTab != ConsolePanelTab.System)
+                if (_tabType != ConsolePanelTab.System)
                 {
                     ShowTab(ConsolePanelTab.System);
                 }
             }
             else if (_functionComboBox.selectedIndex == 2)
             {
-                if (_curShowTab != ConsolePanelTab.ProfilerMaximize)
+                if (_tabType != ConsolePanelTab.ProfilerMaximize)
                 {
                     ShowTab(ConsolePanelTab.ProfilerMaximize);
                 }
             }
             else if (_functionComboBox.selectedIndex == 3)
             {
-                if (_curShowTab != ConsolePanelTab.Command)
+                if (_tabType != ConsolePanelTab.CommandMaximize)
                 {
-                    ShowTab(ConsolePanelTab.Command);
+                    ShowTab(ConsolePanelTab.CommandMaximize);
                 }
             }
         }
@@ -193,27 +163,23 @@ namespace UFramework.Consoles
             if (!isShowed)
                 return;
 
-            switch (_curShowTab)
-            {
-                case ConsolePanelTab.LogMaximize:
-                    _logMaximizeTab?.DoUpdate();
-                    break;
-                case ConsolePanelTab.LogMinimize:
-                    _logMinimizeTab?.DoUpdate();
-                    break;
-                case ConsolePanelTab.System:
-                    _systemTab?.DoUpdate();
-                    break;
-                case ConsolePanelTab.ProfilerMaximize:
-                    _profilerMaximizeTab?.DoUpdate();
-                    break;
-                case ConsolePanelTab.ProfilerMinimize:
-                    _profilerMinimizeTab?.DoUpdate();
-                    break;
-                case ConsolePanelTab.Command:
-                    _commandTab?.DoUpdate();
-                    break;
-            }
+            _tab?.Update();
+        }
+
+        private void AddTab(ConsolePanelTab tabType, BaseConsoleTab tab)
+        {
+            _tabDict.Add(tabType, tab);
+        }
+
+        public T GetTab<T>(ConsolePanelTab tabType) where T : BaseConsoleTab
+        {
+            return GetTab(tabType) as T;
+        }
+
+        public BaseConsoleTab GetTab(ConsolePanelTab tabType)
+        {
+            _tabDict.TryGetValue(tabType, out var tab);
+            return tab;
         }
     }
 }

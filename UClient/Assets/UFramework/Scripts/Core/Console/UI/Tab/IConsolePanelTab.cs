@@ -8,11 +8,12 @@ namespace UFramework.Consoles
 {
     public interface IConsolePanelTab
     {
+        bool isShowing { get; }
         bool initialized { get; }
         
-        void DoShow();
-        void DoHide();
-        void DoRefresh();
-        void DoUpdate();
+        void Show();
+        void Hide();
+        void Refresh();
+        void Update();
     }
 }

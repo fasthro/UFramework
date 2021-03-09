@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1920,80">
+  <controller name="_style" pages="0,,1," selected="0"/>
+  <displayList>
+    <graph id="n0_qhv9" name="n0" xy="0,0" size="1920,80" type="rect" lineSize="0" fillColor="#ff2c2c2c">
+      <gearColor controller="_style" pages="1" values="#303030" default="#2c2c2c"/>
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <richtext id="n1_qhv9" name="_name" xy="20,19" size="95,42" font="ui://q6ykyrf2t33y0" fontSize="30" color="#ffffff" vAlign="middle" bold="true" autoClearText="true" text="[CMD]">
+      <relation target="" sidePair="left-left,top-top"/>
+    </richtext>
+    <richtext id="n3_qhv9" name="_des" xy="135,19" size="134,42" font="ui://q6ykyrf2t33y0" fontSize="30" color="#b4b4b4" vAlign="middle" autoClearText="true" text="CMD Des">
+      <relation target="n1_qhv9" sidePair="middle-middle,left-right"/>
+    </richtext>
+    <component id="n4_qhv9" name="_dropdown" src="qhv9u" fileName="Components/Button/Dropdown-Button.xml" xy="1840,0">
+      <relation target="" sidePair="right-right,top-top"/>
+    </component>
+  </displayList>
+</component>

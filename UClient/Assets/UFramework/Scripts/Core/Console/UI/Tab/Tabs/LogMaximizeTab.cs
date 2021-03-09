@@ -12,7 +12,7 @@ using Console = UFramework.Core.Console;
 
 namespace UFramework.Consoles
 {
-    public class LogMaximizeTab : BaseConsoleTab, IConsolePanelTab
+    public class LogMaximizeTab : BaseConsoleTab
     {
         private static LogService logService;
 
@@ -125,10 +125,8 @@ namespace UFramework.Consoles
             _stackText = _stackCom.GetChild("_text").asRichTextField;
         }
 
-        public void DoShow()
+        protected override void OnShow()
         {
-            Initialize();
-
             _isUpdateDirty = true;
 
             _isShowDebug = true;
@@ -147,7 +145,7 @@ namespace UFramework.Consoles
             SetStackTrace(null);
         }
 
-        public void DoRefresh()
+        protected override void OnRefresh()
         {
             _isUpdateDirty = false;
 
@@ -161,16 +159,15 @@ namespace UFramework.Consoles
                 _logList.scrollPane.ScrollBottom();
         }
 
-        public void DoUpdate()
+        protected override void OnUpdate()
         {
             if (_isUpdateDirty)
-                DoRefresh();
+                Refresh();
 
-            if (initialized)
-                _downButton.visible = !_logList.scrollPane.isBottomMost;
+            _downButton.visible = !_logList.scrollPane.isBottomMost;
         }
 
-        public void DoHide()
+        protected override void OnHide()
         {
             logService.logListener -= OnLog;
 
