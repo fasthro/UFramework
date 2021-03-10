@@ -25,7 +25,7 @@ namespace UFramework.Consoles
         /// </summary>
         public string paramStatement { get; private set; }
 
-        public Command(string name, string description = "", string paramStatement = "")
+        public Command(string name, string description, string paramStatement)
         {
             this.name = name;
             this.description = description;

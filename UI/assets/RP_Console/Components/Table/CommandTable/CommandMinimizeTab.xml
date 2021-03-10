@@ -7,5 +7,12 @@
     <component id="n2_qhv9" name="_input" src="qhv91g" fileName="Components/Input/Input-Command-Minimize.xml" xy="10,10" size="1740,60">
       <relation target="" sidePair="width-width,top-top"/>
     </component>
+    <list id="n3_ochk" name="_history" xy="10,80" size="1740,166" overflow="scroll" defaultItem="ui://8qajrhcwochk1h" autoClearItems="true">
+      <relation target="n2_qhv9" sidePair="width-width,top-bottom"/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+    </list>
   </displayList>
 </component>

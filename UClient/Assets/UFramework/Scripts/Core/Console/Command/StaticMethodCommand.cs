@@ -10,7 +10,8 @@ namespace UFramework.Consoles
 {
     public class StaticMethodCommand : MethodCommand
     {
-        public StaticMethodCommand(string name, string description, MethodInfo methodInfo) : base(name, description, methodInfo, null)
+        public StaticMethodCommand(string name, string description, string paramStatement, MethodInfo methodInfo)
+            : base(name, description, paramStatement, methodInfo, null)
         {
         }
     }

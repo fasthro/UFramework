@@ -14,13 +14,15 @@ namespace UFramework.Consoles
 {
     public class CommandService : BaseConsoleService
     {
-        private Dictionary<string, Command> _cmdDict = new Dictionary<string, Command>();
+        private readonly Dictionary<string, Command> _cmdDict = new Dictionary<string, Command>();
+        private readonly List<HistoryCommand> _historys = new List<HistoryCommand>();
 
         /// <summary>
         /// 收集所有命令
         /// </summary>
         public Command[] CollectCommands()
         {
+            _historys.Clear();
             _cmdDict.Clear();
 
             var assembly = Assembly.Load("Assembly-CSharp");
@@ -45,6 +47,33 @@ namespace UFramework.Consoles
         }
 
         /// <summary>
+        /// 历史记录
+        /// </summary>
+        /// <param name="isAll"></param>
+        /// <param name="maxSize"></param>
+        /// <returns></returns>
+        public HistoryCommand[] GetHistoryCommands(bool isAll, int maxSize)
+        {
+            maxSize = isAll ? _historys.Count : maxSize;
+            var count = Mathf.Min(_historys.Count, maxSize);
+            var result = new HistoryCommand[count];
+            if (count == _historys.Count)
+            {
+                result = _historys.ToArray();
+            }
+            else
+            {
+                var index = 0;
+                for (var i = _historys.Count - 1; i > _historys.Count - count; i--)
+                {
+                    result[++index] = _historys[i];
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// 添加静态方法命令
         /// </summary>
         /// <param name="info"></param>
@@ -57,7 +86,7 @@ namespace UFramework.Consoles
             }
             else
             {
-                _cmdDict.Add(attr.name, new StaticMethodCommand(attr.name, attr.description, info));
+                _cmdDict.Add(attr.name, new StaticMethodCommand(attr.name, attr.description, attr.paramStatement, info));
             }
         }
 
@@ -66,9 +95,10 @@ namespace UFramework.Consoles
         /// </summary>
         /// <param name="name"></param>
         /// <param name="description"></param>
+        /// <param name="paramStatement"></param>
         /// <param name="methodName"></param>
         /// <param name="type"></param>
-        public void AddStaticMethodCommand(string name, string description, string methodName, Type type)
+        public void AddStaticMethodCommand(string name, string description, string paramStatement, string methodName, Type type)
         {
             if (_cmdDict.ContainsKey(name))
             {
@@ -79,7 +109,7 @@ namespace UFramework.Consoles
                 var info = type.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
                 if (info != null)
                 {
-                    _cmdDict.Add(name, new StaticMethodCommand(name, description, info));
+                    _cmdDict.Add(name, new StaticMethodCommand(name, description, paramStatement, info));
                 }
             }
         }
@@ -89,10 +119,11 @@ namespace UFramework.Consoles
         /// </summary>
         /// <param name="name"></param>
         /// <param name="description"></param>
+        /// <param name="paramStatement"></param>
         /// <param name="methodName"></param>
         /// <param name="type"></param>
         /// <param name="target"></param>
-        public void AddMethodCommand(string name, string description, string methodName, Type type, object target)
+        public void AddMethodCommand(string name, string description, string paramStatement, string methodName, Type type, object target)
         {
             if (target == null)
                 return;
@@ -106,7 +137,7 @@ namespace UFramework.Consoles
                 var info = type.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
                 if (info != null)
                 {
-                    _cmdDict.Add(name, new MethodCommand(name, description, info, target));
+                    _cmdDict.Add(name, new MethodCommand(name, description, paramStatement, info, target));
                 }
             }
         }
@@ -121,7 +152,13 @@ namespace UFramework.Consoles
             if (words.Length > 0)
             {
                 _cmdDict.TryGetValue(words[0], out var command);
-                command?.Execute(line);
+
+                if (command != null)
+                {
+                    command.Execute(line);
+
+                    _historys.Add(new HistoryCommand(command, line));
+                }
             }
         }
 

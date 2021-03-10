@@ -23,10 +23,11 @@ namespace UFramework.Consoles
         /// </summary>
         /// <param name="name">命令名称</param>
         /// <param name="description">命令描述</param>
+        /// <param name="paramStatement">命令描述</param>
         /// <param name="methodInfo">函数信息</param>
         /// <param name="target">目标对象</param>
         /// <returns></returns>
-        public MethodCommand(string name, string description, MethodInfo methodInfo, object target) : base(name, description)
+        public MethodCommand(string name, string description, string paramStatement, MethodInfo methodInfo, object target) : base(name, description, paramStatement)
         {
             m_target = target;
             m_methodInfo = methodInfo;

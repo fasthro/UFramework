@@ -145,8 +145,8 @@ namespace UFramework.UI
         public void Hide()
         {
             isShowed = false;
-            foreach (var package in _packages)
-                PackageAgents.Unload(package);
+            // foreach (var package in _packages)
+            //     PackageAgents.Unload(package);
             OnHide();
         }
 

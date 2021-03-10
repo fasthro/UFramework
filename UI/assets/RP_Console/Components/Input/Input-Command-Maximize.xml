@@ -4,10 +4,16 @@
     <graph id="n1_qhv9" name="n1" xy="0,0" size="1920,90" type="rect" lineSize="0" fillColor="#ff424242">
       <relation target="" sidePair="width-width,height-height"/>
     </graph>
-    <text id="n3_qhv9" name="_input" xy="5,0" size="1819,90" font="ui://q6ykyrf2t33y0" fontSize="40" color="#ffffff" vAlign="middle" autoSize="none" singleLine="true" text="" input="true" prompt="&lt;none command&gt;">
+    <text id="n3_qhv9" name="_input" xy="5,0" size="1640,90" font="ui://q6ykyrf2t33y0" fontSize="40" color="#ffffff" vAlign="middle" autoSize="none" singleLine="true" text="" input="true" prompt="&lt;none command&gt;">
       <relation target="" sidePair="width-width,height-height"/>
     </text>
-    <component id="n5_qhv9" name="_clear" src="qhv91f" fileName="Components/Button/Clear-Button.xml" xy="1831,0" size="90,90">
+    <component id="n5_qhv9" name="_clear" src="qhv91f" fileName="Components/Button/Clear-Button.xml" xy="1830,0" size="90,90">
+      <relation target="" sidePair="middle-middle,right-right"/>
+    </component>
+    <component id="n6_ochk" name="_history" src="ochk1j" fileName="Components/Button/History-Button.xml" xy="1740,0" size="90,90">
+      <relation target="" sidePair="middle-middle,right-right"/>
+    </component>
+    <component id="n7_ochk" name="_send" src="ochk1l" fileName="Components/Button/Send-Button.xml" xy="1650,0" size="90,90">
       <relation target="" sidePair="middle-middle,right-right"/>
     </component>
   </displayList>

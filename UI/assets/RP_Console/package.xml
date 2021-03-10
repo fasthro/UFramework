@@ -53,6 +53,11 @@
     <image id="qhv91e" name="clear-50.png" path="/Images/Icons/"/>
     <component id="qhv91f" name="Clear-Button.xml" path="/Components/Button/"/>
     <component id="qhv91g" name="Input-Command-Minimize.xml" path="/Components/Input/"/>
+    <component id="ochk1h" name="CommandHistoryItem.xml" path="/Components/Table/CommandTable/"/>
+    <image id="ochk1i" name="history-50.png" path="/Images/Icons/"/>
+    <component id="ochk1j" name="History-Button.xml" path="/Components/Button/"/>
+    <image id="ochk1k" name="send-50.png" path="/Images/Icons/"/>
+    <component id="ochk1l" name="Send-Button.xml" path="/Components/Button/"/>
   </resources>
   <publish name=""/>
 </packageDescription>

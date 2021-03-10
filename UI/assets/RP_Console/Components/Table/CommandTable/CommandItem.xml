@@ -12,8 +12,5 @@
     <richtext id="n3_qhv9" name="_des" xy="135,19" size="134,42" font="ui://q6ykyrf2t33y0" fontSize="30" color="#b4b4b4" vAlign="middle" autoClearText="true" text="CMD Des">
       <relation target="n1_qhv9" sidePair="middle-middle,left-right"/>
     </richtext>
-    <component id="n4_qhv9" name="_dropdown" src="qhv9u" fileName="Components/Button/Dropdown-Button.xml" xy="1840,0">
-      <relation target="" sidePair="right-right,top-top"/>
-    </component>
   </displayList>
 </component>

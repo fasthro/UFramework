@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="80,80" extention="Button">
-  <controller name="button" pages="0,up,1,down,2,over,3,selectedOver" selected="1"/>
+  <controller name="button" pages="0,up,1,down,2,over,3,selectedOver" selected="0"/>
   <displayList>
-    <image id="n3_qhv9" name="icon" src="qhv91e" fileName="Images/Icons/clear-50.png" xy="15,15" size="50,50" color="#b3b3b3">
+    <image id="n3_qhv9" name="icon" src="ochk1k" fileName="Images/Icons/send-50.png" xy="15,15" size="50,50">
       <gearColor controller="button" pages="1,2,3" values="#b3b3b3|#cccccc|#b3b3b3" default="#ffffff"/>
       <relation target="" sidePair="width-width,height-height"/>
     </image>

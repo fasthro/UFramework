@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1920,50">
+  <controller name="_style" pages="0,,1," selected="0"/>
+  <displayList>
+    <graph id="n0_qhv9" name="n0" xy="0,0" size="1920,50" type="rect" lineSize="0" fillColor="#ff424242">
+      <gearColor controller="_style" pages="0,1" values="#424242|#525151"/>
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <richtext id="n1_qhv9" name="_name" xy="20,8" size="78,34" font="ui://q6ykyrf2t33y0" fontSize="24" color="#ffffff" vAlign="middle" bold="true" autoClearText="true" text="[CMD]">
+      <relation target="" sidePair="left-left,top-top"/>
+    </richtext>
+    <richtext id="n3_qhv9" name="_des" xy="118,8" size="108,34" font="ui://q6ykyrf2t33y0" fontSize="24" color="#b4b4b4" vAlign="middle" autoClearText="true" text="CMD Des">
+      <relation target="n1_qhv9" sidePair="middle-middle,left-right"/>
+    </richtext>
+    <richtext id="n4_ochk" name="_content" xy="246,8" size="108,34" font="ui://q6ykyrf2t33y0" fontSize="24" color="#b4b4b4" vAlign="middle" autoClearText="true" text="CMD Des">
+      <relation target="n3_qhv9" sidePair="middle-middle,left-right"/>
+    </richtext>
+  </displayList>
+</component>
