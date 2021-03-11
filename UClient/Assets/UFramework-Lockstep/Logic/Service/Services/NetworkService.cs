@@ -31,7 +31,7 @@ namespace Lockstep.Logic
         public void SendInput(FrameData frameData)
         {
             var message = new Frame_C2S() {Frame = frameData.ToLSMFrame()};
-            frameData.Recycle();
+            // frameData.Recycle();
             NetworkProxy.Send(NetworkCmd.PLAYER_INPUT, message);
         }
 

@@ -9,12 +9,12 @@ public class UFramework_BaseBehaviourWrap
 		L.BeginClass(typeof(UFramework.BaseBehaviour), typeof(System.Object));
 		L.RegFunction("SetContainer", new LuaCSFunction(SetContainer));
 		L.RegFunction("Initialize", new LuaCSFunction(Initialize));
+		L.RegFunction("SetReference", new LuaCSFunction(SetReference));
 		L.RegFunction("Update", new LuaCSFunction(Update));
 		L.RegFunction("LateUpdate", new LuaCSFunction(LateUpdate));
 		L.RegFunction("FixedUpdate", new LuaCSFunction(FixedUpdate));
 		L.RegFunction("Dispose", new LuaCSFunction(Dispose));
 		L.RegFunction("ApplicationQuit", new LuaCSFunction(ApplicationQuit));
-		L.RegFunction("SetReference", new LuaCSFunction(SetReference));
 		L.RegFunction("CallLuaFunction", new LuaCSFunction(CallLuaFunction));
 		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
 		L.RegVar("managerContainer", new LuaCSFunction(get_managerContainer), new LuaCSFunction(set_managerContainer));
@@ -46,6 +46,22 @@ public class UFramework_BaseBehaviourWrap
 			ToLua.CheckArgsCount(L, 1);
 			UFramework.BaseBehaviour obj = (UFramework.BaseBehaviour)ToLua.CheckObject<UFramework.BaseBehaviour>(L, 1);
 			obj.Initialize();
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int SetReference(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			UFramework.BaseBehaviour obj = (UFramework.BaseBehaviour)ToLua.CheckObject<UFramework.BaseBehaviour>(L, 1);
+			obj.SetReference();
 			return 0;
 		}
 		catch (Exception e)
@@ -127,22 +143,6 @@ public class UFramework_BaseBehaviourWrap
 			ToLua.CheckArgsCount(L, 1);
 			UFramework.BaseBehaviour obj = (UFramework.BaseBehaviour)ToLua.CheckObject<UFramework.BaseBehaviour>(L, 1);
 			obj.ApplicationQuit();
-			return 0;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int SetReference(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 1);
-			UFramework.BaseBehaviour obj = (UFramework.BaseBehaviour)ToLua.CheckObject<UFramework.BaseBehaviour>(L, 1);
-			obj.SetReference();
 			return 0;
 		}
 		catch (Exception e)

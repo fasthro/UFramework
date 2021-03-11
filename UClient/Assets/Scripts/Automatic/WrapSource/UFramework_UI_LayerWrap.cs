@@ -15,6 +15,7 @@ public class UFramework_UI_LayerWrap
 		L.RegVar("NETWORK", new LuaCSFunction(get_NETWORK), null);
 		L.RegVar("LOADER", new LuaCSFunction(get_LOADER), null);
 		L.RegVar("TOP", new LuaCSFunction(get_TOP), null);
+		L.RegVar("Console", new LuaCSFunction(get_Console), null);
 		L.RegFunction("IntToEnum", new LuaCSFunction(IntToEnum));
 		L.EndEnum();
 		TypeTraits<UFramework.UI.Layer>.Check = CheckType;
@@ -86,6 +87,13 @@ public class UFramework_UI_LayerWrap
 	static int get_TOP(IntPtr L)
 	{
 		ToLua.Push(L, UFramework.UI.Layer.TOP);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_Console(IntPtr L)
+	{
+		ToLua.Push(L, UFramework.UI.Layer.Console);
 		return 1;
 	}
 

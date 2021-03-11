@@ -102,6 +102,11 @@ namespace UFramework
         #region project
 
         /// <summary>
+        /// 是否为URP项目
+        /// </summary>
+        public bool isURP = true;
+        
+        /// <summary>
         /// AssetBundle 构建Hash名称
         /// </summary>
         public bool isBuildAssetBunldeNameHash = true;

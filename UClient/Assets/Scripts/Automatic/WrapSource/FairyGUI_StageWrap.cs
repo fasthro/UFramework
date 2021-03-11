@@ -9,7 +9,7 @@ public class FairyGUI_StageWrap
 		L.BeginClass(typeof(FairyGUI.Stage), typeof(FairyGUI.Container));
 		L.RegFunction("Instantiate", new LuaCSFunction(Instantiate));
 		L.RegFunction("Dispose", new LuaCSFunction(Dispose));
-		L.RegFunction("SetFous", new LuaCSFunction(SetFous));
+		L.RegFunction("SetFocus", new LuaCSFunction(SetFocus));
 		L.RegFunction("DoKeyNavigate", new LuaCSFunction(DoKeyNavigate));
 		L.RegFunction("GetTouchPosition", new LuaCSFunction(GetTouchPosition));
 		L.RegFunction("GetTouchTarget", new LuaCSFunction(GetTouchTarget));
@@ -107,7 +107,7 @@ public class FairyGUI_StageWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int SetFous(IntPtr L)
+	static int SetFocus(IntPtr L)
 	{
 		try
 		{
@@ -117,7 +117,7 @@ public class FairyGUI_StageWrap
 			{
 				FairyGUI.Stage obj = (FairyGUI.Stage)ToLua.CheckObject<FairyGUI.Stage>(L, 1);
 				FairyGUI.DisplayObject arg0 = (FairyGUI.DisplayObject)ToLua.CheckObject<FairyGUI.DisplayObject>(L, 2);
-				obj.SetFous(arg0);
+				obj.SetFocus(arg0);
 				return 0;
 			}
 			else if (count == 3)
@@ -125,12 +125,12 @@ public class FairyGUI_StageWrap
 				FairyGUI.Stage obj = (FairyGUI.Stage)ToLua.CheckObject<FairyGUI.Stage>(L, 1);
 				FairyGUI.DisplayObject arg0 = (FairyGUI.DisplayObject)ToLua.CheckObject<FairyGUI.DisplayObject>(L, 2);
 				bool arg1 = LuaDLL.luaL_checkboolean(L, 3);
-				obj.SetFous(arg0, arg1);
+				obj.SetFocus(arg0, arg1);
 				return 0;
 			}
 			else
 			{
-				return LuaDLL.luaL_throw(L, "invalid arguments to method: FairyGUI.Stage.SetFous");
+				return LuaDLL.luaL_throw(L, "invalid arguments to method: FairyGUI.Stage.SetFocus");
 			}
 		}
 		catch (Exception e)

@@ -106,7 +106,7 @@ namespace Lockstep.Logic
             // 添加玩家
             foreach (var playerData in message.playerDatas)
             {
-                var view = _viewService.CreateView<IPlayerView>("Assets/Arts/Player/Player1.prefab", playerData.oid);
+                var view = _viewService.CreateView<IPlayerView>("Assets/Arts/HeroUnit/Hero_Darius.prefab", playerData.oid);
                 // TODO
                 if (playerData.uid == 1)
                 {
@@ -208,6 +208,7 @@ namespace Lockstep.Logic
             frame.tick = tick;
             frame.inputDatas = new[] {_inputService.inputData};
             _networkService.SendInput(frame);
+            PushSFrame(frame);
         }
 
         #region frame

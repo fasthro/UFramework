@@ -22,7 +22,9 @@ public class UFramework_AppConfigWrap
 		L.RegVar("useFairyGUI", new LuaCSFunction(get_useFairyGUI), new LuaCSFunction(set_useFairyGUI));
 		L.RegVar("designResolutionX", new LuaCSFunction(get_designResolutionX), new LuaCSFunction(set_designResolutionX));
 		L.RegVar("designResolutionY", new LuaCSFunction(get_designResolutionY), new LuaCSFunction(set_designResolutionY));
+		L.RegVar("fonts", new LuaCSFunction(get_fonts), new LuaCSFunction(set_fonts));
 		L.RegVar("uiDirectory", new LuaCSFunction(get_uiDirectory), new LuaCSFunction(set_uiDirectory));
+		L.RegVar("isBuildAssetBunldeNameHash", new LuaCSFunction(get_isBuildAssetBunldeNameHash), new LuaCSFunction(set_isBuildAssetBunldeNameHash));
 		L.RegVar("package", new LuaCSFunction(get_package), new LuaCSFunction(set_package));
 		L.RegVar("assigned", new LuaCSFunction(get_assigned), null);
 		L.EndClass();
@@ -297,6 +299,25 @@ public class UFramework_AppConfigWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_fonts(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			UFramework.AppConfig obj = (UFramework.AppConfig)o;
+			System.Collections.Generic.List<string> ret = obj.fonts;
+			ToLua.PushSealed(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o, "attempt to index fonts on a nil value");
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_uiDirectory(IntPtr L)
 	{
 		object o = null;
@@ -312,6 +333,25 @@ public class UFramework_AppConfigWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o, "attempt to index uiDirectory on a nil value");
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_isBuildAssetBunldeNameHash(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			UFramework.AppConfig obj = (UFramework.AppConfig)o;
+			bool ret = obj.isBuildAssetBunldeNameHash;
+			LuaDLL.lua_pushboolean(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o, "attempt to index isBuildAssetBunldeNameHash on a nil value");
 		}
 	}
 
@@ -582,6 +622,25 @@ public class UFramework_AppConfigWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_fonts(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			UFramework.AppConfig obj = (UFramework.AppConfig)o;
+			System.Collections.Generic.List<string> arg0 = (System.Collections.Generic.List<string>)ToLua.CheckObject(L, 2, TypeTraits<System.Collections.Generic.List<string>>.type);
+			obj.fonts = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o, "attempt to index fonts on a nil value");
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int set_uiDirectory(IntPtr L)
 	{
 		object o = null;
@@ -597,6 +656,25 @@ public class UFramework_AppConfigWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o, "attempt to index uiDirectory on a nil value");
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_isBuildAssetBunldeNameHash(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			UFramework.AppConfig obj = (UFramework.AppConfig)o;
+			bool arg0 = LuaDLL.luaL_checkboolean(L, 2);
+			obj.isBuildAssetBunldeNameHash = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o, "attempt to index isBuildAssetBunldeNameHash on a nil value");
 		}
 	}
 

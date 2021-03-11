@@ -10,6 +10,7 @@ using UFramework.Core;
 using UFramework.NativePlatform;
 using UFramework.UI;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 namespace UFramework
 {
@@ -46,12 +47,20 @@ namespace UFramework
             UIPackage.unloadBundleByFGUI = false;
             GRoot.inst.SetContentScaleFactor(appConfig.designResolutionX, appConfig.designResolutionY, UIContentScaler.ScreenMatchMode.MatchWidthOrHeight);
 
+            // URP项目下摄像机堆叠处理
+            if (appConfig.isURP)
+            {
+                var stageCamera = StageCamera.main;
+                stageCamera.GetUniversalAdditionalCameraData().renderType = CameraRenderType.Overlay;
+                Camera.main.GetUniversalAdditionalCameraData().cameraStack.Add(stageCamera);
+            }
+
             #endregion
 
             // launch panel
             _launchPanel = LaunchPanel.Create();
             _launchPanel.Show();
-            
+
             // Console
             Console.Instance.Default();
             // 日志等级

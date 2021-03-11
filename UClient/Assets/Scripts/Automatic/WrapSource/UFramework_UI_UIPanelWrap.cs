@@ -13,6 +13,7 @@ public class UFramework_UI_UIPanelWrap
 		L.RegFunction("LuaBind", new LuaCSFunction(LuaBind));
 		L.RegFunction("UpdateSortOrder", new LuaCSFunction(UpdateSortOrder));
 		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
+		L.RegVar("isResourceLoad", new LuaCSFunction(get_isResourceLoad), new LuaCSFunction(set_isResourceLoad));
 		L.RegVar("layer", new LuaCSFunction(get_layer), null);
 		L.RegVar("isShowed", new LuaCSFunction(get_isShowed), null);
 		L.RegVar("isLoaded", new LuaCSFunction(get_isLoaded), null);
@@ -101,6 +102,25 @@ public class UFramework_UI_UIPanelWrap
 		catch (Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_isResourceLoad(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			UFramework.UI.UIPanel obj = (UFramework.UI.UIPanel)o;
+			bool ret = obj.isResourceLoad;
+			LuaDLL.lua_pushboolean(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o, "attempt to index isResourceLoad on a nil value");
 		}
 	}
 
@@ -196,6 +216,25 @@ public class UFramework_UI_UIPanelWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o, "attempt to index isHidden on a nil value");
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_isResourceLoad(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			UFramework.UI.UIPanel obj = (UFramework.UI.UIPanel)o;
+			bool arg0 = LuaDLL.luaL_checkboolean(L, 2);
+			obj.isResourceLoad = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o, "attempt to index isResourceLoad on a nil value");
 		}
 	}
 }

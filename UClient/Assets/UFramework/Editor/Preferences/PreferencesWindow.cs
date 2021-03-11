@@ -45,7 +45,7 @@ namespace UFramework.Editor.Preferences
             AddPage(new LuaPage());
             AddPage(new TablePage());
             AddPage(new ProtoPage());
-            AddPage(new ProjrectPage());
+            AddPage(new ProjectPage());
         }
     }
 }
