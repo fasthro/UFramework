@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Lockstep
 {
-    public class FrameBuffer : BaseBehaviour
+    public class FrameBuffer
     {
         /// <summary>
         /// 缓冲容量
@@ -28,16 +28,12 @@ namespace Lockstep
         /// </summary>
         /// <value></value>
         public int cTick { get; private set; }
-
+        
         /// <summary>
-        /// 校验完成帧
+        /// 当前执行帧
         /// </summary>
-        public int vTick { get; private set; }
-
-        /// <summary>
-        /// 是否回滚
-        /// </summary>
-        public bool isRollback { get; private set; }
+        /// <value></value>
+        public int rTick { get; private set; }
         
         #region private frame
 
@@ -47,17 +43,11 @@ namespace Lockstep
         #endregion
 
         
-
         public FrameBuffer(int capacity = 2000) : base()
         {
             this.capacity = capacity;
             _sFrames = new FrameData[capacity];
             _cFrames = new FrameData[capacity];
-        }
-
-        public override void Update()
-        {
-            
         }
 
         public void PushCFrame(FrameData frame)
@@ -76,6 +66,7 @@ namespace Lockstep
 
         public FrameData GetFrame(int tick)
         {
+            rTick = tick;
             var frame = GetSFrame(tick);
             return frame ?? GetCFrame(tick);
         }

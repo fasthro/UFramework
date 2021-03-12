@@ -8,14 +8,9 @@ using UFramework.Core;
 
 namespace Lockstep.Logic
 {
-    public class CameraService : BaseGameBehaviour, ICameraService
+    public class CameraService : BaseGameBehaviour, ICameraService, IGameRuntime
     {
-        public override void Initialize()
-        {
-            Messenger.AddListener(EventDefine.GAME_START, OnGameStart);
-        }
-
-        private void OnGameStart()
+        public void InitGame(GameStartMessage message)
         {
             if (_playerService.self != null)
                 RTSCamera.instance.targetFollow = (_playerService.self.view as BaseGameView)?.gameObject.transform;

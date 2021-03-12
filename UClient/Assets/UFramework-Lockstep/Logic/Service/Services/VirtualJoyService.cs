@@ -10,26 +10,17 @@ using UFramework.Game;
 
 namespace Lockstep.Logic
 {
-    public class VirtualJoyService : BaseGameBehaviour, IVirtualJoyService
+    public class VirtualJoyService : BaseGameBehaviour, IVirtualJoyService, IGameRuntime
     {
         /// <summary>
         /// 移动摇杆
         /// </summary>
         public JoyMove move { get; private set; }
-
-        public override void Initialize()
-        {
-            Messenger.AddListener(EventDefine.GAME_INIT, OnGameInit);
-            Messenger.AddListener(EventDefine.GAME_START, OnGameStart);
-        }
-
-        private void OnGameInit()
+        
+        public void InitGame(GameStartMessage message)
         {
             move = new JoyMove(VirtualJoy.Instance.GetJoyWithName("Move Joy"));
-        }
-
-        private void OnGameStart()
-        {
+            
             var moveCom = _uiService.view.GetChild("_moveJoy").asCom;
             move.ui = moveCom;
             move.slider = moveCom.GetChild("_touch").asImage;

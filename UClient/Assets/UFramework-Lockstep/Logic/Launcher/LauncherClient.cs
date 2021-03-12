@@ -34,7 +34,6 @@ namespace Lockstep.Logic
         {
             base.InitializeService();
             serviceContainer.RegisterService(new ViewService());
-            serviceContainer.RegisterService(new NetworkService());
             serviceContainer.RegisterService(new SimulatorService());
             serviceContainer.RegisterService(new InputService());
             serviceContainer.RegisterService(new InitService());

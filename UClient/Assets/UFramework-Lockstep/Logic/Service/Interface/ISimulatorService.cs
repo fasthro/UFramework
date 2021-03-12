@@ -8,8 +8,6 @@ namespace Lockstep.Logic
 {
     public interface ISimulatorService : IService
     {
-        void OnReceiveGameStart(GameStartMessage message);
-        void OnReceiveFrame(FrameData frame);
-        void OnReceivePing(PingMessage message);
+        SimulatorPing ping { get; }
     }
 }

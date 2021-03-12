@@ -11,7 +11,7 @@ using UFramework.Core;
 
 namespace Lockstep.Logic
 {
-    public class UIService : BaseGameService, IUIService
+    public class UIService : BaseGameService, IUIService, IGameRuntime
     {
         private static AdapterManager adapterManager;
         private static FPSService fpsService;
@@ -30,17 +30,9 @@ namespace Lockstep.Logic
         {
             adapterManager = global::Launcher.instance.managerContainer.GetManager<AdapterManager>();
             fpsService = Console.Instance.GetService<FPSService>();
-            
-            Messenger.AddListener(EventDefine.GAME_INIT, OnGameInit);
         }
 
-        public override void Update()
-        {
-            if (_fpsText != null)
-                _fpsText.text = fpsService.GetFPS(0);
-        }
-
-        private void OnGameInit()
+        public void InitGame(GameStartMessage message)
         {
             view = adapterManager.FairyQueryComponent("MainPanel", "");
 
@@ -49,14 +41,13 @@ namespace Lockstep.Logic
             _fpsText = view.GetChild("_fps").asTextField;
         }
 
-        public void UpdatePing(int ping)
+        public override void Update()
         {
-            _pingText.text = $"{ping}ms";
-        }
+            if (_fpsText != null)
+                _fpsText.text = fpsService.GetFPS(0);
 
-        public void UpdateDelay(int delay)
-        {
-            _delayText.text = $"{delay}ms";
+            if (_pingText != null)
+                _pingText.text = $"{_simulatorService.ping.pingValue}s";
         }
     }
 }

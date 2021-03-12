@@ -1,14 +1,13 @@
 ﻿// --------------------------------------------------------------------------------
 // * @Author: fasthro
-// * @Date: 2020/12/29 16:31:41
+// * @Date: 2021/03/12 16:22
 // * @Description:
 // --------------------------------------------------------------------------------
 
-namespace Lockstep.Logic
+namespace Lockstep
 {
-    public interface INetworkService : IService
+    public interface IGameRuntime
     {
-        void SendPing();
-        void SendInput(FrameData frameData);
+        void InitGame(GameStartMessage message);
     }
 }

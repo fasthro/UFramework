@@ -11,8 +11,5 @@ namespace Lockstep.Logic
     public interface IUIService: IService
     {
         GComponent view { get; }
-
-        void UpdatePing(int ping);
-        void UpdateDelay(int delay);
     }
 }

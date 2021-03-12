@@ -11,7 +11,6 @@ namespace Lockstep.Logic
         protected IInitializeService _initializeService;
         protected IInputService _inputService;
         protected ISimulatorService _simulatorService;
-        protected INetworkService _networkService;
         protected IViewService _viewService;
         protected IUIService _uiService;
         protected ICameraService _cameraService;
@@ -23,7 +22,6 @@ namespace Lockstep.Logic
 
             _initializeService = _container.GetService<IInitializeService>();
             _inputService = _container.GetService<IInputService>();
-            _networkService = _container.GetService<INetworkService>();
             _simulatorService = _container.GetService<ISimulatorService>();
             _viewService = _container.GetService<IViewService>();
             _cameraService = _container.GetService<ICameraService>();
