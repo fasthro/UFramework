@@ -25,9 +25,9 @@ namespace Lockstep
                     if (isMove)
                     {
                         var dir = entity.cMovement.dir.normalized;
-
                         // position
-                        entity.cTransform.position += dir * LSTime.deltaTime * entity.cSpeed.moveSpeed;
+                        entity.cTransform.position += dir * LSTime.tickDeltaTime * entity.cSpeed.moveSpeed;
+                        
 
                         // target rotation
                         var ccwDeg = LSMath.Atan2(dir.z, dir.x) * LSMath.Rad2Deg;
@@ -38,7 +38,7 @@ namespace Lockstep
                         entity.cMovement.isMission = true;
                     }
 
-                    entity.cTransform.rotation = LSQuaternion.RotateTowards(entity.cTransform.rotation, entity.cTransform.targetRotation, LSTime.deltaTime * entity.cSpeed.rotationSpeed);
+                    entity.cTransform.rotation = LSQuaternion.RotateTowards(entity.cTransform.rotation, entity.cTransform.targetRotation, LSTime.tickDeltaTime * entity.cSpeed.rotationSpeed);
                 }
             }
         }

@@ -22,7 +22,20 @@ namespace Lockstep
         /// <value></value>
         public static FP deltaTime { get; private set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public static long deltaTimeMS { get; private set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public static FP tickDeltaTime { get; private set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public static FP tickDeltaTimeMS { get; private set; }
 
         /// <summary>
         /// The time this frame has started (Read Only). This is the time in seconds since the last
@@ -43,6 +56,8 @@ namespace Lockstep
         {
             _initTime = DateTime.Now;
             _lastFrameTime = DateTime.Now;
+            tickDeltaTimeMS = 1000 / LSDefine.FRAME_RATE;
+            tickDeltaTime = tickDeltaTimeMS / 1000;
         }
 
         public static void Update()

@@ -1,15 +1,13 @@
 ﻿// --------------------------------------------------------------------------------
 // * @Author: fasthro
-// * @Date: 2020/12/29 16:31:41
+// * @Date: 2021/03/12 18:11
 // * @Description:
 // --------------------------------------------------------------------------------
 
-using Lockstep.Logic.Simulator;
-
-namespace Lockstep.Logic
+namespace Lockstep.Logic.Simulator
 {
-    public interface ISimulatorService : IService
+    public class RollbackInfo
     {
-        SimulatorPing ping { get; }
+        public int tick;
     }
 }

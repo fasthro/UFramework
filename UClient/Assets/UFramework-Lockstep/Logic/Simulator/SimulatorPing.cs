@@ -9,7 +9,7 @@ using System.Linq;
 using Lockstep.Message;
 using UnityEngine;
 
-namespace Lockstep.Logic
+namespace Lockstep.Logic.Simulator
 {
     public class SimulatorPing
     {

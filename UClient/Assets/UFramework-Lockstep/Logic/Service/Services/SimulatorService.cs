@@ -6,6 +6,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Lockstep.Logic.Simulator;
 using Lockstep.Message;
 using UFramework;
 using UFramework.Core;
@@ -55,6 +56,7 @@ namespace Lockstep.Logic
         #endregion simulator
 
         private FrameBuffer _frameBuffer;
+        private RollbackInfo _rollbackInfo;
 
         public override void Initialize()
         {
@@ -63,9 +65,10 @@ namespace Lockstep.Logic
 
         private void InitializeSimulator(GameStartMessage message)
         {
+            isRunning = true;
             tickDeltaTime = 1000 / LSDefine.FRAME_RATE;
             _frameBuffer = new FrameBuffer();
-            isRunning = true;
+            _rollbackInfo = new RollbackInfo();
 
             ping = new SimulatorPing();
 
@@ -83,6 +86,13 @@ namespace Lockstep.Logic
             ping.Update();
 
             tickSinceStart = (int) ((LSTime.realtimeSinceStartupMS - startTime) / tickDeltaTime);
+
+            // 回滚
+            if (_rollbackInfo != null)
+            {
+                tick = _rollbackInfo.tick;
+                _frameBuffer.Rollback(tick);
+            }
 
             // 追帧
             while (tick < _frameBuffer.sTick)
@@ -151,7 +161,7 @@ namespace Lockstep.Logic
                     break;
 
                 case NetworkCmd.PUSH_FRAME:
-                    _frameBuffer.PushSFrame(Frame_S2C.Parser.ParseFrom(pack.rawData).Frame.ToFrameData());
+                    _rollbackInfo = _frameBuffer.PushSFrame(Frame_S2C.Parser.ParseFrom(pack.rawData).Frame.ToFrameData());
                     break;
             }
         }

@@ -4,13 +4,15 @@
 // * @Description:
 // --------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+
 namespace Lockstep
 {
-    public class FrameData: IPoolBehaviour
+    public class FrameData : IPoolBehaviour
     {
         public int tick;
         public InputData[] inputDatas;
-        
+
         #region pool
 
         public bool isRecycled { get; set; }
@@ -25,5 +27,10 @@ namespace Lockstep
         }
 
         #endregion
+
+        public static bool CheckEquals(FrameData x, FrameData y)
+        {
+            return true;
+        }
     }
 }

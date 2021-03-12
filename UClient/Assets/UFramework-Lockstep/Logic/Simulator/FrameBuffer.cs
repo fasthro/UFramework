@@ -7,7 +7,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Lockstep
+namespace Lockstep.Logic.Simulator
 {
     public class FrameBuffer
     {
@@ -28,26 +28,34 @@ namespace Lockstep
         /// </summary>
         /// <value></value>
         public int cTick { get; private set; }
-        
+
         /// <summary>
         /// 当前执行帧
         /// </summary>
         /// <value></value>
         public int rTick { get; private set; }
-        
+
         #region private frame
 
         private FrameData[] _sFrames;
         private FrameData[] _cFrames;
+        private RollbackInfo _rollbackInfo;
 
         #endregion
 
-        
+
         public FrameBuffer(int capacity = 2000) : base()
         {
             this.capacity = capacity;
             _sFrames = new FrameData[capacity];
             _cFrames = new FrameData[capacity];
+            _rollbackInfo = new RollbackInfo();
+        }
+
+        public void Rollback(int tick)
+        {
+            cTick = tick;
+            rTick = tick;
         }
 
         public void PushCFrame(FrameData frame)
@@ -57,11 +65,19 @@ namespace Lockstep
             cTick = frame.tick > cTick ? frame.tick : cTick;
         }
 
-        public void PushSFrame(FrameData frame)
+        public RollbackInfo PushSFrame(FrameData frame)
         {
             var index = FrameIndex(frame);
             _sFrames[index] = frame;
             sTick = frame.tick > sTick ? frame.tick : sTick;
+
+            if (!FrameData.CheckEquals(frame, GetCFrame(sTick)))
+            {
+                _rollbackInfo.tick = sTick - 1;
+                return _rollbackInfo;
+            }
+
+            return null;
         }
 
         public FrameData GetFrame(int tick)

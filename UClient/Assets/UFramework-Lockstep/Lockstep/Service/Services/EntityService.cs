@@ -89,7 +89,7 @@ namespace Lockstep
         {
             var entity = contexts.game.CreateEntity();
             entity.AddCTransform(LSVector3.zero, LSQuaternion.identity, LSQuaternion.identity);
-            entity.AddCSpeed(750, 3600);
+            entity.AddCSpeed(150, 3600);
             entity.AddCMovement(LSVector3.zero, false);
 
             entity.AddCView(view);
