@@ -1,0 +1,7 @@
+include("config.base")
+
+logger = "./log/db.log"
+daemon = "db.pid"
+harbor = 0
+start = "maindb"
+harborname = "db"

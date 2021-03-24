@@ -36,7 +36,7 @@ function CMD.login(source, uid, sid, secret, addr)
     gate = source
     userid = uid
     subid = sid
-    
+    player:register(uid, sid)
     player:login(userid)
     
     if logout_timer then

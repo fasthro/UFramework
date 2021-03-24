@@ -1,9 +1,0 @@
-include("config.base")
-
-logger = "./log/game.log"
-daemon = "game.pid"
-harbor = 0
-start = "maingame"
-harborname = "node1"
-
- 

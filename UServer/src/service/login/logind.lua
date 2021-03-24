@@ -8,11 +8,11 @@ local harborname = skynet.getenv("harborname")
 local nodeconf = runconfig[harborname]
 
 local server = {
-    host = nodeconf.conf.host,
-    port = nodeconf.conf.port,
+    host = nodeconf.login.host,
+    port = nodeconf.login.port,
     multilogin = false, -- disallow multilogin
-    name = nodeconf.conf.name,
-    instance = nodeconf.conf.instance or 8
+    name = nodeconf.login.name,
+    instance = nodeconf.login.instance or 8
 }
 
 local server_list = {}

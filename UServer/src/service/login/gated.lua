@@ -1,7 +1,7 @@
 -- @Author: fasthro
 -- @Date:   2020-11-25 15:13:22
--- @Last Modified by:   fasthro
--- @Last Modified time: 2020-12-23 15:02:03
+-- @Last Modified by:   cc
+-- @Last Modified time: 2021-03-17 16:50:36
 
 local msgserver = require "msgserver"
 local crypt = require "skynet.crypt"
@@ -94,7 +94,7 @@ end
 -- call by self (when gate open)
 function server.register_handler(name)
     servername = name
-    loginservice = cluster.query(harborname, nodeconf.conf.name)
+    loginservice = cluster.query(harborname, nodeconf.login.name)
     skynet.call(loginservice, "lua", "register_gate", servername, skynet.self(), harborname)
 end
 

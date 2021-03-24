@@ -14,7 +14,7 @@ skynet.start(function()
     
     -- 启动登陆服
     local logind = skynet.newservice("logind", harborname)
-    cluster.register(nodeconf.conf.name, logind)
+    cluster.register(nodeconf.login.name, logind)
     
     -- 启动agent池
     skynet.uniqueservice("agentpool", nodeconf.agentpool.name, nodeconf.agentpool.maxnum, nodeconf.agentpool.recyremove, runconfig.brokecachelen)
@@ -27,10 +27,12 @@ skynet.start(function()
     
     -- 启动 pbcloader
     skynet.uniqueservice("pbcloader")
-    
-    -- 启动 db
-    local db = skynet.newservice("mongodb")
-    skynet.call(db, "lua", "connect", {host = runconfig.database.host, port = runconfig.database.port})
+
+    -- 启动DB
+    local db = skynet.uniqueservice("mongodb", harborname)
+    cluster.register(nodeconf.db.name, db)
+
+    skynet.call(db, "lua", "connect", {host = nodeconf.db.host, port = nodeconf.db.port})
     
     skynet.exit()
 end)

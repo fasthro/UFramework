@@ -3,12 +3,12 @@
 CMD=$1
 
 CUR_DIR=$(dirname $(readlink -f $0))
-PID_FILE=$CUR_DIR/login.pid
+PID_FILE=$CUR_DIR/main.pid
 
 function start(){
-	rm -rf $CUR_DIR/log/login.log
-	echo "start login service"
-	$CUR_DIR/3rd/skynet/skynet $CUR_DIR/config/config.login
+	rm -rf $CUR_DIR/log/main.log
+	echo "start main service"
+	$CUR_DIR/3rd/skynet/skynet $CUR_DIR/config/config.main
 }
 
 function stop(){
@@ -20,7 +20,7 @@ function stop(){
 	if [ ! $PID_EXIST ] ;then
 		exit 0
 	else
-		echo "stop login service"
+		echo "stop main service"
 		kill -9 $PID
 	fi
 }

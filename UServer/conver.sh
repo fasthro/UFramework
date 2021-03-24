@@ -1,1 +1,1 @@
-dos2unix restart.sh start.sh stop.sh login.sh game.sh
+dos2unix restart.sh start.sh stop.sh main.sh

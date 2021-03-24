@@ -2,16 +2,16 @@
 return {
     brokecachelen = 5, -- 玩家链接断开之后保持agent多长时间，超过则清楚agent缓存数据, 单位为秒
     
-    -- 数据库服务配置
-    database = {
-        host = "127.0.0.1",
-        port = 27017,
-    },
-    
-    -- 登陆节点启动配置，此节点也作为逻辑上的主节点
-    login = {
+    -- 节点启动配置，此节点也作为逻辑上的主节点
+    main = {
+        -- 数据库服务配置
+        db = {
+            name = "db_master",
+            host = "127.0.0.1",
+            port = 27017,
+        },
         -- 登陆服务器网关配置
-        conf = {
+        login = {
             name = "login_master", -- 登陆服务名称， 全局通过cluster能访问到
             host = "0.0.0.0", -- 侦听地址
             port = 8001, -- 侦听端口

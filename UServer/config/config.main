@@ -1,0 +1,10 @@
+include("config.base")
+
+logger = "./log/main.log"
+daemon = "main.pid"
+harbor = 0
+start = "main"
+harborname = "main"
+
+
+ 
