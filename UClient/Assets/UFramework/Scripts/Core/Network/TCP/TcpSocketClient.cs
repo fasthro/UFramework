@@ -10,6 +10,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using UFramework.Core;
 using UnityEngine;
 
 namespace UFramework.Network
@@ -51,8 +52,8 @@ namespace UFramework.Network
         /// </summary>
         public int connectTimeout
         {
-            get { return _connectTimeout; }
-            set { _connectTimeout = value; }
+            get => _connectTimeout;
+            set => _connectTimeout = value;
         }
 
         /// <summary>
@@ -60,8 +61,8 @@ namespace UFramework.Network
         /// </summary>
         public int receiveBufferSize
         {
-            get { return _receiveBufferSize; }
-            set { _receiveBufferSize = value; }
+            get => _receiveBufferSize;
+            set => _receiveBufferSize = value;
         }
 
         /// <summary>
@@ -69,8 +70,8 @@ namespace UFramework.Network
         /// </summary>
         public int sendBufferSize
         {
-            get { return _sendBufferSize; }
-            set { _sendBufferSize = value; }
+            get => _sendBufferSize;
+            set => _sendBufferSize = value;
         }
 
         private Socket _client;
@@ -94,7 +95,6 @@ namespace UFramework.Network
         private long _session;
         private short _packType;
 
-        private float _connectDecreaseTime;
         private int _connectTimeout = 15000;
         private int _receiveBufferSize = 8192;
         private int _sendBufferSize = 8192;
@@ -123,13 +123,7 @@ namespace UFramework.Network
 
         public void Update()
         {
-            if (isConnecting)
-            {
-                _connectDecreaseTime -= Time.unscaledDeltaTime;
-                if (_connectDecreaseTime <= 0)
-                    OnException(SocketError.TimedOut);
-            }
-            else if (isConnected)
+            if (isConnected)
             {
                 ProcessSend();
             }
@@ -138,14 +132,8 @@ namespace UFramework.Network
         public void Connect(string ip, int port)
         {
             this.port = port;
-
-            IPAddress address = null;
-            if (IPAddress.TryParse(ip, out address))
-                this.ip = ip;
-            else
-                this.ip = Utils.GetIPHost(ip);
-
-            Connect();
+            this.ip = IPAddress.TryParse(ip, out _) ? ip : Utils.GetIPHost(ip);
+            ThreadQueue.Enqueue(Connect);
         }
 
         private void Connect()
@@ -155,26 +143,29 @@ namespace UFramework.Network
             try
             {
                 _isException = false;
-                string newIp = "";
-                string connetIp = ip;
+                var connetIp = ip;
                 // ipv6 & ipv4
-                AddressFamily newAddressFamily = AddressFamily.InterNetwork;
-                IPv6SupportMidleware.getIPType(ip, port.ToString(), out newIp, out newAddressFamily);
-                if (!string.IsNullOrEmpty(newIp)) { connetIp = newIp; }
+                IPv6SupportMidleware.getIPType(ip, port.ToString(), out var newIp, out var newAddressFamily);
+                if (!string.IsNullOrEmpty(newIp))
+                    connetIp = newIp;
 
                 Logger.Debug("socket connect to server. " + ip + ":" + port + (string.IsNullOrEmpty(newIp) ? " ipv4" : " ipv6"));
 
                 // 解析IP地址
-                IPAddress ipAddress = IPAddress.Parse(connetIp);
-                IPEndPoint ipEndpoint = new IPEndPoint(ipAddress, port);
-                
+                var ipAddress = IPAddress.Parse(connetIp);
+                var ipEndpoint = new IPEndPoint(ipAddress, port);
+
                 // 创建 Socket
                 _client = new Socket(newAddressFamily, SocketType.Stream, ProtocolType.Tcp);
                 _client.NoDelay = true;
 
-                _client.BeginConnect(ipEndpoint, new AsyncCallback(OnConnetSucceed), _client);
+                var result = _client.BeginConnect(ipEndpoint, new AsyncCallback(OnConnetSucceed), _client);
                 isConnecting = true;
-                _connectDecreaseTime = (float)connectTimeout / 1000f;
+                var success = result.AsyncWaitHandle.WaitOne(_connectTimeout, true);
+                if (!success) //超时
+                {
+                    OnException(SocketError.TimedOut);
+                }
             }
             catch (SocketException e)
             {
@@ -189,7 +180,7 @@ namespace UFramework.Network
             try
             {
                 Logger.Debug("socket connect to server succeed.");
-                ((Socket)iar.AsyncState).EndConnect(iar);
+                ((Socket) iar.AsyncState).EndConnect(iar);
                 isConnected = true;
                 isConnecting = false;
 
@@ -239,6 +230,7 @@ namespace UFramework.Network
 
                 _sender.Write(pack.rawData);
             }
+
             pack.Recycle();
         }
 
@@ -318,7 +310,8 @@ namespace UFramework.Network
                     }
                 }
                 catch (ThreadAbortException e)
-                { }
+                {
+                }
                 catch (SocketException e)
                 {
                     OnException(e.SocketErrorCode);
@@ -336,6 +329,7 @@ namespace UFramework.Network
                 _receivePackSize = _receivePackSizer.ReadUInt16();
                 _isReceiveSizeReaded = true;
             }
+
             if (_isReceiveSizeReaded && _receiver.size >= _receivePackSize)
             {
                 _isReceiveSizeReaded = false;
@@ -345,8 +339,10 @@ namespace UFramework.Network
                     _receivePackHeader.Write(_receiver.Read(SocketPack.HEADER_SIZE));
                     return SocketPack.AllocateReader(packType, _receivePackHeader, _receiver.Read(_receivePackSize - SocketPack.HEADER_SIZE));
                 }
+
                 return SocketPack.AllocateReader(packType, _receiver.Read(_receivePackSize));
             }
+
             return null;
         }
 
@@ -358,7 +354,9 @@ namespace UFramework.Network
             _listener.OnSocketDisconnected();
         }
 
-        public void Dispose() { }
+        public void Dispose()
+        {
+        }
 
         private void OnDisconnected()
         {
@@ -367,16 +365,20 @@ namespace UFramework.Network
             isConnected = false;
             isConnecting = false;
 
+
+            if (_thread != null)
+            {
+                _thread.Abort();
+                _thread = null;
+            }
+
             if (_client != null && _client.Connected)
             {
                 _client.Shutdown(SocketShutdown.Both);
                 _client.Close();
             }
-            _client = null;
 
-            if (_thread != null)
-                _thread.Abort();
-            _thread = null;
+            _client = null;
         }
 
         private void OnException(SocketError error)

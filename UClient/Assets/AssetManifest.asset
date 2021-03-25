@@ -119,8 +119,8 @@ MonoBehaviour:
   - name: 408096ff37c6878e07cb0609fb423e7c.unity3d
     id: 5
     dependencies: 01000000
-    size: 1049728
-    hash: 7e4f4fafe6378632d84fdfc041748706
+    size: 1049064
+    hash: 8f0f24028957c331ca83c4d79739b539
   - name: 61486fa3f9209a0b6259481ce52af134.unity3d
     id: 6
     dependencies: 

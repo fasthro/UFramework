@@ -26,7 +26,7 @@ namespace GameServer
                 
                 // TODO
                 if (userModel.ExistUser(c2s.Uid) == 0L)
-                    userModel.AddUser(new UserInfo() {Id = ObjectId.GenerateNewId(), uid = c2s.Uid, password = "fasthro", username = "fasehro"});
+                    userModel.AddUser(new UserInfo() {Id = ObjectId.GenerateNewId(), uid = c2s.Uid, password = "", username = ""});
                 
                 var user = userModel.GetUser(c2s.Uid);
                 if (user != null)

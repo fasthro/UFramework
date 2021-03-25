@@ -33,6 +33,24 @@ namespace UFramework
             isInitialized = false;
             var appConfig = Serializer<AppConfig>.Instance;
 
+            if (Platform.RuntimePlatformCurrent == Platform.StandaloneWindows
+                || Platform.RuntimePlatformCurrent == Platform.StandaloneOSX)
+            {
+                if (appConfig.fullScreenMode != FullScreenMode.FullScreenWindow)
+                {
+                    Screen.fullScreen = false;
+                    Screen.SetResolution(appConfig.resolutionX, appConfig.resolutionY, appConfig.fullScreenMode);
+                }
+                else
+                {
+                    Screen.fullScreen = true;
+                }
+            }
+            else
+            {
+                Screen.fullScreen = true;
+            }
+
             #region FairyGUI
 
             // font

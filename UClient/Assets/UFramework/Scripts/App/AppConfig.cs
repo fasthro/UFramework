@@ -105,16 +105,31 @@ namespace UFramework
         /// 是否为URP项目
         /// </summary>
         public bool isURP = true;
-        
+
         /// <summary>
         /// AssetBundle 构建Hash名称
         /// </summary>
         public bool isBuildAssetBunldeNameHash = true;
-        
+
         /// <summary>
         /// 包 id
         /// </summary>
         public string package = "com.futureruler.uframework";
+
+        #endregion
+
+        #region win
+        
+        /// <summary>
+        /// 全屏
+        /// </summary>
+        public FullScreenMode fullScreenMode = FullScreenMode.FullScreenWindow;
+        
+        /// <summary>
+        /// 目标分辨率X
+        /// </summary>
+        public int resolutionX = 1920;
+        public int resolutionY = 1080;
 
         #endregion
 

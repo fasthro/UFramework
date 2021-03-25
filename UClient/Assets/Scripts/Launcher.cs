@@ -16,9 +16,6 @@ public class Launcher : AppLauncher
 
     private void Awake()
     {
-        if (Platform.RuntimePlatformCurrent == Platform.StandaloneWindows)
-            Screen.fullScreen = false;
-        
         DontDestroyOnLoad(this);
         instance = this;
         Initialize();

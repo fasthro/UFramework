@@ -151,6 +151,27 @@ namespace UFramework.Editor.VersionControl.Build
             AssetDatabase.Refresh();
         }
 
+#if UNITY_EDITOR_WIN || Une
+
+        private bool _isFullScreen => fullScreenMode != FullScreenMode.FullScreenWindow;
+        [OnValueChanged("OnValueChanged_Win")] public FullScreenMode fullScreenMode = FullScreenMode.FullScreenWindow;
+
+        [OnValueChanged("OnValueChanged_Win")] [ShowIf("_isFullScreen")]
+        public int resolutionX = 1920;
+
+        [OnValueChanged("OnValueChanged_Win")] [ShowIf("_isFullScreen")]
+        public int resolutionY = 1080;
+
+        private void OnValueChanged_Win()
+        {
+            var ac = Serializer<AppConfig>.Instance;
+            ac.fullScreenMode = fullScreenMode;
+            ac.resolutionX = resolutionX;
+            ac.resolutionY = resolutionY;
+            ac.Serialize();
+        }
+#endif
+
         #endregion
 
         private bool _isBuild;

@@ -5,6 +5,7 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
 using UFramework.Core.Pool;
 using UnityEngine;
 
@@ -16,38 +17,10 @@ namespace UFramework.Core
     public class GammeObjectPoolIdentity : MonoBehaviour, IPoolBehaviour
     {
         public string id;
-
-        public float sleepTime { get; set; }
-
         public bool isRecycled { get; set; }
-
-        public bool isDispose
-        {
-            get
-            {
-                if (isRecycled)
-                {
-                    if (sleepTime > 0)
-                    {
-                        if (Time.time - sleepTime > DISPOSE_SLEEP_TIME)
-                        {
-                            return true;
-                        }
-                    }
-                }
-                return false;
-            }
-        }
-
-        public void OnAllocate()
-        {
-            sleepTime = -1;
-            isRecycled = false;
-        }
 
         public void OnRecycle()
         {
-            sleepTime = Time.time;
             isRecycled = true;
         }
 
@@ -56,34 +29,61 @@ namespace UFramework.Core
             GammeObjectPool.Instance.Recycle(this);
         }
 
-        public void ResetSleepTime(float time)
+        public void OnAllocate()
         {
-            if (isRecycled)
+            isRecycled = false;
+        }
+    }
+
+    public class GammeObjectPoolUnit : Pool<GammeObjectPoolIdentity>
+    {
+        /// <summary>
+        /// id
+        /// </summary>
+        public string id { get; private set; }
+
+        /// <summary>
+        /// 权重
+        /// </summary>
+        public int weight {
+            get
             {
-                sleepTime = time;
+                return 0;
             }
         }
 
-        // 回收后60s内没有被唤醒使用，直接通知Unit销毁处理
-        private const float DISPOSE_SLEEP_TIME = 60f;
-    }
+        /// <summary>
+        /// prefab
+        /// </summary>
+        public GameObject prefab { get; private set; }
 
-    /// <summary>
-    /// Pool Unit
-    /// </summary>
-    public class GammeObjectPoolUnit : Pool<GammeObjectPoolIdentity>
-    {
+        /// <summary>
+        /// 完全释放
+        /// </summary>
+        public bool canAcquittal => _allocateCount == _recycleCount;
+
+        private Transform _parentTrans;
+        private int _allocateCount;
+        private int _recycleCount;
+        private List<float> _weightTimes;
+
+        private AssetRequest _assetRequest;
+
         /// <summary>
         /// Pool Unit
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="root"></param>
-        public GammeObjectPoolUnit(string id, Transform root)
+        /// <param name="parent"></param>
+        public GammeObjectPoolUnit(string id, Transform parent)
         {
             this.id = id;
-            this._assetRequest = Assets.LoadAsset(id, typeof(GameObject));
-            this.prefab = this._assetRequest.asset as GameObject;
-            this._parentTrans = root;
+            _assetRequest = Assets.LoadAsset(id, typeof(GameObject));
+            prefab = _assetRequest.asset as GameObject;
+            _parentTrans = parent;
+
+            _weightTimes = new List<float>();
+            _allocateCount = 0;
+            _recycleCount = 0;
         }
 
         /// <summary>
@@ -97,18 +97,6 @@ namespace UFramework.Core
             this.id = id;
             this.prefab = prefab;
             this._parentTrans = root;
-        }
-
-        public string id { get; private set; }
-        public GameObject prefab { get; private set; }
-
-        /// <summary>
-        /// 是否处于空闲状态
-        /// </summary>
-        /// <value></value>
-        public bool isFree
-        {
-            get { return _stacks.Count > 0 && _balanceCount <= 0; }
         }
 
         /// <summary>
@@ -125,116 +113,94 @@ namespace UFramework.Core
             }
             else
             {
-                var newGo = GameObject.Instantiate<GameObject>(prefab);
-                newGo.transform.SetParent(_parentTrans);
+                var newGo = Object.Instantiate<GameObject>(prefab, _parentTrans, true);
                 poolIdentity = newGo.AddComponent<GammeObjectPoolIdentity>();
                 poolIdentity.id = id;
             }
+
             poolIdentity.OnAllocate();
             poolIdentity.gameObject.SetActive(true);
-            _balanceCount++;
+            _allocateCount++;
+            _weightTimes.Add(Time.realtimeSinceStartup);
             return poolIdentity;
         }
 
         /// <summary>
-        /// 回收对象
+        /// 
         /// </summary>
-        /// <param name="gameObject"></param>
+        /// <param name="poolIdentity"></param>
+        /// <returns></returns>
         public override bool Recycle(GammeObjectPoolIdentity poolIdentity)
         {
-            if (poolIdentity == null)
-            {
-                poolIdentity.gameObject.transform.SetParent(null);
-                GameObject.Destroy(poolIdentity.gameObject);
-                // TODO WARNING LOG, 不属于对象池中的对象
+            if (poolIdentity == null || poolIdentity.isRecycled)
                 return false;
-            }
-
-            if (poolIdentity.isRecycled)
-            {
-                return false;
-            }
 
             poolIdentity.OnRecycle();
             poolIdentity.gameObject.SetActive(false);
             poolIdentity.gameObject.transform.SetParent(_parentTrans);
+
             _stacks.Push(poolIdentity);
-            _balanceCount--;
+            _recycleCount++;
+
             return true;
         }
-
-        /// <summary>
-        /// 处理销毁长眠物体
-        /// </summary>
-        /// <param name="poolIdentity"></param>
-        public void DisposeSleepGameObject(GammeObjectPoolIdentity poolIdentity)
-        {
-            var newPoolIdentity = _stacks.Pop();
-            poolIdentity.ResetSleepTime(newPoolIdentity.sleepTime);
-            newPoolIdentity.gameObject.transform.SetParent(null);
-            GameObject.Destroy(newPoolIdentity.gameObject);
-            newPoolIdentity = null;
-        }
-
-        private Transform _parentTrans;
-
-        // 激活与回收的平衡数量（当平衡数量为0时，说明外界没有使用对象池中的对象）
-        private int _balanceCount;
-
-        private AssetRequest _assetRequest;
     }
 
-    /// <summary>
-    /// GameObject Pool
-    /// </summary>
     public class GammeObjectPool : MonoSingleton<GammeObjectPool>
     {
         /// <summary>
-        /// 分配对象
+        /// 对象单元字典
+        /// </summary>
+        static Dictionary<string, GammeObjectPoolUnit> unitDictionary;
+
+        protected override void OnSingletonAwake()
+        {
+            unitDictionary = new Dictionary<string, GammeObjectPoolUnit>();
+        }
+
+        /// <summary>
+        /// 
         /// </summary>
         /// <param name="res"></param>
+        /// <param name="parent"></param>
         /// <returns></returns>
         public GameObject Allocate(string res, Transform parent)
         {
-            GammeObjectPoolUnit unit = null;
-            if (poolUnitDictionary.TryGetValue(res, out unit))
-            {
+            if (unitDictionary.TryGetValue(res, out var unit))
                 return unit.Allocate().gameObject;
-            }
+
             unit = new GammeObjectPoolUnit(res, parent);
-            poolUnitDictionary.Add(res, unit);
+            unitDictionary.Add(res, unit);
             return unit.Allocate().gameObject;
         }
 
         /// <summary>
-        /// 分配对象
+        /// 
         /// </summary>
         /// <param name="res"></param>
+        /// <param name="prefab"></param>
+        /// <param name="parent"></param>
         /// <returns></returns>
         public GameObject Allocate(string res, GameObject prefab, Transform parent)
         {
-            GammeObjectPoolUnit unit = null;
-            if (poolUnitDictionary.TryGetValue(res, out unit))
-            {
+            if (unitDictionary.TryGetValue(res, out var unit))
                 return unit.Allocate().gameObject;
-            }
+
             unit = new GammeObjectPoolUnit(res, prefab, parent);
-            poolUnitDictionary.Add(res, unit);
+            unitDictionary.Add(res, unit);
             return unit.Allocate().gameObject;
         }
 
         /// <summary>
-        /// 回收对象
+        /// 
         /// </summary>
-        /// <param name="gameObject"></param>
+        /// <param name="go"></param>
         /// <returns></returns>
-        public bool Recycle(GameObject gameObject)
+        public bool Recycle(GameObject go)
         {
-            if (gameObject == null)
-            {
+            if (go == null)
                 return false;
-            }
-            return Recycle(gameObject.GetComponent<GammeObjectPoolIdentity>());
+            return Recycle(go.GetComponent<GammeObjectPoolIdentity>());
         }
 
         /// <summary>
@@ -245,22 +211,14 @@ namespace UFramework.Core
         public bool Recycle(GammeObjectPoolIdentity poolIdentity)
         {
             if (poolIdentity == null)
-            {
-                gameObject.transform.SetParent(null);
-                GameObject.Destroy(gameObject);
                 return false;
-            }
 
-            GammeObjectPoolUnit unit = null;
-            if (!poolUnitDictionary.TryGetValue(poolIdentity.id, out unit))
-            {
+            if (unitDictionary.TryGetValue(poolIdentity.id, out var unit))
                 return unit.Recycle(poolIdentity);
-            }
-            gameObject.transform.SetParent(null);
-            GameObject.Destroy(gameObject);
+
+            poolIdentity.transform.SetParent(null);
+            DestroyImmediate(poolIdentity);
             return false;
         }
-
-        private Dictionary<string, GammeObjectPoolUnit> poolUnitDictionary = new Dictionary<string, GammeObjectPoolUnit>();
     }
 }
