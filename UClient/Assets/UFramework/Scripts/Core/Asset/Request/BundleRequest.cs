@@ -1,8 +1,9 @@
-/*
- * @Author: fasthro
- * @Date: 2020-09-18 14:44:45
- * @Description: bundle
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-09-18 11:37:03
+// * @Description: 请求AssetBundle
+// --------------------------------------------------------------------------------
+
 using System.Collections;
 using System.Collections.Generic;
 using UFramework.Core;
@@ -12,8 +13,9 @@ namespace UFramework.Core
 {
     public class BundleRequest : AssetRequest
     {
-        public AssetBundle assetBundle { get { return asset as AssetBundle; } }
-        public override bool isAsset { get { return false; } }
+        public AssetBundle assetBundle => asset as AssetBundle;
+
+        public override bool isAsset => false;
 
         private List<BundleRequest> _dependencies = new List<BundleRequest>();
 
@@ -39,14 +41,15 @@ namespace UFramework.Core
                 bundle.Load();
                 _dependencies.Add(bundle);
             }
+
             asset = AssetBundle.LoadFromFile(url);
             loadState = LoadState.Loaded;
             Completed();
         }
 
-        public override void Unload()
+        public override void Unload(bool unloadAllLoadedObjects)
         {
-            base.Unload();
+            base.Unload(unloadAllLoadedObjects);
             for (int i = 0; i < _dependencies.Count; i++)
                 _dependencies[i].Unload();
         }
@@ -56,9 +59,10 @@ namespace UFramework.Core
             _dependencies.Clear();
             if (assetBundle != null)
             {
-                assetBundle.Unload(true);
+                assetBundle.Unload(unloadAllLoadedObjects);
                 asset = null;
             }
+
             loadState = LoadState.Unload;
             base.OnReferenceEmpty();
         }

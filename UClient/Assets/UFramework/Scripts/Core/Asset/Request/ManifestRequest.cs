@@ -1,13 +1,15 @@
-/*
- * @Author: fasthro
- * @Date: 2020-09-21 11:04:42
- * @Description: manifest
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-09-18 11:37:03
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using System.Collections;
 using UFramework.Core;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
+
 #endif
 
 namespace UFramework.Core
@@ -15,7 +17,9 @@ namespace UFramework.Core
     public class ManifestRequest : AssetRequest
     {
         public AssetManifest manifest { get; private set; }
-        public override bool isAsset { get { return true; } }
+
+        public override bool isAsset => true;
+        public override float progress => _request?.progress ?? 0;
 
         private AssetBundleRequest _request;
         private BundleAsyncRequest _bundle;
@@ -46,20 +50,21 @@ namespace UFramework.Core
                 manifest = asset as AssetManifest;
                 loadState = LoadState.Loaded;
             }
+
             Completed();
         }
 
         public override void Load()
         {
-            if (Assets.isDevelop)
-            {
 #if UNITY_EDITOR
+            if (Assets.isUseAssetBundle)
+            {
                 manifest = AssetDatabase.LoadAssetAtPath<AssetManifest>(AssetManifest.AssetPath);
                 Completed();
-#endif
             }
             else
             {
+#endif
                 base.Load();
                 if (loadState != LoadState.Init) return;
                 _bundle = Assets.Instance.GetBundle<BundleAsyncRequest>(AssetManifest.AssetBundleFileName, true);
@@ -71,7 +76,9 @@ namespace UFramework.Core
                     _bundle.AddCallback(OnBundleDone);
                     _bundle.Load();
                 }
+#if UNITY_EDITOR
             }
+#endif
         }
 
         private void OnBundleDone(AssetRequest request)
@@ -83,8 +90,7 @@ namespace UFramework.Core
         protected override void OnReferenceEmpty()
         {
             loadState = LoadState.Unload;
-            if (_bundle != null)
-                _bundle.Unload();
+            _bundle?.Unload();
             _bundle = null;
             asset = null;
             _request = null;

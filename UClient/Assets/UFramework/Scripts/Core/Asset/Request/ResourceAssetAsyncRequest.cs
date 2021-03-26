@@ -1,17 +1,17 @@
-/*
- * @Author: fasthro
- * @Date: 2020-09-21 10:27:50
- * @Description: resource async asset
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-09-18 11:37:03
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using System.Collections;
-using UFramework.Core;
 using UnityEngine;
 
 namespace UFramework.Core
 {
     public class ResourceAssetAsyncRequest : AssetRequest
     {
-        public override bool isAsset { get { return true; } }
+        public override bool isAsset => true;
 
         private ResourceRequest _request;
 

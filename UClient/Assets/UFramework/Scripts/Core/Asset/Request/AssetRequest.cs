@@ -1,8 +1,9 @@
-/*
- * @Author: fasthro
- * @Date: 2020-09-18 11:37:03
- * @Description: 资源请求
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-09-18 11:37:03
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using System;
 using System.Collections;
 
@@ -43,50 +44,38 @@ namespace UFramework.Core
         public string name;
         public string url;
         public LoadState loadState { get; protected set; }
-        protected event UCallback<AssetRequest> _callback;
-        public virtual bool isAsset
-        {
-            get { return true; }
-        }
 
-        public virtual bool isDone
-        {
-            get { return loadState == LoadState.Loaded; }
-        }
-
-        public virtual float progress
-        {
-            get { return 1; }
-        }
-
+        public virtual bool isAsset => true;
+        public virtual bool isDone => loadState == LoadState.Loaded;
+        public virtual float progress => 1;
         public virtual string error { get; protected set; }
 
         public string text { get; protected set; }
-
         public byte[] bytes { get; protected set; }
 
-        public UnityEngine.Object asset { get; internal set; }
+        public UnityEngine.Object asset { get; protected set; }
 
-        protected bool _isNeedLoad
-        {
-            get { return loadState == LoadState.Init; }
-        }
+        public bool unloadAllLoadedObjects { get; protected set; }
+
+        protected event UCallback<AssetRequest> _callback;
 
         public virtual void Load()
         {
             Retain();
             if (loadState == LoadState.Loaded)
-            {
                 Completed();
-            }
         }
 
-        public virtual void Unload()
+        public void Unload()
         {
+            Unload(true);
+        }
+
+        public virtual void Unload(bool unloadAllLoadedObjects)
+        {
+            this.unloadAllLoadedObjects = unloadAllLoadedObjects;
             Release();
         }
-
-
 
         protected override void OnReferenceEmpty()
         {

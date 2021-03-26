@@ -1,11 +1,11 @@
-/*
- * @Author: fasthro
- * @Date: 2020-09-18 14:44:45
- * @Description: web bundle
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-09-18 11:37:03
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using System.Collections;
 using System.Collections.Generic;
-using UFramework.Core;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -13,12 +13,12 @@ namespace UFramework.Core
 {
     public class WebBundleRequest : AssetRequest
     {
-        public AssetBundle assetBundle { get { return asset as AssetBundle; } }
+        public AssetBundle assetBundle => asset as AssetBundle;
 
         private List<WebBundleRequest> _dependencies = new List<WebBundleRequest>();
         private UnityWebRequest _request;
 
-        public override bool isAsset { get { return false; } }
+        public override bool isAsset => false;
 
         public static WebBundleRequest Allocate()
         {
@@ -64,9 +64,9 @@ namespace UFramework.Core
             StartCoroutine();
         }
 
-        public override void Unload()
+        public override void Unload(bool unloadAllLoadedObjects)
         {
-            base.Unload();
+            base.Unload(unloadAllLoadedObjects);
             for (int i = 0; i < _dependencies.Count; i++)
                 _dependencies[i].Unload();
         }
@@ -81,7 +81,7 @@ namespace UFramework.Core
             }
             if (assetBundle != null)
             {
-                assetBundle.Unload(true);
+                assetBundle.Unload(unloadAllLoadedObjects);
                 asset = null;
             }
             loadState = LoadState.Unload;

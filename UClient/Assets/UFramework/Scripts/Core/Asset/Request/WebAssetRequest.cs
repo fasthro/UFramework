@@ -1,10 +1,10 @@
-/*
- * @Author: fasthro
- * @Date: 2020-09-18 14:44:45
- * @Description: web asset
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-09-18 11:37:03
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using System.Collections;
-using UFramework.Core;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -12,7 +12,7 @@ namespace UFramework.Core
 {
     public class WebAssetRequest : AssetRequest
     {
-        public override bool isAsset { get { return true; } }
+        public override bool isAsset => true;
 
         private UnityWebRequest _request;
 

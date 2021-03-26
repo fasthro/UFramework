@@ -1,16 +1,16 @@
-/*
- * @Author: fasthro
- * @Date: 2020-09-21 11:04:42
- * @Description: scene asset
- */
-using UFramework.Core;
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-09-18 11:37:03
+// * @Description:
+// --------------------------------------------------------------------------------
+
 
 namespace UFramework.Core
 {
     public class SceneAssetRequest : AssetRequest
     {
-        public override bool isAsset { get { return true; } }
-        
+        public override bool isAsset => true;
+
         public static SceneAssetRequest Allocate()
         {
             return ObjectPool<SceneAssetRequest>.Instance.Allocate();

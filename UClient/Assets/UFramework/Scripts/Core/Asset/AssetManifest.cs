@@ -1,8 +1,8 @@
-/*
- * @Author: fasthro
- * @Date: 2020-09-10 17:13:37
- * @Description: asset manifest
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-09-17 15:33:31
+// * @Description:
+// --------------------------------------------------------------------------------
 
 using System;
 using UnityEngine;
@@ -29,8 +29,8 @@ namespace UFramework.Core
 
     public class AssetManifest : ScriptableObject
     {
-        public readonly static string AssetPath = "Assets/AssetManifest.asset";
-        public readonly static string AssetBundleFileName = "manifest" + Assets.Extension;
+        public static readonly string AssetPath = "Assets/AssetManifest.asset";
+        public static readonly string AssetBundleFileName = "manifest" + Assets.Extension;
 
         /// <summary>
         /// 资源目录

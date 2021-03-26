@@ -1,9 +1,13 @@
-/*
- * @Author: fasthro
- * @Date: 2020-09-18 14:44:45
- * @Description: bundle asset async
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-09-18 11:37:03
+// * @Description: 异步请求AssetBundle内的资源
+// --------------------------------------------------------------------------------
+
 using System.Collections;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 
 namespace UFramework.Core
@@ -13,7 +17,8 @@ namespace UFramework.Core
         public AssetBundleRequest request { get; private set; }
         public BundleAsyncRequest bundle { get; private set; }
 
-        public override bool isAsset { get { return true; } }
+        public override bool isAsset => true;
+        public override float progress => request?.progress ?? 0;
 
         public static BundleAssetAsyncRequest Allocate()
         {
@@ -42,14 +47,27 @@ namespace UFramework.Core
         {
             base.Load();
             if (loadState != LoadState.Init) return;
-            bundle = Assets.Instance.GetBundle<BundleAsyncRequest>(Assets.Instance.GetBundleNameWithAssetName(url), true);
-            if (bundle.isDone)
-                StartCoroutine();
+
+#if UNITY_EDITOR
+            if (Assets.isUseAssetBundle)
+            {
+                asset = AssetDatabase.LoadAssetAtPath(url, assetType);
+                Completed();
+            }
             else
             {
-                loadState = LoadState.LoadBundle;
-                bundle.AddCallback(OnBundleDone).Load();
+#endif
+                bundle = Assets.Instance.GetBundle<BundleAsyncRequest>(Assets.Instance.GetBundleNameWithAssetName(url), true);
+                if (bundle.isDone)
+                    StartCoroutine();
+                else
+                {
+                    loadState = LoadState.LoadBundle;
+                    bundle.AddCallback(OnBundleDone).Load();
+                }
+#if UNITY_EDITOR
             }
+#endif
         }
 
         private void OnBundleDone(AssetRequest request)
@@ -61,8 +79,7 @@ namespace UFramework.Core
         protected override void OnReferenceEmpty()
         {
             loadState = LoadState.Unload;
-            if (bundle != null)
-                bundle.Unload();
+            bundle?.Unload();
             bundle = null;
             asset = null;
             request = null;

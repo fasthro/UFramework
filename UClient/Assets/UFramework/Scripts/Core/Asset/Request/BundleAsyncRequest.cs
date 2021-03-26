@@ -1,8 +1,9 @@
-/*
- * @Author: fasthro
- * @Date: 2020-09-18 14:44:45
- * @Description: async bundle
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-09-18 11:37:03
+// * @Description: 异步请求AssetBundle
+// --------------------------------------------------------------------------------
+
 using System.Collections;
 using System.Collections.Generic;
 using UFramework.Core;
@@ -14,6 +15,7 @@ namespace UFramework.Core
     {
         public AssetBundle assetBundle => asset as AssetBundle;
         public override bool isAsset => false;
+        public override float progress => _request?.progress ?? 0;
 
         private AssetBundleCreateRequest _request;
         private List<BundleAsyncRequest> _dependencies = new List<BundleAsyncRequest>();
@@ -65,9 +67,9 @@ namespace UFramework.Core
         }
 
 
-        public override void Unload()
+        public override void Unload(bool unloadAllLoadedObjects)
         {
-            base.Unload();
+            base.Unload(unloadAllLoadedObjects);
             for (var i = 0; i < _dependencies.Count; i++)
                 _dependencies[i].Unload();
         }
@@ -77,7 +79,7 @@ namespace UFramework.Core
             _dependencies.Clear();
             if (assetBundle != null)
             {
-                assetBundle.Unload(true);
+                assetBundle.Unload(unloadAllLoadedObjects);
                 asset = null;
             }
             _request = null;

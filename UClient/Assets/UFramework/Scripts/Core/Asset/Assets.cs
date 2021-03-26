@@ -21,10 +21,10 @@ namespace UFramework.Core
         public static readonly string Extension = ".unity3d";
 
         /// <summary>
-        /// 开发模式
+        /// 是否使用AssetBundle
         /// </summary>
         /// <value></value>
-        public static bool isDevelop { get; private set; }
+        public static bool isUseAssetBundle { get; private set; }
 
         /// <summary>
         /// 
@@ -79,9 +79,10 @@ namespace UFramework.Core
         /// <param name="onCompleted"></param>
         public void Initialize(Action<bool> onCompleted)
         {
-            isDevelop = Serializer<AppConfig>.Instance.isDevelopmentVersion;
-            isBuildNameHash = Serializer<AppConfig>.Instance.isBuildAssetBunldeNameHash;
-            AssetBundlePath = IOPath.PathCombine(isDevelop ? UApplication.TempDirectory : Application.persistentDataPath, Platform.RuntimePlatformCurrentName);
+            var appConfig = Serializer<AppConfig>.Instance;
+            isUseAssetBundle = !appConfig.isDevelopmentVersion;
+            isBuildNameHash = appConfig.isBuildAssetBunldeNameHash;
+            AssetBundlePath = IOPath.PathCombine(isUseAssetBundle ? UApplication.TempDirectory : Application.persistentDataPath, Platform.RuntimePlatformCurrentName);
             _onInitializeCompleted = onCompleted;
             ManifestRequest.Allocate().AddCallback(OnInitialize).Load();
         }

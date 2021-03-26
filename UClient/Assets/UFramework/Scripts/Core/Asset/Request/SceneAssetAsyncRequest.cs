@@ -1,16 +1,16 @@
-/*
- * @Author: fasthro
- * @Date: 2020-09-21 11:04:42
- * @Description: scene asset async
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-09-18 11:37:03
+// * @Description:
+// --------------------------------------------------------------------------------
+
 using System.Collections;
-using UFramework.Core;
 
 namespace UFramework.Core
 {
     public class SceneAssetAsyncRequest : AssetRequest
     {
-        public override bool isAsset { get { return true; } }
+        public override bool isAsset => true;
 
         public static SceneAssetAsyncRequest Allocate()
         {
