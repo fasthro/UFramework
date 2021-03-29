@@ -6,6 +6,7 @@
 
 using Lockstep.Logic;
 using UFramework;
+using UFramework.Core;
 using UnityEngine;
 
 public class Launcher : AppLauncher
@@ -26,6 +27,18 @@ public class Launcher : AppLauncher
         base.OnInitialized();
         _lockstepClient = new LauncherClient();
         _lockstepClient.Initialize();
+
+        var count = 10;
+        var ts = new GameObject[count];
+        for (int i = 0; i < count; i++)
+        {
+            ts[i] = GoPool.Instance.Allocate("Assets/Arts/Test/Cube.prefab");
+        }
+        
+        for (int i = 0; i < 5; i++)
+        {
+            GoPool.Instance.Recycle(ts[i]);
+        }
     }
 
     void Update()

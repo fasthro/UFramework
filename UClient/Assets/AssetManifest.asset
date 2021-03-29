@@ -22,7 +22,10 @@ MonoBehaviour:
   - Assets/Arts/UI/_Font
   - Assets/Arts/UI/_Panel
   - Assets/Arts/UI/_Text
+  - Assets/Arts/Test
   - Packages/com.unity.shadergraph/Editor/Resources/Shaders
+  - Packages/com.unity.render-pipelines.universal/Shaders
+  - Packages/com.unity.render-pipelines.universal/Shaders/Utils
   - Assets/UAssets/Serializable/AssetBundle
   - Assets/UAssets/Language/Data/ChineseSimplified
   - Assets/UAssets/Table/Data
@@ -43,10 +46,10 @@ MonoBehaviour:
     bundle: 6
     dirIndex: 2
   - name: Main_atlas0.png
-    bundle: 12
+    bundle: 13
     dirIndex: 3
   - name: Main_fui.bytes
-    bundle: 12
+    bundle: 13
     dirIndex: 3
   - name: _Background_atlas0.png
     bundle: 4
@@ -67,7 +70,7 @@ MonoBehaviour:
     bundle: 0
     dirIndex: 6
   - name: _Panel_fui.bytes
-    bundle: 13
+    bundle: 14
     dirIndex: 7
   - name: _Text_atlas0.png
     bundle: 7
@@ -75,21 +78,30 @@ MonoBehaviour:
   - name: _Text_fui.bytes
     bundle: 7
     dirIndex: 8
+  - name: Cube.prefab
+    bundle: 11
+    dirIndex: 9
   - name: FallbackError.shader
     bundle: 1
-    dirIndex: 9
-  - name: TableConfig.json
-    bundle: 11
     dirIndex: 10
+  - name: Lit.shader
+    bundle: 1
+    dirIndex: 11
+  - name: FallbackError.shader
+    bundle: 1
+    dirIndex: 12
+  - name: TableConfig.json
+    bundle: 12
+    dirIndex: 13
   - name: 0.txt
     bundle: 3
-    dirIndex: 11
+    dirIndex: 14
   - name: 1.txt
     bundle: 9
-    dirIndex: 11
+    dirIndex: 14
   - name: Template.csv
     bundle: 2
-    dirIndex: 12
+    dirIndex: 15
   bundles:
   - name: 0b4ac500f42128bab1da5d69c2f80c2e.unity3d
     id: 0
@@ -99,8 +111,8 @@ MonoBehaviour:
   - name: 1aa355706e1767666124331a716c7890.unity3d
     id: 1
     dependencies: 
-    size: 11765
-    hash: 58abdfe25677fa88cf01aa73559c04f2
+    size: 24964
+    hash: 252ea0fb9e1605165fa219384bdb0d66
   - name: 2038ca226310debdde227b05e104e969.unity3d
     id: 2
     dependencies: 
@@ -146,18 +158,23 @@ MonoBehaviour:
     dependencies: 
     size: 36026
     hash: ce7dac4fe57adfccc3d64d3b76dd3ea1
-  - name: c602351bf196a0728f54d9aaa569027f.unity3d
+  - name: b91896ed29b21be9fc1b0ddefca2fa22.unity3d
     id: 11
+    dependencies: 01000000
+    size: 4295
+    hash: 601c93b47e2e1d194b7ec906ddbb879b
+  - name: c602351bf196a0728f54d9aaa569027f.unity3d
+    id: 12
     dependencies: 
     size: 1265
     hash: fdc46f71958abbde6bc60962386295a5
   - name: c9f75271ea0ae10a08191ed858b2a901.unity3d
-    id: 12
+    id: 13
     dependencies: 
     size: 16315
     hash: 00c52775e9410ca92e1664d1623edafa
   - name: db38afd48a8fd6d4ad3536353382bbd0.unity3d
-    id: 13
+    id: 14
     dependencies: 
     size: 1247
     hash: c0a58c8f8b95746429c6f77bbf8c9266

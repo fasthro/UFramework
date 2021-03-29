@@ -18,7 +18,7 @@ namespace Lockstep.Logic
 
         public T CreateView<T>(string path, int localId) where T : IView
         {
-            var gameobject = GammeObjectPool.Instance.Allocate(path, null);
+            var gameobject = GoPool.Instance.Allocate(path, null);
             var view = gameobject.GetComponent<T>();
             var entity = _entityService.AddEntity<T>(LauncherClient.Instance.contexts, view);
             entity.AddCLocalId(localId);

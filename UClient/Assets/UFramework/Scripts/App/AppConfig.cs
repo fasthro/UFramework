@@ -119,17 +119,32 @@ namespace UFramework
         #endregion
 
         #region win
-        
+
         /// <summary>
         /// 全屏
         /// </summary>
         public FullScreenMode fullScreenMode = FullScreenMode.FullScreenWindow;
-        
+
         /// <summary>
         /// 目标分辨率X
         /// </summary>
         public int resolutionX = 1920;
+
         public int resolutionY = 1080;
+
+        #endregion
+
+        #region pool
+
+        /// <summary>
+        /// GoPool 优化间隔时间
+        /// </summary>
+        public int optimizeIntervalTime = 5;
+
+        /// <summary>
+        /// GoPool 完全回收检查间隔时间阈值，大于此值就会自动回收
+        /// </summary>
+        public int autoUnloadThresholdValue = 60;
 
         #endregion
 

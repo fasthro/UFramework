@@ -54,7 +54,19 @@ namespace UFramework.Editor.Preferences.Projrect
 
         [BoxGroup("Font Settings")] [LabelText("  ")] [ListDrawerSettings(Expanded = true)]
         public List<string> fonts = new List<string>();
-
+        
+        /// <summary>
+        /// GoPool 优化间隔时间
+        /// </summary>
+        [BoxGroup("GameObject Pool Settings")] [LabelText("  Optimize Check Interval Time(s)")] [ListDrawerSettings(Expanded = true)]
+        public float optimizeIntervalTime = 5f;
+        
+        /// <summary>
+        /// GoPool 完全回收检查间隔时间
+        /// </summary>
+        [BoxGroup("GameObject Pool Settings")] [LabelText("  Auto Unload Threshold Value Time(s)")] [ListDrawerSettings(Expanded = true)]
+        public float autoUnloadThresholdValue = 10f;
+        
         public object GetInstance()
         {
             return this;
