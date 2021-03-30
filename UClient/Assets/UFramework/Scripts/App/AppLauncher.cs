@@ -91,17 +91,23 @@ namespace UFramework
             Timer.Instance.Default();
             // 下载器
             Downloader.Instance.Default();
-            Logger.Debug("UFramework Base Initialized");
+            // GoPool
+            GoPool.Instance.Default();
+            
+            Logger.Info("UFramework Base Initialized");
+            
             // 版本器
             Updater.Instance.StartUpdate(_launchPanel, () =>
             {
-                Logger.Debug("UFramework Updater Initialized");
+                Logger.Info("UFramework Updater Initialized");
+                
                 // 资源
                 Assets.Instance.Initialize((succeed) =>
                 {
                     if (succeed)
                     {
-                        Logger.Debug("UFramework Initialized.");
+                        Logger.Info("UFramework Initialized.");
+                        
                         isInitialized = true;
                         // Init
                         InitBehaviour();

@@ -43,6 +43,11 @@ namespace UFramework.Core
         /// </summary>
         public bool isAcquittal => _allocateCount == _recycleCount;
 
+        /// <summary>
+        /// 是否自动卸载
+        /// </summary>
+        public bool isAutoUnload { get; private set; }
+
         private int _minCount;
 
         private int _allocateCount;
@@ -54,30 +59,48 @@ namespace UFramework.Core
         private List<float> _intervalTimes = new List<float>();
         private float _lastTime;
 
-        public static GoPoolUnit Allocate(Transform trans, string resPath, int minCount = 5)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="trans"></param>
+        /// <param name="resPath">资源路径</param>
+        /// <param name="minCount">池最小数量</param>
+        /// <param name="autoUnload">是否自动回收卸载</param>
+        /// <returns></returns>
+        public static GoPoolUnit Allocate(Transform trans, string resPath, int minCount, bool autoUnload)
         {
-            return ObjectPool<GoPoolUnit>.Instance.Allocate().Builder(trans, resPath);
+            return ObjectPool<GoPoolUnit>.Instance.Allocate().Builder(trans, resPath, minCount, autoUnload);
         }
 
-        public static GoPoolUnit Allocate(Transform trans, string resPath, GameObject targetPrefab, int minCount = 5)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="trans"></param>
+        /// <param name="resPath">资源路径</param>
+        /// <param name="targetPrefab">目标资源</param>
+        /// <param name="minCount">池最小数量</param>
+        /// <param name="autoUnload">是否自动回收卸载</param>
+        /// <returns></returns>
+        public static GoPoolUnit Allocate(Transform trans, string resPath, GameObject targetPrefab, int minCount, bool autoUnload)
         {
-            return ObjectPool<GoPoolUnit>.Instance.Allocate().Builder(trans, resPath, targetPrefab);
+            return ObjectPool<GoPoolUnit>.Instance.Allocate().Builder(trans, resPath, targetPrefab, minCount, autoUnload);
         }
 
-        private GoPoolUnit Builder(Transform trans, string resPath, int minCount = 5)
+        private GoPoolUnit Builder(Transform trans, string resPath, int minCount, bool autoUnload)
         {
             _assetRequest = Assets.LoadAsset(resPath, typeof(GameObject));
             prefab = _assetRequest.asset as GameObject;
 
-            return Builder(trans, resPath, prefab, minCount);
+            return Builder(trans, resPath, prefab, minCount, autoUnload);
         }
 
-        private GoPoolUnit Builder(Transform trans, string resPath, GameObject targetPrefab, int minCount = 5)
+        private GoPoolUnit Builder(Transform trans, string resPath, GameObject targetPrefab, int minCount, bool autoUnload)
         {
             id = resPath;
             prefab = targetPrefab;
             transform = trans;
             _minCount = minCount;
+            isAutoUnload = autoUnload;
             _allocateCount = 0;
             _recycleCount = 0;
             return this;
@@ -181,8 +204,12 @@ namespace UFramework.Core
         /// 优化间隔时间
         /// </summary>
         private static float optimizeIntervalTime;
+
+        /// <summary>
+        /// 自动卸载时间阈值
+        /// </summary>
         private static float autoUnloadThresholdValue;
-        
+
         readonly Dictionary<string, GoPoolUnit> unitDictionary = new Dictionary<string, GoPoolUnit>();
         readonly List<string> removes = new List<string>();
 
@@ -203,14 +230,14 @@ namespace UFramework.Core
         /// <param name="resPath"></param>
         /// <param name="prefab"></param>
         /// <param name="minCount"></param>
-        public GoPoolUnit CreatePool(string resPath, GameObject prefab, int minCount = 5)
+        public GoPoolUnit CreatePool(string resPath, GameObject prefab, int minCount = 5, bool autoUnload = true)
         {
             if (!unitDictionary.TryGetValue(resPath, out var unit))
             {
                 var unitGo = new GameObject(resPath);
                 unitGo.transform.SetParent(_cacheTransform);
 
-                unit = GoPoolUnit.Allocate(unitGo.transform, resPath, prefab, minCount);
+                unit = GoPoolUnit.Allocate(unitGo.transform, resPath, prefab, minCount, autoUnload);
                 unitDictionary.Add(resPath, unit);
                 return unit;
             }
@@ -223,14 +250,14 @@ namespace UFramework.Core
         /// </summary>
         /// <param name="resPath"></param>
         /// <param name="minCount"></param>
-        public GoPoolUnit CreatePool(string resPath, int minCount = 5)
+        public GoPoolUnit CreatePool(string resPath, int minCount = 5, bool autoUnload = true)
         {
             if (!unitDictionary.TryGetValue(resPath, out var unit))
             {
                 var unitGo = new GameObject(resPath);
                 unitGo.transform.SetParent(_cacheTransform);
 
-                unit = GoPoolUnit.Allocate(unitGo.transform, resPath, minCount);
+                unit = GoPoolUnit.Allocate(unitGo.transform, resPath, minCount, autoUnload);
                 unitDictionary.Add(resPath, unit);
                 return unit;
             }
@@ -310,6 +337,19 @@ namespace UFramework.Core
             return false;
         }
 
+        /// <summary>
+        /// 强制回收
+        /// </summary>
+        /// <param name="id"></param>
+        public void ForceRecycle(string id)
+        {
+            if (unitDictionary.TryGetValue(id, out var unit))
+            {
+                unit.Recycle();
+                unitDictionary.Remove(id);
+            }
+        }
+
         protected override void OnSingletonUpdate(float deltaTime)
         {
             if (Time.realtimeSinceStartup - _checkTime >= optimizeIntervalTime)
@@ -321,10 +361,8 @@ namespace UFramework.Core
                 {
                     var unit = item.Value;
                     unit.CheckOptimize();
-                    if (unit.isAcquittal && unit.averageIntervalTime >= autoUnloadThresholdValue)
-                    {
+                    if (unit.isAutoUnload && unit.isAcquittal && unit.averageIntervalTime >= autoUnloadThresholdValue)
                         removes.Add(item.Key);
-                    }
                 }
 
                 for (var i = 0; i < removes.Count; i++)
