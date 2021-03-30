@@ -9,27 +9,20 @@ using UFramework.Core;
 
 namespace UFramework.Core
 {
-    public enum TableFormat
+    public enum TableKeyFormat
     {
-        CSV,
-        JSON,
-        LUA,
-    }
-
-    public enum TableDataIndexFormat
-    {
-        Array,
-        IntDictionary,
-        StringDictionary,
-        Int2IntDictionary,
+        Default,
+        IntKey,
+        StringKey,
+        Int2Key,
     }
 
     public class TableConfig : ISerializable
     {
-        public SerializableAssigned assigned { get { return SerializableAssigned.AssetBundle; } }
+        public SerializableAssigned assigned => SerializableAssigned.AssetBundle;
 
-        public TableFormat outFormatOptions = TableFormat.CSV;
-        public Dictionary<string, TableDataIndexFormat> tableDict = new Dictionary<string, TableDataIndexFormat>();
+        public bool isBinary = true;
+        public Dictionary<string, TableKeyFormat> tableDict = new Dictionary<string, TableKeyFormat>();
 
         public void Serialize()
         {

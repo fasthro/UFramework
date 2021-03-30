@@ -1,0 +1,85 @@
+// UFramework Automatic.
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UFramework.Core;
+
+namespace UFramework.Automatic
+{
+    public class $tableName$TableData
+    {
+$variable$
+    }
+
+    public class $tableName$Table : Singleton<$tableName$Table>, ITableBehaviour
+    {
+        public string tableName => "$tableName$";
+        public int maxCount => m_tableDatas.Length;
+        
+        public TableKeyFormat dataFormatOptions = TableKeyFormat.$keyFormat$;
+        private $tableName$TableData[] m_tableDatas;
+        private Dictionary<int, $tableName$TableData> m_tableDataIntDictionary;
+        private Dictionary<string, $tableName$TableData> m_tableDataStringDictionary;
+        private Dictionary<int, Dictionary<int, $tableName$TableData>> m_tableDataInt2IntDictionary;
+
+        protected override void OnSingletonAwake()
+        {
+            
+        }
+
+        private $tableName$TableData _GetWithIndex(int index)
+        {
+            if (dataFormatOptions == TableKeyFormat.Default)
+            {
+                if (index >= 0 && index < m_tableDatas.Length)
+                {
+                    return m_tableDatas[index];
+                }
+            }
+            else Logger.Error($"$tableName$ table get data error! key/index > {index}");
+            return null;
+        }
+
+        private $tableName$TableData _GetWithKey(int key)
+        {
+            if (dataFormatOptions == TableKeyFormat.IntKey)
+            {
+                if (m_tableDataIntDictionary.TryGetValue(key, out var data))
+                    return data;
+            }
+            else Logger.Error($"$tableName$ table get data error! key/index > {key}");
+            return null;
+        }
+
+        private $tableName$TableData _GetWithKey(string key)
+        {
+            if (dataFormatOptions == TableKeyFormat.StringKey)
+            {
+                if (m_tableDataStringDictionary.TryGetValue(key, out var data))
+                    return data;
+            }
+            else Logger.Error($"$tableName$ table get data error! key/index > {key}");
+            return null;
+        }
+
+        private $tableName$TableData _GetWithKey(int key1, int key2)
+        {
+            if (dataFormatOptions == TableKeyFormat.Int2Key)
+            {
+                if (m_tableDataInt2IntDictionary.TryGetValue(key1, out var dictionary))
+                {
+                    if (dictionary.TryGetValue(key2, out var data))
+                        return data;
+                }
+            }
+            else Logger.Error($"$tableName$ table get data error! key/index > {key1},{key2}");
+            return null;
+        }
+
+        public static $tableName$TableData GetWithIndex(int index) { return Instance._GetWithIndex(index); }
+        public static $tableName$TableData GetWithKey(int key) { return Instance._GetWithKey(key); }
+        public static $tableName$TableData GetWithKey(string key) { return Instance._GetWithKey(key); }
+        public static $tableName$TableData GetWithKey(int key1, int key2) { return Instance._GetWithKey(key1, key2); }
+    }
+}

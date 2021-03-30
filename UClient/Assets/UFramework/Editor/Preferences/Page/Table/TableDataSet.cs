@@ -6,6 +6,7 @@
 
 using UFramework.Core;
 using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace UFramework.Editor.Preferences.Table
 {
@@ -16,6 +17,12 @@ namespace UFramework.Editor.Preferences.Table
         public string name;
 
         [ShowInInspector, HideLabel] [HorizontalGroup("Format")]
-        public TableDataIndexFormat format;
+        public TableKeyFormat format;
+
+        [HideInInspector] public string md5;
+
+        public string excelPath => IOPath.PathCombine(UApplication.AssetsDirectory, "Table/Excel", name + ".xlsx");
+        public string structPath => IOPath.PathCombine("Assets/Scripts/Automatic/Table", name + "Table.cs");
+        public string dataPath => IOPath.PathCombine(UApplication.AssetsDirectory, "Table/Data", name + ".byte");
     }
 }

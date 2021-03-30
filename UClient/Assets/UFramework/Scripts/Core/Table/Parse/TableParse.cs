@@ -11,11 +11,10 @@ namespace UFramework.Core
 {
     public abstract class TableParse
     {
-        protected string _tableName;
-        protected TableFormat _format;
+        protected readonly string _tableName;
         protected string _content;
 
-        public TableParse(string tableName, TableFormat format) { _tableName = tableName; }
+        public TableParse(string tableName) { _tableName = tableName; }
 
         protected void LoadAsset()
         {
@@ -30,9 +29,9 @@ namespace UFramework.Core
 #endif
         }
 
-        public abstract T[] ParseArray<T>();
-        public abstract Dictionary<string, T> ParseStringDictionary<T>();
-        public abstract Dictionary<int, T> ParseIntDictionary<T>();
-        public abstract Dictionary<int, Dictionary<int, T>> ParseInt2IntDictionary<T>();
+        public abstract T[] Parse<T>();
+        public abstract Dictionary<string, T> ParseStringKey<T>();
+        public abstract Dictionary<int, T> ParseIntKey<T>();
+        public abstract Dictionary<int, Dictionary<int, T>> ParseInt2Key<T>();
     }
 }

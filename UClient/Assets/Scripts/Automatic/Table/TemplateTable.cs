@@ -9,58 +9,105 @@ namespace UFramework.Automatic
 {
     public class TemplateTableData
     {
-        // 键值
-        public int key;
-        // 描述1
-        public byte Byte;
-        // 描述2
-        public int Int;
-        // 描述3
-        public long Long;
-        // 描述4
-        public float Float;
-        // 描述5
-        public double Double;
-        // 描述6
-        public string String;
-        // 描述7
-        public bool Boolean;
-        // 描述8
-        public Vector2 Vector2;
-        // 描述9
-        public Vector3 Vector3;
-        // 多语言
-        public LocalizationText language;
-        public string language_language { get { return language != null ? language.ToString() : string.Empty; } }
-        // 描述10
-        public byte[] ArrayByte;
-        // 描述11
-        public int[] ArrayInt;
-        // 描述12
-        public long[] ArrayLong;
-        // 描述13
-        public float[] ArrayFloat;
-        // 描述14
-        public double[] ArrayDouble;
-        // 描述15
-        public string[] ArrayString;
-        // 描述16
-        public bool[] ArrayBoolean;
-        // 描述17
-        public Vector2[] ArrayVector2;
-        // 描述18
-        public Vector3[] ArrayVector3;
-        // 多语言数组
-        public LocalizationText[] languages;
+        /// <summary>
+        /// 键值
+        /// <summary>
+        public int field1;
+
+        /// <summary>
+        /// 描述1
+        /// <summary>
+        public byte field2;
+
+        /// <summary>
+        /// 描述3
+        /// <summary>
+        public long field4;
+
+        /// <summary>
+        /// 描述4
+        /// <summary>
+        public float field5;
+
+        /// <summary>
+        /// 描述5
+        /// <summary>
+        public double field6;
+
+        /// <summary>
+        /// 描述6
+        /// <summary>
+        public bool field7;
+
+        /// <summary>
+        /// 描述7
+        /// <summary>
+        public string field8;
+
+        /// <summary>
+        /// 描述8
+        /// <summary>
+        public byte[] field9;
+
+        /// <summary>
+        /// 描述9
+        /// <summary>
+        public int[] field10;
+
+        /// <summary>
+        /// 多语言
+        /// <summary>
+        public long[] field11;
+
+        /// <summary>
+        /// 描述10
+        /// <summary>
+        public float[] field12;
+
+        /// <summary>
+        /// 描述11
+        /// <summary>
+        public double[] field13;
+
+        /// <summary>
+        /// 描述12
+        /// <summary>
+        public bool[] field14;
+
+        /// <summary>
+        /// 描述13
+        /// <summary>
+        public string[] field15;
+
+        /// <summary>
+        /// 描述14
+        /// <summary>
+        public Vector2[] field16;
+
+        /// <summary>
+        /// 描述15
+        /// <summary>
+        public Vector3[] field17;
+
+        /// <summary>
+        /// 描述16
+        /// <summary>
+        public LocalizationText field18;
+
+        /// <summary>
+        /// 描述17
+        /// <summary>
+        public LocalizationText[] field19;
+
 
     }
 
     public class TemplateTable : Singleton<TemplateTable>, ITableBehaviour
     {
-        public string tableName { get { return "Template"; } }
-        public int maxCount { get { return m_tableDatas.Length; } }
+        public string tableName => "Template";
+        public int maxCount => m_tableDatas.Length;
         
-        public TableDataIndexFormat dataFormatOptions = TableDataIndexFormat.Array;
+        public TableKeyFormat dataFormatOptions = TableKeyFormat.Default;
         private TemplateTableData[] m_tableDatas;
         private Dictionary<int, TemplateTableData> m_tableDataIntDictionary;
         private Dictionary<string, TemplateTableData> m_tableDataStringDictionary;
@@ -68,85 +115,61 @@ namespace UFramework.Automatic
 
         protected override void OnSingletonAwake()
         {
-            switch (dataFormatOptions)
-            {
-                case TableDataIndexFormat.Array:
-                    m_tableDatas = new TableParseCSV(tableName).ParseArray<TemplateTableData>();
-                    break;
-                case TableDataIndexFormat.IntDictionary:
-                    m_tableDataIntDictionary = new TableParseCSV(tableName).ParseIntDictionary<TemplateTableData>();
-                    break;
-                case TableDataIndexFormat.StringDictionary:
-                    m_tableDataStringDictionary = new TableParseCSV(tableName).ParseStringDictionary<TemplateTableData>();
-                    break;
-                case TableDataIndexFormat.Int2IntDictionary:
-                    m_tableDataInt2IntDictionary = new TableParseCSV(tableName).ParseInt2IntDictionary<TemplateTableData>();
-                    break;
-            }
+            
         }
 
-        private TemplateTableData _GetIndexData(int index)
+        private TemplateTableData _GetWithIndex(int index)
         {
-            if (dataFormatOptions == TableDataIndexFormat.Array)
+            if (dataFormatOptions == TableKeyFormat.Default)
             {
                 if (index >= 0 && index < m_tableDatas.Length)
                 {
                     return m_tableDatas[index];
                 }
             }
-            else Debug.LogError("[TemplateTable] TableDataIndexFormat: Array. Please use the GetKeyData(index)");
+            else Logger.Error($"Template table get data error! key/index > {index}");
             return null;
         }
 
-        private TemplateTableData _GetKeyData(int key)
+        private TemplateTableData _GetWithKey(int key)
         {
-            if (dataFormatOptions == TableDataIndexFormat.IntDictionary)
+            if (dataFormatOptions == TableKeyFormat.IntKey)
             {
-                TemplateTableData data = null;
-                if (m_tableDataIntDictionary.TryGetValue(key, out data))
-                {
+                if (m_tableDataIntDictionary.TryGetValue(key, out var data))
                     return data;
-                }
             }
-            else Debug.LogError("[TemplateTable] TableDataIndexFormat: IntDictionary. Please use the GetKeyData(int-key)");
+            else Logger.Error($"Template table get data error! key/index > {key}");
             return null;
         }
 
-        private TemplateTableData _GetKeyData(string key)
+        private TemplateTableData _GetWithKey(string key)
         {
-            if (dataFormatOptions == TableDataIndexFormat.StringDictionary)
+            if (dataFormatOptions == TableKeyFormat.StringKey)
             {
-                TemplateTableData data = null;
-                if (m_tableDataStringDictionary.TryGetValue(key, out data))
-                {
+                if (m_tableDataStringDictionary.TryGetValue(key, out var data))
                     return data;
-                }
             }
-            else Debug.LogError("[TemplateTable] TableDataIndexFormat: StringDictionary. Please use the GetKeyData(string-key)");
+            else Logger.Error($"Template table get data error! key/index > {key}");
             return null;
         }
 
-        private TemplateTableData _GetKeyData(int key1, int key2)
+        private TemplateTableData _GetWithKey(int key1, int key2)
         {
-            if (dataFormatOptions == TableDataIndexFormat.Int2IntDictionary)
+            if (dataFormatOptions == TableKeyFormat.Int2Key)
             {
-                Dictionary<int, TemplateTableData> dictionary = null;
-                if (m_tableDataInt2IntDictionary.TryGetValue(key1, out dictionary))
+                if (m_tableDataInt2IntDictionary.TryGetValue(key1, out var dictionary))
                 {
-                    TemplateTableData data = null;
-                    if (dictionary.TryGetValue(key2, out data))
-                    {
+                    if (dictionary.TryGetValue(key2, out var data))
                         return data;
-                    }
                 }
             }
-            else Debug.LogError("[TemplateTable] TableDataIndexFormat: Int2IntDictionary. Please use the GetKeyData(int-key, int-key)");
+            else Logger.Error($"Template table get data error! key/index > {key1},{key2}");
             return null;
         }
 
-        public static TemplateTableData GetIndexData(int index) { return Instance._GetIndexData(index); }
-        public static TemplateTableData GetKeyData(int key) { return Instance._GetKeyData(key); }
-        public static TemplateTableData GetKeyData(string key) { return Instance._GetKeyData(key); }
-        public static TemplateTableData GetKeyData(int key1, int key2) { return Instance._GetKeyData(key1, key2); }
+        public static TemplateTableData GetWithIndex(int index) { return Instance._GetWithIndex(index); }
+        public static TemplateTableData GetWithKey(int key) { return Instance._GetWithKey(key); }
+        public static TemplateTableData GetWithKey(string key) { return Instance._GetWithKey(key); }
+        public static TemplateTableData GetWithKey(int key1, int key2) { return Instance._GetWithKey(key1, key2); }
     }
 }
