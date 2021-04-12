@@ -3,6 +3,9 @@
  * @Date: 2020-01-04 14:41:16
  * @Description: 语言Item
  */
+
+using UnityEngine;
+
 namespace UFramework.Core
 {
     public class LocalizationText

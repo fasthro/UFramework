@@ -69,13 +69,22 @@ namespace UFramework
         }
 
         /// <summary>
-        /// PB
+        /// PB DataPath
         /// </summary>
         /// <value></value>
         public static string PBDirectory =>
             Serializer<AppConfig>.Instance.isDevelopmentVersion
                 ? IOPath.PathCombine(Application.dataPath, "Scripts/Automatic/PB")
                 : IOPath.PathCombine(Application.persistentDataPath, "Files/PB");
+
+        /// <summary>
+        /// Table DataPath
+        /// </summary>
+        /// <value></value>
+        public static string TableDirectory =>
+            Serializer<AppConfig>.Instance.isDevelopmentVersion
+                ? IOPath.PathCombine(Application.dataPath, "UAssets/Table/Data")
+                : IOPath.PathCombine(Application.persistentDataPath, "Files/Table");
 
         #endregion
 

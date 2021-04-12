@@ -6,6 +6,7 @@
 
 using FairyGUI;
 using System.Collections;
+using UFramework.Automatic;
 using UFramework.Core;
 using UFramework.NativePlatform;
 using UFramework.UI;
@@ -100,7 +101,6 @@ namespace UFramework
             Updater.Instance.StartUpdate(_launchPanel, () =>
             {
                 Logger.Info("UFramework Updater Initialized");
-                
                 // 资源
                 Assets.Instance.Initialize((succeed) =>
                 {

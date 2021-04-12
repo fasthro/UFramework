@@ -1,18 +1,46 @@
 // UFramework Automatic.
+// $Date$
 
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UFramework.Core;
 
-namespace UFramework.Automatic
+namespace $namespace$
 {
+    [System.Serializable]
     public class $tableName$TableData
     {
 $variable$
     }
+    
+    [System.Serializable]
+    public class $tableName$TableDatas
+    {
+        private List<$tableName$TableData> _datas = new List<$tableName$TableData>();
+        
+        public void AddData($tableName$TableData data)
+        {
+            _datas.Add(data);
+        }
+        
+        public List<$tableName$TableData> GetDatas()
+        {
+            return _datas;
+        }
+    
+        public static List<$tableName$TableData> Load()
+        {
+            var path = IOPath.PathCombine(UApplication.TableDirectory, $"$tableName$.bytes");
+            var obj = TableSerialize.Deserialize<$tableName$TableDatas>(path);
+            return obj._datas;
+        }
+    }
 
-    public class $tableName$Table : Singleton<$tableName$Table>, ITableBehaviour
+    public class $tableName$Table : Singleton<$tableName$Table>
     {
         public string tableName => "$tableName$";
         public int maxCount => m_tableDatas.Length;
@@ -25,7 +53,49 @@ $variable$
 
         protected override void OnSingletonAwake()
         {
-            
+            var datas = $tableName$TableDatas.Load();
+            switch (dataFormatOptions)
+            {
+                case TableKeyFormat.Default:
+                    m_tableDatas = datas.ToArray();
+                    break;
+                case TableKeyFormat.IntKey:
+                    m_tableDataIntDictionary = new Dictionary<int, $tableName$TableData>();
+                    for (var i = 0; i < datas.Count; i++)
+                    {
+                        var data = datas[i];
+                        if (!m_tableDataIntDictionary.ContainsKey(data.$key1$))
+                        {
+                            m_tableDataIntDictionary.Add(data.$key1$, data);
+                        }
+                    }
+
+                    break;
+                case TableKeyFormat.StringKey:
+                    m_tableDataStringDictionary = new Dictionary<string, $tableName$TableData>();
+                    for (var i = 0; i < datas.Count; i++)
+                    {
+                        var data = datas[i];
+                        var id = data.$key1$.ToString();
+                        if (!m_tableDataStringDictionary.ContainsKey(id))
+                            m_tableDataStringDictionary.Add(id, data);
+                    }
+
+                    break;
+                case TableKeyFormat.Int2Key:
+                    m_tableDataInt2IntDictionary = new Dictionary<int, Dictionary<int, $tableName$TableData>>();
+                    for (var i = 0; i < datas.Count; i++)
+                    {
+                        var data = datas[i];
+                        if (!m_tableDataInt2IntDictionary.ContainsKey(data.$key1$))
+                            m_tableDataInt2IntDictionary.Add(data.$key1$, new Dictionary<int, $tableName$TableData>());
+
+                        if (!m_tableDataInt2IntDictionary[data.$key1$].ContainsKey(data.$key2$))
+                            m_tableDataInt2IntDictionary[data.$key1$].Add(data.$key2$, data);
+                    }
+
+                    break;
+            }
         }
 
         private $tableName$TableData _GetWithIndex(int index)

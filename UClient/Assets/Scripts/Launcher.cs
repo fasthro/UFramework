@@ -6,6 +6,7 @@
 
 using Lockstep.Logic;
 using UFramework;
+using UFramework.Automatic;
 using UFramework.Core;
 using UnityEngine;
 

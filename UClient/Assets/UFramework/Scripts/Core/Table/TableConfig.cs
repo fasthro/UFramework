@@ -1,11 +1,12 @@
-/*
- * @Author: fasthro
- * @Date: 2020-05-30 17:18:34
- * @Description: table serdata
- */
+// --------------------------------------------------------------------------------
+// * @Author: fasthro
+// * @Date: 2020-05-30 17:18:34
+// * @Description:
+// --------------------------------------------------------------------------------
 
 using System.Collections.Generic;
-using UFramework.Core;
+using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace UFramework.Core
 {
@@ -16,13 +17,23 @@ namespace UFramework.Core
         StringKey,
         Int2Key,
     }
+    
+    [System.Serializable]
+    public class TableItem
+    {
+        [ShowInInspector, HideLabel, ReadOnly] [HorizontalGroup()]
+        public string name;
+
+        [ShowInInspector, HideLabel] [HorizontalGroup()]
+        public TableKeyFormat format;
+
+        [HideInInspector] public string dataMD5;
+    }
 
     public class TableConfig : ISerializable
     {
         public SerializableAssigned assigned => SerializableAssigned.AssetBundle;
-
-        public bool isBinary = true;
-        public Dictionary<string, TableKeyFormat> tableDict = new Dictionary<string, TableKeyFormat>();
+        public Dictionary<string, TableItem> tableDict = new Dictionary<string, TableItem>();
 
         public void Serialize()
         {

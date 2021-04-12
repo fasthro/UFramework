@@ -1,108 +1,101 @@
 ﻿// UFramework Automatic.
+// 2021-04-13 12:29:36
 
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UFramework.Core;
 
 namespace UFramework.Automatic
 {
+    [System.Serializable]
     public class TemplateTableData
     {
         /// <summary>
         /// 键值
         /// <summary>
-        public int field1;
+        public int id;
 
         /// <summary>
         /// 描述1
         /// <summary>
-        public byte field2;
+        public byte f_byte;
 
         /// <summary>
         /// 描述3
         /// <summary>
-        public long field4;
+        public long f_long;
 
         /// <summary>
         /// 描述4
         /// <summary>
-        public float field5;
+        public float f_float;
 
         /// <summary>
         /// 描述5
         /// <summary>
-        public double field6;
+        public double f_double;
 
         /// <summary>
         /// 描述6
         /// <summary>
-        public bool field7;
+        public bool f_bool;
 
         /// <summary>
         /// 描述7
         /// <summary>
-        public string field8;
+        public string f_tring;
 
         /// <summary>
-        /// 描述8
+        /// 描述7
         /// <summary>
-        public byte[] field9;
+        public Vector2 f_vector2;
 
         /// <summary>
-        /// 描述9
+        /// 描述7
         /// <summary>
-        public int[] field10;
+        public Vector3 f_vector3;
 
         /// <summary>
-        /// 多语言
+        /// 描述7
         /// <summary>
-        public long[] field11;
+        public Color f_color;
 
         /// <summary>
-        /// 描述10
+        /// 描述7
         /// <summary>
-        public float[] field12;
-
-        /// <summary>
-        /// 描述11
-        /// <summary>
-        public double[] field13;
-
-        /// <summary>
-        /// 描述12
-        /// <summary>
-        public bool[] field14;
-
-        /// <summary>
-        /// 描述13
-        /// <summary>
-        public string[] field15;
-
-        /// <summary>
-        /// 描述14
-        /// <summary>
-        public Vector2[] field16;
-
-        /// <summary>
-        /// 描述15
-        /// <summary>
-        public Vector3[] field17;
-
-        /// <summary>
-        /// 描述16
-        /// <summary>
-        public LocalizationText field18;
-
-        /// <summary>
-        /// 描述17
-        /// <summary>
-        public LocalizationText[] field19;
+        public Color32 f_color32;
 
 
     }
+    
+    [System.Serializable]
+    public class TemplateTableDatas
+    {
+        private List<TemplateTableData> _datas = new List<TemplateTableData>();
+        
+        public void AddData(TemplateTableData data)
+        {
+            _datas.Add(data);
+        }
+        
+        public List<TemplateTableData> GetDatas()
+        {
+            return _datas;
+        }
+    
+        public static List<TemplateTableData> Load()
+        {
+            var path = IOPath.PathCombine(UApplication.TableDirectory, $"Template.bytes");
+            var obj = TableSerialize.Deserialize<TemplateTableDatas>(path);
+            return obj._datas;
+        }
+    }
 
-    public class TemplateTable : Singleton<TemplateTable>, ITableBehaviour
+    public class TemplateTable : Singleton<TemplateTable>
     {
         public string tableName => "Template";
         public int maxCount => m_tableDatas.Length;
@@ -115,7 +108,49 @@ namespace UFramework.Automatic
 
         protected override void OnSingletonAwake()
         {
-            
+            var datas = TemplateTableDatas.Load();
+            switch (dataFormatOptions)
+            {
+                case TableKeyFormat.Default:
+                    m_tableDatas = datas.ToArray();
+                    break;
+                case TableKeyFormat.IntKey:
+                    m_tableDataIntDictionary = new Dictionary<int, TemplateTableData>();
+                    for (var i = 0; i < datas.Count; i++)
+                    {
+                        var data = datas[i];
+                        if (!m_tableDataIntDictionary.ContainsKey(data.id))
+                        {
+                            m_tableDataIntDictionary.Add(data.id, data);
+                        }
+                    }
+
+                    break;
+                case TableKeyFormat.StringKey:
+                    m_tableDataStringDictionary = new Dictionary<string, TemplateTableData>();
+                    for (var i = 0; i < datas.Count; i++)
+                    {
+                        var data = datas[i];
+                        var id = data.id.ToString();
+                        if (!m_tableDataStringDictionary.ContainsKey(id))
+                            m_tableDataStringDictionary.Add(id, data);
+                    }
+
+                    break;
+                case TableKeyFormat.Int2Key:
+                    m_tableDataInt2IntDictionary = new Dictionary<int, Dictionary<int, TemplateTableData>>();
+                    for (var i = 0; i < datas.Count; i++)
+                    {
+                        var data = datas[i];
+                        if (!m_tableDataInt2IntDictionary.ContainsKey(data.id))
+                            m_tableDataInt2IntDictionary.Add(data.id, new Dictionary<int, TemplateTableData>());
+
+                        if (!m_tableDataInt2IntDictionary[data.id].ContainsKey(data.f_byte))
+                            m_tableDataInt2IntDictionary[data.id].Add(data.f_byte, data);
+                    }
+
+                    break;
+            }
         }
 
         private TemplateTableData _GetWithIndex(int index)

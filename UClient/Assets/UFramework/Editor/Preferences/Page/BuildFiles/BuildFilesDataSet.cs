@@ -11,12 +11,6 @@ using UnityEngine;
 
 namespace UFramework.Editor.Preferences.BuildFiles
 {
-    public enum SingleFileType
-    {
-        ProtoPB,
-        File
-    }
-
     [System.Serializable]
     public class SingleFileInfo
     {
@@ -33,9 +27,9 @@ namespace UFramework.Editor.Preferences.BuildFiles
         [ShowInInspector] public string buildDirectory;
         
         /// <summary>
-        /// 文件类型
+        /// 是否为内部文件
         /// </summary>
-        [HideInInspector] public SingleFileType fileType;
+        [HideInInspector] public bool isBuiltIn;
     }
 
     public class Preferences_SingleFileConfig : ISerializable

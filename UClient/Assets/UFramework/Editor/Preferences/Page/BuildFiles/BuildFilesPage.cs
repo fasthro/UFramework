@@ -21,6 +21,9 @@ namespace UFramework.Editor.Preferences.BuildFiles
 
         static Preferences_SingleFileConfig Config => Serializer<Preferences_SingleFileConfig>.Instance;
 
+        [ShowInInspector] [TableList(AlwaysExpanded = true, IsReadOnly = true)] [LabelText("File(Table Bytes)")]
+        public List<SingleFileInfo> tableBytes = new List<SingleFileInfo>();
+
         [ShowInInspector] [TableList(AlwaysExpanded = true, IsReadOnly = true)] [LabelText("File(Proto PB)")]
         public List<SingleFileInfo> protos = new List<SingleFileInfo>();
 
@@ -38,34 +41,24 @@ namespace UFramework.Editor.Preferences.BuildFiles
         {
             BuildFilesRootDir = IOPath.PathCombine(UApplication.TempDirectory, "Files");
 
+            // table bytes
+            CheckPath(ref tableBytes, IOPath.PathCombine(UApplication.AssetsDirectory, "Table/Data"), "Table", "*.bytes");
             // pb
-            protos.Clear();
-
-            var pbDir = IOPath.PathCombine(Environment.CurrentDirectory, "Assets/Scripts/Automatic/PB");
-            var pbFiles = IOPath.DirectoryGetFiles(pbDir, "*.pb", SearchOption.AllDirectories);
-            foreach (var pbFile in pbFiles)
-            {
-                protos.Add(new SingleFileInfo()
-                {
-                    path = IOPath.PathUnitySeparator(IOPath.PathRelativeAsset(pbFile)),
-                    buildDirectory = "PB",
-                    fileType = SingleFileType.ProtoPB
-                });
-            }
+            CheckPath(ref protos, IOPath.PathCombine(Environment.CurrentDirectory, "Assets/Scripts/Automatic/PB"), "PB",
+                "*.pb");
 
             // files
             files.Clear();
 
             foreach (var file in Config.files)
-            {
-                if (file.fileType != SingleFileType.ProtoPB)
+                if (!file.isBuiltIn)
                     files.Add(file);
-            }
         }
 
         public void OnSaveDescribe()
         {
             Config.files.Clear();
+            Config.files.AddRange(tableBytes);
             Config.files.AddRange(protos);
             Config.files.AddRange(files);
             Config.Serialize();
@@ -81,6 +74,22 @@ namespace UFramework.Editor.Preferences.BuildFiles
             if (SirenixEditorGUI.ToolbarButton(new GUIContent("Clean Build")))
             {
                 Build(true);
+            }
+        }
+
+        private void CheckPath(ref List<SingleFileInfo> list, string dir, string targetDir, string seachPattern)
+        {
+            list.Clear();
+
+            var pbFiles = IOPath.DirectoryGetFiles(dir, seachPattern, SearchOption.AllDirectories);
+            foreach (var pbFile in pbFiles)
+            {
+                list.Add(new SingleFileInfo()
+                {
+                    path = IOPath.PathUnitySeparator(IOPath.PathRelativeAsset(pbFile)),
+                    buildDirectory = targetDir,
+                    isBuiltIn = true
+                });
             }
         }
 

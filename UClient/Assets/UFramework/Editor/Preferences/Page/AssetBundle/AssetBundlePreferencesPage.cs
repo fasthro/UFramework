@@ -284,14 +284,6 @@ namespace UFramework.Editor.Preferences.AssetBundle
             languageItem.nameType = NameType.Path;
             languageItem.pattern = "*.txt";
             builtInAssetPathItems.Add(languageItem);
-
-            // table
-            var tableItem = new AssetSearchItem();
-            tableItem.path = IOPath.PathRelativeAsset(IOPath.PathCombine(UApplication.AssetsDirectory, "Table", "Data"));
-            tableItem.nameType = NameType.Path;
-            tableItem.pattern = "*.csv";
-
-            builtInAssetPathItems.Add(tableItem);
         }
 
         /// <summary>
