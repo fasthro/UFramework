@@ -148,6 +148,15 @@ namespace UFramework
 
         #endregion
 
+        #region network
+
+        /// <summary>
+        /// 每帧处理网络包数量
+        /// </summary>
+        public int networkFrameProcessCount = 5;
+
+        #endregion
+
         public void Serialize()
         {
             Serializer<AppConfig>.Serialize(this);

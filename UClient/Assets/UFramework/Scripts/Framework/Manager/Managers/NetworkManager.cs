@@ -8,6 +8,7 @@ using UFramework.Core;
 using UFramework.Network;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using UnityEngine;
 
 namespace UFramework
 {
@@ -21,6 +22,14 @@ namespace UFramework
         /// <returns></returns>
         private readonly Dictionary<int, int> _channelDict = new Dictionary<int, int>();
         private readonly List<SocketChannel> _channels = new List<SocketChannel>();
+
+        // 每帧处理网路包数量
+        private int networkFrameProcessCount;
+
+        protected override void OnInitialize()
+        {
+            networkFrameProcessCount = Serializer<AppConfig>.Instance.networkFrameProcessCount;
+        }
 
         /// <summary>
         /// 创建 Channel
@@ -166,8 +175,11 @@ namespace UFramework
                 {
                     channel.packQueue.Swap();
                 }
-                while (!channel.packQueue.IsEmpty())
+
+                var processCount = Mathf.Min(networkFrameProcessCount, channel.packQueue.Count);
+                while (!channel.packQueue.IsEmpty() && processCount > 0)
                 {
+                    processCount--;
                     var pack = channel.packQueue.Dequeue();
                     if (pack.layer == ProcessLayer.All)
                     {

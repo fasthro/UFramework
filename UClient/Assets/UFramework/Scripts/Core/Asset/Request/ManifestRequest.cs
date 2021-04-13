@@ -57,28 +57,20 @@ namespace UFramework.Core
         public override void Load()
         {
 #if UNITY_EDITOR
-            if (Assets.isUseAssetBundle)
-            {
-                manifest = AssetDatabase.LoadAssetAtPath<AssetManifest>(AssetManifest.AssetPath);
-                Completed();
-            }
+            manifest = AssetDatabase.LoadAssetAtPath<AssetManifest>(AssetManifest.AssetPath);
+            Completed();
+#endif
+            base.Load();
+            if (loadState != LoadState.Init) return;
+            _bundle = Assets.Instance.GetBundle<BundleAsyncRequest>(AssetManifest.AssetBundleFileName, true);
+            if (_bundle.isDone)
+                StartCoroutine();
             else
             {
-#endif
-                base.Load();
-                if (loadState != LoadState.Init) return;
-                _bundle = Assets.Instance.GetBundle<BundleAsyncRequest>(AssetManifest.AssetBundleFileName, true);
-                if (_bundle.isDone)
-                    StartCoroutine();
-                else
-                {
-                    loadState = LoadState.LoadBundle;
-                    _bundle.AddCallback(OnBundleDone);
-                    _bundle.Load();
-                }
-#if UNITY_EDITOR
+                loadState = LoadState.LoadBundle;
+                _bundle.AddCallback(OnBundleDone);
+                _bundle.Load();
             }
-#endif
         }
 
         private void OnBundleDone(AssetRequest request)

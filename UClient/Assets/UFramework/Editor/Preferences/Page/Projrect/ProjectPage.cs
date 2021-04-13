@@ -59,13 +59,19 @@ namespace UFramework.Editor.Preferences.Projrect
         /// GoPool 优化间隔时间
         /// </summary>
         [BoxGroup("GameObject Pool Settings")] [LabelText("  Optimize Check Interval Time(s)")] [ListDrawerSettings(Expanded = true)]
-        public float optimizeIntervalTime = 5f;
+        public int optimizeIntervalTime = 5;
         
         /// <summary>
         /// GoPool 完全回收检查间隔时间
         /// </summary>
         [BoxGroup("GameObject Pool Settings")] [LabelText("  Auto Unload Threshold Value Time(s)")] [ListDrawerSettings(Expanded = true)]
-        public float autoUnloadThresholdValue = 10f;
+        public int autoUnloadThresholdValue = 10;
+        
+        /// <summary>
+        /// Network 每帧处理网络数据包数量
+        /// </summary>
+        [BoxGroup("Network Settings")] [LabelText("  Frame Process NetPack Count")] [ListDrawerSettings(Expanded = true)]
+        public int networkFrameProcessCount = 5;
         
         public object GetInstance()
         {
@@ -80,6 +86,9 @@ namespace UFramework.Editor.Preferences.Projrect
             designResolutionX = config.designResolutionX;
             designResolutionY = config.designResolutionY;
             uiDirectory = config.uiDirectory;
+            optimizeIntervalTime = config.optimizeIntervalTime;
+            autoUnloadThresholdValue = config.autoUnloadThresholdValue;
+            networkFrameProcessCount = config.networkFrameProcessCount;
 
             fonts = config.fonts;
         }
@@ -99,6 +108,9 @@ namespace UFramework.Editor.Preferences.Projrect
             config.designResolutionY = designResolutionY;
             config.uiDirectory = uiDirectory;
             config.fonts = fonts;
+            config.optimizeIntervalTime = optimizeIntervalTime;
+            config.autoUnloadThresholdValue = autoUnloadThresholdValue;
+            config.networkFrameProcessCount = networkFrameProcessCount;
             config.Serialize();
         }
 

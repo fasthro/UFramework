@@ -12,13 +12,15 @@ namespace UFramework.Core
     {
         private Queue _consume;
         private Queue _produce;
+        
+        public int Count => _produce.Count;
 
         public DoubleQueue(int capcity = 16)
         {
             _consume = new Queue(capcity);
             _produce = new Queue(capcity);
         }
-
+        
         public void Enqueue(T arg)
         {
             lock (_produce)

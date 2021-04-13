@@ -81,9 +81,11 @@ namespace UFramework.Core
         /// <param name="minCount">池最小数量</param>
         /// <param name="autoUnload">是否自动回收卸载</param>
         /// <returns></returns>
-        public static GoPoolUnit Allocate(Transform trans, string resPath, GameObject targetPrefab, int minCount, bool autoUnload)
+        public static GoPoolUnit Allocate(Transform trans, string resPath, GameObject targetPrefab, int minCount,
+            bool autoUnload)
         {
-            return ObjectPool<GoPoolUnit>.Instance.Allocate().Builder(trans, resPath, targetPrefab, minCount, autoUnload);
+            return ObjectPool<GoPoolUnit>.Instance.Allocate()
+                .Builder(trans, resPath, targetPrefab, minCount, autoUnload);
         }
 
         private GoPoolUnit Builder(Transform trans, string resPath, int minCount, bool autoUnload)
@@ -94,7 +96,8 @@ namespace UFramework.Core
             return Builder(trans, resPath, prefab, minCount, autoUnload);
         }
 
-        private GoPoolUnit Builder(Transform trans, string resPath, GameObject targetPrefab, int minCount, bool autoUnload)
+        private GoPoolUnit Builder(Transform trans, string resPath, GameObject targetPrefab, int minCount,
+            bool autoUnload)
         {
             id = resPath;
             prefab = targetPrefab;
@@ -220,8 +223,8 @@ namespace UFramework.Core
         {
             _cacheTransform = transform;
             var appconfig = Serializer<AppConfig>.Instance;
-            optimizeIntervalTime = appconfig.optimizeIntervalTime;
-            autoUnloadThresholdValue = appconfig.autoUnloadThresholdValue;
+            optimizeIntervalTime = (float) appconfig.optimizeIntervalTime;
+            autoUnloadThresholdValue = (float) appconfig.autoUnloadThresholdValue;
         }
 
         /// <summary>
