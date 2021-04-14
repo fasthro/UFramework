@@ -7,19 +7,17 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using OfficeOpenXml;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
 using UFramework.Core;
+using UFramework.Editor.Preferences.Table;
 using UnityEditor;
 using UnityEngine;
 
-namespace UFramework.Editor.Preferences.Table
+namespace UFramework.Editor.Preferences.Page.Table
 {
     public class TablePage : IPage, IPageBar, IPageCallback
     {
@@ -28,11 +26,21 @@ namespace UFramework.Editor.Preferences.Table
         static TableConfig Config => Serializer<TableConfig>.Instance;
         static Preferences_Table_Config EditorConfig => Serializer<Preferences_Table_Config>.Instance;
 
+        /// <summary>
+        /// 是否使用命名空间
+        /// </summary>
         public bool useNamespace;
+
         private bool _useNamespace => !useNamespace;
 
+        /// <summary>
+        /// 命名空间
+        /// </summary>
         [HideIf("_useNamespace")] public string namespaceValue;
 
+        /// <summary>
+        /// table列表
+        /// </summary>
         [ShowInInspector] [TableList(IsReadOnly = true, AlwaysExpanded = true, HideToolbar = true)]
         public List<TableEditorItem> tables = new List<TableEditorItem>();
 
@@ -67,7 +75,7 @@ namespace UFramework.Editor.Preferences.Table
 
             if (SirenixEditorGUI.ToolbarButton(new GUIContent("Generate Modify")))
             {
-                bool have = false;
+                var have = false;
                 foreach (var table in tables)
                 {
                     var newMd5 = IOPath.FileMD5(table.excelPath);
@@ -170,6 +178,7 @@ namespace UFramework.Editor.Preferences.Table
                         var sheet = package.Workbook.Worksheets[1];
                         if (!bytes)
                         {
+                            GenerateLuaTable(item, sheet);
                             GenerateTableStruct(item, sheet);
                             item.xmlMd5 = string.Empty;
                             item.xmlTempMD5 = newMD5;
@@ -367,7 +376,6 @@ namespace UFramework.Editor.Preferences.Table
                             break;
                     }
 
-//,,,,,,Vector2[],Vector3[],langs
                     dataInstance.GetType().GetField(varName).SetValue(dataInstance, valueObject);
                 }
 
@@ -382,18 +390,220 @@ namespace UFramework.Editor.Preferences.Table
 
         #region gen lua table
 
+        private void GenerateLuaTable(TableEditorItem item, ExcelWorksheet sheet)
+        {
+            var colNum = sheet.Dimension.End.Column;
+            var rowNum = sheet.Dimension.End.Row;
+
+            var vs = new List<string>();
+            var ts = new List<string>();
+            for (var i = 1; i <= colNum; i++)
+            {
+                var varName = sheet.GetValue(2, i) as string;
+                var varType = sheet.GetValue(3, i).ToString();
+                if (string.IsNullOrEmpty(varName) || IgnoreType(varType))
+                    continue;
+                vs.Add(varName);
+                ts.Add(varType);
+            }
+
+            var splitChar = ',';
+            var splitChar2 = '|';
+
+            var tableItems = new List<TableItemData>();
+            for (var i = 4; i <= rowNum; i++)
+            {
+                var tableItem = new TableItemData();
+                for (var j = 1; j <= vs.Count; j++)
+                {
+                    var varName = vs[j - 1];
+                    var varType = ts[j - 1];
+                    var value = sheet.GetValue(i, j);
+                    if (value == null)
+                        continue;
+
+                    var valueStr = value.ToString();
+                    if (j == 1)
+                        tableItem.key = valueStr;
+                    if (j == 2)
+                        tableItem.key2 = valueStr;
+
+                    var resultValue = valueStr;
+
+                    switch (varType)
+                    {
+                        case "byte":
+                        case "int":
+                        case "long":
+                        case "float":
+                        case "double":
+                            resultValue = valueStr;
+                            break;
+                        case "bool":
+                            resultValue = ToBool(valueStr).ToString();
+                            break;
+                        case "string":
+                            resultValue = "\"{valueStr}\"";
+                            break;
+                        case "Vector2":
+                            var v2 = ToVector2(valueStr, splitChar);
+                            resultValue = "Vector2.New({v2.x}, {v2.y})";
+                            break;
+                        case "Vector3":
+                            var v3 = ToVector3(valueStr, splitChar);
+                            resultValue = "Vector3.New({v3.x}, {v3.y}, {v3.z})";
+                            break;
+                        case "Color":
+                            var c = ToColor(valueStr, splitChar);
+                            resultValue = "Color.New({c.r}, {c.g}, {c.b}, {c.a})";
+                            break;
+                        case "Color32":
+                            var c32 = ToColor(valueStr, splitChar);
+                            resultValue = "Color32.New({c32.r}, {c32.g}, {c32.b}, {c32.a})";
+                            break;
+                        case "byte[]":
+                        case "int[]":
+                        case "long[]":
+                        case "float[]":
+                        case "double[]":
+                            resultValue = "ToLuaNumberArray(valueStr, splitChar)})";
+                            break;
+                        case "bool[]":
+                            resultValue = "ToLuaBoolArray(valueStr, splitChar)})";
+                            break;
+                        case "string[]":
+                            resultValue = "ToLuaStringArray(valueStr, splitChar)})";
+                            break;
+                        case "Vector2[]":
+                            resultValue = "ToLuaVector2Array(valueStr, splitChar, splitChar2)})";
+                            break;
+                        case "Vector3[]":
+                            resultValue = "ToLuaVector2Array(valueStr, splitChar, splitChar2)})";
+                            break;
+                        case "Color[]":
+                            resultValue = "ToLuaColorArray(valueStr, splitChar, splitChar2)})";
+                            break;
+                        case "Color32[]":
+                            resultValue = "ToLuaColor32Array(valueStr, splitChar, splitChar2)})";
+                            break;
+                    }
+                }
+
+                // tableLines.Add(line);
+            }
+
+            // var bodyResult = string.Empty;
+            // switch (item.data.format)
+            // {
+            //     case TableKeyFormat.Default:
+            //         bodyResult = GenerateLuaBodyDefault(tableLines);
+            //         break;
+            //     case TableKeyFormat.StringKey:
+            //     case TableKeyFormat.IntKey:
+            //         bodyResult = GenerateLuaBodyKey(item.data.format, tableKeys, tableLines);
+            //         break;
+            //     case TableKeyFormat.Int2Key:
+            //         bodyResult = GenerateLuaBodyInt2Key(tableKeys, tableKeys2, tableLines);
+            //         break;
+            // }
+            //
+            // Debug.Log(bodyResult);
+        }
+
+        private string GenerateLuaBodyDefault(List<List<string>> dataLines)
+        {
+            var sb = new StringBuilder();
+            for (var i = 0; i < dataLines.Count; i++)
+            {
+                sb.Append("\t{");
+                var line = dataLines[i];
+                for (var j = 0; j < line.Count; j++)
+                {
+                    if (j < line.Count - 1)
+                        sb.Append($"{line[j]}, ");
+                    else
+                        sb.Append($"{line[j]}");
+                }
+
+                sb.Append("}, \n");
+            }
+
+            if (dataLines.Count > 0)
+                return "{\n" + sb.ToString().TrimEnd(',', ' ') + "\n}";
+            return string.Empty;
+        }
+
+        private string GenerateLuaBodyKey(TableKeyFormat format, List<string> keys, List<List<string>> dataLines)
+        {
+            var sb = new StringBuilder();
+            for (var i = 0; i < dataLines.Count; i++)
+            {
+                if (format == TableKeyFormat.IntKey)
+                    sb.Append($"[{keys[i]}] = " + "{");
+                else
+                    sb.Append($"[\'{keys[i]}\'] = " + "{");
+
+                var line = dataLines[i];
+                for (var j = 0; j < line.Count; j++)
+                {
+                    if (j < line.Count - 1) sb.Append($"{line[j]}, ");
+                    else sb.Append($"{line[j]}");
+                }
+
+                sb.Append("}, \n");
+            }
+
+            if (dataLines.Count > 0)
+                return "{" + sb.ToString().TrimEnd(',', ' ') + "}";
+            return string.Empty;
+        }
+
+        private string GenerateLuaBodyInt2Key(List<string> keys, List<string> keys2, List<List<string>> dataLines)
+        {
+            var sb = new StringBuilder();
+            var map = new Dictionary<string, List<string>>();
+            var keyMap = new Dictionary<string, List<string>>();
+            for (var i = 0; i < dataLines.Count; i++)
+            {
+                if (!map.ContainsKey(keys[i]))
+                    map.Add(keys[i], new List<string>());
+                if (!keyMap.ContainsKey(keys[i]))
+                    keyMap.Add(keys[i], new List<string>());
+
+                sb.Clear();
+                var line = dataLines[i];
+                for (var j = 0; j < line.Count; j++)
+                {
+                    if (j < line.Count - 1)
+                        sb.Append($"{line[j]}, ");
+                    else sb.Append($"{line[j]}");
+                }
+
+                map[keys[i]].Add(sb.ToString());
+                keyMap[keys[i]].Add(keys2[i]);
+            }
+
+            return string.Empty;
+        }
+
         #endregion
 
-        #region common
+        public void OnEdittorCompileCallback()
+        {
+            foreach (var item in tables)
+                if (!item.xmlMd5.Equals(item.xmlTempMD5))
+                    ProcTable(item, item.xmlTempMD5, true);
+
+            OnSaveDescribe();
+            AssetDatabase.Refresh();
+        }
+
+        #region utils
 
         static bool IgnoreType(string t)
         {
             return t.Trim().Equals("ignore");
         }
-
-        #endregion
-
-        #region utils
 
         static bool ToBool(string input)
         {
@@ -553,16 +763,99 @@ namespace UFramework.Editor.Preferences.Table
             return string.IsNullOrEmpty(input) ? null : input.Split(splitChar);
         }
 
-        #endregion
-
-        public void OnEdittorCompileCallback()
+        static string ToLuaNumberArray(string input, char splitChar)
         {
-            foreach (var item in tables)
-                if (!item.xmlMd5.Equals(item.xmlTempMD5))
-                    ProcTable(item, item.xmlTempMD5, true);
-
-            OnSaveDescribe();
-            AssetDatabase.Refresh();
+            if (string.IsNullOrEmpty(input)) return "{}";
+            var res = input.Split(splitChar);
+            var array = "{";
+            for (var i = 0; i < res.Length; i++)
+                array += res[i] + ", ";
+            array = array.TrimEnd(',', ' ') + "}";
+            return array;
         }
+
+        static string ToLuaBoolArray(string input, char splitChar)
+        {
+            if (string.IsNullOrEmpty(input)) return "{}";
+            var res = input.Split(splitChar);
+            var array = "{";
+            for (var i = 0; i < res.Length; i++)
+                array += ToBool(res[i]).ToString() + ", ";
+            array = array.TrimEnd(',', ' ') + "}";
+            return array;
+        }
+
+        static string ToLuaStringArray(string input, char splitChar)
+        {
+            if (string.IsNullOrEmpty(input)) return "{}";
+            var res = input.Split(splitChar);
+            var array = "{";
+            for (var i = 0; i < res.Length; i++)
+                array += "\"" + res[i] + "\"" + ", ";
+            array = array.TrimEnd(',', ' ') + "}";
+            return array;
+        }
+
+        static string ToLuaVector2Array(string input, char splitChar, char splitCharArray)
+        {
+            if (string.IsNullOrEmpty(input)) return "{}";
+            var res = input.Split(splitCharArray);
+            var array = "{";
+            for (var i = 0; i < res.Length; i++)
+            {
+                var v2 = ToVector2(res[i], splitChar);
+                array += $"Vector2.New({v2.x}, {v2.y})" + ", ";
+            }
+
+            array = array.TrimEnd(',', ' ') + "}";
+            return array;
+        }
+
+        static string ToLuaVector3Array(string input, char splitChar, char splitCharArray)
+        {
+            if (string.IsNullOrEmpty(input)) return "{}";
+            var res = input.Split(splitCharArray);
+            var array = "{";
+            for (var i = 0; i < res.Length; i++)
+            {
+                var v3 = ToVector3(res[i], splitChar);
+                array += $"Vector3.New({v3.x}, {v3.y}, {v3.z})" + ", ";
+            }
+
+            array = array.TrimEnd(',', ' ') + "}";
+            return array;
+        }
+
+        static string ToLuaColorArray(string input, char splitChar, char splitCharArray)
+        {
+            if (string.IsNullOrEmpty(input)) return "{}";
+            var res = input.Split(splitCharArray);
+            var array = "{";
+            for (var i = 0; i < res.Length; i++)
+            {
+                var c = ToColor(res[i], splitChar);
+                array += $"Color.New({c.r}, {c.g}, {c.b}, {c.a}" + ", ";
+            }
+
+            array = array.TrimEnd(',', ' ') + "}";
+            return array;
+        }
+
+        static string ToLuaColor32Array(string input, char splitChar, char splitCharArray)
+        {
+            if (string.IsNullOrEmpty(input)) return "{}";
+            var res = input.Split(splitCharArray);
+            var array = "{";
+            for (var i = 0; i < res.Length; i++)
+            {
+                var c = ToColor32(res[i], splitChar);
+                array += $"Color32.New({c.r}, {c.g}, {c.b}, {c.a}" + ", ";
+            }
+
+            array = array.TrimEnd(',', ' ') + "}";
+            return array;
+        }
+
+        #endregion
     }
 }

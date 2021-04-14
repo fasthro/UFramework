@@ -6,6 +6,7 @@ Description: main
 _G.UApplication = UFramework.UApplication
 _G.IOPath = UFramework.IOPath
 _G.AppConfig = nil
+_G.class = require "3rd.middleclass"
 
 require("Extension.TableExtension")
 require("UI.FairyGUI")

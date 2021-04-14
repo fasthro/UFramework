@@ -12,6 +12,7 @@ using UFramework.Editor.Preferences.BuildFiles;
 using UFramework.Editor.Preferences.Consoles;
 using UFramework.Editor.Preferences.Localization;
 using UFramework.Editor.Preferences.Lua;
+using UFramework.Editor.Preferences.Page.Table;
 using UFramework.Editor.Preferences.Projrect;
 using UFramework.Editor.Preferences.Proto;
 using UFramework.Editor.Preferences.Serializable;

@@ -22,8 +22,11 @@ namespace UFramework.Editor.Preferences.Table
         public string excelPath => IOPath.PathCombine(UApplication.AssetsDirectory, "Table/Excel", data.name + ".xlsx");
         public string structPath => IOPath.PathCombine("Assets/Scripts/Automatic/Table", data.name + "Table.cs");
         public string dataPath => IOPath.PathCombine(UApplication.AssetsDirectory, "Table/Data", data.name + ".bytes");
+
+        public string luaTablePath =>
+            IOPath.PathCombine("Assets/Scripts/Automatic/Lua/Table", data.name + "Table.lua");
     }
-    
+
     public class Preferences_Table_Config : ISerializable
     {
         public SerializableAssigned assigned => SerializableAssigned.Editor;
@@ -34,5 +37,18 @@ namespace UFramework.Editor.Preferences.Table
         {
             Serializer<Preferences_Table_Config>.Serialize(this);
         }
+    }
+
+    public class TableFieldData
+    {
+        public string field;
+        public string value;
+    }
+
+    public class TableItemData
+    {
+        public string key;
+        public string key2;
+        public List<TableFieldData> fields = new List<TableFieldData>();
     }
 }
